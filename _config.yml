@@ -1,0 +1,104 @@
+# Hexo Configuration
+## Docs: https://hexo.io/zh-cn/docs/configuration.html
+## Source: https://github.com/hexojs/hexo/
+
+# 网站
+title: Hexo
+subtitle: ''
+description: ''
+keywords:
+author: John Doe
+language: zh-CN
+timezone: ''
+
+# URL
+## 设置您的网站地址，例如：如果您使用 GitHub Pages，设置为 'https://username.github.io/project'
+url: http://example.com
+permalink: :year/:month/:day/:title/
+permalink_defaults:
+pretty_urls:
+  trailing_index: true # 设置为 false 可移除链接中的 'index.html'
+  trailing_html: true # 设置为 false 可移除链接中的 '.html'
+
+# 目录
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+
+# 写作
+new_post_name: :title.md # 新文章的文件名
+default_layout: post
+titlecase: false # 是否将标题转换为首字母大写
+external_link:
+  enable: true # 在新标签页中打开外部链接
+  field: site # 应用于整个网站
+  exclude: ''
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+syntax_highlighter: highlight.js
+highlight:
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  preprocess: true
+  line_number: true
+  tab_replace: ''
+
+# 主页设置
+## path: 博客首页的根路径（默认为空）
+## per_page: 每页显示的文章数（0 = 禁用分页）
+## order_by: 文章排序方式（默认按日期降序）
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: -date
+
+# 分类 & 标签
+default_category: uncategorized
+category_map:
+tag_map:
+
+# 元数据元素
+## https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/meta
+meta_generator: true
+
+# 日期 / 时间格式
+## Hexo 使用 Moment.js 来解析和显示日期
+## 您可以按以下格式自定义日期格式
+## http://momentjs.com/docs/#/displaying/format/
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+## updated_option 支持 'mtime', 'date', 'empty'
+updated_option: 'mtime'
+
+# 分页
+## 将 per_page 设置为 0 可禁用分页
+per_page: 10
+pagination_dir: page
+
+# 包含 / 排除文件
+## include:/exclude: 选项仅适用于 'source/' 文件夹
+include:
+exclude:
+ignore:
+
+# 扩展
+## 插件: https://hexo.io/zh-cn/plugins/
+## 主题: https://hexo.io/zh-cn/themes/
+theme: butterfly
+
+# 部署
+## Docs: https://hexo.io/zh-cn/docs/one-command-deployment
+deploy:
+  type: ''
