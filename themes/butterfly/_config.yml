@@ -3,7 +3,13 @@
 # 如果您有任何问题，请参考文档
 # 中文文档: https://butterfly.js.org/
 # English: https://butterfly.js.org/en/
+# 图片代理 image_proxy_prefix: https://lz.qaiu.top/parser?url=
 # --------------------------------------
+
+# 主题颜色
+theme_color:
+  enable: true
+  main: '#000000'
 
 # --------------------------------------
 # 导航设置
@@ -18,10 +24,11 @@ nav:
   fixed: false
 
 menu:
-  # 首页: / || fas fa-home
-  # 列表||fas fa-list:
-  #   音乐: /music/ || fas fa-music
-  #   电影: /movies/ || fas fa-video
+  首页: / || fas fa-home
+  归档: /archives/ || fas fa-archive
+  标签: /tags/ || fas fa-tags
+  分类: /categories/ || fas fa-folder-open
+  关于: /about/ || fas fa-heart
 
 # --------------------------------------
 # 代码块设置
@@ -47,7 +54,8 @@ code_blocks:
 #   图标: 链接 || 描述 || 颜色
 social:
   # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
-  # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
+  fas fa-envelope: mailto:505350617@qq.com || Email || '#4a7dbe'
+  fab fa-qq: http://wpa.qq.com/msgrd?v=3&uin=505350617&site=qq&menu=yes || QQ
 
 # --------------------------------------
 # 图片设置
@@ -56,7 +64,7 @@ social:
 favicon: /img/favicon.png
 
 avatar:
-  img: /img/butterfly-icon.png
+  img: /img/leimu.jpg
   effect: false
 
 # 禁用所有顶部图片
@@ -66,26 +74,26 @@ disable_top_img: false
 default_top_img:
 
 # 首页横幅图片
-index_img:
+index_img: /img/rikka/01.png
 
 # 归档页横幅图片
-archive_img:
+archive_img: /img/rikka/02.png
 
 # 注意：标签页面，不是 tags 页面
-tag_img:
+tag_img: /img/rikka/04.png
 
 # 标签页横幅图片，您可以为您每个标签设置横幅图片
 # 格式：
 #  - 标签名: xxxxx
-tag_per_img:
+tag_per_img: /img/rikka/04.png
 
 # 注意：分类页面，不是 categories 页面
-category_img:
+category_img: /img/rikka/03.png
 
 # 分类页横幅图片，您可以为您每个分类设置横幅图片
 # 格式：
 #  - 分类名: xxxxx
-category_per_img:
+category_per_img: /img/rikka/03.png
 
 # 页脚背景图片
 footer_img: false
@@ -102,7 +110,7 @@ cover:
   archives_enable: true
   # 当没有设置封面时，显示默认封面
   default_cover:
-    # - xxx.jpg
+    - /img/rikka/07.png
 
 # 替换失效图片
 error_img:
@@ -174,7 +182,7 @@ subtitle:
 # 5: 信息显示在封面上
 # 6: 瀑布流布局 - 封面上，文章信息在下
 # 7: 瀑布流布局 - 信息显示在封面上
-index_layout: 3
+index_layout: 6
 
 # 在首页显示文章简介
 # 1: description
@@ -259,12 +267,13 @@ footer:
   nav:
   owner:
     enable: true
-    since: 2025
+    since: 2026
   # 主题和框架的版权
   copyright:
-    enable: true
-    version: true
+    enable: false
+    version: false
   custom_text:
+    ✨ 种一棵树最好的时间是十年前，其次是现在
 
 # --------------------------------------
 # 侧边栏设置
@@ -289,10 +298,10 @@ aside:
       enable: true
       icon: fab fa-github
       text: 关注我
-      link: https://github.com/xxxxxx
+      link: https://github.com/Shi-xiaotong
   card_announcement:
     enable: true
-    content: 这是我的博客
+    content: 难道我不是天才吗…
   card_recent_post:
     enable: true
     # 设置为 0 将显示全部
@@ -345,7 +354,7 @@ aside:
     # 排序顺序。1 为升序；-1 为降序
     order: -1
   card_webinfo:
-    enable: true
+    enable: false
     post_count: true
     last_push_date: true
     sort_order:
@@ -909,7 +918,7 @@ clickShowText:
 # https://github.com/francoischalifour/medium-zoom
 # https://fancyapps.com/fancybox/
 # 如果不需要灯箱，请留空
-lightbox:
+lightbox: medium_zoom
 
 # --------------------------------------
 # 标签插件设置

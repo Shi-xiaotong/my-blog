@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # 网站
-title: Hexo
+title: Mercury
 subtitle: ''
 description: ''
 keywords:
-author: John Doe
+author: Mercury
 language: zh-CN
 timezone: ''
 
 # URL
 ## 设置您的网站地址，例如：如果您使用 GitHub Pages，设置为 'https://username.github.io/project'
-url: http://example.com
+url: http://505350617.xyz
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
