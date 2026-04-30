@@ -9,7 +9,7 @@
 # 主题颜色
 theme_color:
   enable: true
-  main: '#000000'
+  main: 'rgba(0, 0, 0, 0)'  # 完全透明
 
 # --------------------------------------
 # 导航设置
@@ -36,7 +36,7 @@ menu:
 
 code_blocks:
   # 代码块主题: darker / pale night / light / ocean / false
-  theme: light
+  theme: darker
   macStyle: false
   # 代码块高度限制（单位：px）
   height_limit: false
@@ -53,9 +53,9 @@ code_blocks:
 # 格式：
 #   图标: 链接 || 描述 || 颜色
 social:
-  # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
-  fas fa-envelope: mailto:505350617@qq.com || Email || '#4a7dbe'
-  fab fa-qq: http://wpa.qq.com/msgrd?v=3&uin=505350617&site=qq&menu=yes || QQ
+# fab fa-github: https://github.com/xxxxx || Github || '#24292e'
+# fas fa-envelope: mailto:505350617@qq.com || Email || '#4a7dbe'
+# fab fa-qq: http://wpa.qq.com/msgrd?v=3&uin=505350617&site=qq&menu=yes || QQ
 
 # --------------------------------------
 # 图片设置
@@ -64,7 +64,7 @@ social:
 favicon: /img/favicon.png
 
 avatar:
-  img: /img/leimu.jpg
+  img: /img/rikka/picture.png
   effect: false
 
 # 禁用所有顶部图片
@@ -74,26 +74,26 @@ disable_top_img: false
 default_top_img:
 
 # 首页横幅图片
-index_img: /img/rikka/01.png
+index_img:
 
 # 归档页横幅图片
-archive_img: /img/rikka/02.png
+archive_img:
 
 # 注意：标签页面，不是 tags 页面
-tag_img: /img/rikka/04.png
+tag_img:
 
 # 标签页横幅图片，您可以为您每个标签设置横幅图片
 # 格式：
 #  - 标签名: xxxxx
-tag_per_img: /img/rikka/04.png
+tag_per_img:
 
 # 注意：分类页面，不是 categories 页面
-category_img: /img/rikka/03.png
+category_img:
 
 # 分类页横幅图片，您可以为您每个分类设置横幅图片
 # 格式：
 #  - 分类名: xxxxx
-category_per_img: /img/rikka/03.png
+category_per_img:
 
 # 页脚背景图片
 footer_img: false
@@ -101,7 +101,7 @@ footer_img: false
 # 网站背景
 # 可以设置为颜色、图片 URL 或包含颜色和/或图片 URL 的数组
 # 如果提供了数组，每次加载时会从数组中随机选择背景
-background:
+background: /img/rikka/07.png
 
 cover:
   # 是否禁用封面
@@ -110,7 +110,15 @@ cover:
   archives_enable: true
   # 当没有设置封面时，显示默认封面
   default_cover:
-    - /img/rikka/07.png
+    - /img/rikka/01.png
+    - /img/rikka/02.png
+    - /img/rikka/03.png
+    - /img/rikka/04.png
+    - /img/rikka/05.png
+    - /img/rikka/06.png
+    - /img/rikka/08.png
+    - /img/rikka/09.png
+    - /img/rikka/10.png
 
 # 替换失效图片
 error_img:
@@ -157,12 +165,26 @@ index_top_img_height:
 
 # 主页副标题
 subtitle:
-  enable: false
+  enable: true
   # 打字机效果
   effect: true
   # 自定义 typed.js
   # https://github.com/mattboldt/typed.js/#customization
   typed_option:
+    # 打字速度（毫秒），数值越大越慢
+    typeSpeed: 100
+    # 删除速度（毫秒），数值越大越慢
+    backSpeed: 60
+    # 开始打字前的延迟（毫秒）
+    startDelay: 300
+    # 两句话之间的间隔（毫秒）
+    backDelay: 1500
+    # 光标字符，比如可以换成 '_' 或 '▶'
+    cursorChar: "|"
+    # 是否循环播放
+    loop: true
+    # 是否智能删除（只删除不同的部分）
+    smartBackspace: true
   # 来源 - 调用第三方服务 API（仅限中文）
   # 它会先显示来源，然后显示 sub 的内容
   # 选择: false/1/2/3
@@ -173,6 +195,17 @@ subtitle:
   source: false
   # 如果关闭打字机效果，副标题只会显示 sub 的第一行
   sub:
+    - '邪王真眼是最强的！'
+    - '爆裂吧 现实！粉碎吧 精神！Banishiment this world！'
+    - '被漆黑烈焰吞噬殆尽吧！'
+    - '爆裂吧现实！粉碎吧精神！放逐这个世界！'
+    - '爆破吧，现实。弹开吧，神经突触！Vanshiment this world！'
+    - '邪王真眼是最强的'
+    - '绽裂吧暗之扉！解放所现黑暗，将终焉的王之力贯彻虚空引路终世！ 黑翼杰克斯原型Ⅱ！'
+    - '在看到你的瞬间，这只邪王真眼向我诉说了那份因缘'
+    - '一起吃午餐，一起回家，一起度过愉快的日子，没有比这更幸福的了'
+    - '因你我的世界重新开始运转'
+    - '你的阳光照亮了我的世界，所以此刻我便爱上那人'
 
 # 主页文章布局
 # 1: 封面在左，文章信息在右
@@ -182,7 +215,7 @@ subtitle:
 # 5: 信息显示在封面上
 # 6: 瀑布流布局 - 封面上，文章信息在下
 # 7: 瀑布流布局 - 信息显示在封面上
-index_layout: 6
+index_layout: 3
 
 # 在首页显示文章简介
 # 1: description
@@ -219,12 +252,12 @@ reward:
   enable: false
   text:
   QR_code:
-    # - img: /img/wechat.jpg
-    #   link:
-    #   text: 微信
-    # - img: /img/alipay.jpg
-    #   link:
-    #   text: 支付宝
+  # - img: /img/wechat.jpg
+  #   link:
+  #   text: 微信
+  # - img: /img/alipay.jpg
+  #   link:
+  #   text: 支付宝
 
 # 文章编辑
 # 轻松在线浏览和编辑博客源代码
@@ -483,8 +516,10 @@ math:
 search:
   # 选择: algolia_search / local_search / docsearch
   # 如果不需要搜索，请留空
-  use:
-  placeholder:
+  use: local_search
+  placeholder: 搜索文章
+  hits:
+    per_page: 10
 
   # Algolia 搜索
   algolia_search:
@@ -494,14 +529,14 @@ search:
   # 本地搜索
   local_search:
     # 页面加载时预加载搜索数据
-    preload: false
+    preload: true
     # 每篇文章显示前 n 个结果，设置为 -1 显示全部结果
-    top_n_per_article: 1
+    top_n_per_article: -1
     # 将 html 字符串转换为可读格式
     unescape: false
     # 启用搜索结果分页
     pagination:
-      enable: false
+      enable: true
       # 每页搜索结果数量
       hitsPerPage: 8
     CDN:
@@ -753,10 +788,10 @@ ad:
 # --------------------------------------
 
 site_verification:
-  # - name: google-site-verification
-  #   content: xxxxxx
-  # - name: baidu-site-verification
-  #   content: xxxxxxx
+# - name: google-site-verification
+#   content: xxxxxx
+# - name: baidu-site-verification
+#   content: xxxxxxx
 
 # --------------------------------------
 # 美化 / 特效
@@ -802,7 +837,7 @@ mask:
 
 # 加载动画
 preloader:
-  enable: false
+  enable: true
   # 来源
   # 1. fullpage-loading
   # 2. pace (进度条)
@@ -896,16 +931,16 @@ fireworks:
 
 # 鼠标点击特效：爱心符号
 click_heart:
-  enable: false
+  enable: true
   mobile: false
 
 # 鼠标点击特效：文字
 clickShowText:
   enable: false
   text:
-    # - 我
-    # - 爱
-    # - 你
+  # - 我
+  # - 爱
+  # - 你
   fontSize: 15px
   random: false
   mobile: false
@@ -996,7 +1031,7 @@ pjax:
   enable: false
   # 从 pjax 中排除指定的页面，例如 '/music/'
   exclude:
-    # - /xxxxxx/
+  # - /xxxxxx/
 
 # 注入 css 和脚本 (aplayer/meting)
 aplayerInject:
@@ -1044,13 +1079,13 @@ pwa:
 Open_Graph_meta:
   enable: true
   option:
-    # twitter_card:
-    # twitter_image:
-    # twitter_id:
-    # twitter_site:
-    # google_plus:
-    # fb_admins:
-    # fb_app_id:
+  # twitter_card:
+  # twitter_image:
+  # twitter_id:
+  # twitter_site:
+  # google_plus:
+  # fb_admins:
+  # fb_app_id:
 
 # 结构化数据
 # https://developers.google.com/search/docs/guides/intro-structured-data
@@ -1067,9 +1102,14 @@ css_prefix: true
 # 在 head 之前（'</head>' 标签之前）和 bottom 之前（'</body>' 标签之前）插入代码
 inject:
   head:
-    # - <link rel="stylesheet" href="/xxx.css">
+    # 基础页面样式
+    - <link rel="stylesheet" href="/css/custom.css">
+    # 搜索弹窗
+    - <link rel="stylesheet" href="/css/search.css">
   bottom:
-    # - <script src="xxxx"></script>
+  # - <script src="xxxx"></script>
+  #    - <script src="/live2d-widget/autoload.js"></script>
+#    - <script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
 
 # CDN 设置
 # 除非您知道如何工作，否则不要修改以下设置
@@ -1089,57 +1129,57 @@ CDN:
   custom_format:
 
   option:
-    # abcjs_basic_js:
-    # activate_power_mode:
-    # algolia_js:
-    # algolia_search:
-    # aplayer_css:
-    # aplayer_js:
-    # artalk_css:
-    # artalk_js:
-    # blueimp_md5:
-    # busuanzi:
-    # canvas_fluttering_ribbon:
-    # canvas_nest:
-    # canvas_ribbon:
-    # chartjs:
-    # click_heart:
-    # clickShowText:
-    # disqusjs:
-    # disqusjs_css:
-    # docsearch_css:
-    # docsearch_js:
-    # egjs_infinitegrid:
-    # fancybox:
-    # fancybox_css:
-    # fireworks:
-    # fontawesome:
-    # gitalk:
-    # gitalk_css:
-    # giscus:
-    # instantpage:
-    # katex:
-    # katex_copytex:
-    # lazyload:
-    # local_search:
-    # main:
-    # main_css:
-    # mathjax:
-    # medium_zoom:
-    # mermaid:
-    # meting_js:
-    # prismjs_autoloader:
-    # prismjs_js:
-    # prismjs_lineNumber_js:
-    # pjax:
-    # sharejs:
-    # sharejs_css:
-    # snackbar:
-    # snackbar_css:
-    # translate:
-    # twikoo:
-    # typed:
-    # utils:
-    # valine:
-    # waline_css:
-    # waline_js:
+  # abcjs_basic_js:
+  # activate_power_mode:
+  # algolia_js:
+  # algolia_search:
+  # aplayer_css:
+  # aplayer_js:
+  # artalk_css:
+  # artalk_js:
+  # blueimp_md5:
+  # busuanzi:
+  # canvas_fluttering_ribbon:
+  # canvas_nest:
+  # canvas_ribbon:
+  # chartjs:
+  # click_heart:
+  # clickShowText:
+  # disqusjs:
+  # disqusjs_css:
+  # docsearch_css:
+  # docsearch_js:
+  # egjs_infinitegrid:
+  # fancybox:
+  # fancybox_css:
+  # fireworks:
+  # fontawesome:
+  # gitalk:
+  # gitalk_css:
+  # giscus:
+  # instantpage:
+  # katex:
+  # katex_copytex:
+  # lazyload:
+  # local_search:
+  # main:
+  # main_css:
+  # mathjax:
+  # medium_zoom:
+  # mermaid:
+  # meting_js:
+  # prismjs_autoloader:
+  # prismjs_js:
+  # prismjs_lineNumber_js:
+  # pjax:
+  # sharejs:
+  # sharejs_css:
+  # snackbar:
+  # snackbar_css:
+  # translate:
+  # twikoo:
+  # typed:
+  # utils:
+  # valine:
+  # waline_css:
+  # waline_js:

@@ -1,0 +1,148 @@
+/* ========== 本地搜索框毛玻璃效果 ========== */
+/* 文件: /source/css/search.css */
+
+/* 搜索对话框整体背景 */
+.search-dialog,
+.local-search-dialog {
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 搜索导航栏 */
+.search-dialog .search-nav,
+.local-search-dialog .search-nav {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* 搜索标题 */
+.search-dialog .search-dialog-title {
+    color: #fff !important;
+}
+
+/* 关闭按钮 */
+.search-dialog .search-close-button {
+    color: #fff !important;
+    opacity: 0.8;
+}
+
+.search-dialog .search-close-button:hover {
+    opacity: 1;
+}
+
+/* 搜索输入框 */
+.local-search-input input,
+.search-dialog .search-input {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(8px) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+}
+
+.local-search-input input::placeholder,
+.search-dialog .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.local-search-input input:focus,
+.search-dialog .search-input:focus {
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    outline: none !important;
+}
+
+/* 搜索结果列表 */
+.search-result-list {
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+/* 单个搜索结果项 */
+.local-search-hit-item,
+.search-result-list li {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px !important;
+    margin: 12px 0 !important;
+    padding: 16px !important;
+    transition: all 0.3s ease !important;
+}
+
+.local-search-hit-item:hover,
+.search-result-list li:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.local-search-hit-item a,
+.search-result-list li a {
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+/* 搜索结果标题 */
+.search-result-title {
+    color: #fff !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    display: block !important;
+    margin-bottom: 8px !important;
+}
+
+/* 搜索结果内容预览 */
+.search-result {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    margin: 4px 0 !important;
+}
+
+/* 关键词高亮 */
+.search-keyword {
+    color: #ff0000 !important;
+    background: transparent !important;
+    font-weight: bold !important;
+    padding: 0 2px !important;
+}
+
+/* 统计和分页区域 */
+#local-search-stats,
+.search-result-stats {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.search-dialog hr {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* 分页器 */
+#local-search-pagination .ais-Pagination-list {
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+#local-search-pagination .ais-Pagination-item {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+}
+
+#local-search-pagination .ais-Pagination-item a,
+#local-search-pagination .ais-Pagination-item span {
+    color: #fff !important;
+    padding: 6px 12px !important;
+    display: inline-block !important;
+}
+
+#local-search-pagination .ais-Pagination-item--selected {
+    color: #fff !important;
+}
+
+#local-search-pagination .ais-Pagination-item--selected span {
+    color: #333 !important;
+}
+
+#loading-status {
+    color: #fff !important;
+}

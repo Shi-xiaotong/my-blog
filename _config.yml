@@ -6,14 +6,14 @@
 title: Mercury
 subtitle: ''
 description: ''
-keywords:
+keywords: AI,个人博客,二次元,技术分享,后端开发,Hexo,Butterfly
 author: Mercury
 language: zh-CN
 timezone: ''
 
 # URL
 ## 设置您的网站地址，例如：如果您使用 GitHub Pages，设置为 'https://username.github.io/project'
-url: http://505350617.xyz
+url: https://233002.xyz
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -97,6 +97,13 @@ ignore:
 ## 插件: https://hexo.io/zh-cn/plugins/
 ## 主题: https://hexo.io/zh-cn/themes/
 theme: butterfly
+
+# 搜索
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 100
 
 # 部署
 ## Docs: https://hexo.io/zh-cn/docs/one-command-deployment

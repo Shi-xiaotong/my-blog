@@ -1,0 +1,199 @@
+/* ================================================
+   毛玻璃效果 - 统一所有卡片
+   ================================================ */
+
+/* 亮色模式 */
+:root {
+    --card-bg: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* 深色模式 */
+[data-theme="dark"] {
+    --card-bg: rgba(0, 0, 0, 0.35) !important;
+}
+
+/* 卡片毛玻璃效果 */
+.recent-post-item,
+#aside-content .card-widget,
+.layout .pagination > *,
+.cardHover,
+#recent-posts .recent-post-item {
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 悬停效果 */
+.recent-post-item:hover,
+#aside-content .card-widget:hover {
+    background: rgba(0, 0, 0, 0.06) !important;
+    backdrop-filter: blur(12px) !important;
+}
+
+[data-theme="dark"] .recent-post-item:hover,
+[data-theme="dark"] #aside-content .card-widget:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ================================================
+   文字可读性增强
+   ================================================ */
+
+/* 亮色模式文字阴影 */
+.recent-post-item,
+#aside-content .card-widget {
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2) !important;
+}
+
+.recent-post-item *,
+#aside-content .card-widget * {
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 深色模式文字阴影 */
+[data-theme="dark"] .recent-post-item,
+[data-theme="dark"] #aside-content .card-widget {
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ================================================
+   首页封面
+   ================================================ */
+#page-header.full_page::before {
+    background: transparent !important;
+    opacity: 0 !important;
+    display: none !important;
+}
+
+#web_bg {
+    filter: blur(0px) !important;
+    -webkit-filter: blur(0px) !important;
+    transform: scale(1.02);
+}
+
+/* ================================================
+   导航栏文字
+   ================================================ */
+#nav .menus_item a,
+#nav #site-name,
+#nav .menus_item_child li a {
+    color: #fff !important;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.4) !important;
+    font-weight: 500 !important;
+}
+
+#nav .menus_item a:hover,
+#nav #site-name:hover {
+    color: #fff !important;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.5) !important;
+}
+
+#site-title {
+    color: #fff !important;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.6) !important;
+    font-weight: 500 !important;
+}
+
+.typed-cursor {
+    color: #fff !important;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.8) !important;
+    font-size: 1.2em !important;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+    #nav .menus_item a,
+    #nav #site-name {
+        color: #333 !important;
+    }
+}
+
+/* ================================================
+   卡片内文字（统一浅色）
+   ================================================ */
+.recent-post-item *,
+#aside-content .card-widget *,
+#article-container * {
+    color: #f0f0f0 !important;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 标题更白更粗 */
+.recent-post-item h1,
+.recent-post-item h2,
+.recent-post-item h3,
+#article-container h1,
+#article-container h2,
+#article-container h3 {
+    color: #fff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 链接 */
+a {
+    color: #fff !important;
+}
+
+a:hover {
+    color: #fff !important;
+}
+
+/* 文章元信息 */
+.post-meta,
+.meta-info {
+    color: #ccc !important;
+    text-shadow: none !important;
+}
+
+/* ================================================
+   归档页面
+   ================================================ */
+#archive,
+#archive * {
+    color: #f0f0f0 !important;
+}
+
+#archive .article-sort-title {
+    color: #fff !important;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ================================================
+   分类/标签页面数字（统一白色）
+   ================================================ */
+.category-list-count,
+.tag-list-count {
+    color: #fff !important;
+}
+
+/* ================================================
+   版权信息（统一白色）
+   ================================================ */
+.post-copyright,
+.post-copyright *,
+.copyright,
+.copyright *,
+#post-reward *,
+.reward-main *,
+footer *,
+.footer *,
+.site-footer,
+.site-footer * {
+    color: #fff !important;
+}
+
+/* ================================================
+   关于页面 note 标签
+   ================================================ */
+.note.primary {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #1a1a1a !important;
+}
+
+.note.primary * {
+    color: #1a1a1a !important;
+}

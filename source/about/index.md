@@ -3,20 +3,19 @@ title: 关于我
 date: 2026-04-28 10:52:24
 type: about
 ---
-![avatar](https://www.github.com/Shi-xiaotong.png)
+
+![avatar](/img/zipai.png)
 
 ## 你好，欢迎来到我的博客！
 
-我是 Mercury，一个热爱技术、喜欢折腾的开发菜鸟。
+> 🌸 一个热爱代码与生活的普通开发者，偶尔中二，常常认真。
 
 ## 技能标签
 
 {% note primary %}
-- 前端开发
-- 后端技术
-- 开源爱好者
-- 技术分享
-{% endnote %}
+
+- 与神明对话这一块/.
+  {% endnote %}
 
 ## 联系方式
 
