@@ -1028,15 +1028,15 @@ note:
 
 # https://github.com/MoOx/pjax
 pjax:
-  enable: false
+  enable: true
   # 从 pjax 中排除指定的页面，例如 '/music/'
   exclude:
   # - /xxxxxx/
 
 # 注入 css 和脚本 (aplayer/meting)
 aplayerInject:
-  enable: false
-  per_page: true
+  enable: true
+  per_page: false
 
 # Snackbar - 吐司通知
 # https://github.com/polonel/SnackBar
@@ -1106,10 +1106,16 @@ inject:
     - <link rel="stylesheet" href="/css/custom.css">
     # 搜索弹窗
     - <link rel="stylesheet" href="/css/search.css">
+    - '<script>window.meting_api = "https://api.injahow.cn/meting/?server=:server&type=:type&id=:id&r=:r";</script>'
   bottom:
-  # - <script src="xxxx"></script>
-  #    - <script src="/live2d-widget/autoload.js"></script>
-#    - <script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+    # - <script src="xxxx"></script>
+    #    - <script src="/live2d-widget/autoload.js"></script>
+    #看板娘
+    #    - <script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+    - <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+    - <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+    - <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+    - <meting-js server="netease" type="playlist" id="60198" fixed="true" autoplay="false"></meting-js>
 
 # CDN 设置
 # 除非您知道如何工作，否则不要修改以下设置
