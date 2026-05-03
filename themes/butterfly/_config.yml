@@ -8,7 +8,7 @@
 
 # 主题颜色
 theme_color:
-  enable: true
+  enable: false
   main: 'rgba(0, 0, 0, 0)'  # 完全透明
 
 # --------------------------------------
@@ -74,7 +74,7 @@ disable_top_img: false
 default_top_img:
 
 # 首页横幅图片
-index_img:
+index_img: /img/rikka/07.png
 
 # 归档页横幅图片
 archive_img:
@@ -1035,7 +1035,7 @@ pjax:
 
 # 注入 css 和脚本 (aplayer/meting)
 aplayerInject:
-  enable: true
+  enable: false
   per_page: false
 
 # Snackbar - 吐司通知
@@ -1102,21 +1102,11 @@ css_prefix: true
 # 在 head 之前（'</head>' 标签之前）和 bottom 之前（'</body>' 标签之前）插入代码
 inject:
   head:
-    # 基础页面样式
-    - <link rel="stylesheet" href="/css/custom.css">
-    # 搜索弹窗
-    - <link rel="stylesheet" href="/css/search.css">
-    - '<script>window.meting_api = "https://api.injahow.cn/meting/?server=:server&type=:type&id=:id&r=:r";</script>'
+
   bottom:
-    # - <script src="xxxx"></script>
-    #    - <script src="/live2d-widget/autoload.js"></script>
     # 看板娘
     - <script src="https://live2d.233002.xyz/autoload.js"></script>
     # 音乐播放器
-    - <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
-    - <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
-    - <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
-    - <meting-js server="netease" type="playlist" id="60198" fixed="true" autoplay="false"></meting-js>
 
 # CDN 设置
 # 除非您知道如何工作，否则不要修改以下设置
