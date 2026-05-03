@@ -61,7 +61,7 @@ social:
 # 图片设置
 # --------------------------------------
 
-favicon: /img/favicon.png
+favicon: /img/favicon.ico
 
 avatar:
   img: /img/rikka/picture.png
@@ -335,10 +335,18 @@ aside:
   card_announcement:
     enable: true
     content: 难道我不是天才吗…
+  card_weather:
+    enable: true
+    # 默认位置
+    default_location:
+      province: 北京
+      city: 北京
+      lat: 39.9042
+      lon: 116.4074
   card_recent_post:
     enable: true
     # 设置为 0 将显示全部
-    limit: 5
+    limit: 1
     # 排序: date / updated
     sort: date
     sort_order:
@@ -350,7 +358,7 @@ aside:
     storage: 10
     avatar: true
   card_categories:
-    enable: true
+    enable: false
     # 设置为 0 将显示全部
     limit: 8
     # 选择: none / true / false
@@ -368,9 +376,9 @@ aside:
     order: 1
     sort_order:
   card_archives:
-    enable: true
+    enable: false
     # 类型: monthly / yearly
-    type: monthly
+    type: yearly
     # 例如: YYYY年MM月
     format: MMMM YYYY
     # 排序顺序。1 为升序；-1 为降序
@@ -405,7 +413,7 @@ rightside_bottom:
 
 # 繁简中文转换
 translate:
-  enable: false
+  enable: true
   # 按钮的文字
   default: 繁
   # 网站语言 (1 - 繁体中文/ 2 - 简体中文）
@@ -415,7 +423,7 @@ translate:
   # 语言为简体中文时按钮的文字
   msgToTraditionalChinese: '繁'
   # 语言为繁体中文时按钮的文字
-  msgToSimplifiedChinese: '簡'
+  msgToSimplifiedChinese: '简'
 
 # 阅读模式
 readmode: true
@@ -429,13 +437,13 @@ darkmode:
   # autoChangeMode: 1  跟随系统设置，如果系统不支持深色模式，将在下午 6 点到早上 6 点之间切换深色模式
   # autoChangeMode: 2  在下午 6 点到早上 6 点之间切换深色模式
   # autoChangeMode: false
-  autoChangeMode: false
+  autoChangeMode: 1
   # 设置浅色模式的时间。值为 0 到 24 之间。如果不设置，默认为 6 和 18
   start:
   end:
 
 # 在回到顶部按钮中显示滚动百分比
-rightside_scroll_percent: false
+rightside_scroll_percent: true
 
 # 除非您知道如何工作，否则不要修改以下设置
 # 选择: readmode,translate,darkmode,hideAside,toc,chat,comment
@@ -841,7 +849,7 @@ preloader:
   # 来源
   # 1. fullpage-loading
   # 2. pace (进度条)
-  source: 1
+  source: 2
   # pace 主题（参见 https://codebyzach.github.io/pace/）
   pace_css_url:
 
@@ -853,13 +861,13 @@ display_mode: light
 
 # 美化文章内容的配置
 beautify:
-  enable: false
+  enable: true
   # 指定要美化的字段（site 或 post）
   field: post
   # 指定用作标题前缀的图标，例如 '\f0c1'
-  title_prefix_icon:
+  title_prefix_icon: '\f02d'
   # 指定标题前缀图标的颜色，例如 '#F47466'
-  title_prefix_icon_color:
+  title_prefix_icon_color: '#F47466'
 
 # 全局字体设置
 # 除非您知道如何工作，否则不要修改以下设置
@@ -884,7 +892,7 @@ hr_icon:
 # 打字机效果
 # https://github.com/disjukr/activate-power-mode
 activate_power_mode:
-  enable: false
+  enable: true
   colorful: true
   shake: true
   mobile: false
@@ -1102,11 +1110,11 @@ css_prefix: true
 # 在 head 之前（'</head>' 标签之前）和 bottom 之前（'</body>' 标签之前）插入代码
 inject:
   head:
-
   bottom:
-    # 看板娘
+    #看板娘
     - <script src="https://live2d.233002.xyz/autoload.js"></script>
-    # 音乐播放器
+    #天气
+    - <script src="/js/weather-widget.js"></script>
 
 # CDN 设置
 # 除非您知道如何工作，否则不要修改以下设置

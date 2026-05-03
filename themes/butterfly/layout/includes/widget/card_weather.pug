@@ -1,0 +1,12 @@
+if theme.aside.card_weather.enable
+  .card-widget.card-weather
+    .item-headline
+      i.fas.fa-cloud-sun
+      span= _p('aside.card_weather')
+    #weather-aside-container(
+      data-default-province=theme.aside.card_weather.default_location.province
+      data-default-city=theme.aside.card_weather.default_location.city
+      data-default-lat=theme.aside.card_weather.default_location.lat
+      data-default-lon=theme.aside.card_weather.default_location.lon
+    )
+      .weather-loading 加载中...
