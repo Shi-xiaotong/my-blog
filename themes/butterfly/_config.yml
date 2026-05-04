@@ -25,6 +25,7 @@ nav:
 
 menu:
   首页: / || fas fa-home
+  天气: /weather/ || fas fa-cloud-sun
   归档: /archives/ || fas fa-archive
   标签: /tags/ || fas fa-tags
   分类: /categories/ || fas fa-folder-open
@@ -53,9 +54,11 @@ code_blocks:
 # 格式：
 #   图标: 链接 || 描述 || 颜色
 social:
-# fab fa-github: https://github.com/xxxxx || Github || '#24292e'
-# fas fa-envelope: mailto:505350617@qq.com || Email || '#4a7dbe'
-# fab fa-qq: http://wpa.qq.com/msgrd?v=3&uin=505350617&site=qq&menu=yes || QQ
+  fab fa-github: https://github.com/Shi-xiaotong || Github || '#24292e'
+  fas fa-envelope: mailto:505350617@qq.com || Email || '#4a7dbe'
+  fab fa-qq: https://qm.qq.com/q/Th9Z1ef8QY || QQ || '#12b5e1'
+  fab fa-bilibili: https://space.bilibili.com/481000222 || B站 || '#00a1d6'
+  fab fa-tiktok: https://v.douyin.com/51Ay-STNVCA || 抖音 || '#010101'
 
 # --------------------------------------
 # 图片设置
@@ -339,7 +342,6 @@ aside:
     enable: true
     # 默认位置
     default_location:
-      province: 北京
       city: 北京
       lat: 39.9042
       lon: 116.4074
@@ -1114,6 +1116,7 @@ inject:
     #看板娘
     - <script src="https://live2d.233002.xyz/autoload.js"></script>
     #天气
+    - <script src="/js/weather-store.js"></script>
     - <script src="/js/weather-widget.js"></script>
 
 # CDN 设置

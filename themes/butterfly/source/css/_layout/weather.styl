@@ -35,6 +35,45 @@
     color: var(--font-color)
     opacity: 0.8
 
+  .weather-temp-range
+    font-size: 0.75rem
+    color: var(--font-color)
+    opacity: 0.7
+    margin-top: 0.2rem
+
+  .weather-hourly
+    padding: 0.5rem 0
+    border-top: 1px dashed var(--border-color)
+
+  .hourly-scroll
+    display: flex
+    overflow-x: auto
+    gap: 0.5rem
+    padding: 0.2rem 0
+    scrollbar-width: none
+
+    &::-webkit-scrollbar
+      display: none
+
+  .hourly-item
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 0.15rem
+    flex-shrink: 0
+    font-size: 0.7rem
+
+  .hourly-time
+    color: var(--font-color)
+    opacity: 0.7
+
+  .hourly-icon
+    font-size: 0.9rem
+
+  .hourly-temp
+    color: var(--font-color)
+    font-weight: 500
+
   .weather-forecast-compact
     display: flex
     justify-content: space-between
