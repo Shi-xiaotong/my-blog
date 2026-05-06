@@ -1,0 +1,14 @@
+extends includes/layout.pug
+
+block content
+  #page
+    #calendar-page.calendar-page
+      if page.title
+        h1.page-title
+          i.fas.fa-calendar-alt
+          = page.title
+      article.card-widget
+        .card-content
+          #calendar-page-container
+            .calendar-loading 加载中...
+      script(src=url_for('/js/calendar-page.js'))
