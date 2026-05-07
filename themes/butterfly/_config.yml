@@ -346,6 +346,8 @@ aside:
       city: 北京
       lat: 39.9042
       lon: 116.4074
+  card_calendar:
+    enable: true
   card_recent_post:
     enable: true
     # 设置为 0 将显示全部
@@ -1119,6 +1121,9 @@ inject:
     #天气
     - <script src="/js/weather-store.js"></script>
     - <script src="/js/weather-widget.js"></script>
+    #日历
+    - <script src="/js/lunar.js"></script>
+    - <script src="/js/calendar-widget.js"></script>
 
 # CDN 设置
 # 除非您知道如何工作，否则不要修改以下设置

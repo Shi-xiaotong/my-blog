@@ -1,0 +1,98 @@
+// 侧边栏日历卡片样式 - 日期卡片 + 节日倒计时
+.card-calendar
+  padding: 0.3rem 0
+
+  // 日期卡片
+  .date-card
+    background: var(--card-bg)
+    border: 1px solid var(--border-color)
+    border-radius: 12px
+    padding: 1rem
+    margin-bottom: 1rem
+    text-align: center
+
+  .date-weekday-large
+    display: none
+
+  .date-ymd
+    display: flex
+    justify-content: center
+    align-items: baseline
+    gap: 0.3rem
+    margin-bottom: 0.4rem
+
+  .date-year
+    font-size: 0.85rem
+    color: var(--font-color)
+
+  .date-month
+    font-size: 0.85rem
+    color: var(--font-color)
+
+  .date-day-num
+    font-size: 2.2rem
+    font-weight: 700
+    color: var(--text-highlight-color)
+    line-height: 1
+
+  .date-weekday
+    font-size: 0.9rem
+    color: var(--font-color)
+    margin-left: 0.3rem
+
+  .date-lunar
+    font-size: 1rem
+    color: var(--font-color)
+    margin-bottom: 0.3rem
+
+  .date-day-info
+    font-size: 0.75rem
+    color: var(--font-color)
+    opacity: 0.7
+
+  .date-holiday
+    margin-top: 0.6rem
+    padding-top: 0.5rem
+    border-top: 1px solid var(--border-color)
+    font-size: 0.85rem
+    color: var(--text-highlight-color)
+
+  // 节日倒计时列表
+  .holiday-list
+    display: flex
+    flex-direction: column
+    gap: 0.5rem
+
+  .holiday-item
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 0.6rem 0.8rem
+    background: var(--card-bg)
+    border: 1px solid var(--border-color)
+    border-radius: 8px
+    transition: all 0.3s ease
+
+    &:hover
+      transform: translateX(4px)
+
+  .holiday-name
+    font-size: 0.9rem
+    color: var(--font-color)
+
+  .holiday-info
+    display: flex
+    gap: 0.5rem
+    align-items: center
+
+  .holiday-days-remaining
+    font-size: 0.75rem
+    color: var(--font-color)
+
+  .holiday-num
+    font-weight: 700
+    color: var(--text-highlight-color)
+
+  .holiday-duration
+    font-size: 0.7rem
+    color: var(--font-color)
