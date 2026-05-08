@@ -114,6 +114,18 @@
                 </div>`
             ).join('');
 
+            // 出行建议
+            const travelAdvice = WeatherStore.getTravelAdvice({
+                temp: current.temperature_2m,
+                feelTemp: current.apparent_temperature ?? current.temperature_2m,
+                humidity: current.relative_humidity_2m ?? 0,
+                pressure: current.surface_pressure ?? 1013,
+                windSpeed: current.wind_speed_10m ?? 0,
+                windDir: current.wind_direction_10m ?? 0,
+                uvIndex: current.uv_index ?? 0,
+                weatherCode: current.weather_code
+            });
+
             this.container.innerHTML = `
                 <div class="weather-page-content">
                     <div class="weather-current-page">
@@ -126,6 +138,7 @@
                             <span class="current-desc">${text}</span>
                         </div>
                         <div class="current-details">${detailsHTML}</div>
+                        <div class="travel-advice">${travelAdvice}</div>
                     </div>
                     <div class="weather-section">
                         <h3 class="section-title"><i class="fas fa-clock"></i>逐小时预报</h3>
