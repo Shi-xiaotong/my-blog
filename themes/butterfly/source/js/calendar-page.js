@@ -116,6 +116,9 @@
 
             let html = '<div class="cal-day empty"></div>'.repeat(firstDay);
 
+            // 记录已显示的节假日名称（只显示该节假日在当月的第一天）
+            const shownHolidays = new Set();
+
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${this.currentYear}-${String(this.currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const isToday = dateStr === todayStr;
@@ -126,13 +129,14 @@
                 const jieQi = lunar.getJieQi();
                 const holiday = HolidayUtil.getHoliday(this.currentYear, this.currentMonth, day);
 
-                // 优先级：节假日 > 节气 > 农历
+                // 优先级：节假日(仅第一次) > 节气 > 农历
                 let subText = `${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
                 let subClass = 'cal-lunar';
 
-                if (holiday) {
+                if (holiday && !shownHolidays.has(holiday.getName())) {
                     subText = holiday.getName();
                     subClass = 'cal-holiday-name';
+                    shownHolidays.add(holiday.getName());
                 } else if (jieQi) {
                     subText = jieQi;
                     subClass = 'cal-jieqi-name';

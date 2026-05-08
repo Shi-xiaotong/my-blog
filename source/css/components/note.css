@@ -1,0 +1,35 @@
+/* ================================================
+   关于页面 Note 标签
+   文件: /source/css/components/note.css
+   ================================================ */
+
+/* Note 标签 */
+.note.primary {
+    background: var(--card-bg);
+    border: 1px solid var(--light-grey);
+    border-radius: 8px;
+    padding: 16px;
+    color: var(--font-color);
+}
+
+.note.primary * {
+    color: var(--font-color);
+}
+
+/* 所有 note 类型统一 */
+.note {
+    border-radius: clamp(8px, 1.5vw, 12px);
+    padding: clamp(12px, 2vw, 16px);
+}
+
+/* 手机适配 */
+@media screen and (max-width: 768px) {
+    .note.primary {
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .note {
+        padding: 10px;
+    }
+}

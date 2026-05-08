@@ -1,0 +1,72 @@
+/* ================================================
+   导航栏文字样式
+   文件: /source/css/components/navbar.css
+   ================================================ */
+
+/* 导航栏文字 - 使用主题变量 */
+#nav .menus_item a,
+#nav #site-name,
+#nav .menus_item_child li a {
+    color: var(--white, #fff);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    font-weight: 500;
+    font-size: clamp(14px, 1.8vw, 16px);
+}
+
+#nav .menus_item a:hover,
+#nav #site-name:hover {
+    color: var(--white, #fff);
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+#site-title {
+    color: var(--white, #fff);
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    font-weight: 500;
+    font-size: clamp(18px, 4vw, 28px);
+}
+
+.typed-cursor {
+    color: var(--white, #fff);
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+    font-size: 1.2em;
+}
+
+/* 首页封面 */
+#page-header.full_page::before {
+    background: transparent !important;
+    opacity: 0 !important;
+    display: none !important;
+}
+
+#web_bg {
+    filter: blur(0px);
+    -webkit-filter: blur(0px);
+    transform: scale(1.02);
+}
+
+/* 平板适配 */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    #nav .menus_item a,
+    #nav #site-name {
+        font-size: clamp(13px, 2vw, 15px);
+    }
+}
+
+/* 手机适配 - 暗色背景导航 */
+@media screen and (max-width: 768px) {
+    #nav .menus_item a,
+    #nav #site-name {
+        color: var(--font-color);
+        text-shadow: none;
+    }
+
+    #site-title {
+        font-size: clamp(16px, 5vw, 22px);
+        text-shadow: none;
+    }
+
+    .typed-cursor {
+        text-shadow: none;
+    }
+}
