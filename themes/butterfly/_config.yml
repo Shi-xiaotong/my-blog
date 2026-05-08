@@ -68,7 +68,7 @@ social:
 favicon: /img/favicon.ico
 
 avatar:
-  img: /img/rikka/picture.png
+  img: /img/picture.png
   effect: false
 
 # 禁用所有顶部图片
@@ -78,7 +78,7 @@ disable_top_img: false
 default_top_img:
 
 # 首页横幅图片
-index_img: /img/rikka/07.png
+index_img: /img/background.png
 
 # 归档页横幅图片
 archive_img:
@@ -105,7 +105,7 @@ footer_img: false
 # 网站背景
 # 可以设置为颜色、图片 URL 或包含颜色和/或图片 URL 的数组
 # 如果提供了数组，每次加载时会从数组中随机选择背景
-background: /img/rikka/07.png
+background: /img/background.png
 
 cover:
   # 是否禁用封面
@@ -127,7 +127,7 @@ cover:
 # 替换失效图片
 error_img:
   flink: /img/friend_404.gif
-  post_page: /img/404.jpg
+  post_page: /img/404.png
 
 # 简单 404 页面
 error_404:

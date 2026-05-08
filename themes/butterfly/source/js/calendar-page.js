@@ -129,13 +129,21 @@
                 const jieQi = lunar.getJieQi();
                 const holiday = HolidayUtil.getHoliday(this.currentYear, this.currentMonth, day);
 
+                // 重要节日列表（金色高亮）
+                const IMPORTANT_HOLIDAYS = ['元旦', '春节', '除夕', '元宵节', '清明节', '劳动节', '端午节', '中秋节', '国庆节', '重阳节', '圣诞节'];
+                
                 // 优先级：节假日(仅第一次) > 节气 > 农历
                 let subText = `${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
                 let subClass = 'cal-lunar';
+                let isImportant = false;
 
                 if (holiday && !shownHolidays.has(holiday.getName())) {
                     subText = holiday.getName();
                     subClass = 'cal-holiday-name';
+                    // 检查是否为重要节日
+                    if (IMPORTANT_HOLIDAYS.some(h => holiday.getName().includes(h) || h.includes(holiday.getName()))) {
+                        isImportant = true;
+                    }
                     shownHolidays.add(holiday.getName());
                 } else if (jieQi) {
                     subText = jieQi;
@@ -149,8 +157,9 @@
                 if (jieQi && !holiday) extraClass += ' is-jieqi';
 
                 const tagHtml = holiday ? `<span class="cal-tag ${holiday.isWork() ? 'tag-workday' : 'tag-holiday'}">${holiday.isWork() ? '班' : '休'}</span>` : '';
+                const subClassFinal = isImportant ? `${subClass} important` : subClass;
 
-                html += `<div class="cal-day${extraClass}" data-date="${dateStr}">${tagHtml}<span class="cal-day-num">${day}</span><span class="${subClass}">${subText}</span></div>`;
+                html += `<div class="cal-day${extraClass}" data-date="${dateStr}">${tagHtml}<span class="cal-day-num">${day}</span><span class="${subClassFinal}">${subText}</span></div>`;
             }
 
             grid.innerHTML = html;
