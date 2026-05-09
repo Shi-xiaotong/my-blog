@@ -8,7 +8,7 @@
 
 # 主题颜色
 theme_color:
-  enable: false
+  enable: true
   main: 'rgba(0, 0, 0, 0)'  # 完全透明
 
 # --------------------------------------
@@ -114,15 +114,7 @@ cover:
   archives_enable: true
   # 当没有设置封面时，显示默认封面
   default_cover:
-    - /img/rikka/01.png
-    - /img/rikka/02.png
-    - /img/rikka/03.png
-    - /img/rikka/04.png
-    - /img/rikka/05.png
-    - /img/rikka/06.png
-    - /img/rikka/08.png
-    - /img/rikka/09.png
-    - /img/rikka/10.png
+    - /img/article_def.png
 
 # 替换失效图片
 error_img:
