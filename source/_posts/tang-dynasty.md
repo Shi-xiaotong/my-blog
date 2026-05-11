@@ -1,7 +1,7 @@
 ---
 title: 唐朝：从盛世到衰落的百年风云
 date: 2026-02-22 18:00:00
-cover:
+cover: https://img.233002.xyz/tang-dynasty.png
 tags:
   - 历史
   - 唐朝

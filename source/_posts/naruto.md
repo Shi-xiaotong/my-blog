@@ -1,7 +1,7 @@
 ---
 title: 火影忍者：那些年我们追过的忍者梦
 date: 2026-04-20 10:00:00
-cover:
+cover: https://img.233002.xyz/naruto.png
 tags:
   - 二次元
   - 火影忍者

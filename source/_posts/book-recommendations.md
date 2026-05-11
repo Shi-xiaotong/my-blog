@@ -1,7 +1,7 @@
 ---
 title: 我的阅读书单：这几本书改变了我
 date: 2026-02-06 16:00:00
-cover:
+cover: https://img.233002.xyz/book-recommendations.png
 tags:
   - 阅读
   - 书单

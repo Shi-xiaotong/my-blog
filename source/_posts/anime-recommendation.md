@@ -1,7 +1,7 @@
 ---
 title: 二次元入坑指南：这些番剧值得一看
 date: 2026-01-19 14:00:00
-cover:
+cover: https://img.233002.xyz/anime-recommendation.png
 tags:
   - 二次元
   - 番剧推荐
