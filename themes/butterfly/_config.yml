@@ -1124,8 +1124,6 @@ inject:
     # 隐藏页面头部和页脚
     - <style>#page-header,#page-header::before,#footer,#footer::before{background:transparent!important}</style>
   bottom:
-    #看板娘
-    - <script src="https://live2d.233002.xyz/autoload.js"></script>
     #天气
     - <script src="/js/weather-store.js"></script>
     - <script src="/js/weather-widget.js"></script>
@@ -1205,3 +1203,22 @@ CDN:
   # valine:
   # waline_css:
   # waline_js:
+
+# --------------------------------------
+# 看板娘 (Live2D)
+# --------------------------------------
+live2d:
+  enable: true
+  # 是否启用拖拽功能
+  drag: true
+  # 控制面板显示的按钮（留空则不显示任何按钮）
+  # 可选: hitokoto(一言), asteroids(小行星), switch-model(切换模型),
+  #       switch-texture(切换材质), photo(拍照), info(信息), quit(关闭)
+  tools:
+#    - hitokoto
+#    - asteroids
+#    - switch-model
+#    - switch-texture
+#    - photo
+#    - info
+#    - quit

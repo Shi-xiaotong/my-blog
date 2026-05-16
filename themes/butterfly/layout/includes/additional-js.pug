@@ -56,6 +56,9 @@ div
 
   != partial('includes/third-party/search/index', {}, { cache: true })
 
+  if theme.live2d && theme.live2d.enable
+    != partial("includes/third-party/live2d", {}, { cache: true })
+
   if theme.google_tag_manager && theme.google_tag_manager.tag_id
     noscript
       iframe(src=`${theme.google_tag_manager.domain ? theme.google_tag_manager.domain : 'https://www.googletagmanager.com'}/ns.html?id=${theme.google_tag_manager.tag_id}` height="0" width="0" style="display:none;visibility:hidden")
