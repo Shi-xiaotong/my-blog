@@ -1,7 +1,7 @@
 ---
 title: 我的博客搭建全记录：从零到AI自动化部署
 date: 2026-05-23 01:30:00
-cover: https://img.233002.xyz/blog/myblog-cover.png
+cover: myblog-cover.png
 tags:
   - Hexo
   - Cloudflare
@@ -15,7 +15,7 @@ toc: true
 
 > 一个人，一个博客，一段从手工部署到 AI 自动化的折腾之旅。
 
-![封面](https://img.233002.xyz/blog/myblog-cover.png)
+![封面](myblog-cover.png)
 
 ## 前言
 
@@ -27,7 +27,7 @@ toc: true
 
 先上一张整体架构图：
 
-![技术栈总览](https://img.233002.xyz/blog/myblog1.png)
+![技术栈总览](myblog1.png)
 
 | 层级 | 技术选型 | 说明 |
 |------|---------|------|
@@ -53,7 +53,7 @@ toc: true
 - 中文文档完善，社区活跃
 - Live2D 看板娘、天气、万年历等趣味功能
 
-![Butterfly 主题效果](https://img.233002.xyz/blog/myblog2.png)
+![Butterfly 主题效果](myblog2.png)
 
 ## GitHub 代码管理
 
@@ -79,7 +79,7 @@ my-blog/
     └── butterfly/       # 主题及自定义配置
 ```
 
-![GitHub 仓库](https://img.233002.xyz/blog/myblog3.png)
+![GitHub 仓库](myblog3.png)
 
 ## Cloudflare Pages 部署
 
@@ -98,7 +98,7 @@ my-blog/
 4. 绑定自定义域名 233002.xyz
 5. 推送代码即自动部署
 
-![Cloudflare Pages 部署配置](https://img.233002.xyz/blog/myblog4.png)
+![Cloudflare Pages 部署配置](myblog4.png)
 
 ## Cloudflare R2 图片存储
 
@@ -116,7 +116,7 @@ my-blog/
 - 自动改写 HTML 中的图片地址
 - 增量同步，跳过未变更文件
 
-![Cloudflare R2 存储](https://img.233002.xyz/blog/myblog5.png)
+![Cloudflare R2 存储](myblog5.png)
 
 ## Hermes Agent + Mimo：AI 自动化
 
@@ -131,7 +131,7 @@ my-blog/
 
 整个交互体验就像是有一个懂技术的助手随时待命，只需要用自然语言描述需求，AI 就能帮你完成操作。
 
-![Hermes Agent 交互](https://img.233002.xyz/blog/myblog6.png)
+![Hermes Agent 交互](myblog6.png)
 
 ## 总结
 

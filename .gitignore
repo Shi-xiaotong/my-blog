@@ -30,3 +30,11 @@ Thumbs.db
 
 # 主题内部 git 目录（避免冲突）
 themes/*/.git/
+
+# 文章资源图片（本地保留，通过 R2 插件上传到 CDN）
+source/_posts/**/*.png
+source/_posts/**/*.jpg
+source/_posts/**/*.jpeg
+source/_posts/**/*.gif
+source/_posts/**/*.webp
+.r2-media-manifest.json
