@@ -1138,7 +1138,7 @@ inject:
     - <script src="/js/lunar.js"></script>
     - <script src="/js/calendar-widget.js"></script>
     #CWD评论系统
-    - <script src="https://unpkg.com/cwd-widget@0.0.5/dist/cwd.js"></script>
+    - <script src="https://unpkg.com/cwd-widget@0.1.11/dist/cwd.js"></script>
     - <script>document.addEventListener('DOMContentLoaded',function(){var el=document.getElementById('cwd-comments');if(el&&typeof CWDComments!=='undefined'){var c=new CWDComments({el:'#cwd-comments',apiBaseUrl:'https://cwd-api.233002.workers.dev',siteId:'blog',lang:'zh-CN'});c.mount();}});</script>
 
 # CDN 设置
