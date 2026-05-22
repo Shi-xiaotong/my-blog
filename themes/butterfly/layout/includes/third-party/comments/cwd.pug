@@ -1,0 +1,41 @@
+- const { apiBaseUrl, siteId, lang } = theme.cwd
+- const { use, lazyload } = theme.comments
+
+script(src="https://unpkg.com/cwd-widget@0.0.5/dist/cwd.js")
+script.
+  (() => {
+    const init = () => {
+      const el = document.getElementById('cwd-comments')
+      if (!el || typeof CWDComments === 'undefined') return
+      el.innerHTML = ''
+      const comments = new CWDComments({
+        el: '#cwd-comments',
+        apiBaseUrl: '!{apiBaseUrl}',
+        siteId: '!{siteId || ""}',
+        lang: '!{lang || "auto"}',
+      })
+      comments.mount()
+    }
+
+    const loadCWD = () => {
+      if (typeof CWDComments === 'object') init()
+      else {
+        const check = setInterval(() => {
+          if (typeof CWDComments !== 'undefined') {
+            clearInterval(check)
+            init()
+          }
+        }, 100)
+        setTimeout(() => clearInterval(check), 10000)
+      }
+    }
+
+    if ('!{use[0]}' === 'CWD' || !!{lazyload}) {
+      if (!{lazyload}) {
+        if (typeof btf !== 'undefined') btf.loadComment(document.getElementById('cwd-comments'), loadCWD)
+        else loadCWD()
+      } else loadCWD()
+    } else {
+      window.loadOtherComment = loadCWD
+    }
+  })()

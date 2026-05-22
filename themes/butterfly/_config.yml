@@ -594,9 +594,9 @@ share:
 comments:
   # 最多两个评论系统，第一个将作为默认显示
   # 如果不需要评论，请留空
-  # 选择: Disqus/Disqusjs/Livere/Gitalk/Valine/Waline/Utterances/Facebook Comments/Twikoo/Giscus/Remark42/Artalk
+  # 选择: Disqus/Disqusjs/Livere/Gitalk/Valine/Waline/Utterances/Facebook Comments/Twikoo/Giscus/Remark42/Artalk/CWD
   # 两个评论系统的格式 : Disqus,Waline
-  use:
+  use: [CWD]
   # 在按钮旁边显示评论名称
   text: true
   # 懒加载：当评论元素进入浏览器视口时加载评论系统
@@ -716,6 +716,13 @@ artalk:
   # 使用 Artalk 访客数作为页面浏览量
   visitor: false
   option:
+
+# CWD 评论系统
+# https://github.com/anghunk/cwd
+cwd:
+  apiBaseUrl: https://cwd-api.233002.workers.dev
+  siteId: blog
+  lang: zh-CN
 
 # --------------------------------------
 # 聊天服务
@@ -1130,6 +1137,9 @@ inject:
     #日历
     - <script src="/js/lunar.js"></script>
     - <script src="/js/calendar-widget.js"></script>
+    #CWD评论系统
+    - <script src="https://unpkg.com/cwd-widget@0.0.5/dist/cwd.js"></script>
+    - <script>document.addEventListener('DOMContentLoaded',function(){var el=document.getElementById('cwd-comments');if(el&&typeof CWDComments!=='undefined'){var c=new CWDComments({el:'#cwd-comments',apiBaseUrl:'https://cwd-api.233002.workers.dev',siteId:'blog',lang:'zh-CN'});c.mount();}});</script>
 
 # CDN 设置
 # 除非您知道如何工作，否则不要修改以下设置
