@@ -1,7 +1,7 @@
 ---
 title: 我的博客搭建全记录：从零到AI自动化部署
 date: 2026-05-23 01:30:00
-cover: myblog-cover.png
+cover: https://img.233002.xyz/blog/myblog-cover.png
 tags:
   - Hexo
   - Cloudflare
@@ -15,7 +15,7 @@ toc: true
 
 > 一个人，一个博客，一段从手工部署到 AI 自动化的折腾之旅。
 
-![封面](myblog-cover.png)
+![封面](https://img.233002.xyz/blog/myblog-cover.png)
 
 ## 前言
 
@@ -27,7 +27,7 @@ toc: true
 
 先上一张整体架构图：
 
-![技术栈总览](myblog1.png)
+![技术栈总览](https://img.233002.xyz/blog/myblog1.png)
 
 | 层级 | 技术选型 | 说明 |
 |------|---------|------|
@@ -53,7 +53,7 @@ toc: true
 - 中文文档完善，社区活跃
 - Live2D 看板娘、天气、万年历等趣味功能
 
-![Butterfly 主题效果](myblog2.png)
+![Butterfly 主题效果](https://img.233002.xyz/blog/myblog2.png)
 
 ## GitHub 代码管理
 
@@ -79,7 +79,7 @@ my-blog/
     └── butterfly/       # 主题及自定义配置
 ```
 
-![GitHub 仓库](myblog3.png)
+![GitHub 仓库](https://img.233002.xyz/blog/myblog3.png)
 
 ## Cloudflare Pages 部署
 
@@ -98,7 +98,7 @@ my-blog/
 4. 绑定自定义域名 233002.xyz
 5. 推送代码即自动部署
 
-![Cloudflare Pages 部署配置](myblog4.png)
+![Cloudflare Pages 部署配置](https://img.233002.xyz/blog/myblog4.png)
 
 ## Cloudflare R2 图片存储
 
@@ -109,14 +109,13 @@ my-blog/
 - **免费额度**：10GB 存储 + 1000万次读取/月
 - **S3 兼容**：标准 S3 API，生态成熟
 
-配合 Hexo 插件 `hexo-cloudflare-r2-media`，实现了自动化：
+配合 AI 自动化，实现了图片管理的零负担：
 
-- 写文章时图片放在文章同级资源文件夹
-- `hexo deploy` 时自动上传到 R2
-- 自动改写 HTML 中的图片地址
-- 增量同步，跳过未变更文件
+- 图片直接上传到 R2 获取 CDN 链接
+- 文章中使用完整 R2 URL
+- 仓库只保留 Markdown 文件，干净轻量
 
-![Cloudflare R2 存储](myblog5.png)
+![Cloudflare R2 存储](https://img.233002.xyz/blog/myblog5.png)
 
 ## Hermes Agent + Mimo：AI 自动化
 
@@ -126,12 +125,13 @@ my-blog/
 
 - **文章管理**：AI 帮忙写文章、整理格式、配置 frontmatter
 - **自动部署**：一句指令完成 git commit + push
+- **图片管理**：AI 自动上传图片到 R2 并生成链接
 - **配置管理**：修改 Hexo 配置、主题配置
 - **问题排查**：构建报错时自动分析和修复
 
 整个交互体验就像是有一个懂技术的助手随时待命，只需要用自然语言描述需求，AI 就能帮你完成操作。
 
-![Hermes Agent 交互](myblog6.png)
+![Hermes Agent 交互](https://img.233002.xyz/blog/myblog6.png)
 
 ## 总结
 
