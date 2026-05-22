@@ -4,39 +4,43 @@
   - resourceList.push('waifu-drag.js')
 
 script.
-  var live2d_path = "/live2d/";
+  (function() {
+    if (window.innerWidth <= 768) return;
 
-  function loadExternalResource(url, type) {
-    return new Promise(function(resolve, reject) {
-      var tag;
-      if (type === "css") {
-        tag = document.createElement("link");
-        tag.rel = "stylesheet";
-        tag.href = url;
-      } else if (type === "js") {
-        tag = document.createElement("script");
-        tag.src = url;
-      }
-      if (tag) {
-        tag.onload = function() { resolve(url); };
-        tag.onerror = function() { reject(url); };
-        document.head.appendChild(tag);
-      }
+    var live2d_path = "/live2d/";
+
+    function loadExternalResource(url, type) {
+      return new Promise(function(resolve, reject) {
+        var tag;
+        if (type === "css") {
+          tag = document.createElement("link");
+          tag.rel = "stylesheet";
+          tag.href = url;
+        } else if (type === "js") {
+          tag = document.createElement("script");
+          tag.src = url;
+        }
+        if (tag) {
+          tag.onload = function() { resolve(url); };
+          tag.onerror = function() { reject(url); };
+          document.head.appendChild(tag);
+        }
+      });
+    }
+
+    var resources = !{JSON.stringify(resourceList)};
+    var promises = resources.map(function(r) {
+      return loadExternalResource(live2d_path + r, r.endsWith('.css') ? 'css' : 'js');
     });
-  }
 
-  var resources = !{JSON.stringify(resourceList)};
-  var promises = resources.map(function(r) {
-    return loadExternalResource(live2d_path + r, r.endsWith('.css') ? 'css' : 'js');
-  });
-
-  Promise.all(promises).then(function() {
-    initWidget({
-      isLocalModel: true,
-      waifuPath: live2d_path + "waifu-tips.json",
-      modelsPath: live2d_path + "model",
-      modelListPath: live2d_path + "model/model_list.json",
-      drag: !{drag},
-      tools: !{JSON.stringify(tools || [])}
+    Promise.all(promises).then(function() {
+      initWidget({
+        isLocalModel: true,
+        waifuPath: live2d_path + "waifu-tips.json",
+        modelsPath: live2d_path + "model",
+        modelListPath: live2d_path + "model/model_list.json",
+        drag: !{drag},
+        tools: !{JSON.stringify(tools || [])}
+      });
     });
-  });
+  })();

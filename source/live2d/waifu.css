@@ -107,6 +107,13 @@
 	fill: #0684bd; /* #34495e */
 }
 
+@media (max-width: 768px) {
+	#waifu,
+	#waifu-toggle {
+		display: none !important;
+	}
+}
+
 @keyframes shake {
 	2% {
 		transform: translate(.5px, -1.5px) rotate(-.5deg);
