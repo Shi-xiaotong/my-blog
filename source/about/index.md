@@ -42,6 +42,7 @@ type: about
 | [Hexo](https://hexo.io) | 快速、简洁且高效的博客框架 | hexojs |
 | [Butterfly](https://github.com/jerryc127/hexo-theme-butterfly) | Hexo 的美观多功能主题 | jerryc127 |
 | [hexo-butterfly-extjs](https://github.com/HiWangyeah/hexo-butterfly-extjs) | Butterfly 主题扩展插件 | HiWangyeah |
+| [Live2D Widget](https://github.com/stevenjoezhang/live2d-widget) | 网页 Live2D 看板娘 | stevenjoezhang |
 
 ### 评论与互动
 
@@ -49,19 +50,7 @@ type: about
 |------|------|------|
 | [CWD](https://github.com/anghunk/cwd) | 基于 Cloudflare Workers + D1 的轻量级评论系统 | anghunk |
 
-### 前端组件库
-
-| 项目 | 说明 |
-|------|------|
-| [Font Awesome](https://fontawesome.com) | 图标库 |
-| [medium-zoom](https://github.com/francoischalifour/medium-zoom) | 图片缩放预览 |
-| [Pjax](https://github.com/MoOx/pjax) | 页面无刷新加载 |
-| [Pace.js](https://github.com/CodeByZach/pace) | 页面加载进度条 |
-| [Typed.js](https://github.com/mattboldt/typed.js) | 打字机动画效果 |
-| [social-share.js](https://github.com/overtrue/share.js) | 社交分享组件 |
-| [Live2D Widget](https://github.com/stevenjoezhang/live2d-widget) | 网页 Live2D 看板娘 |
-
-### 服务与基础设施
+### 评论与互动
 
 | 项目 | 说明 |
 |------|------|
