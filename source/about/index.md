@@ -473,7 +473,7 @@ type: about
 
 | 项目 | 说明 | 作者 |
 |------|------|------|
-| [Live2D Widget](https://github.com/stevenjoezhang/live2d-widget) | 网页 Live2D 看板娘 | stevenjoezhang |
+| [Live2D Widget](https://github.com/stevenjoezhang/live2d-widget) | 网页 Live2D 看板娘（B站 22 姐） | stevenjoezhang |
 | [lunar-javascript](https://github.com/6tail/lunar-javascript) | 农历/阴阳历转换工具库（万年历） | 6tail |
 
 ### 基础设施与服务
@@ -486,3 +486,11 @@ type: about
 | [Cravatar](https://cravatar.cn) | 国内通用头像服务 |
 | [ipwho](https://ipwho.org) | IP 信息查询 API |
 | [Hermes Agent](https://hermes-agent.nousresearch.com) | AI 自动化运维助手 |
+
+---
+
+<p style="text-align: center; color: #636e72; font-size: 0.85em; margin-top: 30px;">
+  <i class="fas fa-shield-halved" style="margin-right: 4px;"></i>
+  本站使用的 Live2D 看板娘模型（B站 22/33）版权归 bilibili 所有。<br>
+  如有侵权，请联系删除相关内容。
+</p>
