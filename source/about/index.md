@@ -473,7 +473,7 @@ type: about
 
 | 项目 | 说明 | 作者 |
 |------|------|------|
-| [Live2D Widget](https://github.com/stevenjoezhang/live2d-widget) | 网页 Live2D 看板娘（B站 22 姐） | stevenjoezhang |
+| [Live2D Widget](https://github.com/stevenjoezhang/live2d-widget) | 网页 Live2D 看板娘组件（模型为 B站 22，版权归 bilibili 所有） | stevenjoezhang |
 | [lunar-javascript](https://github.com/6tail/lunar-javascript) | 农历/阴阳历转换工具库（万年历） | 6tail |
 
 ### 基础设施与服务
@@ -491,6 +491,7 @@ type: about
 
 <p style="text-align: center; color: #636e72; font-size: 0.85em; margin-top: 30px;">
   <i class="fas fa-shield-halved" style="margin-right: 4px;"></i>
-  本站使用的 Live2D 看板娘模型（B站 22/33）版权归 bilibili 所有。<br>
+  本站 Live2D 看板娘组件来自 [stevenjoezhang/live2d-widget](https://github.com/stevenjoezhang/live2d-widget)，<br>
+  模型为 bilibili 出品的 22娘/33娘，版权归 bilibili 所有。<br>
   如有侵权，请联系删除相关内容。
 </p>
