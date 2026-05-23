@@ -64,4 +64,5 @@ type: about
 | [Cloudflare](https://cloudflare.com) | Pages 托管、Workers、D1、R2 存储、CDN |
 | [Open-Meteo](https://open-meteo.com) | 开源免费天气 API |
 | [Cravatar](https://cravatar.cn) | 国内通用头像服务 |
+| [ipwho](https://ipwho.org) | IP 信息查询 API |
 | [Hermes Agent](https://hermes-agent.nousresearch.com) | AI 自动化运维助手 |
