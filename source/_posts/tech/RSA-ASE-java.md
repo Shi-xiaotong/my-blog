@@ -9,7 +9,7 @@ tags:
   - 网络安全
   - 接口加密
 categories:
-  - 技术
+  - tech
   - Java
 ---
 

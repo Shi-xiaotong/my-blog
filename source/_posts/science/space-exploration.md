@@ -4,10 +4,10 @@ date: 2026-01-26 15:00:00
 cover: https://img.233002.xyz/space-exploration.png
 tags:
   - 太空
-  - 科技
-  - 历史
+  - science
+  - history
 categories:
-  - 科技
+  - science
 toc: true
 ---
 

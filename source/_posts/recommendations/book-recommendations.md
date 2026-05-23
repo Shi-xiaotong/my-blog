@@ -7,7 +7,7 @@ tags:
   - 书单
   - 推荐
 categories:
-  - 生活
+  - life
 toc: true
 ---
 

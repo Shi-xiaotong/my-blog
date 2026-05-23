@@ -9,7 +9,7 @@ tags:
   - 博客搭建
   - 自动化
 categories:
-  - 技术
+  - tech
 toc: true
 ---
 

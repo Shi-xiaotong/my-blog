@@ -6,7 +6,7 @@ tags:
   - Docker
   - Docker Compose
 categories:
-  - 技术
+  - tech
 toc: true
 ---
 

@@ -3,11 +3,11 @@ title: 乾隆皇帝：盛极而衰的六十年
 date: 2026-04-10 22:00:00
 cover: https://img.233002.xyz/qianlong-emperor.png
 tags:
-  - 历史
+  - history
   - 清朝
   - 人物
 categories:
-  - 历史
+  - history
 toc: true
 ---
 

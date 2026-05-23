@@ -6,7 +6,7 @@ tags:
   - Docker
   - 运维
 categories:
-  - 技术
+  - tech
 toc: true
 ---
 

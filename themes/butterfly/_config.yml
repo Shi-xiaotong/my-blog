@@ -720,7 +720,7 @@ artalk:
 # CWD 评论系统
 # https://github.com/anghunk/cwd
 cwd:
-  apiBaseUrl: https://cwd-api.233002.workers.dev
+  apiBaseUrl: https://cwd-api.233002.xyz
   siteId: blog
   lang: zh-CN
 
@@ -912,7 +912,7 @@ hr_icon:
 activate_power_mode:
   enable: true
   colorful: true
-  shake: true
+  shake: false
   mobile: false
 
 # 背景特效
@@ -1139,7 +1139,7 @@ inject:
     - <script src="/js/calendar-widget.js"></script>
     #CWD评论系统
     - <script src="https://unpkg.com/cwd-widget@0.1.11/dist/cwd.js"></script>
-    - <script>document.addEventListener('DOMContentLoaded',function(){var el=document.getElementById('cwd-comments');if(el&&typeof CWDComments!=='undefined'){var c=new CWDComments({el:'#cwd-comments',apiBaseUrl:'https://cwd-api.233002.workers.dev',siteId:'blog',lang:'zh-CN'});c.mount();}});</script>
+    - <script>document.addEventListener('DOMContentLoaded',function(){var wrap=document.querySelector('.comment-wrap');if(!wrap)return;wrap.innerHTML='<div id="cwd-comments"></div>';function init(){if(typeof CWDComments==='undefined')return;new CWDComments({el:'#cwd-comments',apiBaseUrl:'https://cwd-api.233002.xyz',siteId:'blog',lang:'zh-CN'}).mount();}if(typeof CWDComments!=='undefined'){init();}else{var t=setInterval(function(){if(typeof CWDComments!=='undefined'){clearInterval(t);init();}},100);setTimeout(function(){clearInterval(t);},10000);}});</script>
 
 # CDN 设置
 # 除非您知道如何工作，否则不要修改以下设置

@@ -3,11 +3,11 @@ title: 海贼王：梦想与羁绊的史诗
 date: 2026-04-05 09:00:00
 cover: https://img.233002.xyz/one-piece.png
 tags:
-  - 二次元
+  - anime
   - 海贼王
   - 动漫
 categories:
-  - 二次元
+  - anime
 toc: true
 ---
 

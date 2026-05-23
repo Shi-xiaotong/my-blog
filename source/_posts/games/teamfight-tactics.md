@@ -7,7 +7,7 @@ tags:
   - 金铲铲之战
   - 自走棋
 categories:
-  - 生活
+  - life
 toc: true
 ---
 

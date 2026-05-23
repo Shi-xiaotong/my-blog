@@ -7,7 +7,7 @@ tags:
   - 前端
   - JavaScript
 categories:
-  - 技术
+  - tech
 toc: true
 ---
 

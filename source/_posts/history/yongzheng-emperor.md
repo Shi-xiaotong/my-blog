@@ -3,11 +3,11 @@ title: 雍正皇帝：改革者的孤独与坚持
 date: 2026-03-25 21:00:00
 cover: https://img.233002.xyz/yongzheng-emperor.png
 tags:
-  - 历史
+  - history
   - 清朝
   - 人物
 categories:
-  - 历史
+  - history
 toc: true
 ---
 

@@ -3,10 +3,10 @@ title: 秦始皇：千古一帝的功过是非
 date: 2026-01-05 12:00:00
 cover: https://img.233002.xyz/qin-shihuang.png
 tags:
-  - 历史
+  - history
   - 人物
 categories:
-  - 历史
+  - history
 toc: true
 ---
 

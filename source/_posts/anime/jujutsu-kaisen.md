@@ -3,11 +3,11 @@ title: 咒术回战：当代最燃热血番
 date: 2026-04-15 14:00:00
 cover: https://img.233002.xyz/jujutsu-kaisen.png
 tags:
-  - 二次元
+  - anime
   - 咒术回战
   - 动漫
 categories:
-  - 二次元
+  - anime
 toc: true
 ---
 

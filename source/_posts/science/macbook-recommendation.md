@@ -7,7 +7,7 @@ tags:
   - 苹果
   - 数码
 categories:
-  - 科技
+  - science
 toc: true
 ---
 

@@ -7,7 +7,7 @@ tags:
   - 王者荣耀
   - MOBA
 categories:
-  - 生活
+  - life
 toc: true
 ---
 

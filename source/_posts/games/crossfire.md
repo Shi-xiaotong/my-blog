@@ -7,7 +7,7 @@ tags:
   - 穿越火线
   - FPS
 categories:
-  - 生活
+  - life
 toc: true
 ---
 
