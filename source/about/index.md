@@ -42,35 +42,26 @@ type: about
 | [Hexo](https://hexo.io) | 快速、简洁且高效的博客框架 | hexojs |
 | [Butterfly](https://github.com/jerryc127/hexo-theme-butterfly) | Hexo 的美观多功能主题 | jerryc127 |
 | [hexo-butterfly-extjs](https://github.com/HiWangyeah/hexo-butterfly-extjs) | Butterfly 主题扩展插件 | HiWangyeah |
-| [Live2D Widget](https://github.com/stevenjoezhang/live2d-widget) | 网页 Live2D 看板娘 | stevenjoezhang |
 
-### 评论与互动
+### 评论系统
 
 | 项目 | 说明 | 作者 |
 |------|------|------|
 | [CWD](https://github.com/anghunk/cwd) | 基于 Cloudflare Workers + D1 的轻量级评论系统 | anghunk |
 
-### 评论与互动
+### 小组件与工具
+
+| 项目 | 说明 | 作者 |
+|------|------|------|
+| [Live2D Widget](https://github.com/stevenjoezhang/live2d-widget) | 网页 Live2D 看板娘 | stevenjoezhang |
+| [lunar-javascript](https://github.com/6tail/lunar-javascript) | 农历/阴阳历转换工具库（万年历） | 6tail |
+
+### 基础设施与服务
 
 | 项目 | 说明 |
 |------|------|
 | [GitHub](https://github.com) | 代码托管与版本控制 |
-| [Cloudflare Pages](https://pages.cloudflare.com) | 静态网站托管与全球 CDN |
-| [Cloudflare Workers](https://workers.cloudflare.com) | 边缘计算平台 |
-| [Cloudflare D1](https://developers.cloudflare.com/d1) | 边缘 SQLite 数据库 |
-| [Cloudflare R2](https://www.cloudflare.com/products/r2) | 对象存储服务（图片 CDN） |
-
-### API 服务
-
-| 项目 | 说明 | 用途 |
-|------|------|------|
-| [Open-Meteo](https://open-meteo.com) | 开源免费天气 API | 天气组件 |
-| [Cravatar](https://cravatar.cn) | 国内通用头像服务 | 评论头像 |
-| [ipwho](https://ipwho.org) | IP 信息查询 API | 评论者信息 |
-
-### 其他工具
-
-| 项目 | 说明 |
-|------|------|
-| [lunar-javascript](https://github.com/6tail/lunar-javascript) | 农历/阴阳历转换工具库（万年历） |
+| [Cloudflare](https://cloudflare.com) | Pages 托管、Workers、D1、R2 存储、CDN |
+| [Open-Meteo](https://open-meteo.com) | 开源免费天气 API |
+| [Cravatar](https://cravatar.cn) | 国内通用头像服务 |
 | [Hermes Agent](https://hermes-agent.nousresearch.com) | AI 自动化运维助手 |
