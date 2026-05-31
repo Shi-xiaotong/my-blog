@@ -138,7 +138,7 @@ comments: false
 .uc-modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
 .uc-loading{text-align:center;padding:120px 20px;color:#888;font-size:16px}
 .uc-loading i{margin-right:8px}
-@media(max-width:768px){#user-center{padding:70px 16px 30px}.uc-card{padding:18px}}
+@media(max-width:768px){ #user-center{padding:70px 16px 30px}.uc-card{padding:18px}}
 </style>
 
 <script src="/js/user-center.js"></script>
