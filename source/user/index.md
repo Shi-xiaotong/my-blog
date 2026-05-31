@@ -161,12 +161,16 @@ var API='https://ffzy.233002.xyz';
 
 function getToken(){return localStorage.getItem('anime_token')||'';}
 
-function api(path,opt){
+function init(){
+var api=function(path,opt){
   opt=opt||{};
   var headers=opt.headers||{'Content-Type':'application/json'};
   var t=getToken();if(t)headers['Authorization']='Bearer '+t;
-  return fetch(API+path,{method:opt.method||'GET',headers:headers,body:opt.body?JSON.stringify(opt.body):undefined})
-    .then(function(r){return r.json();});
+  var ctrl=new AbortController();
+  var timer=setTimeout(function(){ctrl.abort();},10000);
+  return fetch(API+path,{method:opt.method||'GET',headers:headers,body:opt.body?JSON.stringify(opt.body):undefined,signal:ctrl.signal})
+    .then(function(r){clearTimeout(timer);return r.json();})
+    .catch(function(e){clearTimeout(timer);throw e;});
 }
 
 function render(data){
@@ -315,5 +319,8 @@ function load(){
 }
 
 load();
+} // end init
+
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
 </script>
