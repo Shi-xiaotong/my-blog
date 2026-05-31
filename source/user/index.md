@@ -139,6 +139,25 @@ comments: false
 .uc-loading{text-align:center;padding:120px 20px;color:#888;font-size:16px}
 .uc-loading i{margin-right:8px}
 @media(max-width:768px){ #user-center{padding:70px 16px 30px}.uc-card{padding:18px}}
+/* Light mode overrides */
+.uc-name{color:#333}
+.uc-account-name{color:#333}
+.uc-account-icon{color:#666}
+.uc-btn-secondary{color:#555;border-color:rgba(0,0,0,.15);background:rgba(0,0,0,.05)}
+.uc-btn-secondary:hover{background:rgba(0,0,0,.1)}
+.uc-email{color:#666}
+.uc-edit-btn{color:#999}
+.uc-card{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08)}
+.uc-card-title{color:#d4a017}
+[data-theme="dark"] .uc-name{color:#fff}
+[data-theme="dark"] .uc-account-name{color:#ddd}
+[data-theme="dark"] .uc-account-icon{color:#ccc}
+[data-theme="dark"] .uc-btn-secondary{color:#ccc;border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.1)}
+[data-theme="dark"] .uc-btn-secondary:hover{background:rgba(255,255,255,.2)}
+[data-theme="dark"] .uc-email{color:#888}
+[data-theme="dark"] .uc-edit-btn{color:#888}
+[data-theme="dark"] .uc-card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)}
+[data-theme="dark"] .uc-card-title{color:#ffd93d}
 </style>
 
 <script src="/js/user-center.js"></script>
