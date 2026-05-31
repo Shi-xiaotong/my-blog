@@ -1,0 +1,231 @@
+/* 左下角音乐播放器 - 唱碟样式 */
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 9999;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.music-player:hover {
+  transform: scale(1.1);
+}
+
+/* 唱碟容器 */
+.disc-container {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a1a1a 0%, #333 50%, #1a1a1a 100%);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* 唱碟内部纹理 */
+.disc-container::before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0px,
+    transparent 2px,
+    rgba(255, 255, 255, 0.05) 2px,
+    rgba(255, 255, 255, 0.05) 3px
+  );
+}
+
+/* 中心圆点 */
+.disc-container::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  box-shadow: 0 0 8px rgba(238, 90, 36, 0.5);
+}
+
+/* 唱针 */
+.tonearm {
+  position: absolute;
+  top: -8px;
+  right: -5px;
+  width: 25px;
+  height: 3px;
+  background: linear-gradient(90deg, #888, #bbb);
+  transform-origin: right center;
+  transform: rotate(-30deg);
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 1;
+}
+
+.tonearm::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: -2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #666;
+}
+
+.tonearm::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: -1px;
+  width: 5px;
+  height: 5px;
+  background: #999;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+/* 播放状态 - 唱针移到唱片上 */
+.music-player.playing .tonearm {
+  transform: rotate(-5deg);
+}
+
+/* 唱碟旋转动画 */
+@keyframes discRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.music-player.playing .disc-container {
+  animation: discRotate 4s linear infinite;
+  box-shadow: 0 4px 20px rgba(238, 90, 36, 0.3);
+}
+
+/* 音符容器 */
+.music-notes {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 60px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* 音符动画 */
+.music-note {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateX(-50%);
+  animation: noteFloat 2s ease-out infinite;
+  color: #ff6b6b;
+  text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+}
+
+.music-note:nth-child(1) {
+  animation-delay: 0s;
+  left: 30%;
+}
+
+.music-note:nth-child(2) {
+  animation-delay: 0.5s;
+  left: 70%;
+  font-size: 12px;
+}
+
+.music-note:nth-child(3) {
+  animation-delay: 1s;
+  left: 50%;
+  font-size: 16px;
+}
+
+@keyframes noteFloat {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-15px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50px) scale(0.8) rotate(20deg);
+  }
+}
+
+/* 暂停状态 - 音符停止 */
+.music-player:not(.playing) .music-note {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+/* 播放/暂停图标 */
+.play-icon,
+.pause-icon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.play-icon {
+  opacity: 1;
+}
+
+.music-player.playing .play-icon {
+  opacity: 0;
+}
+
+.music-player.playing .pause-icon {
+  opacity: 1;
+}
+
+.play-icon svg,
+.pause-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .music-player {
+    bottom: 15px;
+    left: 15px;
+  }
+  
+  .disc-container {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .disc-container::before {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .disc-container::after {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* 隐藏原始 APlayer */
+#aplayer {
+  display: none !important;
+}

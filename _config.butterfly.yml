@@ -1,15 +1,12 @@
-# APlayer 音乐播放器配置
-# 使用纯 APlayer，不使用 MetingJS（因为音乐在蓝奏云，不在支持的平台上）
+# 音乐播放器配置 - 唱碟样式
+# 自定义实现，不使用 APlayer
 
-# 1. 启用 APlayer 注入（只注入 CSS 和 JS，不自动初始化）
-aplayerInject:
-  enable: true
-  per_page: false
-
-# 2. 注入配置
+# 注入配置
 inject:
   head:
     - <style>#page-header,#page-header::before,#footer,#footer::before{background:transparent!important}</style>
+    # 音乐播放器样式
+    - <link rel="stylesheet" href="/css/music-player.css">
   bottom:
     # 天气
     - <script src="/js/weather-store.js"></script>
@@ -20,15 +17,5 @@ inject:
     # CWD评论系统
     - <script src="https://unpkg.com/cwd-widget@0.1.11/dist/cwd.js"></script>
     - <script>function initCWD(){var wrap=document.querySelector('.comment-wrap');if(!wrap)return;wrap.innerHTML='<div id="cwd-comments"></div>';function init(){if(typeof CWDComments==='undefined')return;new CWDComments({el:'#cwd-comments',apiBaseUrl:'https://cwd-api.233002.xyz',siteId:'blog',lang:'zh-CN'}).mount();}if(typeof CWDComments!=='undefined'){init();}else{var t=setInterval(function(){if(typeof CWDComments!=='undefined'){clearInterval(t);init();}},100);setTimeout(function(){clearInterval(t);},10000);}}document.addEventListener('DOMContentLoaded',initCWD);document.addEventListener('pjax:complete',initCWD);</script>
-    # APlayer 音乐播放器（自定义初始化）
-    - <script src="/js/aplayer-init.js"></script>
-
-# 3. CDN 配置（只引入 APlayer，不引入 MetingJS）
-CDN:
-  internal_provider: local
-  third_party_provider: jsdelivr
-  version: true
-  option:
-    aplayer_css: https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css
-    aplayer_js: https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js
-    meting_js:  # 留空，不引入 MetingJS
+    # 音乐播放器
+    - <script src="/js/music-player.js"></script>
