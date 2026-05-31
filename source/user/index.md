@@ -321,6 +321,7 @@ function load(){
 load();
 } // end init
 
-if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+function waitForEl(id,cb){var t=setInterval(function(){if(document.getElementById(id)){clearInterval(t);cb();}},100);setTimeout(function(){clearInterval(t);},10000);}
+waitForEl('ucLoading',init);
 })();
 </script>
