@@ -5,194 +5,382 @@ type: anime
 ---
 
 <style>
-.anime-page {
-  max-width: 800px;
+/* ========== 影视厅整体 ========== */
+.cinema {
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.section-title {
-  color: #e94560;
-  font-size: 1.3em;
-  margin: 30px 0 15px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid rgba(233, 69, 96, 0.3);
+/* 顶部标题 */
+.cinema-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 25px;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(233, 69, 96, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-.section-title i {
-  margin-right: 8px;
+.cinema-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 300%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(233, 69, 96, 0.05), transparent 30%);
+  animation: cinemaShine 8s linear infinite;
 }
 
-.site-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 15px;
-  margin: 15px 0;
+@keyframes cinemaShine {
+  to { left: 100%; }
 }
 
-.site-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 16px;
-  transition: all 0.3s;
-  text-decoration: none !important;
-  display: block;
+.cinema-title {
+  font-size: 2em;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ffd93d, #e94560, #ffd93d);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleShimmer 3s linear infinite;
+  margin-bottom: 8px;
 }
 
-.site-card:hover {
-  border-color: #e94560;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(233, 69, 96, 0.2);
+@keyframes titleShimmer {
+  to { background-position: 200% center; }
 }
 
-.site-name {
-  color: #fff;
-  font-size: 1.05em;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.site-name i {
-  margin-right: 6px;
-  color: #e94560;
-}
-
-.site-desc {
+.cinema-subtitle {
   color: #8892b0;
-  font-size: 0.85em;
-  line-height: 1.5;
+  font-size: 0.95em;
 }
 
-.site-tag {
-  display: inline-block;
-  background: rgba(233, 69, 96, 0.15);
+/* ========== 播放器区域 ========== */
+.player-section {
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 25px;
+}
+
+.player-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  background: #000;
+}
+
+.player-wrapper iframe,
+.player-wrapper video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* 占位状态 */
+.player-placeholder {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #000 70%);
+}
+
+.placeholder-icon {
+  font-size: 4em;
   color: #e94560;
-  font-size: 0.75em;
-  padding: 2px 8px;
-  border-radius: 10px;
-  margin-top: 8px;
-  margin-right: 4px;
+  margin-bottom: 20px;
+  animation: pulse 2s ease-in-out infinite;
 }
 
-.tip-box {
-  background: rgba(255, 217, 61, 0.08);
-  border-left: 4px solid #ffd93d;
-  border-radius: 0 10px 10px 0;
-  padding: 14px 18px;
-  margin: 20px 0;
-  color: #a8b2d1;
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.placeholder-text {
+  color: #8892b0;
+  font-size: 1.1em;
+  margin-bottom: 8px;
+}
+
+.placeholder-hint {
+  color: #636e72;
+  font-size: 0.85em;
+}
+
+/* ========== 影片信息栏 ========== */
+.video-info {
+  padding: 20px;
+  background: linear-gradient(180deg, #0a0a0a, #111);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.video-title {
+  color: #fff;
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.video-title i {
+  color: #ffd93d;
+}
+
+.video-meta {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #8892b0;
+  font-size: 0.8em;
+  padding: 4px 10px;
+  border-radius: 15px;
+}
+
+.meta-tag i {
+  color: #e94560;
   font-size: 0.9em;
 }
 
-.tip-box i {
+/* ========== 剧集列表 ========== */
+.episode-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.episode-title {
+  color: #fff;
+  font-size: 1.1em;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.episode-title i {
+  color: #e94560;
+}
+
+.episode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 10px;
+}
+
+.episode-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 5px;
+  text-align: center;
+  color: #a8b2d1;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.episode-btn:hover,
+.episode-btn.active {
+  background: rgba(233, 69, 96, 0.2);
+  border-color: #e94560;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ========== 备注区 ========== */
+.cinema-note {
+  background: rgba(255, 217, 61, 0.05);
+  border-left: 3px solid #ffd93d;
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  color: #a8b2d1;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+.cinema-note i {
   color: #ffd93d;
   margin-right: 6px;
 }
 
-.update-note {
-  text-align: center;
-  color: #636e72;
-  font-size: 0.8em;
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
+/* ========== 响应式 ========== */
 @media (max-width: 600px) {
-  .site-grid {
-    grid-template-columns: 1fr;
-  }
+  .cinema-title { font-size: 1.5em; }
+  .video-meta { gap: 8px; }
+  .episode-grid { grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); }
 }
 </style>
 
-<div class="anime-page">
+<div class="cinema">
 
-<div class="tip-box">
-  <i class="fas fa-circle-info"></i>
-  以下站点均为第三方资源，仅供学习交流。如遇域名失效，可搜索站名找到最新地址。
-</div>
+  <!-- 标题 -->
+  <div class="cinema-header">
+    <div class="cinema-title"><i class="fas fa-film"></i> 影 视 屋</div>
+    <div class="cinema-subtitle">沉浸观影，享受每一帧</div>
+  </div>
 
-<div class="section-title"><i class="fas fa-dragon"></i> 动漫</div>
+  <!-- 播放器 -->
+  <div class="player-section">
+    <div class="player-wrapper" id="player">
+      <!-- 占位状态，替换为视频后隐藏 -->
+      <div class="player-placeholder" id="placeholder">
+        <div class="placeholder-icon"><i class="fas fa-play-circle"></i></div>
+        <div class="placeholder-text">暂无片源</div>
+        <div class="placeholder-hint">正在寻找好片中...</div>
+      </div>
+      <!-- 视频播放器（取消注释并填入地址） -->
+      <!-- <video controls autoplay>
+        <source src="你的视频地址" type="application/x-mpegURL">
+      </video> -->
+      <!-- 或 iframe 嵌入 -->
+      <!-- <iframe src="你的iframe地址" allowfullscreen></iframe> -->
+    </div>
+    <div class="video-info">
+      <div class="video-title">
+        <i class="fas fa-clapperboard"></i>
+        <span id="videoName">等待开播...</span>
+      </div>
+      <div class="video-meta">
+        <span class="meta-tag"><i class="fas fa-clock"></i> --:--</span>
+        <span class="meta-tag"><i class="fas fa-closed-captioning"></i> 中字</span>
+        <span class="meta-tag"><i class="fas fa-star"></i> --</span>
+      </div>
+    </div>
+  </div>
 
-<div class="site-grid">
-  <a href="https://anime1.me" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-play-circle"></i> Anime1</div>
-    <div class="site-desc">老牌动漫站，资源丰富，更新及时</div>
-    <span class="site-tag">番剧</span><span class="site-tag">剧场版</span>
-  </a>
-  
-  <a href="https://www.bangumi.tv" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-list"></i> Bangumi 番组计划</div>
-    <div class="site-desc">ACG 收藏与评分社区，找番必备</div>
-    <span class="site-tag">评分</span><span class="site-tag">推荐</span>
-  </a>
-  
-  <a href="https://www.yhpdm.com" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-bolt"></i> 樱花动漫</div>
-    <div class="site-desc">热门日漫在线观看，加载速度快</div>
-    <span class="site-tag">日漫</span><span class="site-tag">新番</span>
-  </a>
-  
-  <a href="https://www.dmedua.com" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-fan"></i> 风车动漫</div>
-    <div class="site-desc">经典动漫资源站，种类齐全</div>
-    <span class="site-tag">日漫</span><span class="site-tag">国漫</span>
-  </a>
-  
-  <a href="https://www.mxdm.org" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-tv"></i> 埋堆堆</div>
-    <div class="site-desc">港剧、动漫综合平台</div>
-    <span class="site-tag">港剧</span><span class="site-tag">动漫</span>
-  </a>
-  
-  <a href="https://www.bimiacg.com" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-cat"></i> BimiACG</div>
-    <div class="site-desc">ACG 资源聚合，追番利器</div>
-    <span class="site-tag">聚合</span><span class="site-tag">追番</span>
-  </a>
-</div>
+  <!-- 剧集列表（示例，可自行增删） -->
+  <div class="episode-section" id="episodeSection" style="display: none;">
+    <div class="episode-title"><i class="fas fa-list-ol"></i> 选集</div>
+    <div class="episode-grid" id="episodeGrid">
+      <!-- JS 动态生成 -->
+    </div>
+  </div>
 
-<div class="section-title"><i class="fas fa-film"></i> 影视</div>
-
-<div class="site-grid">
-  <a href="https://www.libvio.me" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-video"></i> LibVio</div>
-    <div class="site-desc">高清影视资源，支持多线路播放</div>
-    <span class="site-tag">电影</span><span class="site-tag">剧集</span>
-  </a>
-  
-  <a href="https://www.nfmovies.com" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-clapperboard"></i> 奈飞工厂</div>
-    <div class="site-desc">Netflix 资源搬运，画质优秀</div>
-    <span class="site-tag">Netflix</span><span class="site-tag">美剧</span>
-  </a>
-  
-  <a href="https://www.hdmoli.com" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-star"></i> HDMoli</div>
-    <div class="site-desc">高清电影资源站，更新快</div>
-    <span class="site-tag">电影</span><span class="site-tag">高清</span>
-  </a>
-</div>
-
-<div class="section-title"><i class="fas fa-toolbox"></i> 工具</div>
-
-<div class="site-grid">
-  <a href="https://bgm.tv" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-database"></i> Bangumi 数据库</div>
-    <div class="site-desc">ACG 作品数据库，找番查分</div>
-    <span class="site-tag">数据库</span>
-  </a>
-  
-  <a href="https://myanimelist.net" class="site-card" target="_blank">
-    <div class="site-name"><i class="fas fa-globe"></i> MyAnimeList</div>
-    <div class="site-desc">全球最大动漫数据库（英文）</div>
-    <span class="site-tag">英文</span><span class="site-tag">评分</span>
-  </a>
-</div>
-
-<div class="update-note">
-  <i class="fas fa-clock"></i> 最后更新：2026年5月31日 | 站点域名可能变化，请自行搜索最新地址
-</div>
+  <!-- 备注 -->
+  <div class="cinema-note">
+    <i class="fas fa-lightbulb"></i>
+    视频资源来自互联网，仅供学习交流。支持正版，请勿用于商业用途。
+  </div>
 
 </div>
+
+<script>
+// ========== 影片配置 ==========
+// 修改这里添加你的视频
+const VIDEO_CONFIG = {
+  // 当前影片
+  title: '',           // 影片名，显示在播放器下方
+  src: '',             // 视频地址（m3u8/mp4/iframe均可）
+  type: 'video',       // 'video' 或 'iframe'
+  
+  // 剧集列表（可选，留空则不显示选集）
+  episodes: [
+    // { name: '01', src: 'https://xxx/ep01.m3u8' },
+    // { name: '02', src: 'https://xxx/ep02.m3u8' },
+    // ...
+  ]
+};
+
+// ========== 初始化 ==========
+function initPlayer() {
+  const player = document.getElementById('player');
+  const placeholder = document.getElementById('placeholder');
+  const videoName = document.getElementById('videoName');
+  const episodeSection = document.getElementById('episodeSection');
+  const episodeGrid = document.getElementById('episodeGrid');
+  
+  // 无视频时保持占位
+  if (!VIDEO_CONFIG.src) {
+    return;
+  }
+  
+  // 隐藏占位
+  placeholder.style.display = 'none';
+  
+  // 设置标题
+  videoName.textContent = VIDEO_CONFIG.title || '正在播放';
+  
+  // 创建播放器
+  if (VIDEO_CONFIG.type === 'iframe') {
+    const iframe = document.createElement('iframe');
+    iframe.src = VIDEO_CONFIG.src;
+    iframe.allowFullscreen = true;
+    player.appendChild(iframe);
+  } else {
+    const video = document.createElement('video');
+    video.controls = true;
+    video.autoplay = true;
+    video.style.background = '#000';
+    const source = document.createElement('source');
+    source.src = VIDEO_CONFIG.src;
+    video.appendChild(source);
+    player.appendChild(video);
+  }
+  
+  // 渲染剧集列表
+  if (VIDEO_CONFIG.episodes.length > 0) {
+    episodeSection.style.display = 'block';
+    VIDEO_CONFIG.episodes.forEach((ep, i) => {
+      const btn = document.createElement('div');
+      btn.className = 'episode-btn' + (i === 0 ? ' active' : '');
+      btn.textContent = ep.name;
+      btn.onclick = () => switchEpisode(i);
+      episodeGrid.appendChild(btn);
+    });
+  }
+}
+
+// 切换剧集
+function switchEpisode(index) {
+  const ep = VIDEO_CONFIG.episodes[index];
+  if (!ep) return;
+  
+  const player = document.getElementById('player');
+  const oldMedia = player.querySelector('video, iframe');
+  if (oldMedia) oldMedia.remove();
+  
+  const video = document.createElement('video');
+  video.controls = true;
+  video.autoplay = true;
+  video.style.background = '#000';
+  const source = document.createElement('source');
+  source.src = ep.src;
+  video.appendChild(source);
+  player.appendChild(video);
+  
+  document.getElementById('videoName').textContent = 
+    VIDEO_CONFIG.title + ' - ' + ep.name;
+  
+  // 更新按钮状态
+  document.querySelectorAll('.episode-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === index);
+  });
+}
+
+// 页面加载
+document.addEventListener('DOMContentLoaded', initPlayer);
+</script>
