@@ -1,0 +1,6 @@
+/* Hide name/email/url fields in CWD comment form — auto-filled by site-auth */
+.cwd-comment-form .cwd-form-row .cwd-form-field:nth-child(1),
+.cwd-comment-form .cwd-form-row .cwd-form-field:nth-child(2),
+.cwd-comment-form .cwd-form-row .cwd-form-field:nth-child(3) {
+  display: none !important;
+}

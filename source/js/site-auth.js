@@ -1,10 +1,14 @@
 (function(){
+try{
 var API='https://ffzy.233002.xyz';
 var token=localStorage.getItem('anime_token')||'';
 var user=JSON.parse(localStorage.getItem('anime_user')||'null');
 var countdown=0;
 
 function isLoggedIn(){return !!token;}
+
+// Expose for CWD comment integration
+window._siteAuth={isLoggedIn:isLoggedIn,getUser:function(){return user;},getToken:function(){return token;},showLogin:showSiteLoginModal};
 
 function render(){
   var bar=document.getElementById('site-auth-bar');
@@ -141,6 +145,15 @@ function validate(){
 
 function init(){
   handleOAuthCallback();
+  // Create auth bar if not in DOM (fallback)
+  if(!document.getElementById('site-auth-bar')){
+    var nav=document.getElementById('nav');
+    if(nav){
+      var bar=document.createElement('div');
+      bar.id='site-auth-bar';
+      nav.appendChild(bar);
+    }
+  }
   if(!document.getElementById('site-login-modal')){
     var modal=document.createElement('div');modal.id='site-login-modal';
     modal.innerHTML='<div class="slm-box">'
@@ -168,4 +181,5 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
 document.addEventListener('pjax:complete',function(){if(!document.getElementById('site-auth-bar'))init();});
 window.addEventListener('storage',function(e){if(e.key==='anime_token'||e.key==='anime_user'){token=localStorage.getItem('anime_token')||'';user=JSON.parse(localStorage.getItem('anime_user')||'null');render();}});
 window.addEventListener('focus',function(){var t=localStorage.getItem('anime_token')||'';if(t!==token){token=t;user=JSON.parse(localStorage.getItem('anime_user')||'null');render();}});
+}catch(e){console.error('[site-auth] init error:',e);}
 })();
