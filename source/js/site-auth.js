@@ -23,17 +23,14 @@ function render(){
   }
 }
 
-window.showSiteLoginModal=function(){
+function showLoginModal(){
   var m=document.getElementById('site-login-modal');
   if(m){m.classList.add('show');resetEmailForm();}
-};
-function hideSiteLoginModal(){
+}
+
+function hideLoginModal(){
   var m=document.getElementById('site-login-modal');if(m)m.classList.remove('show');
 }
-window.hideSiteLoginModal=hideSiteLoginModal;
-
-// Expose for CWD comment integration
-window._siteAuth={isLoggedIn:isLoggedIn,getUser:function(){return user;},getToken:function(){return token;},showLogin:showSiteLoginModal};
 
 function resetEmailForm(){
   var inp=document.getElementById('slmEmailInput');
@@ -47,14 +44,15 @@ function resetEmailForm(){
   countdown=0;
 }
 
-// GitHub login
-window.siteGithubLogin=function(){window.location.href=API+'/api/auth/github';};
+function logout(){
+  fetch(API+'/api/auth/logout',{method:'POST',headers:{'Authorization':'Bearer '+token}}).catch(function(){});
+  token='';user=null;
+  localStorage.removeItem('anime_token');
+  localStorage.removeItem('anime_user');
+  render();
+}
 
-// Google login
-window.siteGoogleLogin=function(){window.location.href=API+'/api/auth/google';};
-
-// Email: send code
-window.siteSendCode=function(){
+function sendCode(){
   var email=document.getElementById('slmEmailInput').value.trim();
   var err=document.getElementById('slmError');
   var btn=document.getElementById('slmSendBtn');
@@ -70,10 +68,8 @@ window.siteSendCode=function(){
     }else{
       err.textContent='验证码已发送到邮箱';err.style.color='#4ecdc4';
     }
-    // Show code input
     document.getElementById('slmCodeWrap').style.display='flex';
     document.getElementById('slmCodeInput').focus();
-    // Countdown
     countdown=60;
     var timer=setInterval(function(){
       countdown--;
@@ -82,10 +78,9 @@ window.siteSendCode=function(){
     },1000);
   })
   .catch(function(){err.textContent='网络错误';err.style.color='#e94560';btn.disabled=false;});
-};
+}
 
-// Email: verify code
-window.siteVerifyCode=function(){
+function verifyCode(){
   var email=document.getElementById('slmEmailInput').value.trim();
   var code=document.getElementById('slmCodeInput').value.trim();
   var err=document.getElementById('slmError');
@@ -98,21 +93,11 @@ window.siteVerifyCode=function(){
     token=data.token;user=data.user;
     localStorage.setItem('anime_token',token);
     localStorage.setItem('anime_user',JSON.stringify(user));
-    render();hideSiteLoginModal();
+    render();hideLoginModal();
   })
   .catch(function(){err.textContent='网络错误';err.style.color='#e94560';});
-};
+}
 
-// Logout
-window.siteAuthLogout=function(){
-  fetch(API+'/api/auth/logout',{method:'POST',headers:{'Authorization':'Bearer '+token}}).catch(function(){});
-  token='';user=null;
-  localStorage.removeItem('anime_token');
-  localStorage.removeItem('anime_user');
-  render();
-};
-
-// Handle OAuth callback
 function handleOAuthCallback(){
   var params=new URLSearchParams(window.location.search);
   var authParam=params.get('auth');
@@ -126,14 +111,12 @@ function handleOAuthCallback(){
         render();
       }
     }catch(e){}
-    // Clean URL
     var url=new URL(window.location.href);
     url.searchParams.delete('auth');
     window.history.replaceState({},'',url.toString());
   }
 }
 
-// Validate token
 function validate(){
   if(!token){render();return;}
   fetch(API+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
@@ -145,7 +128,6 @@ function validate(){
 
 function init(){
   handleOAuthCallback();
-  // Create auth bar if not in DOM (fallback)
   if(!document.getElementById('site-auth-bar')){
     var nav=document.getElementById('nav');
     if(nav){
@@ -172,10 +154,20 @@ function init(){
       +'<button class="slm-cancel" onclick="hideSiteLoginModal()">取消</button>'
       +'</div>';
     document.body.appendChild(modal);
-    modal.addEventListener('click',function(e){if(e.target===this)hideSiteLoginModal();});
+    modal.addEventListener('click',function(e){if(e.target===this)hideLoginModal();});
   }
   validate();
 }
+
+// Expose globals
+window.showSiteLoginModal=showLoginModal;
+window.hideSiteLoginModal=hideLoginModal;
+window.siteGithubLogin=function(){window.location.href=API+'/api/auth/github';};
+window.siteGoogleLogin=function(){window.location.href=API+'/api/auth/google';};
+window.siteSendCode=sendCode;
+window.siteVerifyCode=verifyCode;
+window.siteAuthLogout=logout;
+window._siteAuth={isLoggedIn:isLoggedIn,getUser:function(){return user;},getToken:function(){return token;},showLogin:showLoginModal};
 
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 document.addEventListener('pjax:complete',function(){if(!document.getElementById('site-auth-bar'))init();});
