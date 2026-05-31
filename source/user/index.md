@@ -4,7 +4,7 @@ date: 2026-05-31
 type: user
 comments: false
 ---
-
+{% raw %}
 <div id="user-center">
   <div class="uc-loading" id="ucLoading"><i class="fas fa-spinner fa-spin"></i> 加载中...</div>
   <div class="uc-main" id="ucMain" style="display:none">
@@ -22,7 +22,6 @@ comments: false
         <div class="uc-meta" id="ucMeta"></div>
       </div>
     </div>
-
     <div class="uc-modal" id="ucNameModal">
       <div class="uc-modal-box">
         <h3>修改昵称</h3>
@@ -33,7 +32,6 @@ comments: false
         </div>
       </div>
     </div>
-
     <div class="uc-modal" id="ucAvatarModal">
       <div class="uc-modal-box">
         <h3>修改头像</h3>
@@ -44,7 +42,6 @@ comments: false
         </div>
       </div>
     </div>
-
     <div class="uc-card">
       <h3 class="uc-card-title"><i class="fas fa-link"></i> 关联账户</h3>
       <div class="uc-accounts" id="ucAccounts">
@@ -74,7 +71,6 @@ comments: false
         </div>
       </div>
     </div>
-
     <div class="uc-card">
       <h3 class="uc-card-title"><i class="fas fa-cog"></i> 账户操作</h3>
       <div class="uc-actions">
@@ -93,3 +89,4 @@ comments: false
     </div>
   </div>
 </div>
+{% endraw %}
