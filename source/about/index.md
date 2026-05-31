@@ -430,6 +430,12 @@ type: about
 
 <div class="divider">✦ ✦ ✦</div>
 
+## 背景音乐
+
+页面左下角的背景音乐来自 [Bogo Cat 猫猫乐队](https://v.douyin.com/dASj3_YY95A/) 的翻唱，原曲为 Justin Bieber 的作品。
+
+<div class="divider">✦ ✦ ✦</div>
+
 ## 联系方式
 
 <p style="color: #8892b0; margin-bottom: 12px;">如果你想找我聊天（或者想帮我 debug），可以在这里找到我：</p>
