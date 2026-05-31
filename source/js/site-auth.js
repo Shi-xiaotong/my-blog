@@ -7,9 +7,6 @@ var countdown=0;
 
 function isLoggedIn(){return !!token;}
 
-// Expose for CWD comment integration
-window._siteAuth={isLoggedIn:isLoggedIn,getUser:function(){return user;},getToken:function(){return token;},showLogin:showSiteLoginModal};
-
 function render(){
   var bar=document.getElementById('site-auth-bar');
   if(!bar)return;
@@ -34,6 +31,9 @@ function hideSiteLoginModal(){
   var m=document.getElementById('site-login-modal');if(m)m.classList.remove('show');
 }
 window.hideSiteLoginModal=hideSiteLoginModal;
+
+// Expose for CWD comment integration
+window._siteAuth={isLoggedIn:isLoggedIn,getUser:function(){return user;},getToken:function(){return token;},showLogin:showSiteLoginModal};
 
 function resetEmailForm(){
   var inp=document.getElementById('slmEmailInput');
