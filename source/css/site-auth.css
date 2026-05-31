@@ -1,0 +1,49 @@
+/* Site-wide auth bar — inside navbar */
+#site-auth-bar{display:flex;align-items:center;margin-left:auto;padding:0 8px;white-space:nowrap}
+#site-auth-bar .auth-login-btn{padding:4px 14px;background:rgba(255,217,61,.1);color:#ffd93d;border:1px solid rgba(255,217,61,.2);border-radius:16px;cursor:pointer;font-size:13px;transition:all .2s;display:flex;align-items:center;gap:4px}
+#site-auth-bar .auth-login-btn:hover{background:rgba(255,217,61,.2);border-color:rgba(255,217,61,.4)}
+#site-auth-bar .auth-user-info{display:flex;align-items:center;gap:5px;padding:3px 10px 3px 6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;font-size:13px;color:#999}
+#site-auth-bar .auth-user-info .auth-avatar-sm{width:22px;height:22px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:10px;color:#ffd93d;overflow:hidden;flex-shrink:0}
+#site-auth-bar .auth-user-info .auth-avatar-sm img{width:100%;height:100%;object-fit:cover}
+#site-auth-bar .auth-user-info .auth-name{color:#ffd93d;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;font-size:13px}
+#site-auth-bar .auth-user-info .auth-name:hover{opacity:.8}
+#site-auth-bar .auth-user-info .auth-logout{background:none;border:none;color:#666;cursor:pointer;font-size:11px;padding:2px 3px}
+#site-auth-bar .auth-user-info .auth-logout:hover{color:#e94560}
+/* Login modal */
+#site-login-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:1002;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+#site-login-modal.show{display:flex}
+#site-login-modal .slm-box{background:#1a1a2e;border:1px solid #333;border-radius:16px;padding:32px;width:380px;max-width:90vw;text-align:center}
+#site-login-modal .slm-box h3{color:#ffd93d;margin:0 0 6px;font-size:18px}
+#site-login-modal .slm-box .slm-sub{color:#888;font-size:13px;margin:0 0 20px;line-height:1.4}
+#site-login-modal .slm-box .slm-error{color:#e94560;font-size:12px;margin-bottom:8px;min-height:16px}
+#site-login-modal .slm-box .slm-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:#555;font-size:12px}
+#site-login-modal .slm-box .slm-divider::before,#site-login-modal .slm-box .slm-divider::after{content:'';flex:1;height:1px;background:#333}
+/* OAuth buttons */
+#site-login-modal .slm-oauth{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+#site-login-modal .slm-oauth-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border:1px solid #444;border-radius:10px;background:#222;color:#e0e0e0;font-size:14px;cursor:pointer;transition:all .2s}
+#site-login-modal .slm-oauth-btn:hover{background:#333;border-color:#666}
+#site-login-modal .slm-oauth-btn .slm-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+#site-login-modal .slm-oauth-btn.github{background:#24292e;border-color:#444}
+#site-login-modal .slm-oauth-btn.github:hover{background:#333}
+#site-login-modal .slm-oauth-btn.google{background:#fff;border-color:#ddd;color:#333}
+#site-login-modal .slm-oauth-btn.google:hover{background:#f5f5f5}
+/* Email form */
+#site-login-modal .slm-email-form{display:flex;flex-direction:column;gap:10px}
+#site-login-modal .slm-email-form input{width:100%;padding:10px 14px;background:#0f0f1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:14px;outline:none;box-sizing:border-box}
+#site-login-modal .slm-email-form input:focus{border-color:#ffd93d}
+#site-login-modal .slm-email-row{display:flex;gap:8px}
+#site-login-modal .slm-email-row input{flex:1}
+#site-login-modal .slm-email-row .slm-send-btn{padding:10px 16px;background:#333;color:#ffd93d;border:1px solid #444;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap;flex-shrink:0}
+#site-login-modal .slm-email-row .slm-send-btn:hover{background:#444}
+#site-login-modal .slm-email-row .slm-send-btn:disabled{opacity:.5;cursor:not-allowed}
+#site-login-modal .slm-submit{width:100%;padding:10px;background:#ffd93d;color:#0f0f1a;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+#site-login-modal .slm-submit:hover{background:#e94560;color:#fff}
+#site-login-modal .slm-cancel{background:none;border:none;color:#888;cursor:pointer;font-size:13px;margin-top:8px}
+#site-login-modal .slm-cancel:hover{color:#ffd93d}
+@media(max-width:768px){
+  #site-auth-bar{padding:0 4px}
+  #site-auth-bar .auth-login-btn{padding:3px 10px;font-size:12px}
+  #site-auth-bar .auth-user-info{padding:2px 8px 2px 5px;font-size:12px}
+  #site-auth-bar .auth-user-info .auth-name{max-width:70px}
+  #site-login-modal .slm-box{padding:24px 20px}
+}

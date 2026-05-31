@@ -7,7 +7,11 @@ inject:
     - <style>#page-header,#page-header::before,#footer,#footer::before{background:transparent!important}</style>
     # 音乐播放器样式
     - <link rel="stylesheet" href="/css/music-player.css">
+    # 全局用户认证样式
+    - <link rel="stylesheet" href="/css/site-auth.css">
   bottom:
+    # 全局用户认证
+    - <script src="/js/site-auth.js"></script>
     # 天气
     - <script src="/js/weather-store.js"></script>
     - <script src="/js/weather-widget.js"></script>

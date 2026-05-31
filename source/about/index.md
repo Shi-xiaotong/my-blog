@@ -492,6 +492,7 @@ type: about
 | [Cravatar](https://cravatar.cn) | 国内通用头像服务 |
 | [ipwho](https://ipwho.org) | IP 信息查询 API |
 | [Hermes Agent](https://hermes-agent.nousresearch.com) | AI 自动化运维助手 |
+| [非凡资源站](https://ffzy1.tv) | 影视屋资源数据源 |
 
 ---
 
