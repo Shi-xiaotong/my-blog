@@ -8,7 +8,7 @@
     if(!auth||!auth.isLoggedIn())return;
     var u=auth.getUser();
     if(!u)return;
-    var name=u.display_name||u.email?u.email.split('@')[0]:'user';
+    var name=u.display_name||(u.email?u.email.split('@')[0]:'user');
     var email=u.email||'';
     try{localStorage.setItem('cwd_user_info',JSON.stringify({name:name,email:email,url:''}));}catch(e){}
   }
