@@ -128,35 +128,46 @@ function validate(){
 
 function init(){
   handleOAuthCallback();
-  if(!document.getElementById('site-auth-bar')){
-    var nav=document.getElementById('nav');
-    if(nav){
-      var bar=document.createElement('div');
-      bar.id='site-auth-bar';
-      nav.appendChild(bar);
-    }
-  }
-  if(!document.getElementById('site-login-modal')){
-    var modal=document.createElement('div');modal.id='site-login-modal';
-    modal.innerHTML='<div class="slm-box">'
-      +'<h3>登录 Mercury 博客</h3>'
-      +'<p class="slm-sub">选择登录方式，已有账户自动关联</p>'
-      +'<div class="slm-error" id="slmError"></div>'
-      +'<div class="slm-oauth">'
-      +'<button class="slm-oauth-btn github" onclick="siteGithubLogin()"><span class="slm-icon"><i class="fab fa-github"></i></span> 使用 GitHub 登录</button>'
-      +'<button class="slm-oauth-btn google" onclick="siteGoogleLogin()"><span class="slm-icon"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></span> 使用 Google 登录</button>'
-      +'</div>'
-      +'<div class="slm-divider">或使用邮箱验证码</div>'
-      +'<div class="slm-email-form">'
-      +'<div class="slm-email-row"><input type="email" id="slmEmailInput" placeholder="your@email.com" onkeydown="if(event.key===\'Enter\')siteSendCode()"><button class="slm-send-btn" id="slmSendBtn" onclick="siteSendCode()">发送验证码</button></div>'
-      +'<div class="slm-email-row" id="slmCodeWrap" style="display:none"><input type="text" id="slmCodeInput" placeholder="输入6位验证码" maxlength="6" onkeydown="if(event.key===\'Enter\')siteVerifyCode()"><button class="slm-submit" style="width:auto;padding:10px 20px" onclick="siteVerifyCode()">验证</button></div>'
-      +'</div>'
-      +'<button class="slm-cancel" onclick="hideSiteLoginModal()">取消</button>'
-      +'</div>';
-    document.body.appendChild(modal);
-    modal.addEventListener('click',function(e){if(e.target===this)hideLoginModal();});
-  }
+  ensureBar();
+  ensureModal();
   validate();
+}
+
+function ensureBar(){
+  if(document.getElementById('site-auth-bar')){render();return;}
+  // Try multiple selectors for Butterfly theme navbar
+  var nav=document.getElementById('nav')
+    || document.querySelector('#nav .menus_items')
+    || document.querySelector('.menus_items')
+    || document.getElementById('nav-container');
+  if(nav){
+    var bar=document.createElement('div');
+    bar.id='site-auth-bar';
+    nav.appendChild(bar);
+  }
+  render();
+}
+
+function ensureModal(){
+  if(document.getElementById('site-login-modal'))return;
+  var modal=document.createElement('div');modal.id='site-login-modal';
+  modal.innerHTML='<div class="slm-box">'
+    +'<h3>登录 Mercury 博客</h3>'
+    +'<p class="slm-sub">选择登录方式，已有账户自动关联</p>'
+    +'<div class="slm-error" id="slmError"></div>'
+    +'<div class="slm-oauth">'
+    +'<button class="slm-oauth-btn github" onclick="siteGithubLogin()"><span class="slm-icon"><i class="fab fa-github"></i></span> 使用 GitHub 登录</button>'
+    +'<button class="slm-oauth-btn google" onclick="siteGoogleLogin()"><span class="slm-icon"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></span> 使用 Google 登录</button>'
+    +'</div>'
+    +'<div class="slm-divider">或使用邮箱验证码</div>'
+    +'<div class="slm-email-form">'
+    +'<div class="slm-email-row"><input type="email" id="slmEmailInput" placeholder="your@email.com" onkeydown="if(event.key===\'Enter\')siteSendCode()"><button class="slm-send-btn" id="slmSendBtn" onclick="siteSendCode()">发送验证码</button></div>'
+    +'<div class="slm-email-row" id="slmCodeWrap" style="display:none"><input type="text" id="slmCodeInput" placeholder="输入6位验证码" maxlength="6" onkeydown="if(event.key===\'Enter\')siteVerifyCode()"><button class="slm-submit" style="width:auto;padding:10px 20px" onclick="siteVerifyCode()">验证</button></div>'
+    +'</div>'
+    +'<button class="slm-cancel" onclick="hideSiteLoginModal()">取消</button>'
+    +'</div>';
+  document.body.appendChild(modal);
+  modal.addEventListener('click',function(e){if(e.target===this)hideLoginModal();});
 }
 
 // Expose globals
@@ -170,7 +181,7 @@ window.siteAuthLogout=logout;
 window._siteAuth={isLoggedIn:isLoggedIn,getUser:function(){return user;},getToken:function(){return token;},showLogin:showLoginModal};
 
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
-document.addEventListener('pjax:complete',function(){if(!document.getElementById('site-auth-bar'))init();});
+document.addEventListener('pjax:complete',function(){init();});
 window.addEventListener('storage',function(e){if(e.key==='anime_token'||e.key==='anime_user'){token=localStorage.getItem('anime_token')||'';user=JSON.parse(localStorage.getItem('anime_user')||'null');render();}});
 window.addEventListener('focus',function(){var t=localStorage.getItem('anime_token')||'';if(t!==token){token=t;user=JSON.parse(localStorage.getItem('anime_user')||'null');render();}});
 }catch(e){console.error('[site-auth] init error:',e);}
