@@ -79,9 +79,19 @@ comments: false
 @media(max-width:600px){
 #play-page .ep-grid{grid-template-columns:repeat(auto-fill,minmax(64px,1fr))}
 #play-page .controls{gap:4px;padding:6px 8px}
-#play-page .volume-wrap input[type=range]{width:50px}
+#play-page .controls button{font-size:14px;padding:5px}
+#play-page .volume-wrap{display:none}
+#play-page .speed-btn{font-size:11px!important;padding:3px 6px!important}
+#play-page .skip-btn{font-size:11px!important;padding:3px 8px!important}
+#play-page .danmaku-bar{gap:6px;padding:6px 8px}
+#play-page .danmaku-bar input{padding:6px 10px;font-size:12px;min-width:100px}
+#play-page .danmaku-bar .send-btn{padding:6px 14px;font-size:12px}
 #play-page .info-header{flex-direction:column;align-items:center;text-align:center}
 #play-page .info-poster{width:100px}
+#play-page .info-section{padding:12px}
+#play-page .episode-section{padding:0 12px 12px}
+#play-page .top-bar{padding:8px 12px}
+#play-page .top-bar .title-text{font-size:13px}
 }
 </style>
 

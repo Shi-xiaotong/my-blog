@@ -43,6 +43,10 @@ comments: false
       </div>
     </div>
     <div class="uc-card">
+      <h3 class="uc-card-title"><i class="fas fa-history"></i> 观看记录</h3>
+      <div id="ucHistoryList"><div class="uc-hint">加载中...</div></div>
+    </div>
+    <div class="uc-card">
       <h3 class="uc-card-title"><i class="fas fa-link"></i> 关联账户</h3>
       <div class="uc-accounts" id="ucAccounts">
         <div class="uc-account-item">

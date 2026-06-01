@@ -41,7 +41,31 @@
 .uc-modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
 .uc-loading{text-align:center;padding:120px 20px;color:#888;font-size:16px}
 .uc-loading i{margin-right:8px}
-@media(max-width:768px){#user-center{padding:70px 16px 30px}.uc-card{padding:18px}}
+@media(max-width:768px){#user-center{padding:70px 16px 30px}.uc-card{padding:18px}
+.uc-history-item img{width:55px;height:75px}
+.uc-history-item{gap:10px;padding:10px 0}
+.uc-history-title{font-size:13px}
+.uc-history-ep,.uc-history-time{font-size:11px}
+}
+/* History list */
+.uc-hint{color:#888;font-size:13px;text-align:center;padding:16px 0}
+.uc-history-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:background .2s}
+.uc-history-item:last-child{border-bottom:none}
+.uc-history-item:hover{background:rgba(255,255,255,.03)}
+.uc-history-item img{width:70px;height:95px;object-fit:cover;border-radius:6px;flex-shrink:0}
+.uc-history-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between}
+.uc-history-title{font-size:14px;color:#e0e0e0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.uc-history-ep{font-size:12px;color:#aaa;margin-top:2px}
+.uc-history-time{font-size:11px;color:#666;margin-top:2px}
+.uc-history-progress{display:flex;align-items:center;gap:8px;margin-top:6px}
+.uc-history-progress .uc-pbar{flex:1;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.uc-history-progress .uc-pfill{height:100%;background:#ffd93d;border-radius:2px}
+.uc-history-progress .uc-ppct{font-size:11px;color:#ffd93d;min-width:32px;text-align:right}
+.uc-history-more{text-align:center;padding:12px 0}
+.uc-history-more a{color:#ffd93d;font-size:13px;text-decoration:none}
+.uc-history-more a:hover{text-decoration:underline}
+[data-theme="dark"] .uc-history-title{color:#e0e0e0}
+[data-theme="dark"] .uc-history-ep{color:#aaa}
 /* Light mode */
 .uc-name{color:#333}
 .uc-account-name{color:#333}

@@ -162,10 +162,47 @@ function load(){
       return;
     }
     render(d);
+    loadHistory();
   }).catch(function(){
     var el=$('ucLoading');if(el)el.style.display='none';
     var nl=$('ucNotLogin');if(nl)nl.style.display='';
   });
+}
+
+function loadHistory(){
+  api('/api/history').then(function(d){
+    var list=d.list||[];
+    var el=$('ucHistoryList');
+    if(!el)return;
+    if(!d.logged_in||list.length===0){
+      el.innerHTML='<div class="uc-hint">暂无观看记录</div>';
+      return;
+    }
+    var html='';
+    var show=list.slice(0,5);
+    show.forEach(function(h){
+      var pct=h.duration>0?Math.round(h.position/h.duration*100):0;
+      html+='<div class="uc-history-item" onclick="window.location.href=\'/anime/play/?vod_id='+h.vod_id+'&ep='+h.episode_index+'\'">';
+      if(h.vod_pic)html+='<img src="'+h.vod_pic+'" onerror="this.style.display=\'none\'">';
+      html+='<div class="uc-history-info">';
+      html+='<div class="uc-history-title">'+h.vod_name+'</div>';
+      html+='<div class="uc-history-ep">第'+(h.episode_index+1)+'集 '+(h.episode_name||'')+'</div>';
+      html+='<div class="uc-history-time"><i class="fas fa-clock"></i> '+formatDate(h.updated_at)+'</div>';
+      html+='<div class="uc-history-progress"><div class="uc-pbar"><div class="uc-pfill" style="width:'+pct+'%"></div></div><span class="uc-ppct">'+pct+'%</span></div>';
+      html+='</div></div>';
+    });
+    if(list.length>5){
+      html+='<div class="uc-history-more"><a href="/anime/history/">查看全部 '+list.length+' 条记录 →</a></div>';
+    }
+    el.innerHTML=html;
+  }).catch(function(){
+    var el=$('ucHistoryList');if(el)el.innerHTML='<div class="uc-hint">加载失败</div>';
+  });
+}
+
+function formatDate(s){
+  if(!s)return'-';
+  try{var d=new Date(s.endsWith('Z')?s:s+'Z');return d.toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return s;}
 }
 
 load();

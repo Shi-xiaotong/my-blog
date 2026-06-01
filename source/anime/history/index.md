@@ -57,8 +57,14 @@ comments: false
 #history-page .login-prompt p{color:#888;margin-bottom:16px}
 #history-page .login-prompt button{padding:8px 24px;background:#ffd93d;color:#0f0f1a;border:none;border-radius:20px;cursor:pointer;font-size:14px;font-weight:600}
 @media(max-width:600px){
-#history-page .history-card img{width:80px;height:110px}
+#history-page .history-card img{width:70px;height:95px}
 #history-page .history-card .card-body{padding:10px}
+#history-page .history-card .card-title{font-size:13px}
+#history-page .container{padding:12px}
+#history-page .tabs{gap:6px}
+#history-page .tabs button{padding:5px 12px;font-size:12px}
+#history-page .stats-bar{gap:12px}
+#history-page .card-actions button{padding:3px 8px;font-size:11px}
 }
 </style>
 

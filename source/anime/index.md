@@ -27,7 +27,7 @@ type: anime
 #anime-page .card .card-title{font-size:13px;color:#e0e0e0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #anime-page .card .card-remark{position:absolute;top:6px;right:6px;background:#e94560;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px}
 #anime-page .pagination{display:flex;justify-content:center;align-items:center;gap:16px;padding:20px 16px}
-#anime-page .pagination button{min-width:120px;height:38px;line-height:38px;padding:0 32px;background:#1a1a2e;color:#ffd93d;border:1px solid #333;border-radius:8px;cursor:pointer;font-size:14px;text-align:center}
+#anime-page .pagination button{height:38px;line-height:38px;padding:0 16px;background:#1a1a2e;color:#ffd93d;border:1px solid #333;border-radius:8px;cursor:pointer;font-size:16px;text-align:center}
 #anime-page .pagination button:hover{background:#ffd93d;color:#0f0f1a}
 #anime-page .pagination button:disabled{opacity:.4;cursor:not-allowed}
 #anime-page .page-info{color:#aaa;font-size:14px;width:auto!important;min-width:100px;line-height:38px;text-align:center}
@@ -46,6 +46,16 @@ type: anime
 /* Mobile */
 @media(max-width:600px){
 #anime-page .card-grid{grid-template-columns:repeat(3,1fr);gap:10px;padding:10px}
+#anime-page .search-bar input{font-size:14px;padding:8px 12px}
+#anime-page .search-bar button{padding:8px 16px;font-size:14px}
+#anime-page .tabs{gap:6px;padding:8px 10px}
+#anime-page .tabs button{padding:5px 12px;font-size:12px}
+#anime-page .nav-links{gap:10px;padding:8px 10px}
+#anime-page .nav-links a{font-size:12px;padding:3px 10px}
+#anime-page .continue-card{margin:10px;padding:12px}
+#anime-page .continue-card img{width:60px;height:82px}
+#anime-page .continue-card .cont-info h3{font-size:14px}
+#anime-page .pagination{gap:12px;padding:16px 10px}
 }
 </style>
 
@@ -88,9 +98,9 @@ type: anime
 
   <!-- Pagination -->
   <div class="pagination" id="pagination">
-    <button id="prevBtn" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i> 上一页</button>
+    <button id="prevBtn" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i></button>
     <span class="page-info" id="pageInfo">1</span>
-    <button id="nextBtn" onclick="changePage(1)">下一页 <i class="fas fa-chevron-right"></i></button>
+    <button id="nextBtn" onclick="changePage(1)"><i class="fas fa-chevron-right"></i></button>
   </div>
 
   <!-- Loading -->
