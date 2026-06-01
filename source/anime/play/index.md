@@ -410,7 +410,7 @@ function stopPlayer(resetVideo){
   if(historyTimer){clearInterval(historyTimer);historyTimer=null;}
   stopDanmakuLoop();
   if(resetVideo!==false){
-    video.pause();video.removeAttribute('src');video.load();video.style.display='';
+    video.pause();video.removeAttribute('src');try{video.load();}catch(e){}video.style.display='';
     document.querySelectorAll('#videoBox iframe').forEach(function(f){f.remove();});
   }
 }
@@ -437,7 +437,7 @@ async function saveHistory(){
 }
 
 // Player controls
-window.togglePlay=function(){if(video.paused)video.play();else video.pause();};
+window.togglePlay=function(){if(video.paused)video.play().catch(function(){});else video.pause();};
 video.addEventListener('play',function(){document.getElementById('playBtn').innerHTML='<i class="fas fa-pause"></i>';});
 video.addEventListener('pause',function(){document.getElementById('playBtn').innerHTML='<i class="fas fa-play"></i>';});
 
@@ -581,7 +581,7 @@ document.addEventListener('keydown',function(e){
   switch(e.key.toLowerCase()){
     case 'n':playNextEp();break;
     case 'p':playPrevEp();break;
-    case 'r':video.currentTime=0;video.play();break;
+    case 'r':video.currentTime=0;video.play().catch(function(){});break;
     case 'f':toggleFullscreen();break;
     case 'd':toggleDanmaku();break;
     case 'arrowleft':video.currentTime=Math.max(0,video.currentTime-10);e.preventDefault();break;
