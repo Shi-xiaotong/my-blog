@@ -303,9 +303,13 @@ async function loadDetail(){
       }catch(e){}
     }
 
-    // Use first source by default
+    // Auto-select source: prefer m3u8 lines over share pages
     currentSourceIndex=0;
-    switchSource(0,histEp);
+    for(var si=0;si<sources.length;si++){
+      var sample=(sources[si][0]||{}).url||'';
+      if(sample.includes('.m3u8')){currentSourceIndex=si;break;}
+    }
+    switchSource(currentSourceIndex,histEp);
 
     document.getElementById('loading').style.display='none';
   }catch(err){
