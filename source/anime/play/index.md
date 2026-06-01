@@ -303,13 +303,9 @@ async function loadDetail(){
       }catch(e){}
     }
 
-    // Auto-select source: prefer m3u8 lines over share pages
+    // Default to first source
     currentSourceIndex=0;
-    for(var si=0;si<sources.length;si++){
-      var sampleUrl=(sources[si][0]||{}).url||'';
-      if(sampleUrl.includes('.m3u8')){currentSourceIndex=si;break;}
-    }
-    switchSource(currentSourceIndex,histEp);
+    switchSource(0,histEp);
 
     document.getElementById('loading').style.display='none';
   }catch(err){
@@ -354,62 +350,41 @@ window.playEpisode=function(index){
   document.querySelectorAll('.ep-btn').forEach(function(b,i){b.classList.toggle('active',i===index);});
 
   var url=ep.url;
-  var isM3U8=url.includes('.m3u8');
-  var isShare=url.includes('/share/')||url.includes('/s/');
-  var playUrl=isM3U8?(API+'/m3u8?url='+encodeURIComponent(url)):url;
 
   stopPlayer(false);
 
-  // Share page → iframe embed (no referrer to bypass CDN restriction)
-  if(isShare){
-    fallbackToIframe(url);
-    return;
-  }
-
-  if(isM3U8&&Hls.isSupported()){
-    hlsInstance=new Hls({maxBufferLength:30,maxMaxBufferLength:60});
-    hlsInstance.loadSource(playUrl);
-    hlsInstance.attachMedia(video);
-    hlsInstance.on(Hls.Events.MANIFEST_PARSED,function(){video.play().catch(function(){});});
-    hlsInstance.on(Hls.Events.ERROR,function(event,data){
-      if(data.fatal){
-        console.warn('HLS fatal error, trying iframe fallback');
-        fallbackToIframe(url);
-      }
-    });
-  }else if(video.canPlayType('application/vnd.apple.mpegurl')){
-    video.src=playUrl;
-    video.addEventListener('loadedmetadata',function(){video.play().catch(function(){});},{once:true});
-  }else{
-    fallbackToIframe(url);return;
-  }
-
-  loadDanmaku();
-  startDanmakuLoop();
-  document.getElementById('skipLabel').textContent=skipIntroTime+'s';
-  document.getElementById('skipInput').value=skipIntroTime;
-
-  // Resume position
-  var resumeAt=0;
-  if(window._savedEpIndex===index&&window._savedPosition>5){
-    resumeAt=window._savedPosition;
-    window._savedPosition=0;
-  }
-  if(resumeAt>0){
-    video.addEventListener('loadedmetadata',function onMeta(){
-      video.currentTime=resumeAt;
-      video.removeEventListener('loadedmetadata',onMeta);
-    });
-  }
+  // All URLs → iframe embed (bypasses CORS, CDN direct from browser)
+  fallbackToIframe(url);
 
   // Update URL without reload
   var newUrl='/anime/play/?vod_id='+vodId+'&ep='+index;
   window.history.replaceState({},'',newUrl);
 
-  // Start auto-save
+  // Start auto-save (note: can't track video position from iframe)
   clearInterval(historyTimer);
-  historyTimer=setInterval(saveHistory,10000);
+  historyTimer=setInterval(saveHistoryBasic,30000);
 };
+
+// Basic history save (without video position, since we can't access iframe internals)
+function saveHistoryBasic(){
+  if(!isLoggedIn()||!currentDetail)return;
+  try{
+    fetch(API+'/api/history',{
+      method:'POST',
+      headers:authHeaders(),
+      body:JSON.stringify({
+        vod_id:currentDetail.vod_id,
+        vod_name:currentDetail.vod_name,
+        vod_pic:currentDetail.vod_pic,
+        episode_index:currentEpIndex,
+        episode_name:episodes[currentEpIndex]?.name||'',
+        position:0,
+        duration:0,
+        skip_intro:skipIntroTime
+      })
+    });
+  }catch(e){}
+}
 
 function fallbackToIframe(url){
   var container=document.getElementById('videoBox');
