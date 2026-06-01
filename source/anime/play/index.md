@@ -351,12 +351,13 @@ window.playEpisode=function(index){
 
   var url=ep.url;
   var isM3U8=url.includes('.m3u8')||url.includes('/m3u8');
+  var playUrl=isM3U8?(API+'/m3u8?url='+encodeURIComponent(url)):url;
 
   stopPlayer(false);
 
   if(isM3U8&&Hls.isSupported()){
     hlsInstance=new Hls({maxBufferLength:30,maxMaxBufferLength:60});
-    hlsInstance.loadSource(url);
+    hlsInstance.loadSource(playUrl);
     hlsInstance.attachMedia(video);
     hlsInstance.on(Hls.Events.MANIFEST_PARSED,function(){video.play().catch(function(){});});
     hlsInstance.on(Hls.Events.ERROR,function(event,data){
@@ -366,7 +367,7 @@ window.playEpisode=function(index){
       }
     });
   }else if(video.canPlayType('application/vnd.apple.mpegurl')){
-    video.src=url;
+    video.src=playUrl;
     video.addEventListener('loadedmetadata',function(){video.play().catch(function(){});},{once:true});
   }else{
     fallbackToIframe(url);return;
