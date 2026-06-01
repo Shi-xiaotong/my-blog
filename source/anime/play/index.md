@@ -247,6 +247,64 @@ if(!vodId){
   return;
 }
 
+// Detect best source line: test each line's first URL
+async function detectBestSource(srcs){
+  if(!srcs||srcs.length===0)return 0;
+  if(srcs.length===1)return 0;
+
+  showToast('检测可用线路...',2000);
+
+  // Score each line: m3u8=2, share=1, other=0; +2 if accessible
+  var scores=[];
+  for(var i=0;i<srcs.length;i++){
+    var eps=srcs[i];
+    if(!eps||eps.length===0){scores.push(-1);continue;}
+    var url=eps[0].url||'';
+    var score=0;
+    if(url.includes('.m3u8'))score=2;
+    else if(url.includes('/share/'))score=1;
+    // Test accessibility
+    try{
+      var ctrl=new AbortController();
+      var tmr=setTimeout(function(){ctrl.abort();},5000);
+      var r=await fetch(url,{method:'HEAD',mode:'no-cors',signal:ctrl.signal});
+      clearTimeout(tmr);
+      score+=2; // accessible
+    }catch(e){
+      // CORS error is OK for m3u8 (means server responded)
+      // Network error means truly unreachable
+      if(url.includes('.m3u8'))score+=1; // m3u8 CORS error = server alive
+    }
+    scores.push(score);
+  }
+
+  // Pick highest score
+  var best=0,bestScore=-1;
+  for(var j=0;j<scores.length;j++){
+    if(scores[j]>bestScore){bestScore=scores[j];best=j;}
+  }
+  return best;
+}
+
+// Auto-switch to next line on playback failure
+var sourceRetryCount=0;
+function tryNextSource(epIndex){
+  sourceRetryCount++;
+  if(sourceRetryCount>=sources.length){
+    showToast('所有线路均不可用',3000);
+    sourceRetryCount=0;
+    return false;
+  }
+  var next=(currentSourceIndex+1)%sources.length;
+  showToast('线路'+(currentSourceIndex+1)+'失败，切换线路'+(next+1),2000);
+  currentSourceIndex=next;
+  episodes=sources[next]||[];
+  document.querySelectorAll('#sourceTabs button').forEach(function(b,i){b.classList.toggle('active',i===next);});
+  renderEpisodes();
+  playEpisode(epIndex);
+  return true;
+}
+
 // Load detail
 async function loadDetail(){
   try{
@@ -303,12 +361,8 @@ async function loadDetail(){
       }catch(e){}
     }
 
-    // Auto-select source: prefer m3u8 lines over share pages
-    currentSourceIndex=0;
-    for(var si=0;si<sources.length;si++){
-      var sample=(sources[si][0]||{}).url||'';
-      if(sample.includes('.m3u8')){currentSourceIndex=si;break;}
-    }
+    // Auto-detect working source line
+    currentSourceIndex=await detectBestSource(sources);
     switchSource(currentSourceIndex,histEp);
 
     document.getElementById('loading').style.display='none';
@@ -322,6 +376,7 @@ async function loadDetail(){
 // Switch source
 window.switchSource=function(idx,epIdx){
   currentSourceIndex=idx;
+  sourceRetryCount=0;
   episodes=sources[idx]||[];
   // Update source tab active
   document.querySelectorAll('#sourceTabs button').forEach(function(b,i){b.classList.toggle('active',i===idx);});
@@ -364,7 +419,10 @@ window.playEpisode=function(index){
     hlsInstance.attachMedia(video);
     hlsInstance.on(Hls.Events.MANIFEST_PARSED,function(){video.play().catch(function(){});});
     hlsInstance.on(Hls.Events.ERROR,function(event,data){
-      if(data.fatal){fallbackToIframe(url);}
+      if(data.fatal){
+        // Try next source line first, then fallback to iframe
+        if(!tryNextSource(currentEpIndex)){fallbackToIframe(url);}
+      }
     });
   }else if(video.canPlayType('application/vnd.apple.mpegurl')){
     video.src=url;
