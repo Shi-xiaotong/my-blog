@@ -350,10 +350,17 @@ window.playEpisode=function(index){
   document.querySelectorAll('.ep-btn').forEach(function(b,i){b.classList.toggle('active',i===index);});
 
   var url=ep.url;
-  var isM3U8=url.includes('.m3u8')||url.includes('/m3u8');
+  var isM3U8=url.includes('.m3u8');
+  var isShare=url.includes('/share/')||url.includes('/s/');
   var playUrl=isM3U8?(API+'/m3u8?url='+encodeURIComponent(url)):url;
 
   stopPlayer(false);
+
+  // Share page → iframe embed (no referrer to bypass CDN restriction)
+  if(isShare){
+    fallbackToIframe(url);
+    return;
+  }
 
   if(isM3U8&&Hls.isSupported()){
     hlsInstance=new Hls({maxBufferLength:30,maxMaxBufferLength:60});
@@ -405,6 +412,7 @@ function fallbackToIframe(url){
   video.style.display='none';
   var iframe=document.createElement('iframe');
   iframe.src=url;iframe.allowFullscreen=true;
+  iframe.referrerPolicy='no-referrer';
   iframe.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;border:none';
   container.appendChild(iframe);
 }
