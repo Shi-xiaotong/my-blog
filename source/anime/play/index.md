@@ -27,7 +27,7 @@ comments: false
 #play-page .controls{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#111;flex-wrap:wrap}
 #play-page .controls button{background:none;border:none;color:#e0e0e0;cursor:pointer;font-size:16px;padding:6px}
 #play-page .controls button:hover{color:#ffd93d}
-#play-page .progress-wrap{flex:1;min-width:100px;height:20px;display:flex;align-items:center;cursor:pointer;position:relative}
+#play-page .progress-wrap{flex:1;min-width:100px;height:24px;display:flex;align-items:center;cursor:pointer;position:relative}
 #play-page .progress-bar{width:100%;height:4px;background:#333;border-radius:2px;position:relative}
 #play-page .progress-bar .progress-fill{height:100%;background:#ffd93d;border-radius:2px;width:0;transition:width .1s}
 #play-page .progress-bar .progress-buffer{position:absolute;top:0;left:0;height:100%;background:rgba(255,255,255,.2);border-radius:2px;width:0}
@@ -41,6 +41,10 @@ comments: false
 #play-page .skip-dropdown.show{display:block}
 #play-page .skip-dropdown label{font-size:12px;color:#aaa;display:block;margin-bottom:4px}
 #play-page .skip-dropdown input{width:60px;background:#111;border:1px solid #444;color:#fff;padding:3px 6px;border-radius:4px;font-size:12px}
+/* Double-tap hint */
+#play-page .tap-hint{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;padding:8px 16px;border-radius:8px;font-size:14px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:5}
+#play-page .tap-hint.left{left:15%}
+#play-page .tap-hint.right{right:15%}
 /* Danmaku bar */
 #play-page .danmaku-bar{display:flex;gap:8px;padding:8px 12px;background:#111;align-items:center;flex-wrap:wrap}
 #play-page .danmaku-bar input{flex:1;min-width:150px;padding:8px 12px;background:#1a1a2e;border:1px solid #333;border-radius:20px;color:#fff;font-size:13px;outline:none}
@@ -77,21 +81,34 @@ comments: false
 /* Error */
 #play-page .error-msg{text-align:center;padding:40px;color:#e94560}
 @media(max-width:600px){
-#play-page .ep-grid{grid-template-columns:repeat(auto-fill,minmax(64px,1fr))}
-#play-page .controls{gap:4px;padding:6px 8px}
-#play-page .controls button{font-size:14px;padding:5px}
+#play-page .ep-grid{grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px}
+#play-page .controls{gap:2px;padding:4px 6px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#play-page .controls button{font-size:13px;padding:6px 4px;flex-shrink:0}
+#play-page .progress-wrap{height:28px;min-width:60px}
+#play-page .progress-bar{height:6px}
+#play-page .progress-time{font-size:10px;margin:0 3px;flex-shrink:0}
 #play-page .volume-wrap{display:none}
-#play-page .speed-btn{font-size:11px!important;padding:3px 6px!important}
-#play-page .skip-btn{font-size:11px!important;padding:3px 8px!important}
+#play-page .speed-btn{font-size:11px!important;padding:4px 6px!important;flex-shrink:0}
+#play-page .skip-btn{font-size:10px!important;padding:4px 6px!important;flex-shrink:0}
+#play-page .skip-btn span{display:none}
+#play-page .skip-settings{display:none}
 #play-page .danmaku-bar{gap:6px;padding:6px 8px}
-#play-page .danmaku-bar input{padding:6px 10px;font-size:12px;min-width:100px}
-#play-page .danmaku-bar .send-btn{padding:6px 14px;font-size:12px}
+#play-page .danmaku-bar input{padding:6px 10px;font-size:13px;min-width:0;flex:1}
+#play-page .danmaku-bar .color-picker{display:none}
+#play-page .danmaku-bar .send-btn{padding:6px 14px;font-size:12px;flex-shrink:0}
 #play-page .info-header{flex-direction:column;align-items:center;text-align:center}
-#play-page .info-poster{width:100px}
-#play-page .info-section{padding:12px}
-#play-page .episode-section{padding:0 12px 12px}
-#play-page .top-bar{padding:8px 12px}
+#play-page .info-poster{width:90px}
+#play-page .info-detail h2{font-size:16px}
+#play-page .info-detail p{font-size:12px}
+#play-page .info-section{padding:10px}
+#play-page .episode-section{padding:0 10px 10px}
+#play-page .episode-section h3{font-size:13px;margin:0 0 8px}
+#play-page .ep-btn{padding:6px 2px;font-size:12px}
+#play-page .top-bar{padding:8px 10px}
 #play-page .top-bar .title-text{font-size:13px}
+#play-page .top-bar .home-link{font-size:12px;padding:3px 6px}
+#play-page .source-tabs button{padding:3px 10px;font-size:11px}
+#play-page .tap-hint{font-size:12px;padding:6px 12px}
 }
 </style>
 
@@ -109,6 +126,8 @@ comments: false
       <video id="videoPlayer" playsinline webkit-playsinline></video>
       <canvas class="danmaku-canvas" id="danmakuCanvas"></canvas>
       <div class="speed-indicator" id="speedIndicator">3x</div>
+      <div class="tap-hint left" id="tapHintLeft">-10s</div>
+      <div class="tap-hint right" id="tapHintRight">+10s</div>
     </div>
     <div class="controls">
       <button onclick="playPrevEp()" title="上一集(P)"><i class="fas fa-step-backward"></i></button>
@@ -469,7 +488,7 @@ function endSpeedUp(){if(!isSpeedUp)return;isSpeedUp=false;video.playbackRate=pl
 var mouseDownTime=0;
 videoBox.addEventListener('mousedown',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar'))return;
-  mouseDownTime=Date.now();longPressTimer=setTimeout(startSpeedUp,300);
+  mouseDownTime=Date.now();longPressTimer=setTimeout(startSpeedUp,500);
 });
 videoBox.addEventListener('mouseup',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar'))return;
@@ -480,17 +499,81 @@ videoBox.addEventListener('mouseup',function(e){
 videoBox.addEventListener('mouseleave',endSpeedUp);
 
 var touchDownTime=0;
+var lastTapTime=0;
+var tapSide=''; // 'left' or 'right'
 videoBox.addEventListener('touchstart',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar'))return;
-  touchDownTime=Date.now();longPressTimer=setTimeout(startSpeedUp,300);
+  touchDownTime=Date.now();
+  longPressTimer=setTimeout(startSpeedUp,500);
 },{passive:true});
 videoBox.addEventListener('touchend',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar'))return;
   clearTimeout(longPressTimer);
-  if(isSpeedUp)endSpeedUp();
-  else if(Date.now()-touchDownTime<300)togglePlay();
+  if(isSpeedUp){endSpeedUp();return;}
+  var now=Date.now();
+  var dt=now-touchDownTime;
+  if(dt>500)return; // was long press
+  // Detect double-tap
+  if(now-lastTapTime<300){
+    // Double-tap: seek based on side
+    var rect=videoBox.getBoundingClientRect();
+    var x=(e.changedTouches[0]||e.touches[0]).clientX-rect.left;
+    var side=x<rect.width/2?'left':'right';
+    if(side==='left'){
+      video.currentTime=Math.max(0,video.currentTime-10);
+      showTapHint('tapHintLeft');
+    }else{
+      video.currentTime=Math.min(video.duration||0,video.currentTime+10);
+      showTapHint('tapHintRight');
+    }
+    lastTapTime=0;
+    return;
+  }
+  lastTapTime=now;
+  // Single tap = toggle play (handled by delay)
+  setTimeout(function(){if(lastTapTime===now)togglePlay();},300);
 });
 videoBox.addEventListener('touchcancel',endSpeedUp);
+
+function showTapHint(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.style.opacity='1';
+  clearTimeout(el._t);
+  el._t=setTimeout(function(){el.style.opacity='0';},400);
+}
+
+// Progress bar drag (touch)
+var progressWrap=document.getElementById('progressWrap');
+var isDragging=false;
+progressWrap.addEventListener('touchstart',function(e){
+  isDragging=true;
+  seekFromTouch(e);
+},{passive:true});
+progressWrap.addEventListener('touchmove',function(e){
+  if(isDragging)seekFromTouch(e);
+},{passive:true});
+progressWrap.addEventListener('touchend',function(){isDragging=false;});
+
+function seekFromTouch(e){
+  var rect=progressWrap.getBoundingClientRect();
+  var x=(e.touches[0]||e.changedTouches[0]).clientX-rect.left;
+  var pct=Math.max(0,Math.min(1,x/rect.width));
+  video.currentTime=pct*(video.duration||0);
+}
+
+// Auto-fullscreen on landscape (mobile)
+function isMobile(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);}
+if(isMobile()){
+  window.addEventListener('orientationchange',function(){
+    var isLandscape=screen.orientation&&(screen.orientation.type||'').includes('landscape')
+      ||window.innerWidth>window.innerHeight;
+    if(isLandscape&&!document.fullscreenElement){
+      var wrapper=document.querySelector('.player-wrap');
+      (wrapper.requestFullscreen||wrapper.webkitRequestFullscreen||wrapper.msRequestFullscreen).call(wrapper).catch(function(){});
+    }
+  });
+}
 
 // Keyboard
 document.addEventListener('keydown',function(e){
@@ -511,7 +594,7 @@ document.addEventListener('keydown',function(e){
 // Spacebar hold
 document.addEventListener('keydown',function(e){
   if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
-  if(e.code==='Space'&&!e.repeat){e.preventDefault();spaceHeld=true;longPressTimer=setTimeout(startSpeedUp,300);}
+  if(e.code==='Space'&&!e.repeat){e.preventDefault();spaceHeld=true;longPressTimer=setTimeout(startSpeedUp,500);}
 });
 document.addEventListener('keyup',function(e){
   if(e.code==='Space'){if(spaceHeld&&!isSpeedUp)togglePlay();spaceHeld=false;clearTimeout(longPressTimer);endSpeedUp();}
