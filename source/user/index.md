@@ -64,8 +64,8 @@ comments: false
         <div class="uc-account-item">
           <div class="uc-account-icon"><i class="fas fa-envelope"></i></div>
           <div class="uc-account-info">
-            <span class="uc-account-name">邮箱验证码</span>
-            <span class="uc-account-status" id="ucEmailStatus">未关联</span>
+            <span class="uc-account-name">邮箱</span>
+            <span class="uc-account-status" id="ucEmailStatus">未绑定</span>
           </div>
           <span id="ucEmailBtn"></span>
         </div>

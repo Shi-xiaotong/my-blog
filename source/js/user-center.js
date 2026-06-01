@@ -55,7 +55,7 @@ function setStatus(type,val){
   }
   if(!s||!b)return;
   if(val){
-    s.textContent='已关联 ('+val+')';s.className='uc-account-status linked';
+    s.textContent='已关联';s.className='uc-account-status linked';
     b.textContent='解绑';b.className='uc-btn uc-btn-sm uc-btn-danger';
     b.onclick=function(){unlinkAccount(type);};
   }else{
