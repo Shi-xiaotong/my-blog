@@ -303,7 +303,7 @@ async function loadDetail(){
       }catch(e){}
     }
 
-    // Default to first source
+    // Use first source by default
     currentSourceIndex=0;
     switchSource(0,histEp);
 
@@ -350,48 +350,57 @@ window.playEpisode=function(index){
   document.querySelectorAll('.ep-btn').forEach(function(b,i){b.classList.toggle('active',i===index);});
 
   var url=ep.url;
+  var isM3U8=url.includes('.m3u8')||url.includes('/m3u8');
 
   stopPlayer(false);
 
-  // All URLs → iframe embed (bypasses CORS, CDN direct from browser)
-  fallbackToIframe(url);
+  if(isM3U8&&Hls.isSupported()){
+    hlsInstance=new Hls({maxBufferLength:30,maxMaxBufferLength:60});
+    hlsInstance.loadSource(url);
+    hlsInstance.attachMedia(video);
+    hlsInstance.on(Hls.Events.MANIFEST_PARSED,function(){video.play().catch(function(){});});
+    hlsInstance.on(Hls.Events.ERROR,function(event,data){
+      if(data.fatal){fallbackToIframe(url);}
+    });
+  }else if(video.canPlayType('application/vnd.apple.mpegurl')){
+    video.src=url;
+    video.addEventListener('loadedmetadata',function(){video.play().catch(function(){});},{once:true});
+  }else{
+    fallbackToIframe(url);return;
+  }
+
+  loadDanmaku();
+  startDanmakuLoop();
+  document.getElementById('skipLabel').textContent=skipIntroTime+'s';
+  document.getElementById('skipInput').value=skipIntroTime;
+
+  // Resume position
+  var resumeAt=0;
+  if(window._savedEpIndex===index&&window._savedPosition>5){
+    resumeAt=window._savedPosition;
+    window._savedPosition=0;
+  }
+  if(resumeAt>0){
+    video.addEventListener('loadedmetadata',function onMeta(){
+      video.currentTime=resumeAt;
+      video.removeEventListener('loadedmetadata',onMeta);
+    });
+  }
 
   // Update URL without reload
   var newUrl='/anime/play/?vod_id='+vodId+'&ep='+index;
   window.history.replaceState({},'',newUrl);
 
-  // Start auto-save (note: can't track video position from iframe)
+  // Start auto-save
   clearInterval(historyTimer);
-  historyTimer=setInterval(saveHistoryBasic,30000);
+  historyTimer=setInterval(saveHistory,10000);
 };
-
-// Basic history save (without video position, since we can't access iframe internals)
-function saveHistoryBasic(){
-  if(!isLoggedIn()||!currentDetail)return;
-  try{
-    fetch(API+'/api/history',{
-      method:'POST',
-      headers:authHeaders(),
-      body:JSON.stringify({
-        vod_id:currentDetail.vod_id,
-        vod_name:currentDetail.vod_name,
-        vod_pic:currentDetail.vod_pic,
-        episode_index:currentEpIndex,
-        episode_name:episodes[currentEpIndex]?.name||'',
-        position:0,
-        duration:0,
-        skip_intro:skipIntroTime
-      })
-    });
-  }catch(e){}
-}
 
 function fallbackToIframe(url){
   var container=document.getElementById('videoBox');
   video.style.display='none';
   var iframe=document.createElement('iframe');
   iframe.src=url;iframe.allowFullscreen=true;
-  iframe.referrerPolicy='no-referrer';
   iframe.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;border:none';
   container.appendChild(iframe);
 }
