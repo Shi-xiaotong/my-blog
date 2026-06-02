@@ -474,7 +474,7 @@ async function loadDetail(){
     var histEp=startEp;
     if(isLoggedIn()){
       try{
-        var hRes=await fetch(API+'/api/history?vod_id='+vodId,{headers:{'Authorization':'Bearer '+getToken()}});
+        var hRes=await fetch(API+'/api/history/'+vodId,{headers:{'Authorization':'Bearer '+getToken()}});
         var hData=await hRes.json();
         if(hData&&hData.episode_index!==undefined){
           histEp=hData.episode_index;
