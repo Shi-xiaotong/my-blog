@@ -20,7 +20,7 @@ comments: false
 /* Player */
 #play-page .player-wrap{position:relative;width:100%;max-width:960px;margin:0 auto;background:#000}
 #play-page .video-box{position:relative;width:100%;padding-top:56.25%;background:#000}
-#play-page .video-box video,#play-page .video-box iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+#play-page .video-box video,#play-page .video-box iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;-webkit-tap-highlight-color:transparent}
 #play-page .danmaku-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2}
 #play-page .speed-indicator{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.7);color:#ffd93d;padding:10px 24px;border-radius:12px;font-size:24px;font-weight:700;display:none;z-index:3}
 /* Controls */
@@ -45,6 +45,14 @@ comments: false
 #play-page .tap-hint{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;padding:8px 16px;border-radius:8px;font-size:14px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:5}
 #play-page .tap-hint.left{left:15%}
 #play-page .tap-hint.right{right:15%}
+/* Touch overlay */
+#play-page #touchOverlay{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;z-index:4;opacity:0;pointer-events:none;transition:opacity .25s}
+#play-page #touchOverlay.visible{opacity:1;pointer-events:auto}
+#play-page .touch-panel{display:flex;align-items:center;gap:32px}
+#play-page .touch-btn{background:rgba(0,0,0,.5);border:none;color:#fff;border-radius:50%;width:48px;height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:18px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:transform .15s}
+#play-page .touch-btn span{font-size:9px;margin-top:1px;opacity:.7}
+#play-page .touch-btn:active{transform:scale(.9)}
+#play-page .touch-btn-main{width:64px;height:64px;font-size:24px;background:rgba(255,217,61,.25);border:2px solid rgba(255,217,61,.5)}
 /* Danmaku bar */
 #play-page .danmaku-bar{display:flex;gap:8px;padding:8px 12px;background:#111;align-items:center;flex-wrap:wrap}
 #play-page .danmaku-bar input{flex:1;min-width:150px;padding:8px 12px;background:#1a1a2e;border:1px solid #333;border-radius:20px;color:#fff;font-size:13px;outline:none}
@@ -532,8 +540,20 @@ window.cycleSpeed=function(){speedIndex=(speedIndex+1)%speeds.length;playbackSpe
 
 window.toggleFullscreen=function(){
   var wrapper=document.querySelector('.player-wrap');
-  if(!document.fullscreenElement){(wrapper.requestFullscreen||wrapper.webkitRequestFullscreen||wrapper.msRequestFullscreen).call(wrapper);}
-  else{(document.exitFullscreen||document.webkitExitFullscreen||document.msExitFullscreen).call(document);}
+  var vid=document.getElementById('videoPlayer');
+  if(!document.fullscreenElement&&!document.webkitFullscreenElement){
+    // iOS Safari: only video element supports webkitEnterFullscreen
+    if(vid.webkitEnterFullscreen){
+      vid.webkitEnterFullscreen();
+    }else if(wrapper.requestFullscreen){
+      wrapper.requestFullscreen();
+    }else if(wrapper.webkitRequestFullscreen){
+      wrapper.webkitRequestFullscreen();
+    }
+  }else{
+    if(document.exitFullscreen){document.exitFullscreen();}
+    else if(document.webkitExitFullscreen){document.webkitExitFullscreen();}
+  }
 };
 
 window.skipIntro=function(){video.currentTime=Math.min(video.currentTime+skipIntroTime,video.duration||Infinity);};
@@ -562,22 +582,75 @@ videoBox.addEventListener('mouseleave',endSpeedUp);
 
 var touchDownTime=0;
 var lastTapTime=0;
-var tapSide=''; // 'left' or 'right'
+var touchStartX=0;
+var touchStartY=0;
+var touchMoved=false;
+var overlayHideTimer=null;
+
+// Touch control overlay (mobile)
+var touchOverlay=document.createElement('div');
+touchOverlay.id='touchOverlay';
+touchOverlay.innerHTML='<div class="touch-panel">'
+  +'<button class="touch-btn" data-action="backward"><i class="fas fa-undo"></i><span>10s</span></button>'
+  +'<button class="touch-btn touch-btn-main" data-action="play"><i class="fas fa-play"></i></button>'
+  +'<button class="touch-btn" data-action="forward"><i class="fas fa-redo"></i><span>10s</span></button>'
+  +'</div>';
+document.getElementById('videoBox').appendChild(touchOverlay);
+
+function showTouchOverlay(autoHide){
+  touchOverlay.classList.add('visible');
+  // Update play/pause icon
+  var btn=touchOverlay.querySelector('[data-action="play"]');
+  if(btn)btn.innerHTML=video.paused?'<i class="fas fa-play"></i>':'<i class="fas fa-pause"></i>';
+  clearTimeout(overlayHideTimer);
+  if(autoHide!==false){
+    overlayHideTimer=setTimeout(function(){touchOverlay.classList.remove('visible');},3000);
+  }
+}
+
+touchOverlay.addEventListener('click',function(e){
+  var btn=e.target.closest('.touch-btn');
+  if(!btn)return;
+  e.stopPropagation();
+  var action=btn.dataset.action;
+  if(action==='play'){togglePlay();}
+  else if(action==='backward'){video.currentTime=Math.max(0,video.currentTime-10);}
+  else if(action==='forward'){video.currentTime=Math.min(video.duration||0,video.currentTime+10);}
+  // Refresh icon
+  var playBtn=touchOverlay.querySelector('[data-action="play"]');
+  if(playBtn)playBtn.innerHTML=video.paused?'<i class="fas fa-play"></i>':'<i class="fas fa-pause"></i>';
+  clearTimeout(overlayHideTimer);
+  overlayHideTimer=setTimeout(function(){touchOverlay.classList.remove('visible');},3000);
+});
+
+// Prevent overlay from triggering video tap
+touchOverlay.addEventListener('touchstart',function(e){e.stopPropagation();},{passive:true});
+touchOverlay.addEventListener('touchend',function(e){e.stopPropagation();});
+
 videoBox.addEventListener('touchstart',function(e){
-  if(e.target.closest('.controls')||e.target.closest('.danmaku-bar'))return;
+  if(e.target.closest('.controls')||e.target.closest('.danmaku-bar')||e.target.closest('#touchOverlay'))return;
   touchDownTime=Date.now();
+  touchMoved=false;
+  touchStartX=(e.touches[0]||{}).clientX||0;
+  touchStartY=(e.touches[0]||{}).clientY||0;
   longPressTimer=setTimeout(startSpeedUp,500);
 },{passive:true});
+videoBox.addEventListener('touchmove',function(e){
+  if(e.target.closest('.controls')||e.target.closest('.danmaku-bar')||e.target.closest('#touchOverlay'))return;
+  var dx=Math.abs(((e.touches[0]||{}).clientX||0)-touchStartX);
+  var dy=Math.abs(((e.touches[0]||{}).clientY||0)-touchStartY);
+  if(dx>10||dy>10)touchMoved=true;
+},{passive:true});
 videoBox.addEventListener('touchend',function(e){
-  if(e.target.closest('.controls')||e.target.closest('.danmaku-bar'))return;
+  if(e.target.closest('.controls')||e.target.closest('.danmaku-bar')||e.target.closest('#touchOverlay'))return;
   clearTimeout(longPressTimer);
   if(isSpeedUp){endSpeedUp();return;}
+  if(touchMoved)return; // ignore swipes
   var now=Date.now();
   var dt=now-touchDownTime;
   if(dt>500)return; // was long press
   // Detect double-tap
   if(now-lastTapTime<300){
-    // Double-tap: seek based on side
     var rect=videoBox.getBoundingClientRect();
     var x=(e.changedTouches[0]||e.touches[0]).clientX-rect.left;
     var side=x<rect.width/2?'left':'right';
@@ -589,11 +662,21 @@ videoBox.addEventListener('touchend',function(e){
       showTapHint('tapHintRight');
     }
     lastTapTime=0;
+    touchOverlay.classList.remove('visible');
     return;
   }
   lastTapTime=now;
-  // Single tap = toggle play (handled by delay)
-  setTimeout(function(){if(lastTapTime===now)togglePlay();},300);
+  // Single tap: show/hide touch overlay (NOT toggle play directly)
+  var singleTapTime=now;
+  setTimeout(function(){
+    if(lastTapTime===singleTapTime){
+      if(touchOverlay.classList.contains('visible')){
+        touchOverlay.classList.remove('visible');
+      }else{
+        showTouchOverlay();
+      }
+    }
+  },300);
 });
 videoBox.addEventListener('touchcancel',endSpeedUp);
 
@@ -630,9 +713,13 @@ if(isMobile()){
   window.addEventListener('orientationchange',function(){
     var isLandscape=screen.orientation&&(screen.orientation.type||'').includes('landscape')
       ||window.innerWidth>window.innerHeight;
-    if(isLandscape&&!document.fullscreenElement){
-      var wrapper=document.querySelector('.player-wrap');
-      (wrapper.requestFullscreen||wrapper.webkitRequestFullscreen||wrapper.msRequestFullscreen).call(wrapper).catch(function(){});
+    if(isLandscape&&!document.fullscreenElement&&!document.webkitFullscreenElement){
+      var vid=document.getElementById('videoPlayer');
+      if(vid.webkitEnterFullscreen){vid.webkitEnterFullscreen().catch(function(){});}
+      else{
+        var wrapper=document.querySelector('.player-wrap');
+        (wrapper.requestFullscreen||wrapper.webkitRequestFullscreen||function(){}).call(wrapper).catch(function(){});
+      }
     }
   });
 }
