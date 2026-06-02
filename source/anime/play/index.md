@@ -24,7 +24,7 @@ comments: false
 #play-page .danmaku-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2}
 #play-page .speed-indicator{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.7);color:#ffd93d;padding:10px 24px;border-radius:12px;font-size:24px;font-weight:700;display:none;z-index:3}
 /* Controls */
-#play-page .controls{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#111;flex-wrap:wrap}
+#play-page .controls{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#111;flex-wrap:wrap;position:relative;z-index:10}
 #play-page .controls button{background:none;border:none;color:#e0e0e0;cursor:pointer;font-size:16px;padding:6px}
 #play-page .controls button:hover{color:#ffd93d}
 #play-page .progress-wrap{flex:1;min-width:100px;height:24px;display:flex;align-items:center;cursor:pointer;position:relative}
@@ -37,7 +37,7 @@ comments: false
 #play-page .speed-btn{font-size:13px!important;padding:4px 8px!important;background:#333!important;border-radius:4px;color:#ffd93d!important}
 #play-page .skip-btn{font-size:12px!important;padding:4px 10px!important;background:#e94560!important;border-radius:4px;color:#fff!important;display:flex;align-items:center;gap:4px}
 #play-page .skip-settings{position:relative;display:inline-block}
-#play-page .skip-dropdown{display:none;position:absolute;bottom:100%;right:0;background:#222;border:1px solid #444;border-radius:6px;padding:8px;z-index:10;min-width:140px}
+#play-page .skip-dropdown{display:none;position:absolute;bottom:100%;right:0;background:#222;border:1px solid #444;border-radius:6px;padding:8px;z-index:20;min-width:140px;box-shadow:0 -4px 16px rgba(0,0,0,.5)}
 #play-page .skip-dropdown.show{display:block}
 #play-page .skip-dropdown label{font-size:12px;color:#aaa;display:block;margin-bottom:4px}
 #play-page .skip-dropdown input{width:60px;background:#111;border:1px solid #444;color:#fff;padding:3px 6px;border-radius:4px;font-size:12px}
@@ -90,7 +90,7 @@ comments: false
 #play-page .error-msg{text-align:center;padding:40px;color:#e94560}
 @media(max-width:600px){
 #play-page .ep-grid{grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px}
-#play-page .controls{gap:2px;padding:4px 6px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#play-page .controls{gap:2px;padding:4px 6px;flex-wrap:nowrap;overflow:visible;-webkit-overflow-scrolling:touch}
 #play-page .controls button{font-size:13px;padding:6px 4px;flex-shrink:0}
 #play-page .progress-wrap{height:28px;min-width:60px}
 #play-page .progress-bar{height:6px}
@@ -132,14 +132,14 @@ comments: false
 #play-page .lp-opt:hover,#play-page .lp-opt.active{background:#ffd93d;color:#0f0f1a}
 /* Sleep timer */
 #play-page .sleep-wrap{position:relative;display:inline-block}
-#play-page .sleep-dropdown{display:none;position:absolute;bottom:100%;right:0;background:#222;border:1px solid #444;border-radius:6px;padding:8px;z-index:10;min-width:120px}
+#play-page .sleep-dropdown{display:none;position:absolute;bottom:100%;right:0;background:#222;border:1px solid #444;border-radius:6px;padding:8px;z-index:20;min-width:120px;box-shadow:0 -4px 16px rgba(0,0,0,.5)}
 #play-page .sleep-dropdown.show{display:block}
 #play-page .sleep-dropdown .sl-opt{display:block;width:100%;padding:4px 8px;background:none;border:none;color:#ccc;font-size:12px;text-align:left;cursor:pointer;border-radius:3px}
 #play-page .sleep-dropdown .sl-opt:hover,#play-page .sleep-dropdown .sl-opt.active{background:#ffd93d;color:#0f0f1a}
 #play-page .sleep-timer-label{font-size:10px;color:#ffd93d;margin-left:2px}
 /* Danmaku settings */
 #play-page .danmaku-settings-wrap{position:relative;display:inline-block}
-#play-page .danmaku-settings-dropdown{display:none;position:absolute;bottom:100%;right:0;background:#222;border:1px solid #444;border-radius:6px;padding:10px;z-index:10;min-width:160px}
+#play-page .danmaku-settings-dropdown{display:none;position:absolute;bottom:100%;right:0;background:#222;border:1px solid #444;border-radius:6px;padding:10px;z-index:20;min-width:160px;box-shadow:0 -4px 16px rgba(0,0,0,.5)}
 #play-page .danmaku-settings-dropdown.show{display:block}
 #play-page .danmaku-settings-dropdown label{font-size:12px;color:#aaa;display:block;margin:6px 0 4px}
 #play-page .danmaku-settings-dropdown label:first-child{margin-top:0}
@@ -157,6 +157,17 @@ comments: false
 #play-page .fav-btn{background:none;border:none;color:#aaa;font-size:18px;cursor:pointer;padding:4px 8px;transition:color .2s}
 #play-page .fav-btn:hover{color:#ffd93d}
 #play-page .fav-btn.active{color:#e94560}
+/* More menu (mobile) */
+#play-page .more-wrap{position:relative;display:none}
+#play-page .more-dropdown{display:none;position:absolute;bottom:100%;right:0;background:#1a1a2e;border:1px solid #444;border-radius:8px;padding:6px;z-index:30;min-width:160px;box-shadow:0 -4px 20px rgba(0,0,0,.6)}
+#play-page .more-dropdown.show{display:flex;flex-direction:column;gap:2px}
+#play-page .more-dropdown button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;color:#ccc;font-size:13px;text-align:left;cursor:pointer;border-radius:6px;white-space:nowrap}
+#play-page .more-dropdown button:hover{background:#333;color:#ffd93d}
+#play-page .more-dropdown button i{width:16px;text-align:center;font-size:14px}
+@media(max-width:600px){
+#play-page .more-wrap{display:inline-block}
+#play-page .controls .speed-btn,#play-page .controls .skip-btn,#play-page .controls .skip-settings,#play-page .controls .danmaku-toggle-btn,#play-page .controls .danmaku-settings-wrap,#play-page .controls .pip-btn,#play-page .controls .sleep-wrap{display:none!important}
+}
 @media(max-width:600px){
 #play-page .recommend-card{width:100px}
 #play-page .recommend-card img{width:100px;height:133px}
@@ -202,7 +213,7 @@ comments: false
       </div>
       <button class="speed-btn" onclick="cycleSpeed()" id="speedBtn" title="播放速度">1x</button>
       <button class="skip-btn" onclick="skipIntro()" title="跳过片头"><i class="fas fa-forward"></i> <span id="skipLabel">90s</span></button>
-      <button onclick="toggleDanmaku()" title="弹幕开关(D)" id="danmakuToggle"><i class="fas fa-comments"></i></button>
+      <button class="danmaku-toggle-btn" onclick="toggleDanmaku()" title="弹幕开关(D)" id="danmakuToggle"><i class="fas fa-comments"></i></button>
       <div class="danmaku-settings-wrap">
         <button onclick="toggleDanmakuSettings()" title="弹幕设置"><i class="fas fa-sliders-h"></i></button>
         <div class="danmaku-settings-dropdown" id="danmakuSettingsDropdown">
@@ -242,6 +253,18 @@ comments: false
         </div>
       </div>
       <button onclick="toggleFullscreen()" title="全屏(F)"><i class="fas fa-expand"></i></button>
+      <div class="more-wrap">
+        <button onclick="toggleMoreMenu()" title="更多"><i class="fas fa-ellipsis-v"></i></button>
+        <div class="more-dropdown" id="moreDropdown">
+          <button onclick="cycleSpeed();closeMoreMenu()"><i class="fas fa-tachometer-alt"></i>倍速 <span id="moreSpeedLabel">1x</span></button>
+          <button onclick="skipIntro();closeMoreMenu()"><i class="fas fa-forward"></i>跳过片头 <span id="moreSkipLabel">90s</span></button>
+          <button onclick="toggleDanmaku();closeMoreMenu()"><i class="fas fa-comments"></i>弹幕开关</button>
+          <button onclick="toggleDanmakuSettings();closeMoreMenu()"><i class="fas fa-sliders-h"></i>弹幕设置</button>
+          <button onclick="togglePiP();closeMoreMenu()" id="morePipBtn" style="display:none"><i class="fas fa-external-link-alt"></i>画中画</button>
+          <button onclick="toggleSleepMenu();closeMoreMenu()"><i class="fas fa-moon"></i>睡眠定时 <span id="moreSleepLabel"></span></button>
+          <button onclick="toggleSkipSettings();closeMoreMenu()"><i class="fas fa-cog"></i>长按倍速设置</button>
+        </div>
+      </div>
     </div>
     <div class="danmaku-bar">
       <input type="text" id="danmakuInput" placeholder="发条弹幕..." maxlength="100">
@@ -651,7 +674,7 @@ window.setVolume=function(val){video.volume=val/100;video.muted=val==0;updateMut
 window.toggleMute=function(){video.muted=!video.muted;document.getElementById('volumeSlider').value=video.muted?0:Math.round(video.volume*100);updateMuteIcon();};
 function updateMuteIcon(){var icon=video.muted||video.volume===0?'fa-volume-mute':video.volume<0.5?'fa-volume-down':'fa-volume-up';document.getElementById('muteBtn').innerHTML='<i class="fas '+icon+'"></i>';}
 
-window.cycleSpeed=function(){speedIndex=(speedIndex+1)%speeds.length;playbackSpeed=speeds[speedIndex];video.playbackRate=playbackSpeed;document.getElementById('speedBtn').textContent=playbackSpeed+'x';try{localStorage.setItem('anime_speed',playbackSpeed);}catch(e){}};
+window.cycleSpeed=function(){speedIndex=(speedIndex+1)%speeds.length;playbackSpeed=speeds[speedIndex];video.playbackRate=playbackSpeed;document.getElementById('speedBtn').textContent=playbackSpeed+'x';var msl=document.getElementById('moreSpeedLabel');if(msl)msl.textContent=playbackSpeed+'x';try{localStorage.setItem('anime_speed',playbackSpeed);}catch(e){}};
 
 window.toggleFullscreen=function(){
   var wrapper=document.querySelector('.player-wrap');
@@ -672,10 +695,12 @@ window.toggleFullscreen=function(){
 };
 
 window.skipIntro=function(){video.currentTime=Math.min(video.currentTime+skipIntroTime,video.duration||Infinity);};
-window.toggleSkipSettings=function(){document.getElementById('skipDropdown').classList.toggle('show');document.getElementById('sleepDropdown').classList.remove('show');document.getElementById('danmakuSettingsDropdown').classList.remove('show');};
-window.updateSkipTime=function(val){skipIntroTime=parseInt(val)||90;document.getElementById('skipLabel').textContent=skipIntroTime+'s';try{localStorage.setItem('anime_skip_intro',skipIntroTime);}catch(e){}};
+window.toggleSkipSettings=function(){document.getElementById('skipDropdown').classList.toggle('show');document.getElementById('sleepDropdown').classList.remove('show');document.getElementById('danmakuSettingsDropdown').classList.remove('show');document.getElementById('moreDropdown').classList.remove('show');};
+window.toggleMoreMenu=function(){document.getElementById('moreDropdown').classList.toggle('show');document.getElementById('skipDropdown').classList.remove('show');document.getElementById('sleepDropdown').classList.remove('show');document.getElementById('danmakuSettingsDropdown').classList.remove('show');};
+window.closeMoreMenu=function(){document.getElementById('moreDropdown').classList.remove('show');};
+window.updateSkipTime=function(val){skipIntroTime=parseInt(val)||90;document.getElementById('skipLabel').textContent=skipIntroTime+'s';var mskl=document.getElementById('moreSkipLabel');if(mskl)mskl.textContent=skipIntroTime+'s';try{localStorage.setItem('anime_skip_intro',skipIntroTime);}catch(e){}};
 
-document.addEventListener('click',function(e){if(!e.target.closest('.skip-settings')){document.getElementById('skipDropdown').classList.remove('show');}});
+document.addEventListener('click',function(e){if(!e.target.closest('.skip-settings')){document.getElementById('skipDropdown').classList.remove('show');}if(!e.target.closest('.more-wrap')){document.getElementById('moreDropdown').classList.remove('show');}if(!e.target.closest('.sleep-wrap')){document.getElementById('sleepDropdown').classList.remove('show');}if(!e.target.closest('.danmaku-settings-wrap')){document.getElementById('danmakuSettingsDropdown').classList.remove('show');}});
 
 // Long press speed up
 var videoBox=document.getElementById('videoBox');
@@ -754,8 +779,7 @@ videoBox.addEventListener('touchstart',function(e){
   var rect=videoBox.getBoundingClientRect();
   var side=touchStartX-rect.left<rect.width/2?'left':'right';
   gestureType=side==='left'?'brightness':'volume';
-  longPressTimer=setTimeout(startSpeedUp,500);
-},{passive:true});
+},{passive:false});
 videoBox.addEventListener('touchmove',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar')||e.target.closest('#touchOverlay'))return;
   var cx=((e.touches[0]||{}).clientX||0);
@@ -765,8 +789,8 @@ videoBox.addEventListener('touchmove',function(e){
   if(dx>10||dy>10)touchMoved=true;
   // Volume/Brightness gesture: vertical swipe with clear intent
   if(dy>20&&dy>dx*1.5&&!isSpeedUp){
+    e.preventDefault(); // prevent page scroll during gesture
     gestureActive=true;
-    clearTimeout(longPressTimer);
     var deltaY=touchStartY-cy; // positive = swipe up
     var rect=videoBox.getBoundingClientRect();
     var pctChange=deltaY/rect.height*2; // 0..1 range
@@ -785,36 +809,17 @@ videoBox.addEventListener('touchmove',function(e){
     }
     indicator.style.display='block';
   }
-},{passive:true});
+},{passive:false});
 videoBox.addEventListener('touchend',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar')||e.target.closest('#touchOverlay'))return;
-  clearTimeout(longPressTimer);
   // Hide gesture indicator
   document.getElementById('gestureIndicator').style.display='none';
   if(gestureActive){gestureActive=false;gestureType=null;return;}
-  if(isSpeedUp){endSpeedUp();return;}
   if(touchMoved)return; // ignore swipes
   var now=Date.now();
   var dt=now-touchDownTime;
-  if(dt>500)return; // was long press
-  // Detect double-tap
-  if(now-lastTapTime<300){
-    var rect=videoBox.getBoundingClientRect();
-    var x=(e.changedTouches[0]||e.touches[0]).clientX-rect.left;
-    var side=x<rect.width/2?'left':'right';
-    if(side==='left'){
-      video.currentTime=Math.max(0,video.currentTime-10);
-      showTapHint('tapHintLeft');
-    }else{
-      video.currentTime=Math.min(video.duration||0,video.currentTime+10);
-      showTapHint('tapHintRight');
-    }
-    lastTapTime=0;
-    touchOverlay.classList.remove('visible');
-    return;
-  }
-  lastTapTime=now;
-  // Single tap: show/hide touch overlay (NOT toggle play directly)
+  if(dt>500)return; // was long press (now unused, just ignore)
+  // Single tap: show/hide touch overlay
   var singleTapTime=now;
   setTimeout(function(){
     if(lastTapTime===singleTapTime){
@@ -824,7 +829,8 @@ videoBox.addEventListener('touchend',function(e){
         showTouchOverlay();
       }
     }
-  },300);
+  },200);
+  lastTapTime=now;
 });
 videoBox.addEventListener('touchcancel',endSpeedUp);
 
@@ -993,7 +999,7 @@ document.getElementById('skipLabel').textContent=skipIntroTime+'s';
 document.getElementById('skipInput').value=skipIntroTime;
 
 // Show PiP button if supported
-if(document.pictureInPictureEnabled){document.getElementById('pipBtn').style.display='';}
+if(document.pictureInPictureEnabled){document.getElementById('pipBtn').style.display='';document.getElementById('morePipBtn').style.display='';}
 
 // === FEATURE: Picture-in-Picture ===
 window.togglePiP=function(){
@@ -1031,7 +1037,7 @@ window.setSleepTimer=function(minutes){
   // Clear existing timers
   if(sleepTimerId){clearTimeout(sleepTimerId);sleepTimerId=null;}
   if(sleepIntervalId){clearInterval(sleepIntervalId);sleepIntervalId=null;}
-  document.getElementById('sleepLabel').textContent='';
+  updateSleepLabel('');
   // Update active state
   document.querySelectorAll('.sl-opt').forEach(function(b){
     b.classList.toggle('active',parseInt(b.dataset.min)===minutes);
@@ -1042,20 +1048,20 @@ window.setSleepTimer=function(minutes){
     return;
   }
   sleepRemaining=minutes*60;
-  document.getElementById('sleepLabel').textContent=formatSleepTime(sleepRemaining);
+  updateSleepLabel(formatSleepTime(sleepRemaining));
   sleepIntervalId=setInterval(function(){
     sleepRemaining--;
     if(sleepRemaining<=0){
       clearInterval(sleepIntervalId);sleepIntervalId=null;
-      document.getElementById('sleepLabel').textContent='';
+      updateSleepLabel('');
     }else{
-      document.getElementById('sleepLabel').textContent=formatSleepTime(sleepRemaining);
+      updateSleepLabel(formatSleepTime(sleepRemaining));
     }
   },1000);
   sleepTimerId=setTimeout(function(){
     video.pause();
     showToast('睡眠定时已到，视频已暂停',3000);
-    document.getElementById('sleepLabel').textContent='';
+    updateSleepLabel('');
     sleepTimerId=null;
   },minutes*60*1000);
   showToast('将在 '+minutes+' 分钟后暂停');
@@ -1064,6 +1070,10 @@ window.setSleepTimer=function(minutes){
 function formatSleepTime(sec){
   var m=Math.floor(sec/60);var s=sec%60;
   return m+':'+(s<10?'0':'')+s;
+}
+function updateSleepLabel(text){
+  var sl=document.getElementById('sleepLabel');if(sl)sl.textContent=text;
+  var msl=document.getElementById('moreSleepLabel');if(msl)msl.textContent=text;
 }
 
 // Close sleep dropdown on outside click
