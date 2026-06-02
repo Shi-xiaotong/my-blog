@@ -779,6 +779,7 @@ videoBox.addEventListener('touchstart',function(e){
   var rect=videoBox.getBoundingClientRect();
   var side=touchStartX-rect.left<rect.width/2?'left':'right';
   gestureType=side==='left'?'brightness':'volume';
+  longPressTimer=setTimeout(startSpeedUp,500);
 },{passive:false});
 videoBox.addEventListener('touchmove',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar')||e.target.closest('#touchOverlay'))return;
@@ -791,6 +792,7 @@ videoBox.addEventListener('touchmove',function(e){
   if(dy>20&&dy>dx*1.5&&!isSpeedUp){
     e.preventDefault(); // prevent page scroll during gesture
     gestureActive=true;
+    clearTimeout(longPressTimer);
     var deltaY=touchStartY-cy; // positive = swipe up
     var rect=videoBox.getBoundingClientRect();
     var pctChange=deltaY/rect.height*2; // 0..1 range
@@ -812,9 +814,11 @@ videoBox.addEventListener('touchmove',function(e){
 },{passive:false});
 videoBox.addEventListener('touchend',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar')||e.target.closest('#touchOverlay'))return;
+  clearTimeout(longPressTimer);
   // Hide gesture indicator
   document.getElementById('gestureIndicator').style.display='none';
   if(gestureActive){gestureActive=false;gestureType=null;return;}
+  if(isSpeedUp){endSpeedUp();return;}
   if(touchMoved)return; // ignore swipes
   var now=Date.now();
   var dt=now-touchDownTime;
