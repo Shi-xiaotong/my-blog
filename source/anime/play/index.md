@@ -788,8 +788,9 @@ videoBox.addEventListener('touchmove',function(e){
   var dx=Math.abs(cx-touchStartX);
   var dy=Math.abs(cy-touchStartY);
   if(dx>10||dy>10)touchMoved=true;
-  // Volume/Brightness gesture: vertical swipe with clear intent
-  if(dy>20&&dy>dx*1.5&&!isSpeedUp){
+  // Volume/Brightness gesture: only in fullscreen, vertical swipe with clear intent
+  var inFullscreen=!!(document.fullscreenElement||document.webkitFullscreenElement);
+  if(inFullscreen&&dy>20&&dy>dx*1.5&&!isSpeedUp){
     e.preventDefault(); // prevent page scroll during gesture
     gestureActive=true;
     clearTimeout(longPressTimer);
