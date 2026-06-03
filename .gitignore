@@ -45,3 +45,4 @@ source/_posts/**/*.webp
 !.dev.vars.example
 .env*
 !.env.example
+*.png
