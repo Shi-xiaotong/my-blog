@@ -38,3 +38,10 @@ source/_posts/**/*.jpeg
 source/_posts/**/*.gif
 source/_posts/**/*.webp
 .r2-media-manifest.json
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example

@@ -3,7 +3,7 @@ title: 中国"水上电梯"：113米垂直升船，多项世界第一
 date: 2026-06-03 12:00:00
 tags: [科技, 工程, 三峡, 大国重器]
 categories: tech
-cover: https://img.233002.xyz/blog/water-elevator-cover.png
+cover: https://img.233002.xyz/water-elevator-cover.png
 ---
 
 你见过能把3000吨的船"抬"上113米高空的电梯吗？

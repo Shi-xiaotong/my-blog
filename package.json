@@ -5,9 +5,10 @@
   "scripts": {
     "build": "hexo generate",
     "clean": "hexo clean",
-    "deploy": "hexo deploy",
+    "deploy": "npm run build && wrangler deploy",
     "server": "hexo server",
-    "start": "hexo clean && hexo g && hexo s"
+    "start": "hexo clean && hexo g && hexo s",
+    "preview": "npm run build && wrangler dev"
   },
   "hexo": {
     "version": "7.3.0"
@@ -28,5 +29,8 @@
     "hexo-theme-butterfly": "^5.5.4",
     "hexo-theme-landscape": "^1.0.0",
     "lunar-javascript": "^1.7.7"
+  },
+  "devDependencies": {
+    "wrangler": "^4.97.0"
   }
 }

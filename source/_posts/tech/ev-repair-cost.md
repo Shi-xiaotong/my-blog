@@ -3,7 +3,7 @@ title: 新能源车维修成本为什么远高于燃油车？买车前必看
 date: 2026-06-03 14:00:00
 tags: [新能源, 汽车, 维修, 避坑]
 categories: life
-cover: https://img.233002.xyz/blog/ev-repair-cover.png
+cover: https://img.233002.xyz/ev-repair-cover.png
 ---
 
 今天百度热搜上有一条：#新能源车维修成本为何远高于燃油车#。
