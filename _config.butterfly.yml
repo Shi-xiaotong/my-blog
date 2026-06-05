@@ -5,6 +5,8 @@
 inject:
   head:
     - <style>#page-header,#page-header::before,#footer,#footer::before{background:transparent!important}</style>
+    # 导航栏标题改为 Mercury
+    - <style>#blog-info .site-name{font-size:0}#blog-info .site-name::after{content:"Mercury";font-size:16px}</style>
     # 音乐播放器样式
     - <link rel="stylesheet" href="/css/music-player.css">
     # 全局用户认证样式

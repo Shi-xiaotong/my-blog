@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /js/
+Disallow: /css/
+Disallow: /live2d/
+
+Sitemap: https://233002.xyz/sitemap.xml
