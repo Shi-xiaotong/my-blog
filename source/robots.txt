@@ -4,4 +4,4 @@ Disallow: /js/
 Disallow: /css/
 Disallow: /live2d/
 
-Sitemap: https://233002.xyz/sitemap.xml
+Sitemap: https://www.233002.xyz/sitemap.xml
