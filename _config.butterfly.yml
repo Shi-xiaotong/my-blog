@@ -13,6 +13,8 @@ inject:
     - <link rel="stylesheet" href="/css/site-auth.css">
     # 个人中心样式
     - <link rel="stylesheet" href="/css/user-center.css">
+    # 百度站长验证
+    - <meta name="baidu-site-verification" content="codeva-ZY06XcFKmM" />
   bottom:
     # 全局用户认证
     - <script src="/js/site-auth.js"></script>
