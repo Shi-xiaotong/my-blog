@@ -13,7 +13,7 @@ timezone: ''
 
 # URL
 ## 设置您的网站地址，例如：如果您使用 GitHub Pages，设置为 'https://username.github.io/project'
-url: https://233002.xyz
+url: https://www.233002.xyz
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
