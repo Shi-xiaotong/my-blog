@@ -10,7 +10,7 @@
 
 > 普通上班族平均每天产生 30+ 个文件：截图、文档、下载的 PDF、微信传的图片……一年下来就是 7000+ 个文件。其中 60% 打开一次就再也没看过。
 
-![文件堆积示意](https://img.233002.xyz/blog/ai-file-organizer-img1.png)
+![文件堆积示意](https://img.233002.xyz/blog/file-organizer-cover.png)
 
 ## 为什么手动分类不靠谱
 
@@ -32,7 +32,7 @@ AI 擅长的恰好是人类不擅长的：
 - **内容理解** — AI 能读 PDF 内容、识别图片、解析文件名语义
 - **不疲倦** — 不会分到第 50 个文件就烦了
 
-![AI 分类思路](https://img.233002.xyz/blog/ai-file-organizer-img2.png)
+![AI 分类思路](https://img.233002.xyz/blog/file-organizer-workflow.png)
 
 ## 现实中的方案
 
@@ -60,7 +60,7 @@ AI 擅长的恰好是人类不擅长的：
 
 > 目前没有一个产品能做到"装完就用"。准确率普遍在 85-93% 之间，剩下的需要人工修正。对于有洁癖的人来说，85% 的准确率还不如不分类——因为你不知道哪 15% 分错了。
 
-![整理前后对比](https://img.233002.xyz/blog/ai-file-organizer-img3.png)
+![整理前后对比](https://img.233002.xyz/blog/file-organizer-compare.png)
 
 ## 我的建议
 
