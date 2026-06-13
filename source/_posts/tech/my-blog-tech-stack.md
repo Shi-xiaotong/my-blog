@@ -29,14 +29,14 @@ toc: true
 
 ![技术栈总览](https://img.233002.xyz/blog/myblog1.png)
 
-| 层级 | 技术选型 | 说明 |
-|------|---------|------|
-| 框架 | Hexo 7.x | 静态博客生成器，Markdown 写作 |
-| 主题 | Butterfly 5.x | 功能丰富、颜值在线的中文友好主题 |
-| 代码管理 | GitHub | 版本控制 + CI/CD 触发源 |
-| 静态部署 | Cloudflare Pages | 全球 CDN 加速，自定义域名 |
-| 媒体存储 | Cloudflare R2 | 图片对象存储，自定义域名 img.233002.xyz |
-| AI 自动化 | Hermes Agent + Mimo | AI 驱动的博客运维自动化 |
+ 层级 | 技术选型 | 说明 |
+------|---------|------|
+ 框架 | Hexo 7.x | 静态博客生成器，Markdown 写作 |
+ 主题 | Butterfly 5.x | 功能丰富、颜值在线的中文友好主题 |
+ 代码管理 | GitHub | 版本控制 + CI/CD 触发源 |
+ 静态部署 | Cloudflare Pages | 全球 CDN 加速，自定义域名 |
+ 媒体存储 | Cloudflare R2 | 图片对象存储，自定义域名 img.233002.xyz |
+ AI 自动化 | Hermes Agent + Mimo | AI 驱动的博客运维自动化 |
 
 ## 为什么选择 Hexo + Butterfly
 
