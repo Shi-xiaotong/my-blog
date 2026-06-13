@@ -1068,7 +1068,7 @@ document.getElementById('skipLabel').textContent=skipIntroTime+'s';
 document.getElementById('skipInput').value=skipIntroTime;
 
 // Show PiP button if supported
-if(document.pictureInPictureEnabled){document.getElementById('pipBtn').style.display='';document.getElementById('morePipBtn').style.display='';}
+if(document.pictureInPictureEnabled){var mpb=document.getElementById('morePipBtn');if(mpb)mpb.style.display='';}
 
 // === FEATURE: Picture-in-Picture ===
 window.togglePiP=function(){
