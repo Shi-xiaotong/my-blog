@@ -109,7 +109,13 @@ type: anime
 
 <script>
 (function(){
-var API='https://ffzy.233002.xyz';
+var API_SOURCES=[
+  {name:'Huya',base:'https://www.huyaapi.com',list:'/api.php/provide/vod/?ac=list'},
+  {name:'FFZY',base:'https://ffzy.233002.xyz',list:'/api/ffzy?ac=videolist'},
+  {name:'BDZY',base:'https://api.apibdzy.com',list:'/api.php/provide/vod/?ac=list'},
+  {name:'FF22',base:'https://cj.ffzyapi.com',list:'/api.php/provide/vod/?ac=list'}
+];
+var API=API_SOURCES[0].base;
 var currentPage=1;
 var currentType='';
 var currentKeyword='';
@@ -151,15 +157,20 @@ async function loadList(){
   grid.innerHTML='';
   loading.style.display='block';
 
-  try{
-    var url=API+'/api/ffzy?ac=videolist&pg='+currentPage;
-    if(currentType)url+='&t='+currentType;
-    if(currentKeyword)url+='&wd='+encodeURIComponent(currentKeyword);
+  // Try each API source
+  for(var si=0;si<API_SOURCES.length;si++){
+    var src=API_SOURCES[si];
+    try{
+      var url=src.base+src.list+'&pg='+currentPage;
+      if(currentType)url+='&t='+currentType;
+      if(currentKeyword)url+='&wd='+encodeURIComponent(currentKeyword);
 
-    var res=await fetch(url);
-    var data=await res.json();
-    var list=data.list||[];
-    totalPages=data.pagecount||1;
+      var res=await fetch(url);
+      var data=await res.json();
+      var list=data.list||[];
+      if(list.length===0&&si<API_SOURCES.length-1)continue; // try next source
+      API=src.base;
+      totalPages=data.pagecount||1;
 
     list.forEach(function(item){
       var card=document.createElement('div');
@@ -171,9 +182,13 @@ async function loadList(){
       grid.appendChild(card);
     });
 
-    updatePagination();
-  }catch(err){
-    grid.innerHTML='<div style="text-align:center;padding:40px;color:#e94560"><i class="fas fa-exclamation-circle"></i> 加载失败，请稍后重试</div>';
+      updatePagination();
+      break; // found working source
+    }catch(err){
+      if(si===API_SOURCES.length-1){
+        grid.innerHTML='<div style="text-align:center;padding:40px;color:#e94560"><i class="fas fa-exclamation-circle"></i> 所有源站均不可用</div>';
+      }
+    }
   }
   loading.style.display='none';
 }

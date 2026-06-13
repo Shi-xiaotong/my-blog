@@ -286,10 +286,13 @@ comments: false
 <script>
 (function(){
 var API_SOURCES=[
+  {name:'Huya',base:'https://www.huyaapi.com',search:'/api.php/provide/vod/?ac=list&wd=',detail:'/api.php/provide/vod/?ac=detail&ids='},
   {name:'FFZY',base:'https://ffzy.233002.xyz',search:'/api/ffzy?ac=list&wd=',detail:'/api/ffzy?ac=detail&ids='},
-  {name:'BDZY',base:'https://api.apibdzy.com',search:'/api.php/provide/vod/?ac=list&wd=',detail:'/api.php/provide/vod/?ac=detail&ids='}
+  {name:'BDZY',base:'https://api.apibdzy.com',search:'/api.php/provide/vod/?ac=list&wd=',detail:'/api.php/provide/vod/?ac=detail&ids='},
+  {name:'FF22',base:'https://cj.ffzyapi.com',search:'/api.php/provide/vod/?ac=list&wd=',detail:'/api.php/provide/vod/?ac=detail&ids='}
 ];
 var API=API_SOURCES[0].base;
+var currentSourceIdx=0;
 var video=document.getElementById('videoPlayer');
 var canvas=document.getElementById('danmakuCanvas');
 var ctx=canvas.getContext('2d');
