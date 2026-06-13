@@ -135,6 +135,8 @@ comments: false
 #play-page.fs-immersive .controls.show{opacity:1}
 /* Double-tap fullscreen hint */
 #play-page .fullscreen-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.7);color:#ffd93d;padding:10px 24px;border-radius:12px;font-size:16px;font-weight:600;display:none;z-index:6;pointer-events:none;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+/* Quality badge */
+#play-page .quality-badge{font-size:11px!important;padding:2px 6px!important;background:#e94560!important;border-radius:4px;color:#fff!important;cursor:default!important;letter-spacing:.5px}
 /* PiP button */
 #play-page .pip-btn{font-size:14px!important}
 /* Long-press dropdown */
@@ -226,6 +228,7 @@ comments: false
         <input type="range" min="0" max="100" value="100" id="volumeSlider" oninput="setVolume(this.value)">
       </div>
       <button class="speed-btn" onclick="cycleSpeed()" id="speedBtn" title="播放速度">1x</button>
+      <button class="quality-badge" id="qualityBadge" title="当前清晰度">--</button>
       <button class="skip-btn" onclick="skipIntro()" title="跳过片头"><i class="fas fa-forward"></i> <span id="skipLabel">90s</span></button>
       <button class="danmaku-toggle-btn" onclick="toggleDanmaku()" title="弹幕开关(D)" id="danmakuToggle"><i class="fas fa-comments"></i></button>
       <div class="danmaku-settings-wrap">
@@ -360,6 +363,24 @@ var sleepRemaining=0;
 var sleepIntervalId=null;
 var danmakuDensity=parseInt(localStorage.getItem('anime_danmaku_density'))||1;
 var danmakuFontSize=parseInt(localStorage.getItem('anime_danmaku_fontsize'))||16;
+
+// Detect quality from video element (fallback for native HLS)
+function detectQualityFromVideo(){
+  var v=video;
+  var w=v.videoWidth||0;
+  var h=v.videoHeight||0;
+  if(h>0){
+    var label=h+'p';
+    if(w>0) label=w+'x'+h;
+    document.getElementById('qualityBadge').textContent=label;
+  }
+}
+video.addEventListener('loadedmetadata',function(){
+  if(!hlsInstance) detectQualityFromVideo();
+});
+video.addEventListener('playing',function(){
+  if(!hlsInstance) detectQualityFromVideo();
+});
 
 // Auth
 function getToken(){return localStorage.getItem('anime_token')||'';}
@@ -576,7 +597,33 @@ window.playEpisode=function(index){
     hlsInstance=new Hls({maxBufferLength:30,maxMaxBufferLength:60});
     hlsInstance.loadSource(url);
     hlsInstance.attachMedia(video);
-    hlsInstance.on(Hls.Events.MANIFEST_PARSED,function(){video.play().catch(function(){});});
+    hlsInstance.on(Hls.Events.MANIFEST_PARSED,function(event,data){
+      video.play().catch(function(){});
+      // Detect quality from manifest
+      var levels=hlsInstance.levels;
+      if(levels&&levels.length>0){
+        var best=levels[0];
+        for(var i=1;i<levels.length;i++){
+          if((levels[i].height||0)>(best.height||0))best=levels[i];
+        }
+        var label=best.height?(best.height+'p'):(best.width?best.width+'p':'HD');
+        if(levels.length>1)label+=' ('+levels.length+'档)';
+        document.getElementById('qualityBadge').textContent=label;
+      }else{
+        // Single level or no level info - detect from video element after play
+        setTimeout(detectQualityFromVideo,1000);
+      }
+    });
+    hlsInstance.on(Hls.Events.FRAG_LOADED,function(event,data){
+      // Update quality badge with actual resolution
+      var hls=hlsInstance;
+      if(hls.levels&&hls.currentLevel>=0){
+        var lvl=hls.levels[hls.currentLevel];
+        if(lvl&&lvl.height){
+          document.getElementById('qualityBadge').textContent=lvl.height+'p';
+        }
+      }
+    });
     hlsInstance.on(Hls.Events.ERROR,function(event,data){
       if(data.fatal){
         // Try next source line first, then fallback to iframe
