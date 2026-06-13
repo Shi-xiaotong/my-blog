@@ -122,6 +122,19 @@ comments: false
 #play-page .gesture-indicator{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#ffd93d;padding:12px 28px;border-radius:14px;font-size:20px;font-weight:700;display:none;z-index:6;pointer-events:none;white-space:nowrap;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 /* Watched episode dot */
 #play-page .ep-btn .watched-dot{display:inline-block;width:6px;height:6px;background:#e94560;border-radius:50%;margin-left:3px;vertical-align:middle}
+/* Fullscreen immersive mode */
+#play-page.fs-immersive .top-bar{display:none!important}
+#play-page.fs-immersive .info-section{display:none!important}
+#play-page.fs-immersive .episode-section{display:none!important}
+#play-page.fs-immersive .recommend-section{display:none!important}
+#play-page.fs-immersive .danmaku-bar{display:none!important}
+#play-page.fs-immersive .player-wrap{max-width:100%!important;margin:0!important}
+#play-page.fs-immersive .video-box{padding-top:0!important;height:100vh!important}
+#play-page.fs-immersive .video-box video{position:static!important;width:100%!important;height:100%!important;object-fit:contain!important}
+#play-page.fs-immersive .controls{position:fixed!important;bottom:0;left:0;right:0;z-index:100;opacity:0;transition:opacity .3s}
+#play-page.fs-immersive .controls.show{opacity:1}
+/* Double-tap fullscreen hint */
+#play-page .fullscreen-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.7);color:#ffd93d;padding:10px 24px;border-radius:12px;font-size:16px;font-weight:600;display:none;z-index:6;pointer-events:none;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 /* PiP button */
 #play-page .pip-btn{font-size:14px!important}
 /* Long-press dropdown */
@@ -194,6 +207,7 @@ comments: false
       <div class="tap-hint left" id="tapHintLeft">-10s</div>
       <div class="tap-hint right" id="tapHintRight">+10s</div>
       <div class="gesture-indicator" id="gestureIndicator"></div>
+      <div class="fullscreen-hint" id="fullscreenHint"></div>
     </div>
     <div class="controls">
       <button onclick="playPrevEp()" title="上一集(P)"><i class="fas fa-step-backward"></i></button>
@@ -680,7 +694,6 @@ window.toggleFullscreen=function(){
   var wrapper=document.querySelector('.player-wrap');
   var vid=document.getElementById('videoPlayer');
   if(!document.fullscreenElement&&!document.webkitFullscreenElement){
-    // iOS Safari: only video element supports webkitEnterFullscreen
     if(vid.webkitEnterFullscreen){
       vid.webkitEnterFullscreen();
     }else if(wrapper.requestFullscreen){
@@ -693,6 +706,38 @@ window.toggleFullscreen=function(){
     else if(document.webkitExitFullscreen){document.webkitExitFullscreen();}
   }
 };
+
+// Fullscreen immersive mode: hide everything except video + controls
+var fsControlsTimer=null;
+function onFullscreenChange(){
+  var isFS=!!(document.fullscreenElement||document.webkitFullscreenElement);
+  var playPage=document.getElementById('play-page');
+  if(isFS){
+    playPage.classList.add('fs-immersive');
+    // Show controls briefly, then auto-hide
+    var ctrls=document.querySelector('#play-page .controls');
+    ctrls.classList.add('show');
+    clearTimeout(fsControlsTimer);
+    fsControlsTimer=setTimeout(function(){ctrls.classList.remove('show');},3000);
+    // Tap to show controls in fullscreen
+    videoBox.addEventListener('click',_fsShowControls);
+  }else{
+    playPage.classList.remove('fs-immersive');
+    var ctrls=document.querySelector('#play-page .controls');
+    ctrls.classList.remove('show');
+    clearTimeout(fsControlsTimer);
+    videoBox.removeEventListener('click',_fsShowControls);
+  }
+}
+function _fsShowControls(e){
+  if(e.target.closest('.controls')||e.target.closest('#touchOverlay'))return;
+  var ctrls=document.querySelector('#play-page .controls');
+  ctrls.classList.add('show');
+  clearTimeout(fsControlsTimer);
+  fsControlsTimer=setTimeout(function(){ctrls.classList.remove('show');},3000);
+}
+document.addEventListener('fullscreenchange',onFullscreenChange);
+document.addEventListener('webkitfullscreenchange',onFullscreenChange);
 
 window.skipIntro=function(){video.currentTime=Math.min(video.currentTime+skipIntroTime,video.duration||Infinity);};
 window.toggleSkipSettings=function(){document.getElementById('skipDropdown').classList.toggle('show');document.getElementById('sleepDropdown').classList.remove('show');document.getElementById('danmakuSettingsDropdown').classList.remove('show');document.getElementById('moreDropdown').classList.remove('show');};
@@ -708,6 +753,7 @@ function startSpeedUp(){if(isSpeedUp)return;isSpeedUp=true;video.playbackRate=lo
 function endSpeedUp(){if(!isSpeedUp)return;isSpeedUp=false;video.playbackRate=playbackSpeed;document.getElementById('speedIndicator').style.display='none';}
 
 var mouseDownTime=0;
+var lastMouseTapTime=0;
 videoBox.addEventListener('mousedown',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar'))return;
   mouseDownTime=Date.now();longPressTimer=setTimeout(startSpeedUp,500);
@@ -715,8 +761,18 @@ videoBox.addEventListener('mousedown',function(e){
 videoBox.addEventListener('mouseup',function(e){
   if(e.target.closest('.controls')||e.target.closest('.danmaku-bar'))return;
   clearTimeout(longPressTimer);
-  if(isSpeedUp)endSpeedUp();
-  else if(Date.now()-mouseDownTime<300)togglePlay();
+  if(isSpeedUp){endSpeedUp();return;}
+  var now=Date.now();
+  if(now-mouseDownTime>300)return; // long press
+  // Double-click: fullscreen
+  if(now-lastMouseTapTime<300){
+    lastMouseTapTime=0;
+    toggleFullscreen();
+    return;
+  }
+  lastMouseTapTime=now;
+  var tapTime=now;
+  setTimeout(function(){if(lastMouseTapTime===tapTime)togglePlay();},300);
 });
 videoBox.addEventListener('mouseleave',endSpeedUp);
 
@@ -823,19 +879,25 @@ videoBox.addEventListener('touchend',function(e){
   if(touchMoved)return; // ignore swipes
   var now=Date.now();
   var dt=now-touchDownTime;
-  if(dt>500)return; // was long press (now unused, just ignore)
-  // Single tap: show/hide touch overlay
+  if(dt>500)return; // was long press
+  // Double-tap detection for fullscreen
+  if(now-lastTapTime<300){
+    // Double tap: toggle fullscreen
+    lastTapTime=0;
+    toggleFullscreen();
+    return;
+  }
+  lastTapTime=now;
+  // Single tap: show/hide touch overlay (delayed to wait for possible double-tap)
   var singleTapTime=now;
   setTimeout(function(){
-    if(lastTapTime===singleTapTime){
-      if(touchOverlay.classList.contains('visible')){
-        touchOverlay.classList.remove('visible');
-      }else{
-        showTouchOverlay();
-      }
+    if(lastTapTime!==singleTapTime)return; // was double-tap, ignore
+    if(touchOverlay.classList.contains('visible')){
+      touchOverlay.classList.remove('visible');
+    }else{
+      showTouchOverlay();
     }
-  },200);
-  lastTapTime=now;
+  },300);
 });
 videoBox.addEventListener('touchcancel',endSpeedUp);
 
