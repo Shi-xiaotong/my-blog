@@ -172,17 +172,13 @@ comments: false
 #play-page .fav-btn{background:none;border:none;color:#aaa;font-size:18px;cursor:pointer;padding:4px 8px;transition:color .2s}
 #play-page .fav-btn:hover{color:#ffd93d}
 #play-page .fav-btn.active{color:#e94560}
-/* More menu (mobile) */
-#play-page .more-wrap{position:relative;display:none}
+/* More menu (always visible) */
+#play-page .more-wrap{position:relative;display:inline-block}
 #play-page .more-dropdown{display:none;position:absolute;bottom:100%;right:0;background:#1a1a2e;border:1px solid #444;border-radius:8px;padding:6px;z-index:30;min-width:160px;box-shadow:0 -4px 20px rgba(0,0,0,.6)}
 #play-page .more-dropdown.show{display:flex;flex-direction:column;gap:2px}
 #play-page .more-dropdown button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;background:none;border:none;color:#ccc;font-size:13px;text-align:left;cursor:pointer;border-radius:6px;white-space:nowrap}
 #play-page .more-dropdown button:hover{background:#333;color:#ffd93d}
 #play-page .more-dropdown button i{width:16px;text-align:center;font-size:14px}
-@media(max-width:600px){
-#play-page .more-wrap{display:inline-block}
-#play-page .controls .speed-btn,#play-page .controls .skip-btn,#play-page .controls .skip-settings,#play-page .controls .danmaku-toggle-btn,#play-page .controls .danmaku-settings-wrap,#play-page .controls .pip-btn,#play-page .controls .sleep-wrap{display:none!important}
-}
 @media(max-width:600px){
 #play-page .recommend-card{width:100px}
 #play-page .recommend-card img{width:100px;height:133px}
@@ -227,59 +223,19 @@ comments: false
         <button onclick="toggleMute()" id="muteBtn"><i class="fas fa-volume-up"></i></button>
         <input type="range" min="0" max="100" value="100" id="volumeSlider" oninput="setVolume(this.value)">
       </div>
-      <button class="speed-btn" onclick="cycleSpeed()" id="speedBtn" title="播放速度">1x</button>
       <button class="quality-badge" id="qualityBadge" title="当前清晰度">--</button>
       <button class="skip-btn" onclick="skipIntro()" title="跳过片头"><i class="fas fa-forward"></i> <span id="skipLabel">90s</span></button>
-      <button class="danmaku-toggle-btn" onclick="toggleDanmaku()" title="弹幕开关(D)" id="danmakuToggle"><i class="fas fa-comments"></i></button>
-      <div class="danmaku-settings-wrap">
-        <button onclick="toggleDanmakuSettings()" title="弹幕设置"><i class="fas fa-sliders-h"></i></button>
-        <div class="danmaku-settings-dropdown" id="danmakuSettingsDropdown">
-          <label>密度</label>
-          <button class="dm-opt" data-density="1" onclick="setDanmakuDensity(1)">全部</button>
-          <button class="dm-opt" data-density="2" onclick="setDanmakuDensity(2)">1/2</button>
-          <button class="dm-opt" data-density="3" onclick="setDanmakuDensity(3)">1/3</button>
-          <label>字号</label>
-          <button class="dm-opt" data-fontsize="12" onclick="setDanmakuFontsize(12)">12px</button>
-          <button class="dm-opt" data-fontsize="14" onclick="setDanmakuFontsize(14)">14px</button>
-          <button class="dm-opt" data-fontsize="16" onclick="setDanmakuFontsize(16)">16px</button>
-          <button class="dm-opt" data-fontsize="18" onclick="setDanmakuFontsize(18)">18px</button>
-          <button class="dm-opt" data-fontsize="20" onclick="setDanmakuFontsize(20)">20px</button>
-        </div>
-      </div>
-      <button class="pip-btn" onclick="togglePiP()" title="画中画" id="pipBtn" style="display:none"><i class="fas fa-external-link-alt"></i></button>
-      <div class="sleep-wrap">
-        <button onclick="toggleSleepMenu()" title="睡眠定时" id="sleepBtn"><i class="fas fa-moon"></i><span class="sleep-timer-label" id="sleepLabel"></span></button>
-        <div class="sleep-dropdown" id="sleepDropdown">
-          <button class="sl-opt active" data-min="0" onclick="setSleepTimer(0)">关闭</button>
-          <button class="sl-opt" data-min="15" onclick="setSleepTimer(15)">15 分钟</button>
-          <button class="sl-opt" data-min="30" onclick="setSleepTimer(30)">30 分钟</button>
-          <button class="sl-opt" data-min="60" onclick="setSleepTimer(60)">60 分钟</button>
-          <button class="sl-opt" data-min="90" onclick="setSleepTimer(90)">90 分钟</button>
-        </div>
-      </div>
-      <div class="skip-settings">
-        <button onclick="toggleSkipSettings()" title="片头设置"><i class="fas fa-cog"></i></button>
-        <div class="skip-dropdown" id="skipDropdown">
-          <label>跳过秒数</label>
-          <input type="number" id="skipInput" value="90" min="0" max="600" onchange="updateSkipTime(this.value)">
-          <label style="margin-top:8px">长按倍速</label>
-          <button class="lp-opt" data-lpspeed="2" onclick="setLongPressSpeed(2)">2x</button>
-          <button class="lp-opt" data-lpspeed="3" onclick="setLongPressSpeed(3)">3x</button>
-          <button class="lp-opt" data-lpspeed="4" onclick="setLongPressSpeed(4)">4x</button>
-          <button class="lp-opt" data-lpspeed="5" onclick="setLongPressSpeed(5)">5x</button>
-        </div>
-      </div>
       <button onclick="toggleFullscreen()" title="全屏(F)"><i class="fas fa-expand"></i></button>
       <div class="more-wrap">
         <button onclick="toggleMoreMenu()" title="更多"><i class="fas fa-ellipsis-v"></i></button>
         <div class="more-dropdown" id="moreDropdown">
           <button onclick="cycleSpeed();closeMoreMenu()"><i class="fas fa-tachometer-alt"></i>倍速 <span id="moreSpeedLabel">1x</span></button>
-          <button onclick="skipIntro();closeMoreMenu()"><i class="fas fa-forward"></i>跳过片头 <span id="moreSkipLabel">90s</span></button>
           <button onclick="toggleDanmaku();closeMoreMenu()"><i class="fas fa-comments"></i>弹幕开关</button>
           <button onclick="toggleDanmakuSettings();closeMoreMenu()"><i class="fas fa-sliders-h"></i>弹幕设置</button>
           <button onclick="togglePiP();closeMoreMenu()" id="morePipBtn" style="display:none"><i class="fas fa-external-link-alt"></i>画中画</button>
-          <button onclick="toggleSleepMenu();closeMoreMenu()"><i class="fas fa-moon"></i>睡眠定时 <span id="moreSleepLabel"></span></button>
-          <button onclick="toggleSkipSettings();closeMoreMenu()"><i class="fas fa-cog"></i>长按倍速设置</button>
+          <button onclick="setSleepTimer(30);closeMoreMenu()"><i class="fas fa-moon"></i>睡眠30分 <span id="moreSleepLabel"></span></button>
+          <div style="display:flex;align-items:center;gap:6px;padding:4px 12px"><i class="fas fa-forward" style="width:16px;text-align:center;font-size:14px;color:#aaa"></i><span style="font-size:12px;color:#aaa;white-space:nowrap">跳过</span><input type="number" id="skipInput" value="90" min="0" max="600" style="width:48px;background:#111;border:1px solid #444;color:#fff;padding:3px 6px;border-radius:4px;font-size:12px" onchange="updateSkipTime(this.value)"><span style="font-size:12px;color:#aaa">秒</span></div>
+          <button onclick="setLongPressSpeed(longPressSpeed===3?5:3);closeMoreMenu()"><i class="fas fa-bolt"></i>长按倍速 <span id="moreLPLabel">3x</span></button>
         </div>
       </div>
     </div>
@@ -735,7 +691,7 @@ window.setVolume=function(val){video.volume=val/100;video.muted=val==0;updateMut
 window.toggleMute=function(){video.muted=!video.muted;document.getElementById('volumeSlider').value=video.muted?0:Math.round(video.volume*100);updateMuteIcon();};
 function updateMuteIcon(){var icon=video.muted||video.volume===0?'fa-volume-mute':video.volume<0.5?'fa-volume-down':'fa-volume-up';document.getElementById('muteBtn').innerHTML='<i class="fas '+icon+'"></i>';}
 
-window.cycleSpeed=function(){speedIndex=(speedIndex+1)%speeds.length;playbackSpeed=speeds[speedIndex];video.playbackRate=playbackSpeed;document.getElementById('speedBtn').textContent=playbackSpeed+'x';var msl=document.getElementById('moreSpeedLabel');if(msl)msl.textContent=playbackSpeed+'x';try{localStorage.setItem('anime_speed',playbackSpeed);}catch(e){}};
+window.cycleSpeed=function(){speedIndex=(speedIndex+1)%speeds.length;playbackSpeed=speeds[speedIndex];video.playbackRate=playbackSpeed;var msl=document.getElementById('moreSpeedLabel');if(msl)msl.textContent=playbackSpeed+'x';try{localStorage.setItem('anime_speed',playbackSpeed);}catch(e){}};
 
 window.toggleFullscreen=function(){
   var wrapper=document.querySelector('.player-wrap');
@@ -787,12 +743,12 @@ document.addEventListener('fullscreenchange',onFullscreenChange);
 document.addEventListener('webkitfullscreenchange',onFullscreenChange);
 
 window.skipIntro=function(){video.currentTime=Math.min(video.currentTime+skipIntroTime,video.duration||Infinity);};
-window.toggleSkipSettings=function(){document.getElementById('skipDropdown').classList.toggle('show');document.getElementById('sleepDropdown').classList.remove('show');document.getElementById('danmakuSettingsDropdown').classList.remove('show');document.getElementById('moreDropdown').classList.remove('show');};
-window.toggleMoreMenu=function(){document.getElementById('moreDropdown').classList.toggle('show');document.getElementById('skipDropdown').classList.remove('show');document.getElementById('sleepDropdown').classList.remove('show');document.getElementById('danmakuSettingsDropdown').classList.remove('show');};
+window.toggleSkipSettings=function(){}; // Now handled by inline input in more menu
+window.toggleMoreMenu=function(){document.getElementById('moreDropdown').classList.toggle('show');};
 window.closeMoreMenu=function(){document.getElementById('moreDropdown').classList.remove('show');};
-window.updateSkipTime=function(val){skipIntroTime=parseInt(val)||90;document.getElementById('skipLabel').textContent=skipIntroTime+'s';var mskl=document.getElementById('moreSkipLabel');if(mskl)mskl.textContent=skipIntroTime+'s';try{localStorage.setItem('anime_skip_intro',skipIntroTime);}catch(e){}};
+window.updateSkipTime=function(val){skipIntroTime=parseInt(val)||90;document.getElementById('skipLabel').textContent=skipIntroTime+'s';try{localStorage.setItem('anime_skip_intro',skipIntroTime);}catch(e){}};
 
-document.addEventListener('click',function(e){if(!e.target.closest('.skip-settings')){document.getElementById('skipDropdown').classList.remove('show');}if(!e.target.closest('.more-wrap')){document.getElementById('moreDropdown').classList.remove('show');}if(!e.target.closest('.sleep-wrap')){document.getElementById('sleepDropdown').classList.remove('show');}if(!e.target.closest('.danmaku-settings-wrap')){document.getElementById('danmakuSettingsDropdown').classList.remove('show');}});
+document.addEventListener('click',function(e){if(!e.target.closest('.more-wrap')){document.getElementById('moreDropdown').classList.remove('show');}});
 
 // Long press speed up
 var videoBox=document.getElementById('videoBox');
@@ -1057,7 +1013,6 @@ document.getElementById('danmakuInput').addEventListener('keydown',function(e){i
 
 window.toggleDanmaku=function(){
   danmakuEnabled=!danmakuEnabled;
-  document.getElementById('danmakuToggle').innerHTML=danmakuEnabled?'<i class="fas fa-comments"></i>':'<i class="fas fa-comment-slash"></i>';
   if(!danmakuEnabled)ctx.clearRect(0,0,canvas.width,canvas.height);
 };
 
@@ -1104,7 +1059,7 @@ if(savedSpeed){
   }
 }
 video.playbackRate=playbackSpeed;
-document.getElementById('speedBtn').textContent=playbackSpeed+'x';
+var msl=document.getElementById('moreSpeedLabel');if(msl)msl.textContent=playbackSpeed+'x';
 
 // Restore saved skip time
 var savedSkip=localStorage.getItem('anime_skip_intro');
@@ -1130,35 +1085,21 @@ window.setLongPressSpeed=function(speed){
   longPressSpeed=speed;
   try{localStorage.setItem('anime_longpress_speed',speed);}catch(e){}
   document.getElementById('speedIndicator').textContent=speed+'x';
-  // Update active state
-  document.querySelectorAll('.lp-opt').forEach(function(b){
-    b.classList.toggle('active',parseInt(b.dataset.lpspeed)===speed);
-  });
+  var lpLabel=document.getElementById('moreLPLabel');
+  if(lpLabel)lpLabel.textContent=speed+'x';
   showToast('长按倍速: '+speed+'x');
 };
-// Initialize long-press speed active state
-document.querySelectorAll('.lp-opt').forEach(function(b){
-  b.classList.toggle('active',parseInt(b.dataset.lpspeed)===longPressSpeed);
-});
 
 // === FEATURE: Sleep timer ===
-window.toggleSleepMenu=function(){
-  document.getElementById('sleepDropdown').classList.toggle('show');
-  // Close other dropdowns
-  document.getElementById('danmakuSettingsDropdown').classList.remove('show');
-};
+window.toggleSleepMenu=function(){}; // Now handled by quick button in more menu
 window.setSleepTimer=function(minutes){
   // Clear existing timers
   if(sleepTimerId){clearTimeout(sleepTimerId);sleepTimerId=null;}
   if(sleepIntervalId){clearInterval(sleepIntervalId);sleepIntervalId=null;}
   updateSleepLabel('');
   // Update active state
-  document.querySelectorAll('.sl-opt').forEach(function(b){
-    b.classList.toggle('active',parseInt(b.dataset.min)===minutes);
-  });
   if(minutes<=0){
     showToast('睡眠定时已关闭');
-    document.getElementById('sleepDropdown').classList.remove('show');
     return;
   }
   sleepRemaining=minutes*60;
@@ -1179,7 +1120,6 @@ window.setSleepTimer=function(minutes){
     sleepTimerId=null;
   },minutes*60*1000);
   showToast('将在 '+minutes+' 分钟后暂停');
-  document.getElementById('sleepDropdown').classList.remove('show');
 };
 function formatSleepTime(sec){
   var m=Math.floor(sec/60);var s=sec%60;
@@ -1190,16 +1130,11 @@ function updateSleepLabel(text){
   var msl=document.getElementById('moreSleepLabel');if(msl)msl.textContent=text;
 }
 
-// Close sleep dropdown on outside click
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.sleep-wrap')){document.getElementById('sleepDropdown').classList.remove('show');}
-});
-
 // === FEATURE: Danmaku density + font size ===
 window.toggleDanmakuSettings=function(){
-  document.getElementById('danmakuSettingsDropdown').classList.toggle('show');
-  // Close other dropdowns
-  document.getElementById('sleepDropdown').classList.remove('show');
+  // Cycle density: 1 -> 2 -> 3 -> 1
+  var next=danmakuDensity>=3?1:danmakuDensity+1;
+  setDanmakuDensity(next);
 };
 window.setDanmakuDensity=function(d){
   danmakuDensity=d;
@@ -1217,17 +1152,6 @@ window.setDanmakuFontsize=function(s){
   });
   showToast('弹幕字号: '+s+'px');
 };
-// Initialize danmaku settings active states
-document.querySelectorAll('.dm-opt[data-density]').forEach(function(b){
-  b.classList.toggle('active',parseInt(b.dataset.density)===danmakuDensity);
-});
-document.querySelectorAll('.dm-opt[data-fontsize]').forEach(function(b){
-  b.classList.toggle('active',parseInt(b.dataset.fontsize)===danmakuFontSize);
-});
-// Close danmaku settings on outside click
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.danmaku-settings-wrap')){document.getElementById('danmakuSettingsDropdown').classList.remove('show');}
-});
 
 // === FEATURE: Favorites ===
 window.toggleFavorite=function(){
