@@ -285,7 +285,11 @@ comments: false
 
 <script>
 (function(){
-var API='https://ffzy.233002.xyz';
+var API_SOURCES=[
+  {name:'FFZY',base:'https://ffzy.233002.xyz',search:'/api/ffzy?ac=list&wd=',detail:'/api/ffzy?ac=detail&ids='},
+  {name:'BDZY',base:'https://api.apibdzy.com',search:'/api.php/provide/vod/?ac=list&wd=',detail:'/api.php/provide/vod/?ac=detail&ids='}
+];
+var API=API_SOURCES[0].base;
 var video=document.getElementById('videoPlayer');
 var canvas=document.getElementById('danmakuCanvas');
 var ctx=canvas.getContext('2d');
@@ -423,13 +427,34 @@ function tryNextSource(epIndex){
 
 // Load detail
 async function loadDetail(){
+  // Try each API source until one works
+  var detailData=null;
+  var usedSource='';
+  for(var si=0;si<API_SOURCES.length;si++){
+    var src=API_SOURCES[si];
+    try{
+      var res=await fetch(src.base+src.detail+vodId);
+      var data=await res.json();
+      var item=(data.list||[])[0];
+      if(item&&item.vod_play_url){
+        detailData=item;
+        API=src.base;
+        usedSource=src.name;
+        break;
+      }
+    }catch(e){}
+  }
+  if(!detailData){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('errorMsg').style.display='block';
+    document.getElementById('errorMsg').innerHTML='<i class="fas fa-exclamation-circle"></i> 所有源站均不可用<br><br><a href="/anime/" style="color:#ffd93d">返回影视屋</a>';
+    return;
+  }
   try{
-    var res=await fetch(API+'/api/ffzy?ac=detail&ids='+vodId);
-    var data=await res.json();
-    var item=(data.list||[])[0];
-    if(!item){throw new Error('not found');}
+    var item=detailData;
 
     currentDetail=item;
+    if(usedSource)showToast('源站: '+usedSource,2000);
     document.getElementById('pageTitle').textContent=item.vod_name;
     document.getElementById('infoSection').style.display='block';
     document.getElementById('infoPoster').src=item.vod_pic||'';
@@ -1199,7 +1224,8 @@ async function loadRecommendations(){
   var keyword=genre.split(/[,，/]/)[0].trim();
   if(!keyword)return;
   try{
-    var res=await fetch(API+'/api/ffzy?ac=list&wd='+encodeURIComponent(keyword));
+    var src=API_SOURCES.find(function(s){return s.base===API;})||API_SOURCES[0];
+    var res=await fetch(src.base+src.search+encodeURIComponent(keyword));
     var data=await res.json();
     var list=(data.list||[]).filter(function(item){return item.vod_id!==vodId;}).slice(0,6);
     if(list.length===0)return;
