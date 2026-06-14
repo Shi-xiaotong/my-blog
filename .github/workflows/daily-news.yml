@@ -24,7 +24,6 @@ jobs:
 
       - name: Generate daily news
         env:
-          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           AGNES_API_KEY: ${{ secrets.AGNES_API_KEY }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
