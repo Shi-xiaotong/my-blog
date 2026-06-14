@@ -46,6 +46,7 @@ menu:
   标签: /tags/ || fas fa-tags
   分类: /categories/ || fas fa-folder-open
   关于: /about/ || fas fa-heart
+  友链: /links/ || fas fa-link
 
 # --------------------------------------
 # 代码块设置
