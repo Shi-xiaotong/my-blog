@@ -1,0 +1,40 @@
+name: Daily News Generator
+
+on:
+  schedule:
+    - cron: '0 1 * * *'   # 09:00 CST (01:00 UTC)
+  workflow_dispatch:
+    inputs:
+      topics:
+        description: 'Custom topics (optional, leave empty for auto)'
+        required: false
+        default: ''
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      - name: Install wrangler
+        run: npm install -g wrangler
+
+      - name: Generate daily news
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          AGNES_API_KEY: ${{ secrets.AGNES_API_KEY }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
+          BLOG_DIR: ${{ github.workspace }}
+        run: python scripts/daily-news.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "daily-news-bot"
+          git config user.email "bot@233002.xyz"
+          git add -A
+          git diff --cached --quiet || git commit -m "auto: daily news $(date +%Y-%m-%d)"
+          git push
