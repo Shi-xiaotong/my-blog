@@ -51,10 +51,16 @@ def gen_image(prompt, output_path):
 
 
 def upload_r2(local_path, remote_key):
-    subprocess.run([
+    env = os.environ.copy()
+    env["CLOUDFLARE_API_TOKEN"] = env.get("CF_R2_TOKEN", "")
+    env["CLOUDFLARE_ACCOUNT_ID"] = env.get("CF_ACCOUNT_ID", "")
+    result = subprocess.run([
         "npx", "wrangler", "r2", "object", "put", f"myblog/{remote_key}",
         f"--file={local_path}", "--content-type", "image/png", "--remote"
-    ], capture_output=True, timeout=60, cwd=BLOG_DIR)
+    ], capture_output=True, text=True, timeout=120, cwd=BLOG_DIR, env=env)
+    if result.returncode != 0:
+        print(f"    R2 upload failed: {result.stderr[:200]}", flush=True)
+        return ""
     return f"https://img.233002.xyz/{remote_key}"
 
 
