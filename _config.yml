@@ -17,8 +17,8 @@ url: https://www.233002.xyz
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
-  trailing_index: true # 设置为 false 可移除链接中的 'index.html'
-  trailing_html: true # 设置为 false 可移除链接中的 '.html'
+  trailing_index: false # 设置为 false 可移除链接中的 'index.html'
+  trailing_html: false # 设置为 false 可移除链接中的 '.html'
 
 # 目录
 source_dir: source
