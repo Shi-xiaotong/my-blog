@@ -34,11 +34,17 @@
             this.container.innerHTML = `
                 <div class="calendar-content">
                     <div class="calendar-header">
-                        <button class="cal-nav-btn" id="cal-prev-year" title="上一年"><i class="fas fa-angle-double-left"></i></button>
-                        <button class="cal-nav-btn" id="cal-prev-month" title="上一月"><i class="fas fa-chevron-left"></i></button>
-                        <button class="cal-today-btn" id="cal-today" title="回到今天">今天</button>
-                        <button class="cal-nav-btn" id="cal-next-month" title="下一月"><i class="fas fa-chevron-right"></i></button>
-                        <button class="cal-nav-btn" id="cal-next-year" title="下一年"><i class="fas fa-angle-double-right"></i></button>
+                        <div class="cal-current-date">
+                            <span class="cal-year">${this.currentYear}年</span>
+                            <span class="cal-month">${this.currentMonth}月</span>
+                        </div>
+                        <div class="cal-nav-bar">
+                            <button class="cal-nav-btn" id="cal-prev-year" title="上一年"><i class="fas fa-angle-double-left"></i></button>
+                            <button class="cal-nav-btn" id="cal-prev-month" title="上一月"><i class="fas fa-chevron-left"></i></button>
+                            <button class="cal-today-btn" id="cal-today" title="回到今天">今天</button>
+                            <button class="cal-nav-btn" id="cal-next-month" title="下一月"><i class="fas fa-chevron-right"></i></button>
+                            <button class="cal-nav-btn" id="cal-next-year" title="下一年"><i class="fas fa-angle-double-right"></i></button>
+                        </div>
                     </div>
                     <div class="calendar-main">
                         <div class="calendar-weekdays">
@@ -74,8 +80,9 @@
             const d = new Date();
             this.currentYear = d.getFullYear();
             this.currentMonth = d.getMonth() + 1;
-            this.selectDate(d.toISOString().split('T')[0]);
+            this.render();
             this.renderCalendar();
+            this.selectDate(d.toISOString().split('T')[0]);
         }
 
         changeMonth(delta) {
