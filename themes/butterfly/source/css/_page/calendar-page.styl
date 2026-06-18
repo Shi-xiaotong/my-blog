@@ -1,41 +1,37 @@
-// 万年历页面样式 - 深色玻璃态风格
+// Calendar Page - Butterfly Theme Style
 
-// 整体背景 - 深海蓝+青蓝，更通透现代
 #page .calendar-page .calendar-content
   padding: 1.5rem 2rem
-  background: linear-gradient(135deg, #163443 0%, #1d4558 45%, #27556a 100%)
-  border-radius: 20px
+  background: var(--card-bg)
+  border-radius: 12px
+  border: 1px solid var(--border-color)
+  box-shadow: var(--card-box-shadow)
   +maxMd()
     padding: 1rem
-    border-radius: 16px
+    border-radius: 12px
 
-// 头部导航 - 中层透明度
+// Header navigation
 .calendar-header
   display: flex
   align-items: center
   justify-content: center
   gap: 1rem
   padding: 1rem 1.5rem
-  background: rgba(255, 255, 255, 0.06)
-  backdrop-filter: blur(10px)
-  -webkit-backdrop-filter: blur(10px)
-  border: 1px solid rgba(255, 255, 255, 0.08)
-  border-radius: 16px
+  background: var(--card-bg)
+  border: 1px solid var(--border-color)
+  border-radius: 12px
   margin-bottom: 1rem
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15)
 
 .cal-nav-btn, .cal-today-btn
-  background: rgba(255, 255, 255, 0.1)
-  border: 1px solid rgba(255, 255, 255, 0.15)
-  color: rgba(255, 255, 255, 0.9)
+  background: var(--card-bg)
+  border: 1px solid var(--border-color)
+  color: var(--font-color)
   cursor: pointer
   transition: all 0.25s ease
 
   &:hover
-    background: rgba(255, 255, 255, 0.2)
-    border-color: rgba(255, 255, 255, 0.3)
-    color: #fff
-    transform: scale(1.05)
+    border-color: var(--theme-color, #49b1f5)
+    color: var(--theme-color, #49b1f5)
 
 .cal-nav-btn
   width: 36px
@@ -55,33 +51,30 @@
   font-size: 0.85rem
   font-weight: 500
 
-// 主体日历 - 中层透明度
+// Calendar main area
 .calendar-main
-  border-radius: 16px
-  background: rgba(255, 255, 255, 0.05)
-  backdrop-filter: blur(10px)
-  -webkit-backdrop-filter: blur(10px)
-  border: 1px solid rgba(255, 255, 255, 0.06)
+  border-radius: 12px
+  background: var(--card-bg)
+  border: 1px solid var(--border-color)
   overflow: hidden
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12)
 
-// 星期标题
+// Weekday headers
 .calendar-weekdays
   display: grid
   grid-template-columns: repeat(7, 1fr)
   gap: 0
   padding: 0.8rem 0.5rem
-  background: rgba(255, 255, 255, 0.04)
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+  border-bottom: 1px solid var(--border-color)
 
 .weekday
   text-align: center
   font-size: 0.85rem
   font-weight: 500
   padding: 0.5rem 0
-  color: rgba(255, 255, 255, 0.6)
+  color: var(--font-color)
+  opacity: 0.6
 
-// 日历网格 - 用 gap 代替边框
+// Calendar grid
 .calendar-grid
   display: grid
   grid-template-columns: repeat(7, 1fr)
@@ -89,360 +82,85 @@
   padding: 0.5rem
   background: transparent
 
-// 日期格子 - 浅层透明度
+// Day cells
 .cal-day
-  aspect-ratio: 1
-  background: rgba(255, 255, 255, 0.04)
-  border-radius: 10px
   display: flex
   flex-direction: column
   align-items: center
   justify-content: center
-  padding: 0.25rem
+  padding: 0.6rem 0.3rem
+  border-radius: 8px
   cursor: pointer
-  transition: all 0.2s ease
-  position: relative
-  min-height: 55px
-  // 移除边框，用背景色区分
+  transition: all 0.25s ease
+  min-height: 48px
 
   &:hover
-    background: rgba(255, 255, 255, 0.08)
+    background: var(--theme-color, #49b1f5)
+    color: #fff
 
-  &.empty
-    background: transparent
-    cursor: default
-
-  // 今天 - 柔和蓝色渐变
-  &.today
-    background: linear-gradient(135deg, #4ea1ff, #7bc3ff)
-    box-shadow: 0 4px 12px rgba(78, 161, 255, 0.4)
-
-    .cal-day-num
-      color: #fff
-      font-weight: 600
-
-    .cal-lunar, .cal-holiday-name, .cal-jieqi-name
-      color: rgba(255, 255, 255, 0.9)
-
-    .cal-tag
-      background: rgba(255, 255, 255, 0.3)
+    .cal-day-num, .cal-day-lunar
       color: #fff
 
-  // 周末 - 柔和橙色
-  &.weekend .cal-day-num
-    color: #ff9f7f
-
-  // 选中状态
-  &.selected:not(.today)
-    background: rgba(255, 255, 255, 0.15)
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2)
-
-// 日期数字
 .cal-day-num
   font-size: 1rem
   font-weight: 500
-  color: rgba(255, 255, 255, 0.95)
-  line-height: 1.3
+  color: var(--font-color)
 
-// 农历文字 - 三级信息，更淡
-.cal-lunar
-  font-size: 0.65rem
-  line-height: 1.2
-  text-align: center
-  max-width: 100%
-  overflow: hidden
-  text-overflow: ellipsis
-  white-space: nowrap
+.cal-day-lunar
+  font-size: 0.7rem
+  color: var(--font-color)
+  opacity: 0.5
   margin-top: 2px
-  color: rgba(255, 255, 255, 0.4)
 
-// 节日名称 - 普通节日稍淡
-.cal-holiday-name
-  font-size: 0.65rem
-  line-height: 1.2
-  text-align: center
-  max-width: 100%
-  overflow: hidden
-  text-overflow: ellipsis
-  white-space: nowrap
-  margin-top: 2px
-  color: rgba(255, 255, 255, 0.7)
-  font-weight: 500
-
-// 重要节日 - 金色高亮
-.cal-holiday-name.important
-  color: #f7c948
-  font-weight: 600
-
-// 节气 - 柔和绿色
-.cal-jieqi-name
-  font-size: 0.65rem
-  line-height: 1.2
-  text-align: center
-  max-width: 100%
-  overflow: hidden
-  text-overflow: ellipsis
-  white-space: nowrap
-  margin-top: 2px
-  color: rgba(180, 220, 180, 0.8)
-  font-weight: 500
-
-// 标签 - 柔和色
-.cal-tag
-  position: absolute
-  top: 3px
-  right: 3px
-  font-size: 0.55rem
-  font-weight: 600
-  padding: 1px 4px
-  border-radius: 4px
-  line-height: 1.2
-  z-index: 1
-
-.cal-tag.tag-holiday
-  background: rgba(255, 120, 100, 0.7)
+.cal-day.today
+  background: var(--theme-color, #49b1f5)
   color: #fff
 
-.cal-tag.tag-workday
-  background: rgba(180, 180, 180, 0.6)
-  color: rgba(255, 255, 255, 0.9)
+  .cal-day-num, .cal-day-lunar
+    color: #fff
 
-// 详情卡片 - 中层透明度
-.calendar-detail
+.cal-day.other-month
+  opacity: 0.3
+
+// Calendar info section
+.calendar-info
   margin-top: 1rem
-  padding: 1.5rem
-  background: rgba(255, 255, 255, 0.05)
-  backdrop-filter: blur(10px)
-  -webkit-backdrop-filter: blur(10px)
-  border: 1px solid rgba(255, 255, 255, 0.06)
-  border-radius: 16px
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12)
+  padding: 1rem
+  background: var(--card-bg)
+  border: 1px solid var(--border-color)
+  border-radius: 12px
 
-.detail-header
-  text-align: center
-  margin-bottom: 1.5rem
-  padding-bottom: 1rem
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08)
-
-.detail-lunar-date
-  font-size: 2rem
-  font-weight: 200
-  color: #f7c948
-  line-height: 1.3
-
-.detail-ganzhi
-  font-size: 1rem
-  color: rgba(255, 255, 255, 0.7)
-  margin-top: 0.5rem
-
-.detail-shengxiao
-  display: inline-block
-  margin-top: 0.5rem
-  padding: 0.3rem 1rem
-  background: linear-gradient(135deg, rgba(247, 201, 72, 0.2), rgba(255, 140, 0, 0.2))
-  border: 1px solid rgba(247, 201, 72, 0.4)
-  color: #f7c948
+.calendar-info-title
+  font-size: 1.1rem
   font-weight: 600
-  border-radius: 15px
-  font-size: 0.85rem
-
-.detail-info
-  display: grid
-  grid-template-columns: repeat(3, 1fr)
-  gap: 0.8rem
-  margin-bottom: 1.2rem
-
-.detail-row
-  display: flex
-  align-items: baseline
-  gap: 0.4rem
-
-.detail-label
-  font-size: 0.8rem
-  color: rgba(255, 255, 255, 0.5)
-  white-space: nowrap
-
-.detail-value
-  font-size: 0.85rem
-  color: rgba(255, 255, 255, 0.9)
-
-  &.jieqi-value
-    background: linear-gradient(135deg, #a78bfa, #7dd3fc)
-    -webkit-background-clip: text
-    -webkit-text-fill-color: transparent
-    background-clip: text
-    font-weight: 600
-    font-size: 1rem
-
-.detail-positions
-  display: grid
-  grid-template-columns: repeat(3, 1fr)
-  gap: 0.8rem
-  margin-bottom: 1.2rem
-  padding: 1rem
-  background: rgba(255, 255, 255, 0.04)
-  border-radius: 12px
-  border: 1px solid rgba(255, 255, 255, 0.06)
-
-.position-item
-  text-align: center
-
-.pos-label
-  display: block
-  font-size: 0.75rem
-  color: rgba(255, 255, 255, 0.5)
-  margin-bottom: 0.3rem
-
-.pos-value
-  font-size: 0.8rem
-  color: rgba(255, 255, 255, 0.85)
-
-// 八字卡片 - 更柔和的渐变
-.detail-bazi
-  background: rgba(255, 255, 255, 0.05)
-  border: 1px solid rgba(255, 255, 255, 0.08)
-  border-radius: 12px
-  padding: 1rem
-  margin-bottom: 1rem
-  text-align: center
-
-.bazi-title
-  font-size: 0.8rem
-  color: rgba(255, 255, 255, 0.5)
+  color: var(--font-color)
   margin-bottom: 0.5rem
 
-.bazi-content
-  font-size: 1rem
-  color: rgba(247, 201, 72, 0.9)
-  font-weight: 500
-  letter-spacing: 2px
-  margin-bottom: 0.3rem
-
-.bazi-na-yin
-  font-size: 0.75rem
-  color: rgba(255, 255, 255, 0.6)
-
-.detail-pengzu
-  display: flex
-  align-items: center
-  justify-content: center
-  gap: 0.5rem
-  padding: 0.8rem
-  background: rgba(255, 255, 255, 0.04)
-  border-radius: 8px
-  margin-bottom: 1rem
-
-  .detail-label
-    font-size: 0.8rem
-    color: rgba(255, 255, 255, 0.5)
-
-  .detail-value
-    font-size: 0.85rem
-    color: rgba(255, 200, 100, 0.9)
-
-.detail-yi-ji
-  display: grid
-  grid-template-columns: 1fr 1fr
-  gap: 1rem
-  margin-bottom: 1.2rem
-
-.yi-section, .ji-section
-  padding: 0.8rem
-  border-radius: 10px
-
-.yi-section
-  background: rgba(100, 200, 130, 0.15)
-  border: 1px solid rgba(100, 200, 130, 0.3)
-
-  .section-title
-    color: #86efac
-
-.ji-section
-  background: rgba(250, 120, 120, 0.15)
-  border: 1px solid rgba(250, 120, 120, 0.3)
-
-  .section-title
-    color: #fca5a5
-
-.section-title
+.calendar-info-detail
   font-size: 0.85rem
-  font-weight: 600
-  margin-bottom: 0.5rem
-
-.section-content
-  font-size: 0.8rem
-  color: rgba(255, 255, 255, 0.8)
+  color: var(--font-color)
+  opacity: 0.7
   line-height: 1.6
-  word-break: break-word
 
-.detail-footer
-  padding-top: 1rem
-  border-top: 1px solid rgba(255, 255, 255, 0.08)
-
-// 响应式 - 移动端极简
-@media (max-width: 768px)
+// Responsive
++maxMd()
   .calendar-header
+    padding: 0.8rem 1rem
     gap: 0.5rem
-    padding: 0.8rem
 
   .cal-nav-btn
     width: 32px
     height: 32px
 
-    i
-      font-size: 0.9rem
-
   .cal-today-btn
     padding: 0 12px
     height: 32px
-    font-size: 0.75rem
-
-  .calendar-main
-    border-radius: 12px
+    font-size: 0.8rem
 
   .calendar-grid
     gap: 4px
     padding: 0.3rem
 
   .cal-day
-    min-height: 48px
-    border-radius: 8px
-    padding: 0.15rem
-
-  .cal-day-num
-    font-size: 0.9rem
-
-  // 移动端隐藏农历和节气，保持极简
-  .cal-lunar, .cal-jieqi-name
-    display: none
-
-  .cal-holiday-name
-    font-size: 0.6rem
-
-  .cal-tag
-    font-size: 0.5rem
-    padding: 1px 3px
-    top: 2px
-    right: 2px
-
-  .calendar-detail
-    padding: 1rem
-
-  .detail-lunar-date
-    font-size: 1.5rem
-
-  .detail-info
-    grid-template-columns: repeat(2, 1fr)
-
-  .detail-positions
-    grid-template-columns: repeat(2, 1fr)
-    gap: 0.5rem
-
-  .detail-yi-ji
-    grid-template-columns: 1fr
-
-  .section-content, .bazi-content
-    font-size: 0.75rem
-
-  .bazi-content
-    letter-spacing: 1px
+    padding: 0.4rem 0.2rem
+    min-height: 40px
