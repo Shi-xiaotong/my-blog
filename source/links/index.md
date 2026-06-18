@@ -23,7 +23,7 @@ top_img: false
     </div>
     <div class="friend-link-item">
       <div class="friend-link-avatar" data-name="他说">
-        <img src="https://www.google.com/s2/favicons?domain=090909.top&sz=64" alt="他说" onerror="this.parentElement.classList.add('no-icon');this.remove();">
+        <img src="https://090909.top/assets/images/logo.ico" alt="他说" onerror="this.parentElement.classList.add('no-icon');this.remove();">
       </div>
       <div class="friend-link-info">
         <a href="https://090909.top/" target="_blank" rel="noopener noreferrer">

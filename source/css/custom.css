@@ -72,3 +72,53 @@ iframe {
         padding: 12px;
     }
 }
+
+/* 淡入淡出页面过渡 */
+#loading-box {
+  transition: opacity 0.5s ease;
+}
+
+#loading-box.loaded {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#loading-box .loading-left-bg,
+#loading-box .loading-right-bg {
+  transition: opacity 0.5s ease !important;
+  transform: none !important;
+}
+
+#loading-box.loaded .loading-left-bg,
+#loading-box.loaded .loading-right-bg {
+  opacity: 0;
+}
+
+/* Preloader 透明 */
+:root {
+  --preloader-bg: transparent !important;
+}
+
+#loading-box .loading-left-bg,
+#loading-box .loading-right-bg {
+  background-color: transparent !important;
+}
+
+#loading-box .spinner-box {
+  display: none !important;
+}
+
+/* 强制覆盖 preloader 背景 */
+.loading-bg,
+#loading-box .loading-left-bg,
+#loading-box .loading-right-bg {
+  background-color: transparent !important;
+}
+
+/* 强制覆盖 preloader 背景 */
+.loading-bg,
+#loading-box .loading-left-bg,
+#loading-box .loading-right-bg,
+#loading-box .spinner-box .configure-core {
+  background-color: transparent !important;
+}

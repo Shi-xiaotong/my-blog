@@ -2,7 +2,7 @@
 (function() {
   'use strict';
   
-  const MUSIC_URL = 'https://lanzou-api.233002.xyz/api/direct?url=https://wwbdj.lanzoul.com/iZjIP3qskyfc&pwd=bc7o';
+  const MUSIC_URL = '/audio/bgm.mp3';
   
   let audio = null;
   let isPlaying = false;
