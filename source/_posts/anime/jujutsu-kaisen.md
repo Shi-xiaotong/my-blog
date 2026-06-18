@@ -5,7 +5,7 @@ cover: https://img.233002.xyz/jujutsu-kaisen.png
 tags:
   - anime
   - 咒术回战
-  - 动漫
+
 categories:
   - anime
 toc: true

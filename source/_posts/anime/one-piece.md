@@ -5,7 +5,7 @@ cover: https://img.233002.xyz/one-piece.png
 tags:
   - anime
   - 海贼王
-  - 动漫
+
 categories:
   - anime
 toc: true

@@ -5,7 +5,7 @@ cover: https://img.233002.xyz/anime-recommendation.png
 tags:
   - anime
   - 番剧推荐
-  - 动漫
+
 categories:
   - anime
 toc: true

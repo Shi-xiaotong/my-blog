@@ -5,7 +5,7 @@ cover: https://img.233002.xyz/tang-dynasty.png
 tags:
   - history
   - 唐朝
-  - 中国历史
+  - 历史
 categories:
   - history
 toc: true

@@ -8,7 +8,7 @@ tags:
   - 免费API
   - OpenAI兼容
   - FreeLLMAPI
-  - 效率提升
+  - 效率
 cover: https://img.233002.xyz/blog/freellmapi-cover.png
 ---
 

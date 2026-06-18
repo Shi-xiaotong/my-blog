@@ -5,7 +5,7 @@ cover: https://img.233002.xyz/naruto.png
 tags:
   - anime
   - 火影忍者
-  - 动漫
+
 categories:
   - anime
 toc: true

@@ -3,7 +3,7 @@ title: ChatGPT与我的日常：AI时代的工作变革
 date: 2026-01-12 13:00:00
 cover: https://img.233002.xyz/ai-work-change.png
 tags:
-  - 人工智能
+  - AI
   - science
   - life
 categories:

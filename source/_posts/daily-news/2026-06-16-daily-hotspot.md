@@ -4,7 +4,7 @@ date: 2026-06-16 06:36:00
 categories:
   - daily-news
 tags:
-  - 每日热点  - 苹果Vision  - 特斯拉Optim  - 某大厂发布“量子  - 脑机接口初创公司
+  - 每日热点
 cover: https://img.233002.xyz/blog/daily-news-2026-06-16-1.png
 ---
 

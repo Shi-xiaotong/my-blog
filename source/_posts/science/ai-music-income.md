@@ -3,7 +3,7 @@ title: AI写歌月入十几万：音乐创作的平民化时代来了？
 date: 2026-06-04 12:00:00
 cover: https://img.233002.xyz/ai-music-cover.png
 tags:
-  - 人工智能
+  - AI
   - 音乐
   - 科技
 categories:

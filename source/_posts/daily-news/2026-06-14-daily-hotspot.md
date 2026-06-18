@@ -5,10 +5,6 @@ categories:
   - daily-news
 tags:
   - 每日热点
-  - 雷军
-  - AI
-  - SpaceX
-  - 携程
 cover: https://img.233002.xyz/blog/daily-news-2026-06-14-1.png
 ---
 
