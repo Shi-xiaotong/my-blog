@@ -30,6 +30,10 @@ code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
   - 'js/**'
+  - 'live2d/**'
+  - 'user/**'
+  - 'anime/play/**'
+  - '**/*.json'
 
 # 写作
 new_post_name: :title.md # 新文章的文件名
@@ -152,3 +156,5 @@ hexo_submit_urls_to_search_engine:
   google_key_file: ""
   google_proxy: 0
   replace: 0
+
+# 排除不需要索引的文件
