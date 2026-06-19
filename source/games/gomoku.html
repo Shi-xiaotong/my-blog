@@ -219,83 +219,57 @@ function showOverlay(title, msg) {
 }
 function closeOverlay() { document.getElementById('overlay').style.display = 'none'; }
 
-// ===== AI (启发式评估 + Alpha-Beta) =====
+// ===== AI (快速启发式) =====
 
-// 棋型评分
-const SCORES = {
-  FIVE: 10000000,
-  OPEN_FOUR: 1000000,
-  FOUR: 100000,
-  OPEN_THREE: 10000,
-  THREE: 1000,
-  OPEN_TWO: 100,
-  TWO: 10,
-  ONE: 1
-};
+const DIRS = [[0,1],[1,0],[1,1],[1,-1]];
 
-function evaluateLine(line, player) {
+// 评估某一点对某个玩家的价值（只看经过该点的线）
+function scorePoint(r, c, player) {
+  let total = 0;
   const opp = player === BLACK ? WHITE : BLACK;
-  const pCount = line.filter(v => v === player).length;
-  const oCount = line.filter(v => v === opp).length;
-  const empty = line.filter(v => v === EMPTY).length;
-
-  if (pCount > 0 && oCount > 0) return 0; // Both have stones in this line
-  if (pCount === 0 && oCount === 0) return 0;
-
-  const count = Math.max(pCount, oCount);
-  const isPlayer = pCount > 0;
-
-  if (count >= 5) return isPlayer ? SCORES.FIVE : -SCORES.FIVE;
-  if (count === 4) {
-    if (empty === 1) return isPlayer ? SCORES.OPEN_FOUR : -SCORES.OPEN_FOUR;
-    return isPlayer ? SCORES.FOUR : -SCORES.FOUR;
+  for (const [dr, dc] of DIRS) {
+    let count = 1, openEnds = 0;
+    // Forward
+    for (let i = 1; i < 5; i++) {
+      const nr = r + dr*i, nc = c + dc*i;
+      if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) break;
+      if (board[nr][nc] === player) count++;
+      else { if (board[nr][nc] === EMPTY) openEnds++; break; }
+    }
+    // Backward
+    for (let i = 1; i < 5; i++) {
+      const nr = r - dr*i, nc = c - dc*i;
+      if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) break;
+      if (board[nr][nc] === player) count++;
+      else { if (board[nr][nc] === EMPTY) openEnds++; break; }
+    }
+    if (count >= 5) total += 10000000;
+    else if (count === 4) total += openEnds >= 1 ? 1000000 : 100000;
+    else if (count === 3) total += openEnds === 2 ? 10000 : openEnds === 1 ? 1000 : 100;
+    else if (count === 2) total += openEnds === 2 ? 100 : openEnds === 1 ? 10 : 1;
   }
-  if (count === 3) {
-    if (empty === 2) return isPlayer ? SCORES.OPEN_THREE : -SCORES.OPEN_THREE;
-    return isPlayer ? SCORES.THREE : -SCORES.THREE;
-  }
-  if (count === 2) {
-    if (empty === 3) return isPlayer ? SCORES.OPEN_TWO : -SCORES.OPEN_TWO;
-    return isPlayer ? SCORES.TWO : -SCORES.TWO;
-  }
-  return isPlayer ? SCORES.ONE : -SCORES.ONE;
+  return total;
 }
 
-function evaluateBoard(player) {
-  let score = 0;
-  const opp = player === BLACK ? WHITE : BLACK;
-
-  // Evaluate all lines of 5
-  for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) {
-    // Horizontal
-    if (c + 4 < SIZE) {
-      const line = [board[r][c], board[r][c+1], board[r][c+2], board[r][c+3], board[r][c+4]];
-      score += evaluateLine(line, player);
-    }
-    // Vertical
-    if (r + 4 < SIZE) {
-      const line = [board[r][c], board[r+1][c], board[r+2][c], board[r+3][c], board[r+4][c]];
-      score += evaluateLine(line, player);
-    }
-    // Diagonal
-    if (r + 4 < SIZE && c + 4 < SIZE) {
-      const line = [board[r][c], board[r+1][c+1], board[r+2][c+2], board[r+3][c+3], board[r+4][c+4]];
-      score += evaluateLine(line, player);
-    }
-    if (r + 4 < SIZE && c - 4 >= 0) {
-      const line = [board[r][c], board[r+1][c-1], board[r+2][c-2], board[r+3][c-3], board[r+4][c-4]];
-      score += evaluateLine(line, player);
-    }
-  }
-  return score;
+// 快速评估一个落子点
+function quickScore(r, c) {
+  board[r][c] = WHITE;
+  const aiScore = scorePoint(r, c, WHITE);
+  board[r][c] = BLACK;
+  const blockScore = scorePoint(r, c, BLACK);
+  board[r][c] = EMPTY;
+  // 优先赢，其次堵，AI 略高于防守
+  return aiScore * 1.1 + blockScore;
 }
 
-function getNeighbors() {
+function getBestMove() {
+  if (moveCount === 0) return [7, 7];
+
+  // 收集邻居
   const neighbors = new Set();
-  const range = 2;
   for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) {
     if (board[r][c] !== EMPTY) {
-      for (let dr = -range; dr <= range; dr++) for (let dc = -range; dc <= range; dc++) {
+      for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) {
         const nr = r + dr, nc = c + dc;
         if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && board[nr][nc] === EMPTY) {
           neighbors.add(nr * SIZE + nc);
@@ -303,114 +277,36 @@ function getNeighbors() {
       }
     }
   }
-  return [...neighbors].map(idx => [Math.floor(idx / SIZE), idx % SIZE]);
-}
 
-function getCandidates() {
-  if (moveCount === 0) return [[7, 7]]; // Center
-  const neighbors = getNeighbors();
-  // Score and sort candidates
-  return neighbors
-    .map(([r, c]) => {
-      board[r][c] = WHITE;
-      const score = evaluateBoard(WHITE);
-      board[r][c] = EMPTY;
-      return { r, c, score };
-    })
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 20)
-    .map(({r, c}) => [r, c]);
-}
+  const candidates = [...neighbors].map(idx => {
+    const r = Math.floor(idx / SIZE), c = idx % SIZE;
+    return { r, c, score: quickScore(r, c) };
+  }).sort((a, b) => b.score - a.score).slice(0, 15);
 
-function alphaBeta(depth, alpha, beta, isMaximizing) {
-  // Check for immediate win
-  for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) {
-    if (board[r][c] !== EMPTY) {
-      const player = board[r][c];
-      if (checkWin(r, c, player)) {
-        return player === WHITE ? SCORES.FIVE : -SCORES.FIVE;
-      }
-    }
+  // 检查直接赢
+  for (const {r, c} of candidates) {
+    board[r][c] = WHITE;
+    if (checkWin(r, c, WHITE)) { board[r][c] = EMPTY; return [r, c]; }
+    board[r][c] = EMPTY;
   }
 
-  if (depth === 0) return evaluateBoard(WHITE);
-
-  const candidates = getCandidates();
-  if (candidates.length === 0) return 0;
-
-  if (isMaximizing) {
-    let maxEval = -Infinity;
-    for (const [r, c] of candidates) {
-      board[r][c] = WHITE;
-      const eval_ = alphaBeta(depth - 1, alpha, beta, false);
-      board[r][c] = EMPTY;
-      maxEval = Math.max(maxEval, eval_);
-      alpha = Math.max(alpha, eval_);
-      if (beta <= alpha) break;
-    }
-    return maxEval;
-  } else {
-    let minEval = Infinity;
-    for (const [r, c] of candidates) {
-      board[r][c] = BLACK;
-      const eval_ = alphaBeta(depth - 1, alpha, beta, true);
-      board[r][c] = EMPTY;
-      minEval = Math.min(minEval, eval_);
-      beta = Math.min(beta, eval_);
-      if (beta <= alpha) break;
-    }
-    return minEval;
+  // 检查必须堵
+  for (const {r, c} of candidates) {
+    board[r][c] = BLACK;
+    if (checkWin(r, c, BLACK)) { board[r][c] = EMPTY; return [r, c]; }
+    board[r][c] = EMPTY;
   }
+
+  // 返回评分最高的
+  return [candidates[0].r, candidates[0].c];
 }
 
 function aiMove() {
   if (gameOver) return;
-
-  let bestMove = null;
-  let bestScore = -Infinity;
-
-  const candidates = getCandidates();
-
-  // First check for immediate win
-  for (const [r, c] of candidates) {
-    board[r][c] = WHITE;
-    if (checkWin(r, c, WHITE)) {
-      board[r][c] = EMPTY;
-      placeStone(r, c);
-      return;
-    }
-    board[r][c] = EMPTY;
-  }
-
-  // Then check for immediate block
-  for (const [r, c] of candidates) {
-    board[r][c] = BLACK;
-    if (checkWin(r, c, BLACK)) {
-      board[r][c] = EMPTY;
-      bestMove = [r, c];
-      break;
-    }
-    board[r][c] = EMPTY;
-  }
-
-  // Alpha-beta search
-  if (!bestMove) {
-    const depth = candidates.length > 10 ? 2 : 3;
-    for (const [r, c] of candidates) {
-      board[r][c] = WHITE;
-      const score = alphaBeta(depth - 1, -Infinity, Infinity, false);
-      board[r][c] = EMPTY;
-      if (score > bestScore) {
-        bestScore = score;
-        bestMove = [r, c];
-      }
-    }
-  }
-
-  if (bestMove) {
-    placeStone(bestMove[0], bestMove[1]);
-  }
+  const [r, c] = getBestMove();
+  placeStone(r, c);
 }
+
 
 init();
 </script>
