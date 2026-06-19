@@ -14,6 +14,9 @@ canvas#board { display: block; border-radius: 6px; cursor: pointer; box-shadow: 
 .panel-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
 .panel-box h3 { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
 .status-text { font-size: 16px; font-weight: 600; text-align: center; margin: 8px 0; }
+.btn-sm { padding: 4px 12px; font-size: 12px; }
+.diff-btn { opacity: 0.5; }
+.diff-btn.active { opacity: 1; background: var(--primary); color: #fff; border-color: var(--primary); }
 .win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 100; }
 .win-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; }
 .win-box h2 { margin-bottom: 8px; }
@@ -49,6 +52,14 @@ canvas#board { display: block; border-radius: 6px; cursor: pointer; box-shadow: 
           <button class="btn btn-outline" onclick="newGame('pvp')">双人对战</button>
         </div>
       </div>
+      <div class="panel-box" id="diffBox">
+        <h3>难度</h3>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-sm diff-btn active" data-diff="easy" onclick="setDiff('easy')">简单</button>
+          <button class="btn btn-sm diff-btn" data-diff="medium" onclick="setDiff('medium')">中等</button>
+          <button class="btn btn-sm diff-btn" data-diff="hard" onclick="setDiff('hard')">困难</button>
+        </div>
+      </div>
       <div class="panel-box">
         <h3>操作</h3>
         <div style="display:flex;gap:4px;flex-direction:column">
@@ -79,13 +90,18 @@ const PADDING = 20;
 const CELL = (canvas.width - PADDING * 2) / (SIZE - 1);
 const STONE_R = CELL * 0.42;
 
-let board, currentPlayer, gameOver, mode, history, winCells, moveCount, hoverPos;
+let board, currentPlayer, gameOver, mode, history, winCells, moveCount, hoverPos, difficulty;
 const EMPTY = 0, BLACK = 1, WHITE = 2;
 
 // Star points (天元 + 星位)
 const STAR_POINTS = [[3,3],[3,11],[7,7],[11,3],[11,11],[3,7],[7,3],[7,11],[11,7]];
 
-function init() { newGame('ai'); }
+function setDiff(d) {
+  difficulty = d;
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.toggle('active', b.dataset.diff === d));
+}
+
+function init() { difficulty = 'easy'; newGame('ai'); }
 
 function newGame(m) {
   mode = m || mode;
@@ -97,6 +113,7 @@ function newGame(m) {
   moveCount = 0;
   hoverPos = null;
   document.getElementById('overlay').style.display = 'none';
+  document.getElementById('diffBox').style.display = mode === 'ai' ? '' : 'none';
   setStatus(mode === 'ai' ? '你的回合 (黑棋)' : '黑棋落子');
   draw();
 }
@@ -119,9 +136,7 @@ function draw() {
 
   // Board background
   ctx.fillStyle = '#d4a574';
-  ctx.beginPath();
-  ctx.roundRect(0, 0, w, h, 6);
-  ctx.fill();
+  ctx.fillRect(0, 0, w, h);
 
   // Grid lines
   ctx.strokeStyle = '#8b6914';
@@ -222,9 +237,9 @@ canvas.addEventListener('touchend', (e) => {
   if (pos) placeStone(pos[0], pos[1]);
 });
 
-function placeStone(r, c) {
+function placeStone(r, c, isAi) {
   if (gameOver || board[r][c] !== EMPTY) return;
-  if (mode === 'ai' && currentPlayer === WHITE) return;
+  if (!isAi && mode === 'ai' && currentPlayer === WHITE) return;
 
   board[r][c] = currentPlayer;
   history.push([r, c, currentPlayer]);
@@ -330,13 +345,11 @@ function scorePoint(r, c, player) {
   return total;
 }
 
-function getBestMove() {
-  if (moveCount === 0) return [7, 7];
-
+function getNeighbors() {
   const neighbors = new Set();
   for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) {
     if (board[r][c] !== EMPTY) {
-      for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+      for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) {
         if (dr === 0 && dc === 0) continue;
         const nr = r + dr, nc = c + dc;
         if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && board[nr][nc] === EMPTY) {
@@ -345,34 +358,159 @@ function getBestMove() {
       }
     }
   }
+  return [...neighbors].map(idx => [Math.floor(idx / SIZE), idx % SIZE]);
+}
 
-  const scored = [...neighbors].map(idx => {
-    const r = Math.floor(idx / SIZE), c = idx % SIZE;
+function evalBoard(player) {
+  let score = 0;
+  for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) {
+    if (board[r][c] === player) score += scorePoint(r, c, player);
+  }
+  return score;
+}
+
+function checkWinFast(r, c, player) {
+  for (const [dr, dc] of DIRS) {
+    let count = 1;
+    for (let i = 1; i < 5; i++) { const nr = r+dr*i, nc = c+dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) count++; else break; }
+    for (let i = 1; i < 5; i++) { const nr = r-dr*i, nc = c-dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) count++; else break; }
+    if (count >= 5) return true;
+  }
+  return false;
+}
+
+// --- Easy: random near existing stones ---
+function getEasyMove() {
+  const neighbors = getNeighbors();
+  if (!neighbors.length) return [7, 7];
+  // 80% random, 20% best heuristic
+  if (Math.random() < 0.8) {
+    return neighbors[Math.floor(Math.random() * neighbors.length)];
+  }
+  return getMediumMove();
+}
+
+// --- Medium: heuristic scoring ---
+function getMediumMove() {
+  if (moveCount === 0) return [7, 7];
+  const neighbors = getNeighbors();
+  if (!neighbors.length) return [7, 7];
+
+  const scored = neighbors.map(([r, c]) => {
     board[r][c] = WHITE;
     const a = scorePoint(r, c, WHITE);
     board[r][c] = BLACK;
     const b = scorePoint(r, c, BLACK);
     board[r][c] = EMPTY;
     return { r, c, score: a * 1.1 + b };
-  }).sort((a, b) => b.score - a.score).slice(0, 20);
+  }).sort((a, b) => b.score - a.score);
 
+  // Check instant win
   for (const {r, c} of scored) {
     board[r][c] = WHITE;
-    if (checkWin(r, c, WHITE)) { board[r][c] = EMPTY; return [r, c]; }
+    if (checkWinFast(r, c, WHITE)) { board[r][c] = EMPTY; return [r, c]; }
     board[r][c] = EMPTY;
   }
+  // Check must block
   for (const {r, c} of scored) {
     board[r][c] = BLACK;
-    if (checkWin(r, c, BLACK)) { board[r][c] = EMPTY; return [r, c]; }
+    if (checkWinFast(r, c, BLACK)) { board[r][c] = EMPTY; return [r, c]; }
     board[r][c] = EMPTY;
   }
   return [scored[0].r, scored[0].c];
 }
 
+// --- Hard: heuristic + minimax depth 2 ---
+function minimax(depth, alpha, beta, isMax) {
+  if (depth === 0) return evalBoard(WHITE) - evalBoard(BLACK);
+
+  const neighbors = getNeighbors();
+  if (!neighbors.length) return 0;
+
+  // Score and sort candidates for better pruning
+  const scored = neighbors.map(([r, c]) => {
+    board[r][c] = isMax ? WHITE : BLACK;
+    const s = scorePoint(r, c, isMax ? WHITE : BLACK);
+    board[r][c] = EMPTY;
+    return [r, c, s];
+  }).sort((a, b) => b[2] - a[2]).slice(0, 12);
+
+  if (isMax) {
+    let best = -Infinity;
+    for (const [r, c] of scored) {
+      board[r][c] = WHITE;
+      if (checkWinFast(r, c, WHITE)) { board[r][c] = EMPTY; return 10000000; }
+      const val = minimax(depth - 1, alpha, beta, false);
+      board[r][c] = EMPTY;
+      best = Math.max(best, val);
+      alpha = Math.max(alpha, val);
+      if (beta <= alpha) break;
+    }
+    return best;
+  } else {
+    let best = Infinity;
+    for (const [r, c] of scored) {
+      board[r][c] = BLACK;
+      if (checkWinFast(r, c, BLACK)) { board[r][c] = EMPTY; return -10000000; }
+      const val = minimax(depth - 1, alpha, beta, true);
+      board[r][c] = EMPTY;
+      best = Math.min(best, val);
+      beta = Math.min(beta, val);
+      if (beta <= alpha) break;
+    }
+    return best;
+  }
+}
+
+function getHardMove() {
+  if (moveCount === 0) return [7, 7];
+  const neighbors = getNeighbors();
+  if (!neighbors.length) return [7, 7];
+
+  // Score candidates
+  const scored = neighbors.map(([r, c]) => {
+    board[r][c] = WHITE;
+    const a = scorePoint(r, c, WHITE);
+    board[r][c] = BLACK;
+    const b = scorePoint(r, c, BLACK);
+    board[r][c] = EMPTY;
+    return { r, c, score: a * 1.1 + b };
+  }).sort((a, b) => b.score - a.score).slice(0, 15);
+
+  // Check instant win
+  for (const {r, c} of scored) {
+    board[r][c] = WHITE;
+    if (checkWinFast(r, c, WHITE)) { board[r][c] = EMPTY; return [r, c]; }
+    board[r][c] = EMPTY;
+  }
+  // Check must block
+  for (const {r, c} of scored) {
+    board[r][c] = BLACK;
+    if (checkWinFast(r, c, BLACK)) { board[r][c] = EMPTY; return [r, c]; }
+    board[r][c] = EMPTY;
+  }
+
+  // Minimax on top candidates
+  let bestScore = -Infinity, bestMove = [scored[0].r, scored[0].c];
+  for (const {r, c} of scored.slice(0, 10)) {
+    board[r][c] = WHITE;
+    const score = minimax(2, -Infinity, Infinity, false);
+    board[r][c] = EMPTY;
+    if (score > bestScore) { bestScore = score; bestMove = [r, c]; }
+  }
+  return bestMove;
+}
+
+function getBestMove() {
+  if (difficulty === 'easy') return getEasyMove();
+  if (difficulty === 'hard') return getHardMove();
+  return getMediumMove();
+}
+
 function aiMove() {
   if (gameOver) return;
   const [r, c] = getBestMove();
-  placeStone(r, c);
+  placeStone(r, c, true);
 }
 
 init();
