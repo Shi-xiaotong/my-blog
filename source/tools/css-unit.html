@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS 单位转换 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.result-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+.result-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; align-items: center; justify-content: space-between; }
+.result-card .unit-label { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+.result-card .unit-value { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 16px; font-weight: 600; }
+.result-card .btn { padding: 4px 10px; font-size: 12px; }
+.input-row { display: flex; gap: 12px; margin-bottom: 16px; align-items: end; }
+.input-row .value-input { flex: 2; }
+.input-row .unit-select { flex: 1; }
+.settings { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.settings > div { flex: 1; min-width: 150px; }
+.visual-bar { height: 6px; background: var(--border); border-radius: 3px; margin-top: 8px; position: relative; overflow: hidden; }
+.visual-bar .fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width 0.3s; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>CSS 单位转换</h1>
+  </div>
+  <div class="tool-area">
+    <div class="input-row">
+      <div class="value-input">
+        <label>数值</label>
+        <input type="number" id="inputValue" value="16" oninput="convert()">
+      </div>
+      <div class="unit-select">
+        <label>单位</label>
+        <select id="inputUnit" onchange="convert()">
+          <option value="px">px</option>
+          <option value="rem">rem</option>
+          <option value="em">em</option>
+          <option value="vw">vw</option>
+          <option value="%">%</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings">
+      <div>
+        <label>基准字号 (root font-size)</label>
+        <input type="number" id="baseFontSize" value="16" oninput="convert()" step="1">
+      </div>
+      <div>
+        <label>视口宽度 (viewport width)</label>
+        <input type="number" id="viewportWidth" value="375" oninput="convert()" step="1">
+      </div>
+    </div>
+    <label>转换结果</label>
+    <div class="result-grid" id="results"></div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+const units = ['px', 'rem', 'em', 'vw', '%'];
+
+function convert() {
+  const value = parseFloat(document.getElementById('inputValue').value) || 0;
+  const unit = document.getElementById('inputUnit').value;
+  const baseFontSize = parseFloat(document.getElementById('baseFontSize').value) || 16;
+  const viewportWidth = parseFloat(document.getElementById('viewportWidth').value) || 375;
+
+  // Convert everything to px first
+  let px;
+  switch(unit) {
+    case 'px': px = value; break;
+    case 'rem': px = value * baseFontSize; break;
+    case 'em': px = value * baseFontSize; break;
+    case 'vw': px = (value / 100) * viewportWidth; break;
+    case '%': px = (value / 100) * baseFontSize; break;
+    default: px = value;
+  }
+
+  // Convert from px to all units
+  const results = {
+    px: px,
+    rem: px / baseFontSize,
+    em: px / baseFontSize,
+    vw: (px / viewportWidth) * 100,
+    '%': (px / baseFontSize) * 100
+  };
+
+  const maxPx = Math.max(...Object.values(results));
+
+  const container = document.getElementById('results');
+  container.innerHTML = units.map(u => {
+    const val = results[u];
+    const formatted = u === 'px' ? val.toFixed(2).replace(/\.?0+$/, '') || '0' : val.toFixed(4).replace(/\.?0+$/, '') || '0';
+    const cssValue = formatted + (u === '%' ? '%' : u);
+    const barWidth = maxPx > 0 ? (val / maxPx) * 100 : 0;
+    return `
+      <div class="result-card">
+        <div style="flex:1">
+          <div class="unit-label">${u.toUpperCase()}</div>
+          <div class="unit-value">${formatted}</div>
+          <div class="visual-bar"><div class="fill" style="width:${barWidth}%"></div></div>
+        </div>
+        <button class="btn btn-outline" onclick="copyText('${cssValue}')">复制</button>
+      </div>
+    `;
+  }).join('');
+}
+
+convert();
+</script>
+</body>
+</html>

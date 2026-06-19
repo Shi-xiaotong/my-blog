@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在线工具箱 - 233002.xyz</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.search-box { max-width: 500px; margin: 20px auto; position: relative; }
+.search-box input { width: 100%; padding: 12px 16px 12px 44px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; background: var(--card-bg); color: var(--text); outline: none; transition: border-color 0.2s; }
+.search-box input:focus { border-color: var(--primary); }
+.search-box .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
+.category { margin-bottom: 32px; }
+.category-title { font-size: 1.2em; font-weight: 600; margin-bottom: 16px; padding-left: 4px; display: flex; align-items: center; gap: 8px; color: var(--text); }
+.category-title .cat-icon { color: var(--primary); }
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.tool-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-decoration: none; color: var(--text); transition: all 0.2s; display: flex; align-items: flex-start; gap: 14px; }
+.tool-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--primary); }
+.tool-card.hidden { display: none; }
+.tool-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tool-icon svg { width: 22px; height: 22px; }
+.tool-info h3 { font-size: 15px; margin-bottom: 4px; }
+.tool-info p { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+@media (max-width: 640px) {
+  .tools-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tool-card { padding: 14px; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+  .tool-icon { width: 40px; height: 40px; }
+}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()" title="切换主题"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container-wide">
+<a href="/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回首页</a>
+<div class="header-center">
+  <h1>在线工具箱</h1>
+  <p>免费、快速、无需注册的在线实用工具集合</p>
+  <div class="search-box">
+    <span class="search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
+    <input type="text" id="searchInput" placeholder="搜索工具..." oninput="filterTools()">
+  </div>
+</div>
+
+<!-- 文本工具 -->
+<div class="category" data-category="text">
+  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></span> 文本工具</div>
+  <div class="tools-grid">
+    <a href="/tools/json-formatter.html" class="tool-card" data-keywords="json 格式化 压缩 校验 美化">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-info"><h3>JSON 格式化</h3><p>JSON 格式化、压缩、校验、树形展示</p></div>
+    </a>
+    <a href="/tools/base64.html" class="tool-card" data-keywords="base64 编码 解码 编解码">
+      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="tool-info"><h3>Base64 编解码</h3><p>Base64 编码与解码，支持中文</p></div>
+    </a>
+    <a href="/tools/url-codec.html" class="tool-card" data-keywords="url 编码 解码 encodeURIComponent">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+      <div class="tool-info"><h3>URL 编解码</h3><p>URL 编码与解码转换</p></div>
+    </a>
+    <a href="/tools/text-diff.html" class="tool-card" data-keywords="文本 对比 差异 diff 比较">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></div>
+      <div class="tool-info"><h3>文本对比</h3><p>两段文本差异对比，高亮显示不同</p></div>
+    </a>
+    <a href="/tools/word-count.html" class="tool-card" data-keywords="字数 统计 字符 单词 行数">
+      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+      <div class="tool-info"><h3>字数统计</h3><p>中英文字符数、单词数、行数统计</p></div>
+    </a>
+    <a href="/tools/password-gen.html" class="tool-card" data-keywords="密码 生成器 随机 安全 强密码">
+      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+      <div class="tool-info"><h3>密码生成器</h3><p>生成安全随机密码，可自定义规则</p></div>
+    </a>
+  </div>
+</div>
+
+<!-- 开发工具 -->
+<div class="category" data-category="dev">
+  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span> 开发工具</div>
+  <div class="tools-grid">
+    <a href="/tools/timestamp.html" class="tool-card" data-keywords="时间戳 日期 unix 转换 epoch">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="tool-info"><h3>时间戳转换</h3><p>Unix 时间戳与日期互转</p></div>
+    </a>
+    <a href="/tools/hash.html" class="tool-card" data-keywords="md5 sha 哈希 hash 加密 摘要">
+      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4"/><path d="M5 19.5C5.5 18 6 15 6 12"/><path d="M21 12c0 5.5-4.5 10-10 10"/><path d="M19 4.5C18.5 6 18 9 18 12"/></svg></div>
+      <div class="tool-info"><h3>哈希生成</h3><p>MD5、SHA-1、SHA-256、SHA-512</p></div>
+    </a>
+    <a href="/tools/uuid.html" class="tool-card" data-keywords="uuid guid 生成 唯一 随机">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M16 8h-6a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8"/><path d="M12 18V6"/></svg></div>
+      <div class="tool-info"><h3>UUID 生成器</h3><p>批量生成 UUID v4，一键复制</p></div>
+    </a>
+    <a href="/tools/regex.html" class="tool-card" data-keywords="正则 表达式 regex 测试 匹配">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/></svg></div>
+      <div class="tool-info"><h3>正则测试</h3><p>正则表达式在线测试，高亮匹配</p></div>
+    </a>
+    <a href="/tools/color.html" class="tool-card" data-keywords="颜色 转换 hex rgb hsl 拾色器">
+      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2Z"/></svg></div>
+      <div class="tool-info"><h3>颜色转换</h3><p>HEX/RGB/HSL 互转，可视化拾色</p></div>
+    </a>
+    <a href="/tools/jwt-decode.html" class="tool-card" data-keywords="jwt json web token 解析 解码">
+      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="tool-info"><h3>JWT 解析</h3><p>解析 JWT Token 的 Header 和 Payload</p></div>
+    </a>
+    <a href="/tools/cron.html" class="tool-card" data-keywords="cron 定时 表达式 解析 可视化">
+      <div class="tool-icon" style="background:#fff7ed;color:#f97316;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg></div>
+      <div class="tool-info"><h3>Cron 解析</h3><p>Cron 表达式可视化，显示未来执行时间</p></div>
+    </a>
+    <a href="/tools/code-highlight.html" class="tool-card" data-keywords="代码 高亮 格式化 美化 复制">
+      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg></div>
+      <div class="tool-info"><h3>代码高亮</h3><p>代码语法高亮，选语言，一键复制</p></div>
+    </a>
+    <a href="/tools/css-unit.html" class="tool-card" data-keywords="css 单位 px rem em vw 转换">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v7h18V3z"/><path d="M21 14H3v7h18v-7z"/><path d="M12 3v7"/><path d="M12 14v7"/></svg></div>
+      <div class="tool-info"><h3>CSS 单位换算</h3><p>px/rem/em/vw/% 实时换算</p></div>
+    </a>
+  </div>
+</div>
+
+<!-- 图片工具 -->
+<div class="category" data-category="image">
+  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span> 图片工具</div>
+  <div class="tools-grid">
+    <a href="/tools/watermark.html" class="tool-card" data-keywords="图片 水印 添加 文字 logo">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h4m1 8l-4-4h8l-4 4z"/></svg></div>
+      <div class="tool-info"><h3>图片加水印</h3><p>给图片添加文字或图片水印</p></div>
+    </a>
+    <a href="/tools/image-compress.html" class="tool-card" data-keywords="图片 压缩 体积 缩小 质量">
+      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg></div>
+      <div class="tool-info"><h3>图片压缩</h3><p>在线压缩图片体积，质量可调</p></div>
+    </a>
+    <a href="/tools/qr-code.html" class="tool-card" data-keywords="二维码 qr code 生成 生成器">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="4" height="4"/><path d="M18 14h4v4h-4z"/></svg></div>
+      <div class="tool-info"><h3>二维码生成</h3><p>文本/网址生成二维码，可下载</p></div>
+    </a>
+    <a href="/tools/image-convert.html" class="tool-card" data-keywords="图片 格式 转换 png jpg webp">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
+      <div class="tool-info"><h3>图片格式转换</h3><p>PNG/JPG/WebP/BMP 格式互转</p></div>
+    </a>
+  </div>
+</div>
+
+<div class="footer">
+  <p>更多工具持续添加中 · <a href="/">233002.xyz</a></p>
+</div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? '' : 'dark');
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  const btn = document.querySelector('.theme-toggle');
+  btn.innerHTML = isDark
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.querySelector('.theme-toggle').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+  }
+})();
+
+// Search
+function filterTools() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.tool-card').forEach(card => {
+    const keywords = (card.getAttribute('data-keywords') || '') + ' ' + card.textContent;
+    card.classList.toggle('hidden', q && !keywords.toLowerCase().includes(q));
+  });
+  document.querySelectorAll('.category').forEach(cat => {
+    const visible = cat.querySelectorAll('.tool-card:not(.hidden)').length;
+    cat.style.display = visible ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

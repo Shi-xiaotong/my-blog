@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base64 编解码 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+@media (max-width: 640px) { .panels { grid-template-columns: 1fr; } }
+.btn-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.file-area { margin-top: 12px; padding: 12px; border: 2px dashed var(--border); border-radius: 8px; text-align: center; cursor: pointer; font-size: 14px; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 8px; }
+.file-area:hover { border-color: var(--primary); }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>Base64 编解码</h1>
+  </div>
+  <div class="tool-area">
+    <div class="panels">
+      <div>
+        <label>明文</label>
+        <textarea id="plain" rows="10" placeholder="输入明文文本..."></textarea>
+      </div>
+      <div>
+        <label>Base64</label>
+        <textarea id="encoded" rows="10" placeholder="输入 Base64 编码..."></textarea>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="encode()">编码 →</button>
+      <button class="btn btn-primary" onclick="decode()">← 解码</button>
+      <button class="btn btn-outline" onclick="copyText(document.getElementById('encoded').value)">复制编码</button>
+      <button class="btn btn-outline" onclick="copyText(document.getElementById('plain').value)">复制明文</button>
+    </div>
+    <div class="file-area" onclick="document.getElementById('fileInput').click()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      点击选择文件转为 Base64
+      <input type="file" id="fileInput" style="display:none" onchange="fileToBase64(this)">
+    </div>
+    <div id="fileInfo" style="margin-top:8px;font-size:13px;color:var(--text-secondary)"></div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+function encode() {
+  const plain = document.getElementById('plain').value;
+  if (!plain) return;
+  try {
+    const bytes = new TextEncoder().encode(plain);
+    let binary = '';
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    document.getElementById('encoded').value = btoa(binary);
+  } catch(e) { showToast('编码失败: ' + e.message); }
+}
+
+function decode() {
+  const enc = document.getElementById('encoded').value.trim();
+  if (!enc) return;
+  try {
+    const binary = atob(enc);
+    const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+    document.getElementById('plain').value = new TextDecoder().decode(bytes);
+  } catch(e) { showToast('解码失败: ' + e.message); }
+}
+
+function fileToBase64(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function() {
+    const base64 = reader.result.split(',')[1];
+    document.getElementById('encoded').value = base64;
+    document.getElementById('fileInfo').textContent = `文件: ${file.name} | 大小: ${(file.size/1024).toFixed(1)} KB | 类型: ${file.type || '未知'}`;
+    showToast('文件已转为 Base64');
+  };
+  reader.readAsDataURL(file);
+}
+</script>
+</body>
+</html>

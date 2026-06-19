@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>时间戳转换 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.now-box { background: var(--primary-light); border: 1px solid var(--primary); border-radius: var(--radius); padding: 16px; text-align: center; margin-bottom: 20px; }
+.now-ts { font-size: 2em; font-weight: 700; font-family: 'SF Mono', monospace; cursor: pointer; }
+.section { margin-bottom: 20px; }
+.result-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 8px; }
+.result-line { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.result-line:last-child { border-bottom: none; }
+.result-label { color: var(--text-secondary); font-size: 13px; }
+.result-value { font-family: 'SF Mono', monospace; font-size: 13px; cursor: pointer; }
+.result-value:hover { color: var(--primary); }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>时间戳转换</h1>
+  </div>
+  <div class="tool-area">
+    <div class="now-box">
+      <label>当前时间戳（秒）</label>
+      <div class="now-ts" id="nowSec" onclick="copyText(this.textContent)"></div>
+      <label style="margin-top:8px">当前时间戳（毫秒）</label>
+      <div class="now-ts" id="nowMs" onclick="copyText(this.textContent)" style="font-size:1.2em"></div>
+      <div id="nowDate" style="margin-top:8px;color:var(--text-secondary);font-size:14px"></div>
+    </div>
+
+    <div class="section">
+      <label>时间戳 → 日期</label>
+      <div class="row">
+        <input type="text" id="tsInput" placeholder="输入时间戳，如 1700000000">
+        <select id="tsUnit">
+          <option value="s">秒 (s)</option>
+          <option value="ms">毫秒 (ms)</option>
+        </select>
+        <button class="btn btn-primary" onclick="tsToDate()">转换</button>
+      </div>
+      <div id="tsResult" class="result-box" style="display:none"></div>
+    </div>
+
+    <div class="section">
+      <label>日期 → 时间戳</label>
+      <div class="row">
+        <input type="text" id="dateInput" placeholder="如 2024-01-01 12:00:00 或选择下方">
+        <button class="btn btn-primary" onclick="dateToTs()">转换</button>
+      </div>
+      <input type="datetime-local" id="datePicker" style="margin-top:8px" onchange="document.getElementById('dateInput').value=this.value.replace('T',' ')+':00'">
+      <div id="dateResult" class="result-box" style="display:none;margin-top:8px"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+
+function updateNow() {
+  const now = Date.now();
+  document.getElementById('nowSec').textContent = Math.floor(now / 1000);
+  document.getElementById('nowMs').textContent = now;
+  document.getElementById('nowDate').textContent = new Date(now).toLocaleString('zh-CN');
+}
+setInterval(updateNow, 1000);
+updateNow();
+
+function getRelativeTime(date) {
+  const now = Date.now();
+  const diff = now - date.getTime();
+  const abs = Math.abs(diff);
+  const suffix = diff > 0 ? '前' : '后';
+  if (abs < 60000) return Math.floor(abs/1000) + ' 秒' + suffix;
+  if (abs < 3600000) return Math.floor(abs/60000) + ' 分钟' + suffix;
+  if (abs < 86400000) return Math.floor(abs/3600000) + ' 小时' + suffix;
+  if (abs < 2592000000) return Math.floor(abs/86400000) + ' 天' + suffix;
+  if (abs < 31536000000) return Math.floor(abs/2592000000) + ' 个月' + suffix;
+  return Math.floor(abs/31536000000) + ' 年' + suffix;
+}
+
+function tsToDate() {
+  const val = document.getElementById('tsInput').value.trim();
+  const unit = document.getElementById('tsUnit').value;
+  const el = document.getElementById('tsResult');
+  if (!val || isNaN(val)) { el.style.display='none'; return; }
+  let ms = parseInt(val);
+  if (unit === 's') ms *= 1000;
+  const d = new Date(ms);
+  if (isNaN(d.getTime())) { el.style.display='none'; return; }
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="result-line"><span class="result-label">本地时间</span><span class="result-value" onclick="copyText(this.textContent)">${d.toLocaleString('zh-CN')}</span></div>
+    <div class="result-line"><span class="result-label">ISO 8601</span><span class="result-value" onclick="copyText(this.textContent)">${d.toISOString()}</span></div>
+    <div class="result-line"><span class="result-label">UTC</span><span class="result-value" onclick="copyText(this.textContent)">${d.toUTCString()}</span></div>
+    <div class="result-line"><span class="result-label">相对时间</span><span class="result-value">${getRelativeTime(d)}</span></div>
+    <div class="result-line"><span class="result-label">秒时间戳</span><span class="result-value" onclick="copyText(this.textContent)">${Math.floor(ms/1000)}</span></div>
+    <div class="result-line"><span class="result-label">毫秒时间戳</span><span class="result-value" onclick="copyText(this.textContent)">${ms}</span></div>
+  `;
+}
+
+function dateToTs() {
+  const val = document.getElementById('dateInput').value.trim();
+  const el = document.getElementById('dateResult');
+  if (!val) { el.style.display='none'; return; }
+  const d = new Date(val);
+  if (isNaN(d.getTime())) { el.style.display='none'; showToast('日期格式无效'); return; }
+  const ms = d.getTime();
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="result-line"><span class="result-label">秒时间戳</span><span class="result-value" onclick="copyText(this.textContent)">${Math.floor(ms/1000)}</span></div>
+    <div class="result-line"><span class="result-label">毫秒时间戳</span><span class="result-value" onclick="copyText(this.textContent)">${ms}</span></div>
+    <div class="result-line"><span class="result-label">ISO 8601</span><span class="result-value" onclick="copyText(this.textContent)">${d.toISOString()}</span></div>
+  `;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>正则表达式测试 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.flag-group { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.flag-group label { display: flex; align-items: center; gap: 4px; font-size: 14px; cursor: pointer; color: var(--text); margin-bottom: 0; }
+.flag-group input[type="checkbox"] { width: auto; }
+.highlight-box { padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; white-space: pre-wrap; word-break: break-all; min-height: 60px; max-height: 300px; overflow-y: auto; }
+.highlight-box mark { background: #fef08a; color: #1e293b; border-radius: 3px; padding: 1px 2px; }
+.match-info { font-size: 13px; color: var(--text-secondary); margin: 12px 0; }
+.match-detail { font-family: monospace; font-size: 13px; padding: 6px 10px; background: var(--bg); border-radius: 6px; margin-bottom: 4px; border: 1px solid var(--border); }
+.error { color: #ef4444; font-size: 13px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>正则表达式测试</h1>
+  </div>
+  <div class="tool-area">
+    <div class="row">
+      <div>
+        <label>常用正则预设</label>
+        <select id="presets" onchange="loadPreset()">
+          <option value="">选择预设...</option>
+          <option value="email">邮箱</option>
+          <option value="phone">手机号</option>
+          <option value="url">URL</option>
+          <option value="ipv4">IPv4</option>
+          <option value="ipv6">IPv6</option>
+          <option value="chinese">中文字符</option>
+          <option value="idcard">身份证号</option>
+          <option value="date">日期 (YYYY-MM-DD)</option>
+          <option value="html-tag">HTML 标签</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div style="flex:3">
+        <label>正则表达式</label>
+        <input type="text" id="pattern" placeholder="输入正则表达式..." oninput="test()">
+      </div>
+      <div style="flex:1">
+        <label>标志位</label>
+        <div class="flag-group" style="margin-top:4px">
+          <label><input type="checkbox" id="flagG" checked onchange="test()"> g</label>
+          <label><input type="checkbox" id="flagI" onchange="test()"> i</label>
+          <label><input type="checkbox" id="flagM" onchange="test()"> m</label>
+          <label><input type="checkbox" id="flagS" onchange="test()"> s</label>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <label>测试字符串</label>
+      <textarea id="testStr" rows="5" placeholder="输入要测试的文本..." oninput="test()"></textarea>
+    </div>
+    <div id="error" class="error"></div>
+    <div id="matchInfo" class="match-info"></div>
+    <div style="margin-bottom:12px">
+      <label>匹配结果</label>
+      <div class="highlight-box" id="result"></div>
+    </div>
+    <div id="matchDetails"></div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+const presets = {
+  email: '[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}',
+  phone: '1[3-9]\\d{9}',
+  url: 'https?://[\\w\\-._~:/?#\\[\\]@!$&\'()*+,;=%]+',
+  ipv4: '\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b',
+  ipv6: '([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}',
+  chinese: '[\\u4e00-\\u9fa5]+',
+  idcard: '[1-9]\\d{5}(?:19|20)\\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])\\d{3}[\\dXx]',
+  date: '\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])',
+  'html-tag': '<([a-zA-Z][a-zA-Z0-9]*)\\b[^>]*>.*?</\\1>'
+};
+
+function loadPreset() {
+  const v = document.getElementById('presets').value;
+  if (v && presets[v]) { document.getElementById('pattern').value = presets[v]; test(); }
+}
+
+function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function test() {
+  const patternStr = document.getElementById('pattern').value;
+  const testStr = document.getElementById('testStr').value;
+  const errEl = document.getElementById('error');
+  const resultEl = document.getElementById('result');
+  const infoEl = document.getElementById('matchInfo');
+  const detailsEl = document.getElementById('matchDetails');
+  errEl.textContent = '';
+  detailsEl.innerHTML = '';
+
+  if (!patternStr || !testStr) {
+    resultEl.innerHTML = escapeHtml(testStr);
+    infoEl.textContent = '';
+    return;
+  }
+
+  let flags = '';
+  if (document.getElementById('flagG').checked) flags += 'g';
+  if (document.getElementById('flagI').checked) flags += 'i';
+  if (document.getElementById('flagM').checked) flags += 'm';
+  if (document.getElementById('flagS').checked) flags += 's';
+
+  let regex;
+  try { regex = new RegExp(patternStr, flags); } catch(e) { errEl.textContent = e.message; resultEl.innerHTML = escapeHtml(testStr); return; }
+
+  let matches = [];
+  if (flags.includes('g')) {
+    let m;
+    while ((m = regex.exec(testStr)) !== null) { matches.push({ index: m.index, length: m[0].length, text: m[0], groups: m.slice(1) }); if (m[0].length === 0) regex.lastIndex++; }
+  } else {
+    const m = regex.exec(testStr);
+    if (m) matches.push({ index: m.index, length: m[0].length, text: m[0], groups: m.slice(1) });
+  }
+
+  infoEl.textContent = `找到 ${matches.length} 个匹配`;
+
+  // Build highlighted HTML
+  let html = '';
+  let last = 0;
+  matches.forEach(m => {
+    html += escapeHtml(testStr.slice(last, m.index));
+    html += '<mark>' + escapeHtml(m.text) + '</mark>';
+    last = m.index + m.length;
+  });
+  html += escapeHtml(testStr.slice(last));
+  resultEl.innerHTML = html;
+
+  // Match details
+  if (matches.length > 0) {
+    let dHtml = '<label>匹配详情</label>';
+    matches.forEach((m, i) => {
+      dHtml += `<div class="match-detail">匹配 ${i+1}: "${escapeHtml(m.text)}" (位置: ${m.index})`;
+      m.groups.forEach((g, gi) => { if (g !== undefined) dHtml += ` | 组${gi+1}: "${escapeHtml(g)}"`; });
+      dHtml += '</div>';
+    });
+    detailsEl.innerHTML = dHtml;
+  }
+}
+</script>
+</body>
+</html>

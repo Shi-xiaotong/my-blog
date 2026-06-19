@@ -1,10 +1,9 @@
----
-title: 观看记录
-date: 2026-06-01
-type: anime
-comments: false
----
-
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>观看记录</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
@@ -67,7 +66,8 @@ comments: false
 #history-page .card-actions button{padding:3px 8px;font-size:11px}
 }
 </style>
-
+</head>
+<body>
 <div id="history-page">
   <div class="top-bar">
     <button class="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
@@ -182,3 +182,5 @@ function formatDate(s){
 
 })();
 </script>
+</body>
+</html>

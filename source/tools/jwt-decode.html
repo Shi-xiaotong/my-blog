@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JWT 解码器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.jwt-section { margin-bottom: 16px; }
+.jwt-section .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.jwt-section .section-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.jwt-section pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; overflow-x: auto; line-height: 1.6; white-space: pre-wrap; word-break: break-all; max-height: 300px; overflow-y: auto; }
+.jwt-header-part { color: #ef4444; }
+.jwt-payload-part { color: #8b5cf6; }
+.jwt-sig-part { color: #f59e0b; }
+.info-box { padding: 12px 16px; border-radius: 8px; margin-top: 12px; font-size: 13px; }
+.info-box.expired { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+.info-box.valid { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; }
+.error { color: #ef4444; font-size: 13px; margin-top: 8px; }
+.token-parts { font-family: monospace; font-size: 13px; word-break: break-all; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; line-height: 1.8; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>JWT 解码器</h1>
+  </div>
+  <div class="tool-area">
+    <div style="margin-bottom:16px">
+      <label>粘贴 JWT Token</label>
+      <textarea id="jwtInput" rows="4" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" oninput="decode()"></textarea>
+      <div id="error" class="error"></div>
+    </div>
+
+    <div id="tokenParts" class="token-parts" style="display:none"></div>
+
+    <div id="decoded" style="display:none">
+      <div class="jwt-section">
+        <div class="section-header">
+          <span class="section-label" style="color:#ef4444">Header (头部)</span>
+          <button class="btn btn-outline" onclick="copyText(document.getElementById('headerJson').textContent)">复制</button>
+        </div>
+        <pre id="headerJson"></pre>
+      </div>
+      <div class="jwt-section">
+        <div class="section-header">
+          <span class="section-label" style="color:#8b5cf6">Payload (载荷)</span>
+          <button class="btn btn-outline" onclick="copyText(document.getElementById('payloadJson').textContent)">复制</button>
+        </div>
+        <pre id="payloadJson"></pre>
+      </div>
+      <div class="jwt-section">
+        <div class="section-header">
+          <span class="section-label" style="color:#f59e0b">Signature (签名)</span>
+        </div>
+        <pre id="sigText" style="font-size:12px"></pre>
+      </div>
+      <div id="tokenInfo"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+function base64UrlDecode(str) {
+  str = str.replace(/-/g, '+').replace(/_/g, '/');
+  while (str.length % 4) str += '=';
+  return decodeURIComponent(atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+}
+
+function formatTime(ts) {
+  const d = new Date(ts * 1000);
+  return d.toLocaleString('zh-CN', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+
+function decode() {
+  const token = document.getElementById('jwtInput').value.trim();
+  const errEl = document.getElementById('error');
+  const decodedEl = document.getElementById('decoded');
+  const partsEl = document.getElementById('tokenParts');
+  errEl.textContent = '';
+
+  if (!token) { decodedEl.style.display = 'none'; partsEl.style.display = 'none'; return; }
+
+  const parts = token.split('.');
+  if (parts.length < 2 || parts.length > 3) { errEl.innerHTML = '<span style="color:#ef4444">无效的 JWT 格式（需要 2 或 3 个部分）</span>'; decodedEl.style.display = 'none'; partsEl.style.display = 'none'; return; }
+
+  try {
+    const header = JSON.parse(base64UrlDecode(parts[0]));
+    const payload = JSON.parse(base64UrlDecode(parts[1]));
+
+    document.getElementById('headerJson').textContent = JSON.stringify(header, null, 2);
+    document.getElementById('payloadJson').textContent = JSON.stringify(payload, null, 2);
+    document.getElementById('sigText').textContent = parts[2] || '(无签名)';
+
+    // Color-coded token parts
+    partsEl.style.display = 'block';
+    partsEl.innerHTML = `<span class="jwt-header-part">${parts[0]}</span>.<span class="jwt-payload-part">${parts[1]}</span>${parts[2] ? '.<span class="jwt-sig-part">'+parts[2]+'</span>' : ''}`;
+
+    // Token info
+    let infoHtml = '';
+    const now = Math.floor(Date.now() / 1000);
+
+    if (payload.iat) infoHtml += `<div style="margin-bottom:4px">签发时间 (iat): ${formatTime(payload.iat)}</div>`;
+    if (payload.exp) {
+      const isExpired = now > payload.exp;
+      const cls = isExpired ? 'expired' : 'valid';
+      const status = isExpired ? '<span style="color:#ef4444">已过期</span>' : '<span style="color:#22c55e">未过期</span>';
+      const remaining = payload.exp - now;
+      const remainingStr = remaining > 0 ? ` (剩余 ${Math.floor(remaining/3600)}h ${Math.floor((remaining%3600)/60)}m ${remaining%60}s)` : '';
+      infoHtml += `<div style="margin-bottom:4px">过期时间 (exp): ${formatTime(payload.exp)} ${status}${remainingStr}</div>`;
+      document.getElementById('tokenInfo').innerHTML = `<div class="info-box ${cls}">${infoHtml}</div>`;
+    } else {
+      document.getElementById('tokenInfo').innerHTML = infoHtml ? `<div class="info-box valid">${infoHtml}</div>` : '';
+    }
+
+    decodedEl.style.display = 'block';
+  } catch(e) {
+    errEl.innerHTML = '<span style="color:#ef4444">解码失败: ' + e.message + '</span>';
+    decodedEl.style.display = 'none';
+    partsEl.style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>

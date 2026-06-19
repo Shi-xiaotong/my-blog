@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片水印工具 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; color: var(--text-secondary); margin-bottom: 16px; transition: border-color 0.2s; }
+.drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: var(--primary-light); }
+.drop-zone p { margin-top: 8px; font-size: 13px; }
+canvas { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+.pos-grid { display: grid; grid-template-columns: repeat(3,40px); grid-template-rows: repeat(3,40px); gap: 4px; justify-content: start; }
+.pos-btn { border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: var(--bg); transition: all 0.15s; }
+.pos-btn.active { background: var(--primary); border-color: var(--primary); }
+.pos-btn:hover { border-color: var(--primary); }
+.controls { margin: 16px 0; display: flex; flex-wrap: wrap; gap: 12px; }
+.controls label { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px; }
+.controls input[type="range"] { width: 100%; }
+.controls input[type="color"] { width: 40px; height: 34px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; padding: 2px; }
+.preview-wrap { text-align: center; margin: 16px 0; }
+.actions { display: flex; gap: 8px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>图片水印工具</h1>
+  </div>
+  <div class="tool-area">
+    <div class="drop-zone" id="dropZone">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>点击或拖拽图片到此处上传</p>
+      <p>支持 PNG / JPG 格式</p>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+    <div id="settings" style="display:none">
+      <div class="controls">
+        <label>水印文字
+          <input type="text" id="wmText" value="© My Blog" placeholder="输入水印文字">
+        </label>
+        <label>字号
+          <input type="number" id="wmSize" value="32" min="8" max="200">
+        </label>
+        <label>颜色
+          <input type="color" id="wmColor" value="#ffffff">
+        </label>
+      </div>
+      <div class="controls">
+        <label>透明度: <span id="opVal">50</span>%
+          <input type="range" id="wmOpacity" min="1" max="100" value="50">
+        </label>
+        <label>旋转角度: <span id="rotVal">0</span>°
+          <input type="range" id="wmRotation" min="-180" max="180" value="0">
+        </label>
+      </div>
+      <label style="margin-bottom:8px">水印位置</label>
+      <div class="pos-grid" id="posGrid">
+        <div class="pos-btn" data-pos="0"></div>
+        <div class="pos-btn" data-pos="1"></div>
+        <div class="pos-btn" data-pos="2"></div>
+        <div class="pos-btn" data-pos="3"></div>
+        <div class="pos-btn active" data-pos="4"></div>
+        <div class="pos-btn" data-pos="5"></div>
+        <div class="pos-btn" data-pos="6"></div>
+        <div class="pos-btn" data-pos="7"></div>
+        <div class="pos-btn" data-pos="8"></div>
+      </div>
+      <div class="preview-wrap">
+        <canvas id="canvas"></canvas>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="download('png')">下载 PNG</button>
+        <button class="btn btn-outline" onclick="download('jpg')">下载 JPG</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+let img = null;
+let selectedPos = 4;
+
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const settings = document.getElementById('settings');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+
+function loadFile(f) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    img = new Image();
+    img.onload = () => { settings.style.display = 'block'; render(); };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(f);
+}
+
+document.getElementById('posGrid').addEventListener('click', e => {
+  const btn = e.target.closest('.pos-btn');
+  if (!btn) return;
+  document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedPos = parseInt(btn.dataset.pos);
+  render();
+});
+
+['wmText','wmSize','wmColor','wmOpacity','wmRotation'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    document.getElementById('opVal').textContent = document.getElementById('wmOpacity').value;
+    document.getElementById('rotVal').textContent = document.getElementById('wmRotation').value;
+    render();
+  });
+});
+
+function render() {
+  if (!img) return;
+  const maxW = 800;
+  const scale = img.width > maxW ? maxW / img.width : 1;
+  canvas.width = img.width * scale;
+  canvas.height = img.height * scale;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+  const text = document.getElementById('wmText').value || 'Watermark';
+  const size = parseInt(document.getElementById('wmSize').value) * scale;
+  const color = document.getElementById('wmColor').value;
+  const opacity = parseInt(document.getElementById('wmOpacity').value) / 100;
+  const rotation = parseInt(document.getElementById('wmRotation').value) * Math.PI / 180;
+
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  ctx.font = `bold ${size}px -apple-system, sans-serif`;
+  ctx.fillStyle = color;
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+
+  const col = selectedPos % 3;
+  const row = Math.floor(selectedPos / 3);
+  const x = (col / 2) * canvas.width;
+  const y = (row / 2) * canvas.height;
+
+  // For edges, add padding
+  const pad = 20;
+  const px = col === 0 ? pad + ctx.measureText(text).width / 2 : col === 2 ? canvas.width - pad - ctx.measureText(text).width / 2 : x;
+  const py = row === 0 ? pad + size / 2 : row === 2 ? canvas.height - pad - size / 2 : y;
+
+  ctx.translate(px, py);
+  ctx.rotate(rotation);
+  ctx.fillText(text, 0, 0);
+  ctx.restore();
+}
+
+function download(format) {
+  const mime = format === 'jpg' ? 'image/jpeg' : 'image/png';
+  const ext = format === 'jpg' ? 'jpg' : 'png';
+  canvas.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `watermark.${ext}`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('下载成功');
+  }, mime, 0.92);
+}
+</script>
+</body>
+</html>

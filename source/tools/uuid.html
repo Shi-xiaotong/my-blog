@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UUID 生成器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.uuid-list { max-height: 400px; overflow-y: auto; margin-top: 16px; }
+.uuid-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 14px; background: var(--bg); }
+.uuid-item .btn { padding: 4px 10px; font-size: 12px; }
+.options { display: flex; gap: 12px; align-items: end; margin-bottom: 16px; flex-wrap: wrap; }
+.options > div { flex: 1; min-width: 120px; }
+.count-info { font-size: 13px; color: var(--text-secondary); margin-top: 8px; }
+.toggle-group { display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+.toggle-group button { padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; background: transparent; color: var(--text-secondary); transition: all 0.15s; }
+.toggle-group button.active { background: var(--primary); color: #fff; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>UUID 生成器</h1>
+  </div>
+  <div class="tool-area">
+    <div class="options">
+      <div>
+        <label>生成数量</label>
+        <input type="number" id="count" value="5" min="1" max="100">
+      </div>
+      <div>
+        <label>大小写</label>
+        <div class="toggle-group">
+          <button id="btn-lower" class="active" onclick="setCase('lower')">小写</button>
+          <button id="btn-upper" onclick="setCase('upper')">大写</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:end;">
+        <button class="btn btn-primary" onclick="generate()" style="width:100%">生成 UUID</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button class="btn btn-outline" onclick="copyAll()">复制全部</button>
+      <span class="count-info" id="countInfo"></span>
+    </div>
+    <div class="uuid-list" id="uuidList"></div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+let currentCase = 'lower';
+let uuids = [];
+
+function setCase(c) {
+  currentCase = c;
+  document.getElementById('btn-lower').classList.toggle('active', c === 'lower');
+  document.getElementById('btn-upper').classList.toggle('active', c === 'upper');
+  renderList();
+}
+
+function generateUUIDv4() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+function generate() {
+  const count = Math.min(100, Math.max(1, parseInt(document.getElementById('count').value) || 5));
+  uuids = [];
+  for (let i = 0; i < count; i++) uuids.push(generateUUIDv4());
+  renderList();
+}
+
+function renderList() {
+  const list = document.getElementById('uuidList');
+  document.getElementById('countInfo').textContent = `共 ${uuids.length} 个`;
+  list.innerHTML = uuids.map((u, i) => {
+    const display = currentCase === 'upper' ? u.toUpperCase() : u.toLowerCase();
+    return `<div class="uuid-item"><span>${display}</span><button class="btn btn-outline" onclick="copyText('${u}')">复制</button></div>`;
+  }).join('');
+}
+
+function copyAll() {
+  if (!uuids.length) return;
+  const text = uuids.map(u => currentCase === 'upper' ? u.toUpperCase() : u.toLowerCase()).join('\n');
+  copyText(text);
+}
+
+generate();
+</script>
+</body>
+</html>

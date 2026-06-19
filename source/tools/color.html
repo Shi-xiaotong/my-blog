@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>颜色转换器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.color-preview { width: 100%; height: 100px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px; }
+.color-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; font-family: monospace; font-size: 14px; }
+.color-row span { color: var(--text-secondary); font-family: inherit; font-size: 13px; min-width: 50px; }
+.harmony-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.harmony-swatch { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; }
+.harmony-label { font-size: 12px; color: var(--text-secondary); text-align: center; margin-top: 2px; }
+.history-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.history-swatch { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; }
+input[type="color"] { width: 60px; height: 40px; padding: 2px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>颜色转换器</h1>
+  </div>
+  <div class="tool-area">
+    <div class="row" style="align-items:end;">
+      <div style="flex:0 0 auto">
+        <label>拾色器</label>
+        <input type="color" id="colorPicker" value="#3b82f6" oninput="updateFromPicker(this.value)">
+      </div>
+      <div style="flex:1">
+        <label>HEX 输入</label>
+        <input type="text" id="hexInput" value="#3b82f6" oninput="updateFromHex(this.value)" placeholder="#3b82f6">
+      </div>
+    </div>
+    <div class="color-preview" id="preview"></div>
+    <label>颜色值</label>
+    <div class="color-row"><span>HEX</span><code id="hexVal">#3b82f6</code><button class="btn btn-outline" onclick="copyText(document.getElementById('hexVal').textContent)">复制</button></div>
+    <div class="color-row"><span>RGB</span><code id="rgbVal">rgb(59, 130, 246)</code><button class="btn btn-outline" onclick="copyText(document.getElementById('rgbVal').textContent)">复制</button></div>
+    <div class="color-row"><span>HSL</span><code id="hslVal">hsl(217, 91%, 60%)</code><button class="btn btn-outline" onclick="copyText(document.getElementById('hslVal').textContent)">复制</button></div>
+    <div class="color-row"><span>RGBA</span><code id="rgbaVal">rgba(59, 130, 246, 1)</code><button class="btn btn-outline" onclick="copyText(document.getElementById('rgbaVal').textContent)">复制</button></div>
+
+    <div style="margin-top:16px">
+      <label>互补色 / 类似色</label>
+      <div class="harmony-row" id="harmony"></div>
+    </div>
+
+    <div style="margin-top:16px">
+      <label>最近使用</label>
+      <div class="history-row" id="history"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+function hexToRgb(hex) {
+  hex = hex.replace('#','');
+  if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  const r = parseInt(hex.substr(0,2),16), g = parseInt(hex.substr(2,2),16), b = parseInt(hex.substr(4,2),16);
+  return {r,g,b};
+}
+
+function rgbToHex(r,g,b) { return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+
+function rgbToHsl(r,g,b) {
+  r/=255; g/=255; b/=255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b), l=(max+min)/2;
+  let h=0, s=0;
+  if (max!==min) {
+    const d=max-min;
+    s=l>0.5?d/(2-max-min):d/(max+min);
+    switch(max) {
+      case r: h=((g-b)/d+(g<b?6:0))/6; break;
+      case g: h=((b-r)/d+2)/6; break;
+      case b: h=((r-g)/d+4)/6; break;
+    }
+  }
+  return {h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100)};
+}
+
+function hslToRgb(h,s,l) {
+  h/=360; s/=100; l/=100;
+  if(s===0) { const v=Math.round(l*255); return {r:v,g:v,b:v}; }
+  const hue2rgb=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;};
+  const q=l<0.5?l*(1+s):l+s-l*s, p=2*l-q;
+  return {r:Math.round(hue2rgb(p,q,h+1/3)*255),g:Math.round(hue2rgb(p,q,h)*255),b:Math.round(hue2rgb(p,q,h-1/3)*255)};
+}
+
+let currentHex = '#3b82f6';
+
+function updateFromPicker(hex) {
+  document.getElementById('hexInput').value = hex;
+  update(hex);
+}
+
+function updateFromHex(val) {
+  if (/^#[0-9a-fA-F]{3,6}$/.test(val)) update(val);
+}
+
+function update(hex) {
+  currentHex = hex.length === 4 ? '#'+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3] : hex;
+  const {r,g,b} = hexToRgb(currentHex);
+  const {h,s,l} = rgbToHsl(r,g,b);
+
+  document.getElementById('preview').style.background = currentHex;
+  document.getElementById('hexVal').textContent = currentHex;
+  document.getElementById('rgbVal').textContent = `rgb(${r}, ${g}, ${b})`;
+  document.getElementById('hslVal').textContent = `hsl(${h}, ${s}%, ${l}%)`;
+  document.getElementById('rgbaVal').textContent = `rgba(${r}, ${g}, ${b}, 1)`;
+  document.getElementById('colorPicker').value = currentHex;
+
+  // Harmony
+  const compl = hslToRgb((h+180)%360, s, l);
+  const ana1 = hslToRgb((h+30)%360, s, l);
+  const ana2 = hslToRgb((h-30+360)%360, s, l);
+  const tri1 = hslToRgb((h+120)%360, s, l);
+  const tri2 = hslToRgb((h+240)%360, s, l);
+
+  const hEl = document.getElementById('harmony');
+  hEl.innerHTML = [
+    { label: '互补', c: compl },
+    { label: '类似+30°', c: ana1 },
+    { label: '类似-30°', c: ana2 },
+    { label: '三角+120°', c: tri1 },
+    { label: '三角+240°', c: tri2 }
+  ].map(item => {
+    const hex = rgbToHex(item.c.r, item.c.g, item.c.b);
+    return `<div><div class="harmony-swatch" style="background:${hex}" onclick="updateFromPicker('${hex}')" title="${hex}"></div><div class="harmony-label">${item.label}</div></div>`;
+  }).join('');
+
+  saveHistory(hex);
+}
+
+function saveHistory(hex) {
+  let hist = JSON.parse(localStorage.getItem('colorHistory') || '[]');
+  hist = hist.filter(h => h !== hex);
+  hist.unshift(hex);
+  if (hist.length > 20) hist = hist.slice(0, 20);
+  localStorage.setItem('colorHistory', JSON.stringify(hist));
+  renderHistory();
+}
+
+function renderHistory() {
+  const hist = JSON.parse(localStorage.getItem('colorHistory') || '[]');
+  document.getElementById('history').innerHTML = hist.map(h =>
+    `<div class="history-swatch" style="background:${h}" onclick="updateFromPicker('${h}')" title="${h}"></div>`
+  ).join('');
+}
+
+update('#3b82f6');
+renderHistory();
+</script>
+</body>
+</html>

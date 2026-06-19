@@ -32,7 +32,10 @@ skip_render:
   - 'js/**'
   - 'live2d/**'
   - 'user/**'
+  - 'anime/index.html'
   - 'anime/play/**'
+  - 'anime/history/**'
+  - 'tools/**'
   - '**/*.json'
 
 # 写作

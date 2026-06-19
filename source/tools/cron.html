@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron 表达式解析 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.desc-box { padding: 16px; background: var(--primary-light); border: 1px solid var(--primary); border-radius: 8px; font-size: 15px; margin-bottom: 16px; line-height: 1.6; }
+.field-editor { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.field-editor .field { flex: 1; min-width: 100px; }
+.field-editor .field input { text-align: center; font-family: monospace; font-weight: 600; }
+.field-editor .field .field-label { font-size: 11px; color: var(--text-secondary); text-align: center; margin-bottom: 2px; }
+.schedule-list { list-style: none; padding: 0; }
+.schedule-list li { padding: 8px 12px; border-bottom: 1px solid var(--border); font-family: monospace; font-size: 14px; display: flex; gap: 8px; }
+.schedule-list li:last-child { border-bottom: none; }
+.schedule-list li .num { color: var(--text-secondary); font-size: 12px; min-width: 20px; }
+.error { color: #ef4444; font-size: 13px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>Cron 表达式解析</h1>
+  </div>
+  <div class="tool-area">
+    <div class="row">
+      <div style="flex:3">
+        <label>Cron 表达式</label>
+        <input type="text" id="cronInput" value="0 9 * * 1-5" oninput="parse()" placeholder="* * * * *">
+      </div>
+      <div style="flex:1">
+        <label>常用预设</label>
+        <select id="presets" onchange="loadPreset()">
+          <option value="">选择...</option>
+          <option value="* * * * *">每分钟</option>
+          <option value="0 * * * *">每小时</option>
+          <option value="0 0 * * *">每天午夜</option>
+          <option value="0 9 * * *">每天 9:00</option>
+          <option value="0 9 * * 1-5">工作日 9:00</option>
+          <option value="0 0 * * 0">每周日午夜</option>
+          <option value="0 0 1 * *">每月1号午夜</option>
+          <option value="0 0 1 1 *">每年1月1日午夜</option>
+          <option value="*/5 * * * *">每5分钟</option>
+          <option value="0 */2 * * *">每2小时</option>
+          <option value="30 4 1,15 * *">每月1号和15号 4:30</option>
+        </select>
+      </div>
+    </div>
+
+    <label>可视化编辑器（点击修改各字段）</label>
+    <div class="field-editor">
+      <div class="field"><div class="field-label">分钟 (0-59)</div><input type="text" id="f0" oninput="updateFromFields()"></div>
+      <div class="field"><div class="field-label">小时 (0-23)</div><input type="text" id="f1" oninput="updateFromFields()"></div>
+      <div class="field"><div class="field-label">日 (1-31)</div><input type="text" id="f2" oninput="updateFromFields()"></div>
+      <div class="field"><div class="field-label">月 (1-12)</div><input type="text" id="f3" oninput="updateFromFields()"></div>
+      <div class="field"><div class="field-label">星期 (0-6)</div><input type="text" id="f4" oninput="updateFromFields()"></div>
+    </div>
+
+    <div id="error" class="error"></div>
+    <div id="desc" class="desc-box" style="display:none"></div>
+
+    <div style="margin-top:16px">
+      <label>接下来 10 次执行时间</label>
+      <ul class="schedule-list" id="schedule"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+const weekdayNames = ['日','一','二','三','四','五','六'];
+const monthNames = ['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+function loadPreset() {
+  const v = document.getElementById('presets').value;
+  if (v) { document.getElementById('cronInput').value = v; parse(); }
+}
+
+function updateFromFields() {
+  const parts = [0,1,2,3,4].map(i => document.getElementById('f'+i).value.trim());
+  document.getElementById('cronInput').value = parts.join(' ');
+  parse();
+}
+
+function describeField(val, fieldIndex) {
+  if (val === '*') {
+    const labels = ['每分钟','每小时','每天','每月','每天'];
+    return labels[fieldIndex];
+  }
+  // */N
+  let m = val.match(/^\*\/(\d+)$/);
+  if (m) {
+    const units = ['分钟','小时','天','月','天'];
+    return `每隔 ${m[1]} ${units[fieldIndex]}`;
+  }
+  // N-M
+  m = val.match(/^(\d+)-(\d+)$/);
+  if (m) {
+    if (fieldIndex === 4) return `星期${weekdayNames[m[1]]}到星期${weekdayNames[m[2]]}`;
+    return `${m[1]} 到 ${m[2]}`;
+  }
+  // N,M,O
+  if (val.includes(',')) {
+    const items = val.split(',');
+    if (fieldIndex === 4) return items.map(i => '星期'+weekdayNames[i]).join('、');
+    return items.join('、');
+  }
+  // N
+  if (/^\d+$/.test(val)) {
+    if (fieldIndex === 4) return '星期' + weekdayNames[val];
+    return val;
+  }
+  return val;
+}
+
+function describeCron(parts) {
+  const [min, hour, dom, mon, dow] = parts;
+  let desc = '在 ';
+  if (mon !== '*') desc += describeField(mon, 3) + ' ';
+  if (dom !== '*') desc += describeField(dom, 2) + '日 ';
+  if (dow !== '*') desc += describeField(dow, 4) + ' ';
+  if (hour !== '*') desc += describeField(hour, 1) + '时 ';
+  if (min !== '*') desc += describeField(min, 0) + '分 ';
+  desc += '执行';
+  desc = desc.replace(/\s+/g, ' ').trim();
+  if (desc === '在 执行') return '每分钟执行';
+  return desc;
+}
+
+function matchField(val, value, min, max) {
+  if (val === '*') return true;
+  // */N
+  let m = val.match(/^\*\/(\d+)$/);
+  if (m) return value % parseInt(m[1]) === 0;
+  // N-M
+  m = val.match(/^(\d+)-(\d+)$/);
+  if (m) return value >= parseInt(m[1]) && value <= parseInt(m[2]);
+  // N-M/S
+  m = val.match(/^(\d+)-(\d+)\/(\d+)$/);
+  if (m) return value >= parseInt(m[1]) && value <= parseInt(m[2]) && (value - parseInt(m[1])) % parseInt(m[3]) === 0;
+  // Comma separated
+  if (val.includes(',')) return val.split(',').some(v => matchField(v.trim(), value, min, max));
+  // Single number
+  return parseInt(val) === value;
+}
+
+function getNextRuns(cronExpr, count) {
+  const fields = cronExpr.trim().split(/\s+/);
+  if (fields.length < 5 || fields.length > 6) return [];
+
+  const [minF, hourF, domF, monF, dowF] = fields.slice(fields.length - 5);
+  const results = [];
+  const now = new Date();
+  let d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0);
+
+  const maxIter = 525960; // ~1 year in minutes
+  for (let i = 0; i < maxIter && results.length < count; i++) {
+    const minute = d.getMinutes(), hour = d.getHours(), day = d.getDate();
+    const month = d.getMonth() + 1, dow = d.getDay();
+
+    if (matchField(minF, minute, 0, 59) && matchField(hourF, hour, 0, 23) &&
+        matchField(domF, day, 1, 31) && matchField(monF, month, 1, 12) &&
+        matchField(dowF, dow, 0, 6)) {
+      results.push(new Date(d));
+    }
+    d = new Date(d.getTime() + 60000);
+  }
+  return results;
+}
+
+function parse() {
+  const input = document.getElementById('cronInput').value.trim();
+  const errEl = document.getElementById('error');
+  const descEl = document.getElementById('desc');
+  const scheduleEl = document.getElementById('schedule');
+  errEl.textContent = '';
+
+  if (!input) { descEl.style.display = 'none'; scheduleEl.innerHTML = ''; return; }
+
+  const fields = input.split(/\s+/);
+  if (fields.length < 5 || fields.length > 6) {
+    errEl.innerHTML = '<span style="color:#ef4444">需要 5 或 6 个字段，当前 ' + fields.length + ' 个</span>';
+    descEl.style.display = 'none';
+    scheduleEl.innerHTML = '';
+    return;
+  }
+
+  // Update field editor
+  const baseFields = fields.slice(fields.length - 5);
+  baseFields.forEach((f, i) => document.getElementById('f'+i).value = f);
+
+  descEl.textContent = describeCron(baseFields);
+  descEl.style.display = 'block';
+
+  const runs = getNextRuns(input, 10);
+  scheduleEl.innerHTML = runs.map((r, i) =>
+    `<li><span class="num">${i+1}.</span> ${r.toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})}</li>`
+  ).join('');
+}
+
+parse();
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片格式转换 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; color: var(--text-secondary); margin-bottom: 16px; transition: border-color 0.2s; }
+.drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: var(--primary-light); }
+.preview-row { display: flex; gap: 16px; margin: 16px 0; }
+.preview-row > div { flex: 1; text-align: center; }
+.preview-row img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+.stats { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.stat-card { background: var(--primary-light); padding: 12px 18px; border-radius: 8px; flex: 1; min-width: 120px; }
+.stat-card .label { font-size: 12px; color: var(--text-secondary); }
+.stat-card .value { font-size: 18px; font-weight: 700; color: var(--primary); }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>图片格式转换</h1>
+  </div>
+  <div class="tool-area">
+    <div class="drop-zone" id="dropZone">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>点击或拖拽图片到此处上传</p>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+    <div id="settings" style="display:none">
+      <div class="row">
+        <div>
+          <label>输出格式</label>
+          <select id="format">
+            <option value="image/png">PNG</option>
+            <option value="image/jpeg">JPG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+        <div id="qualityWrap">
+          <label>质量: <span id="qVal">92</span>%</label>
+          <input type="range" id="quality" min="1" max="100" value="92" style="margin-top:8px;width:100%">
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="preview-row">
+        <div><p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">原图</p><img id="origPreview"></div>
+        <div><p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">转换后</p><img id="convPreview"></div>
+      </div>
+      <button class="btn btn-primary" onclick="doDownload()">下载转换图片</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+
+let origFile = null, origImg = null, convBlob = null;
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+
+function formatSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+  return (b / 1048576).toFixed(2) + ' MB';
+}
+
+function loadFile(f) {
+  origFile = f;
+  const reader = new FileReader();
+  reader.onload = e => {
+    origImg = new Image();
+    origImg.onload = () => {
+      document.getElementById('origPreview').src = e.target.result;
+      document.getElementById('settings').style.display = 'block';
+      convert();
+    };
+    origImg.src = e.target.result;
+  };
+  reader.readAsDataURL(f);
+}
+
+['format', 'quality'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    document.getElementById('qVal').textContent = document.getElementById('quality').value;
+    const fmt = document.getElementById('format').value;
+    document.getElementById('qualityWrap').style.display = (fmt === 'image/png') ? 'none' : 'block';
+    convert();
+  });
+});
+
+function convert() {
+  const fmt = document.getElementById('format').value;
+  const q = parseInt(document.getElementById('quality').value) / 100;
+  const c = document.createElement('canvas');
+  c.width = origImg.width;
+  c.height = origImg.height;
+  c.getContext('2d').drawImage(origImg, 0, 0);
+  c.toBlob(blob => {
+    convBlob = blob;
+    document.getElementById('convPreview').src = URL.createObjectURL(blob);
+    const ext = fmt.split('/')[1].toUpperCase();
+    document.getElementById('stats').innerHTML =
+      `<div class="stat-card"><div class="label">原始大小</div><div class="value">${formatSize(origFile.size)}</div></div>` +
+      `<div class="stat-card"><div class="label">${ext} 大小</div><div class="value">${formatSize(blob.size)}</div></div>` +
+      `<div class="stat-card"><div class="label">变化</div><div class="value">${((blob.size / origFile.size - 1) * 100).toFixed(1)}%</div></div>`;
+  }, fmt, fmt === 'image/png' ? undefined : q);
+}
+
+function doDownload() {
+  if (!convBlob) return;
+  const fmt = document.getElementById('format').value;
+  const ext = fmt.split('/')[1];
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(convBlob);
+  a.download = `converted.${ext}`;
+  a.click();
+  showToast('下载成功');
+}
+</script>
+</body>
+</html>

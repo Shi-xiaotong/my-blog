@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL 编解码 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+@media (max-width: 640px) { .panels { grid-template-columns: 1fr; } }
+.btn-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.result-section { margin-top: 16px; }
+.result-section label { margin-bottom: 8px; }
+.result-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: 'SF Mono', monospace; font-size: 13px; word-break: break-all; cursor: pointer; }
+.result-box:hover { border-color: var(--primary); }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>URL 编解码</h1>
+  </div>
+  <div class="tool-area">
+    <div class="panels">
+      <div>
+        <label>原文</label>
+        <textarea id="plain" rows="6" placeholder="输入文本或 URL..."></textarea>
+      </div>
+      <div>
+        <label>编码结果</label>
+        <textarea id="encoded" rows="6" placeholder="输入编码后的文本..."></textarea>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="doEncode()">编码 →</button>
+      <button class="btn btn-primary" onclick="doDecode()">← 解码</button>
+      <button class="btn btn-outline" onclick="copyText(document.getElementById('encoded').value)">复制编码</button>
+    </div>
+    <div class="result-section">
+      <label>encodeURIComponent 结果</label>
+      <div class="result-box" id="compEnc" onclick="copyText(this.textContent)"></div>
+    </div>
+    <div class="result-section" style="margin-top:12px">
+      <label>encodeURI 结果（完整URL编码）</label>
+      <div class="result-box" id="fullEnc" onclick="copyText(this.textContent)"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+function doEncode() {
+  const plain = document.getElementById('plain').value;
+  if (!plain) return;
+  const encoded = encodeURIComponent(plain);
+  document.getElementById('encoded').value = encoded;
+  document.getElementById('compEnc').textContent = encoded;
+  document.getElementById('fullEnc').textContent = encodeURI(plain);
+}
+
+function doDecode() {
+  const enc = document.getElementById('encoded').value.trim();
+  if (!enc) return;
+  try {
+    const decoded = decodeURIComponent(enc);
+    document.getElementById('plain').value = decoded;
+    document.getElementById('compEnc').textContent = encodeURIComponent(decoded);
+    document.getElementById('fullEnc').textContent = encodeURI(decoded);
+  } catch(e) { showToast('解码失败: ' + e.message); }
+}
+</script>
+</body>
+</html>

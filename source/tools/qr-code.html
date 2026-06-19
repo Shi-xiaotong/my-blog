@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二维码生成器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.qr-result { text-align: center; margin: 20px 0; }
+.qr-result canvas { border-radius: 8px; }
+.color-row { display: flex; gap: 16px; align-items: center; }
+.color-row label { display: flex; align-items: center; gap: 8px; margin: 0; }
+.color-row input[type="color"] { width: 40px; height: 34px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; padding: 2px; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>二维码生成器</h1>
+  </div>
+  <div class="tool-area">
+    <div class="row">
+      <div>
+        <label>文本或网址</label>
+        <textarea id="qrInput" rows="3" placeholder="输入文本或URL...">https://example.com</textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>尺寸</label>
+        <select id="qrSize">
+          <option value="128">小 (128×128)</option>
+          <option value="256" selected>中 (256×256)</option>
+          <option value="512">大 (512×512)</option>
+        </select>
+      </div>
+      <div class="color-row">
+        <label>前景色 <input type="color" id="qrFg" value="#000000"></label>
+        <label>背景色 <input type="color" id="qrBg" value="#ffffff"></label>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="generate()" style="margin-top:8px">生成二维码</button>
+    <div class="qr-result" id="qrResult"></div>
+    <div id="qrActions" style="display:none;text-align:center">
+      <button class="btn btn-primary" onclick="downloadQR()">下载 PNG</button>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(t);showToast('已复制')}
+
+let qr = null;
+
+function generate() {
+  const text = document.getElementById('qrInput').value.trim();
+  if (!text) { showToast('请输入内容'); return; }
+  const size = parseInt(document.getElementById('qrSize').value);
+  const fg = document.getElementById('qrFg').value;
+  const bg = document.getElementById('qrBg').value;
+  const el = document.getElementById('qrResult');
+  el.innerHTML = '';
+  qr = new QRCode(el, {
+    text: text,
+    width: size,
+    height: size,
+    colorDark: fg,
+    colorLight: bg,
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  document.getElementById('qrActions').style.display = 'block';
+}
+
+function downloadQR() {
+  const canvas = document.querySelector('#qrResult canvas');
+  if (!canvas) { showToast('请先生成二维码'); return; }
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = 'qrcode.png';
+  a.click();
+  showToast('下载成功');
+}
+</script>
+</body>
+</html>

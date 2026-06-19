@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本对比工具 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.diff-inputs { display: flex; gap: 12px; margin-bottom: 16px; }
+.diff-inputs > div { flex: 1; }
+.diff-inputs textarea { height: 200px; resize: vertical; }
+.stats { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.stat-card { background: var(--primary-light); padding: 10px 16px; border-radius: 8px; flex: 1; min-width: 100px; text-align: center; }
+.stat-card .label { font-size: 12px; color: var(--text-secondary); }
+.stat-card .value { font-size: 20px; font-weight: 700; }
+.diff-result { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 13px; line-height: 1.8; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.diff-line { padding: 2px 12px; white-space: pre-wrap; word-break: break-all; }
+.diff-line.add { background: #dcfce7; color: #166534; }
+.diff-line.del { background: #fee2e2; color: #991b1b; }
+.diff-line.same { color: var(--text-secondary); }
+[data-theme="dark"] .diff-line.add { background: #14532d; color: #86efac; }
+[data-theme="dark"] .diff-line.del { background: #7f1d1d; color: #fca5a5; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>文本对比工具</h1>
+  </div>
+  <div class="tool-area">
+    <div class="diff-inputs">
+      <div>
+        <label>文本 A</label>
+        <textarea id="textA" placeholder="输入原始文本..."></textarea>
+      </div>
+      <div>
+        <label>文本 B</label>
+        <textarea id="textB" placeholder="输入对比文本..."></textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="compare()">对比文本</button>
+    <div id="statsArea"></div>
+    <div id="diffOutput" style="margin-top:16px"></div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');const b=document.querySelector('.theme-toggle');if(b)b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+
+function lcs(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m+1}, () => new Array(n+1).fill(0));
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j], dp[i][j-1]);
+  const result = [];
+  let i = m, j = n;
+  while (i > 0 && j > 0) {
+    if (a[i-1] === b[j-1]) { result.unshift({type:'same',line:a[i-1]}); i--; j--; }
+    else if (dp[i-1][j] >= dp[i][j-1]) { result.unshift({type:'del',line:a[i-1]}); i--; }
+    else { result.unshift({type:'add',line:b[j-1]}); j--; }
+  }
+  while (i > 0) { result.unshift({type:'del',line:a[i-1]}); i--; }
+  while (j > 0) { result.unshift({type:'add',line:b[j-1]}); j--; }
+  return result;
+}
+
+function compare() {
+  const a = document.getElementById('textA').value.split('\n');
+  const b = document.getElementById('textB').value.split('\n');
+  const diff = lcs(a, b);
+  let adds = 0, dels = 0, sames = 0;
+  let html = '';
+  diff.forEach(d => {
+    const cls = d.type === 'add' ? 'add' : d.type === 'del' ? 'del' : 'same';
+    const prefix = d.type === 'add' ? '+ ' : d.type === 'del' ? '- ' : '  ';
+    if (d.type === 'add') adds++;
+    else if (d.type === 'del') dels++;
+    else sames++;
+    html += `<div class="diff-line ${cls}">${prefix}${escapeHtml(d.line)}</div>`;
+  });
+  document.getElementById('statsArea').innerHTML =
+    `<div class="stats"><div class="stat-card"><div class="label">相同</div><div class="value" style="color:#64748b">${sames}</div></div>` +
+    `<div class="stat-card"><div class="label">新增</div><div class="value" style="color:#22c55e">${adds}</div></div>` +
+    `<div class="stat-card"><div class="label">删除</div><div class="value" style="color:#ef4444">${dels}</div></div></div>`;
+  document.getElementById('diffOutput').innerHTML = `<div class="diff-result">${html}</div>`;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

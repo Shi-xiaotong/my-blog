@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>影视屋 - 233002.xyz</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --primary: #ffd93d;
+  --primary-hover: #e94560;
+  --bg: #0f0f1a;
+  --card-bg: #1a1a2e;
+  --text: #e0e0e0;
+  --text-secondary: #888;
+  --border: #2a2a3e;
+  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+  --radius: 12px;
+}
+[data-theme="light"] {
+  --bg: #f5f5fa;
+  --card-bg: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #666;
+  --border: #e0e0e8;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+
+/* Theme toggle */
+.theme-toggle {
+  position: fixed; top: 20px; right: 20px;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--card-bg); color: var(--text);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; z-index: 100; transition: all 0.2s;
+}
+.theme-toggle:hover { border-color: var(--primary); }
+
+/* Back link */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--primary); text-decoration: none; font-size: 14px; margin-bottom: 10px;
+}
+.back-link:hover { text-decoration: underline; }
+
+/* Auth bar */
+#site-auth-bar {
+  display: flex; align-items: center; justify-content: center;
+  padding: 6px 0; margin-bottom: 8px;
+}
+.auth-login-btn {
+  padding: 6px 18px; border: 1px solid var(--primary); border-radius: 20px;
+  background: transparent; color: var(--primary); cursor: pointer; font-size: 13px;
+  transition: all 0.2s;
+}
+.auth-login-btn:hover { background: var(--primary); color: #0f0f1a; }
+.auth-user-info { display: flex; align-items: center; gap: 8px; }
+.auth-avatar-sm {
+  width: 28px; height: 28px; border-radius: 50%; overflow: hidden;
+  background: var(--border); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: 1px solid var(--primary);
+}
+.auth-avatar-sm img { width: 100%; height: 100%; object-fit: cover; }
+.auth-name { font-size: 13px; color: var(--text); cursor: pointer; }
+.auth-name:hover { color: var(--primary); }
+.auth-logout {
+  background: none; border: none; color: var(--text-secondary); cursor: pointer;
+  font-size: 14px; padding: 4px;
+}
+.auth-logout:hover { color: var(--primary-hover); }
+
+/* Nav links */
+#anime-page .nav-links {
+  display: flex; justify-content: center; gap: 16px; padding: 10px 16px;
+}
+#anime-page .nav-links a {
+  color: var(--text); opacity: 0.7; text-decoration: none; font-size: 13px;
+  padding: 4px 12px; border: 1px solid var(--border); border-radius: 16px;
+  transition: all 0.2s;
+}
+#anime-page .nav-links a:hover { color: var(--primary); border-color: var(--primary); opacity: 1; }
+
+/* Search bar */
+#anime-page .search-bar {
+  display: flex; max-width: 700px; margin: 10px auto; padding: 0 16px;
+}
+#anime-page .search-bar input {
+  flex: 1; padding: 10px 16px; border: 1px solid var(--border); border-radius: 20px 0 0 20px;
+  background: var(--card-bg); color: var(--text); font-size: 15px; outline: none;
+  transition: border-color 0.2s;
+}
+#anime-page .search-bar input:focus { border-color: var(--primary); }
+#anime-page .search-bar button {
+  padding: 10px 24px; background: var(--primary); color: #0f0f1a;
+  border: none; border-radius: 0 20px 20px 0; cursor: pointer; font-size: 15px; font-weight: 600;
+  transition: background 0.2s;
+}
+#anime-page .search-bar button:hover { background: var(--primary-hover); color: #fff; }
+
+/* Category tabs */
+#anime-page .tabs {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  padding: 10px 16px; max-width: 900px; margin: 0 auto;
+}
+#anime-page .tabs button {
+  padding: 6px 18px; border: 1px solid var(--border); background: transparent;
+  color: var(--text); opacity: 0.7; border-radius: 20px; cursor: pointer;
+  font-size: 14px; transition: all 0.2s;
+}
+#anime-page .tabs button.active {
+  background: var(--primary); color: #0f0f1a; border-color: var(--primary);
+  font-weight: 600; opacity: 1;
+}
+#anime-page .tabs button:hover { border-color: var(--primary); color: var(--primary); opacity: 1; }
+
+/* Card grid */
+#anime-page .card-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px; padding: 16px; max-width: 1200px; margin: 0 auto;
+}
+#anime-page .card {
+  background: var(--card-bg); border-radius: 8px; overflow: hidden;
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+  position: relative; border: 1px solid var(--border);
+}
+#anime-page .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+#anime-page .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+#anime-page .card .card-info { padding: 8px 10px; }
+#anime-page .card .card-title {
+  font-size: 13px; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#anime-page .card .card-remark {
+  position: absolute; top: 6px; right: 6px;
+  background: var(--primary); color: #0f0f1a;
+  padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600;
+}
+
+/* Pagination */
+#anime-page .pagination {
+  display: flex; justify-content: center; align-items: center;
+  gap: 16px; padding: 20px 16px;
+}
+#anime-page .pagination button {
+  height: 38px; line-height: 38px; padding: 0 16px;
+  background: var(--card-bg); color: var(--primary);
+  border: 1px solid var(--border); border-radius: 8px;
+  cursor: pointer; font-size: 16px; text-align: center; transition: all 0.2s;
+}
+#anime-page .pagination button:hover {
+  border-color: var(--primary); background: var(--primary); color: #0f0f1a;
+}
+#anime-page .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+#anime-page .page-info {
+  color: var(--text); opacity: 0.7; font-size: 14px;
+  width: auto !important; min-width: 100px; line-height: 38px; text-align: center;
+}
+
+/* Continue watching */
+#anime-page .continue-card {
+  display: none; background: var(--card-bg);
+  border: 1px solid var(--primary); border-radius: 12px;
+  padding: 16px; margin: 16px auto; max-width: 600px;
+  cursor: pointer; transition: transform 0.2s;
+}
+#anime-page .continue-card.show { display: flex; gap: 16px; align-items: center; }
+#anime-page .continue-card:hover { transform: translateY(-2px); }
+#anime-page .continue-card img { width: 80px; height: 110px; object-fit: cover; border-radius: 8px; }
+#anime-page .continue-card .cont-info h3 { margin: 0 0 4px; color: var(--primary); font-size: 16px; }
+#anime-page .continue-card .cont-info p { margin: 2px 0; color: var(--text); opacity: 0.7; font-size: 13px; }
+#anime-page .continue-card .cont-info span { color: var(--primary); font-size: 12px; }
+
+/* Loading */
+#anime-page .loading { text-align: center; padding: 40px; color: var(--text); opacity: 0.7; }
+#anime-page .loading i { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Login modal */
+#site-login-modal {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+}
+#site-login-modal.show { display: flex; }
+.slm-box {
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
+  padding: 32px; max-width: 400px; width: 90%; text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+.slm-box h3 { margin-bottom: 6px; color: var(--text); font-size: 18px; }
+.slm-sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 16px; }
+.slm-error { font-size: 13px; min-height: 20px; margin-bottom: 10px; }
+.slm-oauth { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.slm-oauth-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border);
+  background: transparent; color: var(--text); cursor: pointer; font-size: 14px;
+  transition: all 0.2s;
+}
+.slm-oauth-btn:hover { border-color: var(--primary); }
+.slm-oauth-btn.github:hover { background: #24292e; color: #fff; border-color: #24292e; }
+.slm-oauth-btn.google:hover { background: #f0f0f0; }
+.slm-icon { display: flex; align-items: center; }
+.slm-divider {
+  color: var(--text-secondary); font-size: 12px; margin: 12px 0;
+  display: flex; align-items: center; gap: 10px;
+}
+.slm-divider::before, .slm-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.slm-email-form { display: flex; flex-direction: column; gap: 10px; }
+.slm-email-row { display: flex; gap: 8px; }
+.slm-email-row input {
+  flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--bg); color: var(--text); font-size: 14px; outline: none;
+}
+.slm-email-row input:focus { border-color: var(--primary); }
+.slm-send-btn, .slm-submit {
+  padding: 10px 16px; border: none; border-radius: 10px;
+  background: var(--primary); color: #0f0f1a; font-size: 14px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+}
+.slm-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.slm-cancel {
+  margin-top: 14px; background: none; border: none;
+  color: var(--text-secondary); cursor: pointer; font-size: 13px;
+}
+.slm-cancel:hover { color: var(--text); }
+
+/* Footer */
+.footer { text-align: center; padding: 30px 0; color: var(--text-secondary); font-size: 13px; }
+.footer a { color: var(--primary); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* Mobile */
+@media (max-width: 600px) {
+  #anime-page .card-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
+  #anime-page .search-bar input { font-size: 14px; padding: 8px 12px; }
+  .theme-toggle { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
+
+<div class="container">
+  <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> 返回首页</a>
+
+  <div id="site-auth-bar"></div>
+
+  <div id="anime-page">
+    <!-- Nav links -->
+    <div class="nav-links">
+      <a href="/anime/history/"><i class="fas fa-history"></i> 观看记录</a>
+      <a href="/user/"><i class="fas fa-user"></i> 个人中心</a>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="搜索动漫、电影、电视剧...">
+      <button onclick="doSearch()"><i class="fas fa-search"></i> 搜索</button>
+    </div>
+
+    <!-- Continue Watching -->
+    <div class="continue-card" id="continueCard" onclick="continueWatching()">
+      <img id="contPic" src="">
+      <div class="cont-info">
+        <h3 id="contTitle"></h3>
+        <p id="contEp"></p>
+        <span><i class="fas fa-play-circle"></i> 继续观看</span>
+      </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="tabs" id="tabs">
+      <button class="active" data-type="">推荐</button>
+      <button data-type="4">日韩动漫</button>
+      <button data-type="49">国产动漫</button>
+      <button data-type="3">欧美动漫</button>
+      <button data-type="1">电影</button>
+      <button data-type="2">连续剧</button>
+      <button data-type="35">综艺</button>
+    </div>
+
+    <!-- Card Grid -->
+    <div class="card-grid" id="cardGrid"></div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination">
+      <button id="prevBtn" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i></button>
+      <span class="page-info" id="pageInfo">1</span>
+      <button id="nextBtn" onclick="changePage(1)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading" style="display:none"><i class="fas fa-spinner"></i> 加载中...</div>
+  </div>
+
+  <div class="footer">
+    <p>🎬 影视屋 · <a href="/">233002.xyz</a></p>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div id="site-login-modal">
+  <div class="slm-box">
+    <h3>登录 Mercury 博客</h3>
+    <p class="slm-sub">选择登录方式，已有账户自动关联</p>
+    <div class="slm-error" id="slmError"></div>
+    <div class="slm-oauth">
+      <button class="slm-oauth-btn github" onclick="siteGithubLogin()"><span class="slm-icon"><i class="fab fa-github"></i></span> 使用 GitHub 登录</button>
+      <button class="slm-oauth-btn google" onclick="siteGoogleLogin()"><span class="slm-icon"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></span> 使用 Google 登录</button>
+    </div>
+    <div class="slm-divider">或使用邮箱验证码</div>
+    <div class="slm-email-form">
+      <div class="slm-email-row"><input type="email" id="slmEmailInput" placeholder="your@email.com" onkeydown="if(event.key==='Enter')siteSendCode()"><button class="slm-send-btn" id="slmSendBtn" onclick="siteSendCode()">发送验证码</button></div>
+      <div class="slm-email-row" id="slmCodeWrap" style="display:none"><input type="text" id="slmCodeInput" placeholder="输入6位验证码" maxlength="6" onkeydown="if(event.key==='Enter')siteVerifyCode()"><button class="slm-submit" style="width:auto;padding:10px 20px" onclick="siteVerifyCode()">验证</button></div>
+    </div>
+    <button class="slm-cancel" onclick="hideSiteLoginModal()">取消</button>
+  </div>
+</div>
+
+<script>
+// ===== Theme toggle =====
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? '' : 'light');
+  localStorage.setItem('theme', isLight ? 'dark' : 'light');
+  document.querySelector('.theme-toggle').textContent = isLight ? '🌙' : '☀️';
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.querySelector('.theme-toggle').textContent = '☀️';
+  }
+})();
+
+// ===== Site Auth (from site-auth.js) =====
+(function(){
+try{
+var AUTH_API='https://ffzy.233002.xyz';
+var token=localStorage.getItem('anime_token')||'';
+var user=JSON.parse(localStorage.getItem('anime_user')||'null');
+var countdown=0;
+
+function isLoggedIn(){return !!token;}
+
+function render(){
+  var bar=document.getElementById('site-auth-bar');
+  if(!bar)return;
+  if(isLoggedIn()){
+    var avatarHtml=user&&user.avatar_url?'<img src="'+user.avatar_url+'" alt="">':'<i class="fas fa-user" style="font-size:10px"></i>';
+    var name=user?(user.display_name||user.email.split('@')[0]):'';
+    bar.innerHTML='<div class="auth-user-info">'
+      +'<div class="auth-avatar-sm" onclick="window.location.href=\'/user/\'" title="个人中心">'+avatarHtml+'</div>'
+      +'<span class="auth-name" onclick="window.location.href=\'/user/\'" title="个人中心">'+name+'</span>'
+      +'<button class="auth-logout" onclick="siteAuthLogout()" title="退出"><i class="fas fa-sign-out-alt"></i></button>'
+      +'</div>';
+  }else{
+    bar.innerHTML='<button class="auth-login-btn" onclick="showSiteLoginModal()"><i class="fas fa-user"></i> 登录</button>';
+  }
+}
+
+function showLoginModal(){
+  var m=document.getElementById('site-login-modal');
+  if(m){m.classList.add('show');resetEmailForm();}
+}
+function hideLoginModal(){
+  var m=document.getElementById('site-login-modal');if(m)m.classList.remove('show');
+}
+function resetEmailForm(){
+  var inp=document.getElementById('slmEmailInput');
+  var codeInp=document.getElementById('slmCodeInput');
+  var err=document.getElementById('slmError');
+  if(inp)inp.value='';
+  if(codeInp)codeInp.value='';
+  if(err)err.textContent='';
+  var btn=document.getElementById('slmSendBtn');
+  if(btn){btn.disabled=false;btn.textContent='发送验证码';}
+  countdown=0;
+}
+function logout(){
+  fetch(AUTH_API+'/api/auth/logout',{method:'POST',headers:{'Authorization':'Bearer '+token}}).catch(function(){});
+  token='';user=null;
+  localStorage.removeItem('anime_token');
+  localStorage.removeItem('anime_user');
+  render();
+}
+function sendCode(){
+  var email=document.getElementById('slmEmailInput').value.trim();
+  var err=document.getElementById('slmError');
+  var btn=document.getElementById('slmSendBtn');
+  if(!email||email.indexOf('@')<0){err.textContent='请输入有效邮箱';err.style.color='#e94560';return;}
+  err.textContent='发送中...';err.style.color='#aaa';
+  btn.disabled=true;
+  fetch(AUTH_API+'/api/auth/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
+  .then(function(r){return r.json()})
+  .then(function(data){
+    if(data.error){err.textContent=data.error;err.style.color='#e94560';btn.disabled=false;return;}
+    if(data.dev_code){
+      err.textContent='验证码已发送 (开发模式: '+data.dev_code+')';err.style.color='#4ecdc4';
+    }else{
+      err.textContent='验证码已发送到邮箱';err.style.color='#4ecdc4';
+    }
+    document.getElementById('slmCodeWrap').style.display='flex';
+    document.getElementById('slmCodeInput').focus();
+    countdown=60;
+    var timer=setInterval(function(){
+      countdown--;
+      if(countdown<=0){clearInterval(timer);btn.disabled=false;btn.textContent='发送验证码';}
+      else{btn.textContent=countdown+'s';}
+    },1000);
+  })
+  .catch(function(){err.textContent='网络错误';err.style.color='#e94560';btn.disabled=false;});
+}
+function verifyCode(){
+  var email=document.getElementById('slmEmailInput').value.trim();
+  var code=document.getElementById('slmCodeInput').value.trim();
+  var err=document.getElementById('slmError');
+  if(!code){err.textContent='请输入验证码';err.style.color='#e94560';return;}
+  err.textContent='验证中...';err.style.color='#aaa';
+  fetch(AUTH_API+'/api/auth/email/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,code:code})})
+  .then(function(r){return r.json()})
+  .then(function(data){
+    if(data.error){err.textContent=data.error;err.style.color='#e94560';return;}
+    token=data.token;user=data.user;
+    localStorage.setItem('anime_token',token);
+    localStorage.setItem('anime_user',JSON.stringify(user));
+    render();hideLoginModal();
+  })
+  .catch(function(){err.textContent='网络错误';err.style.color='#e94560';});
+}
+function handleOAuthCallback(){
+  var params=new URLSearchParams(window.location.search);
+  var authParam=params.get('auth');
+  if(authParam){
+    try{
+      var data=JSON.parse(decodeURIComponent(authParam));
+      if(data.token&&data.user){
+        token=data.token;user=data.user;
+        localStorage.setItem('anime_token',token);
+        localStorage.setItem('anime_user',JSON.stringify(user));
+        render();
+      }
+    }catch(e){}
+    var url=new URL(window.location.href);
+    url.searchParams.delete('auth');
+    window.history.replaceState({},'',url.toString());
+  }
+}
+function validate(){
+  if(!token){render();return;}
+  fetch(AUTH_API+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
+  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(data){if(data.user){user=data.user;localStorage.setItem('anime_user',JSON.stringify(user));}})
+  .catch(function(){token='';user=null;localStorage.removeItem('anime_token');localStorage.removeItem('anime_user');})
+  .then(function(){render();});
+}
+
+// Expose globals
+window.showSiteLoginModal=showLoginModal;
+window.hideSiteLoginModal=hideLoginModal;
+window.siteGithubLogin=function(){window.location.href=AUTH_API+'/api/auth/github';};
+window.siteGoogleLogin=function(){window.location.href=AUTH_API+'/api/auth/google';};
+window.siteSendCode=sendCode;
+window.siteVerifyCode=verifyCode;
+window.siteAuthLogout=logout;
+
+handleOAuthCallback();
+validate();
+
+document.getElementById('site-login-modal').addEventListener('click',function(e){if(e.target===this)hideLoginModal();});
+
+window.addEventListener('storage',function(e){if(e.key==='anime_token'||e.key==='anime_user'){token=localStorage.getItem('anime_token')||'';user=JSON.parse(localStorage.getItem('anime_user')||'null');render();}});
+window.addEventListener('focus',function(){var t=localStorage.getItem('anime_token')||'';if(t!==token){token=t;user=JSON.parse(localStorage.getItem('anime_user')||'null');render();}});
+}catch(e){console.error('[site-auth] init error:',e);}
+})();
+
+// ===== Anime Page Logic =====
+(function(){
+var API_SOURCES=[
+  {name:'Huya',base:'https://www.huyaapi.com',list:'/api.php/provide/vod/?ac=list'},
+  {name:'FFZY',base:'https://ffzy.233002.xyz',list:'/api/ffzy?ac=videolist'},
+  {name:'BDZY',base:'https://api.apibdzy.com',list:'/api.php/provide/vod/?ac=list'},
+  {name:'FF22',base:'https://cj.ffzyapi.com',list:'/api.php/provide/vod/?ac=list'}
+];
+var API=API_SOURCES[0].base;
+var currentPage=1;
+var currentType='';
+var currentKeyword='';
+var totalPages=1;
+
+// Auth
+function getToken(){return localStorage.getItem('anime_token')||'';}
+function isLoggedIn(){return !!getToken();}
+
+// Search
+window.doSearch=function(){
+  var q=document.getElementById('searchInput').value.trim();
+  if(!q)return;
+  currentKeyword=q;currentType='';currentPage=1;
+  document.querySelectorAll('#tabs button').forEach(function(b){b.classList.remove('active');});
+  loadList();
+};
+
+document.getElementById('searchInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter')doSearch();
+});
+
+// Tabs
+document.querySelectorAll('#tabs button').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('#tabs button').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    currentType=btn.dataset.type;
+    currentKeyword='';
+    currentPage=1;
+    loadList();
+  });
+});
+
+// Load list
+async function loadList(){
+  var grid=document.getElementById('cardGrid');
+  var loading=document.getElementById('loading');
+  grid.innerHTML='';
+  loading.style.display='block';
+
+  // Try each API source
+  for(var si=0;si<API_SOURCES.length;si++){
+    var src=API_SOURCES[si];
+    try{
+      var url=src.base+src.list+'&pg='+currentPage;
+      if(currentType)url+='&t='+currentType;
+      if(currentKeyword)url+='&wd='+encodeURIComponent(currentKeyword);
+
+      var res=await fetch(url);
+      var data=await res.json();
+      var list=data.list||[];
+      if(list.length===0&&si<API_SOURCES.length-1)continue; // try next source
+      API=src.base;
+      totalPages=data.pagecount||1;
+
+    list.forEach(function(item){
+      var card=document.createElement('div');
+      card.className='card';
+      card.innerHTML='<img src="'+(item.vod_pic||'')+'" alt="'+item.vod_name+'" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 300%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22300%22/><text fill=%22%23555%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22>No Image</text></svg>\'">'
+        +'<div class="card-info"><div class="card-title">'+item.vod_name+'</div></div>'
+        +(item.vod_remarks?'<span class="card-remark">'+item.vod_remarks+'</span>':'');
+      card.onclick=function(){window.location.href='/anime/play/?vod_id='+item.vod_id;};
+      grid.appendChild(card);
+    });
+
+      updatePagination();
+      break; // found working source
+    }catch(err){
+      if(si===API_SOURCES.length-1){
+        grid.innerHTML='<div style="text-align:center;padding:40px;color:#e94560"><i class="fas fa-exclamation-circle"></i> 所有源站均不可用</div>';
+      }
+    }
+  }
+  loading.style.display='none';
+}
+
+function updatePagination(){
+  document.getElementById('pageInfo').textContent=currentPage+' / '+totalPages;
+  document.getElementById('prevBtn').disabled=currentPage<=1;
+  document.getElementById('nextBtn').disabled=currentPage>=totalPages;
+}
+
+window.changePage=function(delta){
+  currentPage+=delta;
+  if(currentPage<1)currentPage=1;
+  if(currentPage>totalPages)currentPage=totalPages;
+  loadList();
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+// Continue watching
+window.continueWatching=function(){
+  if(!isLoggedIn()){showSiteLoginModal();return;}
+  // Get latest history item
+  fetch(API+'/api/history',{headers:{'Authorization':'Bearer '+getToken()}})
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var items=data.list||[];
+    if(items.length>0){
+      var h=items[0];
+      window.location.href='/anime/play/?vod_id='+h.vod_id+'&ep='+h.episode_index;
+    }
+  }).catch(function(){});
+};
+
+// Load continue card
+async function loadContinueCard(){
+  if(!isLoggedIn()){document.getElementById('continueCard').classList.remove('show');return;}
+  try{
+    var res=await fetch(API+'/api/history',{headers:{'Authorization':'Bearer '+getToken()}});
+    var data=await res.json();
+    var items=data.list||[];
+    if(items.length>0){
+      var h=items[0];
+      document.getElementById('contPic').src=h.vod_pic||'';
+      document.getElementById('contTitle').textContent=h.vod_name;
+      document.getElementById('contEp').textContent='第'+(h.episode_index+1)+'集 '+(h.episode_name||'')+' · '+formatTime(h.position);
+      document.getElementById('continueCard').classList.add('show');
+    }
+  }catch(e){}
+}
+
+function formatTime(sec){
+  if(!sec||isNaN(sec))return'0:00';
+  sec=Math.floor(sec);var m=Math.floor(sec/60);var s=sec%60;
+  return m+':'+(s<10?'0':'')+s;
+}
+
+// Auth sync
+window.addEventListener('storage',function(e){
+  if(e.key==='anime_token'||e.key==='anime_user'){
+    if(isLoggedIn())loadContinueCard();
+    else document.getElementById('continueCard').classList.remove('show');
+  }
+});
+window.addEventListener('focus',function(){
+  if(isLoggedIn())loadContinueCard();
+});
+
+// Init
+loadList();
+loadContinueCard();
+
+})();
+</script>
+</body>
+</html>

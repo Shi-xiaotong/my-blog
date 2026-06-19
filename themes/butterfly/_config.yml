@@ -41,7 +41,9 @@ menu:
   首页: / || fas fa-home
   万年历: /calendar/ || fas fa-calendar-alt
   天气: /weather/ || fas fa-cloud-sun
-  影视屋: /anime/ || fas fa-film
+  更多:
+    影视屋: /anime/ || fas fa-film
+    工具箱: /tools/ || fas fa-toolbox
   友链: /links/ || fas fa-link
   关于: /about/ || fas fa-heart
 
