@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 猜词 - 小游戏</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.game-container { max-width: 600px; margin: 0 auto; }
+.chat-area { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; height: 400px; overflow-y: auto; margin-bottom: 12px; }
+.msg { margin-bottom: 12px; display: flex; gap: 8px; }
+.msg .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.msg.ai .avatar { background: var(--primary-light); color: var(--primary); }
+.msg.user .avatar { background: var(--accent); color: #fff; }
+.msg .bubble { flex: 1; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+.msg.ai .bubble { background: var(--bg); border: 1px solid var(--border); }
+.msg.user .bubble { background: var(--primary); color: #fff; }
+.msg.system .bubble { background: transparent; color: var(--text-secondary); font-size: 13px; text-align: center; width: 100%; }
+.msg .bubble.correct { background: #14532d; color: #22c55e; border-color: #22c55e; }
+.msg .bubble.wrong { background: #7f1d1d; color: #fca5a5; border-color: #ef4444; }
+.input-area { display: flex; gap: 8px; margin-bottom: 12px; }
+.input-area input { flex: 1; padding: 12px 16px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; background: var(--card-bg); color: var(--text); outline: none; }
+.input-area input:focus { border-color: var(--primary); }
+.quick-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 12px; }
+.quick-btns button { padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); color: var(--text); font-size: 13px; cursor: pointer; }
+.quick-btns button:hover { border-color: var(--primary); color: var(--primary); }
+.status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; }
+.status-bar .remaining { color: var(--primary); font-weight: 600; }
+.win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.win-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; max-width: 360px; }
+.win-box h2 { margin-bottom: 8px; }
+.win-box p { color: var(--text-secondary); margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/games/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回游戏</a>
+    <h1>AI 猜词</h1>
+  </div>
+  <div class="game-container">
+    <div class="status-bar">
+      <div>得分: <strong id="score">0</strong></div>
+      <div class="remaining">剩余提问: <span id="remaining">20</span></div>
+    </div>
+
+    <div class="chat-area" id="chatArea"></div>
+
+    <div class="quick-btns">
+      <button onclick="ask('是动物吗?')">是动物吗?</button>
+      <button onclick="ask('是食物吗?')">是食物吗?</button>
+      <button onclick="ask('是物品吗?')">是物品吗?</button>
+      <button onclick="ask('是活的吗?')">是活的吗?</button>
+      <button onclick="ask('是人造的吗?')">是人造的吗?</button>
+      <button onclick="ask('比桌子大吗?')">比桌子大吗?</button>
+    </div>
+
+    <div class="input-area">
+      <input type="text" id="questionInput" placeholder="问一个是/否问题..." onkeydown="if(event.key==='Enter')askFromInput()">
+      <button class="btn btn-primary" onclick="askFromInput()">提问</button>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button class="btn btn-primary" onclick="newGame()">新的一局</button>
+      <button class="btn btn-outline" onclick="guessAnswer()">我猜答案</button>
+      <button class="btn btn-outline" onclick="giveUp()">放弃</button>
+    </div>
+    <p class="tip">AI 心里想了一个词，你问是非题来猜出它！</p>
+  </div>
+</div>
+
+<div class="win-overlay" id="overlay" style="display:none">
+  <div class="win-box">
+    <h2 id="winTitle"></h2>
+    <p id="winMsg"></p>
+    <button class="btn btn-primary" onclick="closeOverlay();newGame()">再来一局</button>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='light';h.setAttribute('data-theme',d?'':'light');localStorage.setItem('game-theme',d?'dark':'light');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('game-theme');if(s==='light'){document.documentElement.setAttribute('data-theme','light');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'}})()
+
+const AI_ENDPOINT = 'https://ai.233002.xyz';
+let secretWord = '', questionsLeft = 20, score = 0, gameOver = false;
+let conversationHistory = [];
+
+const WORDS = [
+  '猫','狗','太阳','月亮','钢琴','冰箱','西瓜','蝴蝶','飞机','钻石',
+  '眼镜','雨伞','狮子','火山','巧克力','显微镜','龙','圣诞树','美人鱼','机器人',
+  '长城','金字塔','海绵','灯泡','蜘蛛','鲨鱼','冰淇淋','火箭','魔方','指南针',
+];
+
+function addMsg(role, content, extraClass) {
+  const el = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const avatar = role === 'ai' ? 'AI' : role === 'user' ? '?' : '';
+  div.innerHTML = `<div class="avatar">${avatar}</div><div class="bubble ${extraClass || ''}">${content}</div>`;
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+
+async function newGame() {
+  gameOver = false;
+  questionsLeft = 20;
+  secretWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+  conversationHistory = [];
+  document.getElementById('remaining').textContent = questionsLeft;
+  document.getElementById('chatArea').innerHTML = '';
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('questionInput').value = '';
+
+  addMsg('system', '新的一局开始！AI 心里想了一个词，你来问是非题猜出它。');
+  addMsg('ai', '我已经想好了一个词，来问我吧！只能问是/否问题哦。');
+}
+
+function askFromInput() {
+  const input = document.getElementById('questionInput');
+  const q = input.value.trim();
+  if (!q || gameOver) return;
+  input.value = '';
+  ask(q);
+}
+
+async function ask(question) {
+  if (gameOver || questionsLeft <= 0) return;
+  questionsLeft--;
+  document.getElementById('remaining').textContent = questionsLeft;
+  addMsg('user', question);
+
+  try {
+    const res = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'agnes-2.0-flash',
+        messages: [
+          { role: 'system', content: `You are playing a 20 questions game. The secret word is "${secretWord}". Answer the user's yes/no questions truthfully with ONLY "是" or "否", followed by a very brief explanation (max 15 Chinese chars). Never reveal the word directly. If the user asks something that can't be answered yes/no, say "请问我是非题".` },
+          { role: 'user', content: question }
+        ],
+        temperature: 0.3,
+        max_tokens: 50
+      })
+    });
+
+    const data = await res.json();
+    const answer = data?.choices?.[0]?.message?.content || '无法回答';
+    addMsg('ai', answer);
+
+    // Check if user guessed the word
+    if (question.includes(secretWord) || question.replace(/[?？！!。.]/g, '').trim() === '是' + secretWord) {
+      // Don't auto-win on asking "is it X?" - only on explicit guess
+    }
+  } catch {
+    addMsg('ai', '网络错误，请重试');
+    questionsLeft++; // Don't count failed questions
+    document.getElementById('remaining').textContent = questionsLeft;
+  }
+}
+
+async function guessAnswer() {
+  if (gameOver) return;
+  const input = document.getElementById('questionInput');
+  const guess = input.value.trim() || prompt('你的答案是？');
+  if (!guess) return;
+  input.value = '';
+
+  addMsg('user', '我猜是: ' + guess);
+
+  if (guess === secretWord || guess.includes(secretWord) || secretWord.includes(guess)) {
+    gameOver = true;
+    const points = questionsLeft * 5 + 20;
+    score += points;
+    document.getElementById('score').textContent = score;
+    addMsg('ai', '猜对了！就是「' + secretWord + '」！', 'correct');
+    setTimeout(() => {
+      document.getElementById('winTitle').textContent = '恭喜猜对!';
+      document.getElementById('winMsg').textContent = `答案: ${secretWord} | 剩余提问: ${questionsLeft} | 得分: +${points}`;
+      document.getElementById('overlay').style.display = 'flex';
+    }, 800);
+  } else {
+    addMsg('ai', '不对哦，继续猜！', 'wrong');
+  }
+}
+
+function giveUp() {
+  if (gameOver) return;
+  gameOver = true;
+  addMsg('ai', '答案是「' + secretWord + '」，下次加油！', 'wrong');
+}
+
+function closeOverlay() { document.getElementById('overlay').style.display = 'none'; }
+
+newGame();
+</script>
+</body>
+</html>

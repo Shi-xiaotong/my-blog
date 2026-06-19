@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 谜语 - 小游戏</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.game-container { max-width: 600px; margin: 0 auto; }
+.riddle-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 16px 0; text-align: center; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.riddle-card .riddle-text { font-size: 18px; line-height: 1.8; font-weight: 500; }
+.riddle-card .riddle-num { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+.guess-area { display: flex; gap: 8px; margin-bottom: 16px; }
+.guess-area input { flex: 1; padding: 12px 16px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; background: var(--card-bg); color: var(--text); outline: none; }
+.guess-area input:focus { border-color: var(--primary); }
+.result-msg { text-align: center; font-size: 16px; font-weight: 600; min-height: 28px; margin: 12px 0; }
+.result-msg.correct { color: var(--accent); }
+.result-msg.wrong { color: var(--danger); }
+.answer-reveal { background: var(--primary-light); border: 1px solid var(--primary); border-radius: 8px; padding: 12px; margin: 12px 0; text-align: center; display: none; }
+.answer-reveal .answer { font-size: 20px; font-weight: 700; color: var(--primary); }
+.answer-reveal .explain { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+.difficulty-select { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+.diff-btn { padding: 6px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); color: var(--text); font-size: 13px; cursor: pointer; }
+.diff-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.win-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; max-width: 360px; }
+.win-box h2 { margin-bottom: 8px; }
+.win-box p { color: var(--text-secondary); margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/games/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回游戏</a>
+    <h1>AI 谜语</h1>
+  </div>
+  <div class="game-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div>得分: <strong id="score">0</strong> | 连对: <strong id="streak">0</strong></div>
+      <div>第 <strong id="round">0</strong> 题</div>
+    </div>
+
+    <div class="difficulty-select">
+      <button class="diff-btn active" onclick="setDiff('easy')">简单</button>
+      <button class="diff-btn" onclick="setDiff('medium')">中等</button>
+      <button class="diff-btn" onclick="setDiff('hard')">困难</button>
+    </div>
+
+    <div class="riddle-card">
+      <div class="riddle-num" id="riddleNum">点击「出题」开始</div>
+      <div class="riddle-text" id="riddleText">AI 准备了各种谜语等你来猜</div>
+    </div>
+
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="answer-reveal" id="answerReveal">
+      <div class="answer" id="answerText"></div>
+      <div class="explain" id="answerExplain"></div>
+    </div>
+
+    <div class="guess-area">
+      <input type="text" id="guessInput" placeholder="输入你的答案..." onkeydown="if(event.key==='Enter')checkAnswer()">
+      <button class="btn btn-primary" onclick="checkAnswer()">猜</button>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button class="btn btn-primary" onclick="newRiddle()">出题</button>
+      <button class="btn btn-outline" onclick="showHint()">提示</button>
+      <button class="btn btn-outline" onclick="revealAnswer()">看答案</button>
+    </div>
+  </div>
+</div>
+
+<div class="win-overlay" id="overlay" style="display:none">
+  <div class="win-box">
+    <h2 id="winTitle"></h2>
+    <p id="winMsg"></p>
+    <button class="btn btn-primary" onclick="closeOverlay();newRiddle()">下一题</button>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='light';h.setAttribute('data-theme',d?'':'light');localStorage.setItem('game-theme',d?'dark':'light');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('game-theme');if(s==='light'){document.documentElement.setAttribute('data-theme','light');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'}})()
+
+const AI_ENDPOINT = 'https://ai.233002.xyz';
+let currentAnswer = '', currentExplanation = '', score = 0, streak = 0, round = 0, difficulty = 'easy', answered = false;
+
+function setDiff(d) {
+  difficulty = d;
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.diff-btn[onclick="setDiff('${d}')"]`).classList.add('active');
+}
+
+async function newRiddle() {
+  round++;
+  answered = false;
+  document.getElementById('round').textContent = round;
+  document.getElementById('riddleNum').textContent = '第 ' + round + ' 题 - 加载中...';
+  document.getElementById('riddleText').textContent = 'AI 正在想谜语...';
+  document.getElementById('resultMsg').textContent = '';
+  document.getElementById('resultMsg').className = 'result-msg';
+  document.getElementById('answerReveal').style.display = 'none';
+  document.getElementById('guessInput').value = '';
+  document.getElementById('overlay').style.display = 'none';
+
+  const diffDesc = difficulty === 'easy' ? '简单常见' : difficulty === 'medium' ? '中等难度' : '困难冷门';
+
+  try {
+    const res = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'agnes-2.0-flash',
+        messages: [
+          { role: 'system', content: `你是一个谜语出题者。生成一个${diffDesc}的中文谜语。回复格式严格为JSON: {"riddle": "谜面", "answer": "谜底(2-4个字)", "explain": "解释(一句话)"}` },
+          { role: 'user', content: '出一个谜语' }
+        ],
+        temperature: 1.0,
+        max_tokens: 150
+      })
+    });
+
+    const data = await res.json();
+    const content = data?.choices?.[0]?.message?.content || '';
+
+    let result;
+    try {
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      result = JSON.parse(jsonMatch ? jsonMatch[0] : content);
+    } catch {
+      result = { riddle: content, answer: '未知', explain: '' };
+    }
+
+    currentAnswer = result.answer || '未知';
+    currentExplanation = result.explain || '';
+
+    document.getElementById('riddleNum').textContent = '第 ' + round + ' 题';
+    document.getElementById('riddleText').textContent = result.riddle || '谜语加载失败';
+  } catch (e) {
+    document.getElementById('riddleText').textContent = '加载失败，请重试';
+  }
+}
+
+function checkAnswer() {
+  if (answered) return;
+  const input = document.getElementById('guessInput');
+  const guess = input.value.trim();
+  if (!guess) return;
+
+  const resultMsg = document.getElementById('resultMsg');
+  const answerReveal = document.getElementById('answerReveal');
+
+  const isCorrect = guess === currentAnswer ||
+    guess.includes(currentAnswer) ||
+    currentAnswer.includes(guess) ||
+    levenshtein(guess, currentAnswer) <= 1;
+
+  if (isCorrect) {
+    answered = true;
+    const diffBonus = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30;
+    const points = diffBonus + streak * 5;
+    score += points;
+    streak++;
+    document.getElementById('score').textContent = score;
+    document.getElementById('streak').textContent = streak;
+    resultMsg.textContent = '答对了! +' + points + ' 分';
+    resultMsg.className = 'result-msg correct';
+    answerReveal.style.display = 'block';
+    document.getElementById('answerText').textContent = '答案: ' + currentAnswer;
+    document.getElementById('answerExplain').textContent = currentExplanation;
+    input.value = '';
+  } else {
+    resultMsg.textContent = '不对哦，再想想';
+    resultMsg.className = 'result-msg wrong';
+  }
+}
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m+1}, () => Array(n+1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) {
+    dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] : Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1;
+  }
+  return dp[m][n];
+}
+
+async function showHint() {
+  if (answered || !currentAnswer) return;
+  try {
+    const res = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'agnes-2.0-flash',
+        messages: [
+          { role: 'system', content: '给一个关于谜底的简短提示，不要直接说出答案。用中文，不超过15字。' },
+          { role: 'user', content: `谜底是"${currentAnswer}"，给一个提示` }
+        ],
+        temperature: 0.8,
+        max_tokens: 30
+      })
+    });
+    const data = await res.json();
+    const hint = data?.choices?.[0]?.message?.content || '无法获取提示';
+    document.getElementById('resultMsg').textContent = '提示: ' + hint;
+    document.getElementById('resultMsg').className = 'result-msg';
+  } catch {
+    document.getElementById('resultMsg').textContent = '获取提示失败';
+  }
+}
+
+function revealAnswer() {
+  if (!currentAnswer) return;
+  answered = true;
+  streak = 0;
+  document.getElementById('streak').textContent = 0;
+  document.getElementById('resultMsg').textContent = '答案揭晓';
+  document.getElementById('resultMsg').className = 'result-msg';
+  document.getElementById('answerReveal').style.display = 'block';
+  document.getElementById('answerText').textContent = '答案: ' + currentAnswer;
+  document.getElementById('answerExplain').textContent = currentExplanation;
+}
+
+function closeOverlay() { document.getElementById('overlay').style.display = 'none'; }
+
+newRiddle();
+</script>
+</body>
+</html>
