@@ -265,11 +265,12 @@ function quickScore(r, c) {
 function getBestMove() {
   if (moveCount === 0) return [7, 7];
 
-  // 收集邻居
+  // 收集邻居（1格范围内）
   const neighbors = new Set();
   for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) {
     if (board[r][c] !== EMPTY) {
-      for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) {
+      for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
         const nr = r + dr, nc = c + dc;
         if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && board[nr][nc] === EMPTY) {
           neighbors.add(nr * SIZE + nc);
@@ -278,27 +279,33 @@ function getBestMove() {
     }
   }
 
-  const candidates = [...neighbors].map(idx => {
+  // 快速筛选：先粗评，只精评 top 20
+  const scored = [...neighbors].map(idx => {
     const r = Math.floor(idx / SIZE), c = idx % SIZE;
-    return { r, c, score: quickScore(r, c) };
-  }).sort((a, b) => b.score - a.score).slice(0, 15);
+    board[r][c] = WHITE;
+    const a = scorePoint(r, c, WHITE);
+    board[r][c] = BLACK;
+    const b = scorePoint(r, c, BLACK);
+    board[r][c] = EMPTY;
+    return { r, c, score: a * 1.1 + b };
+  }).sort((a, b) => b.score - a.score).slice(0, 20);
 
   // 检查直接赢
-  for (const {r, c} of candidates) {
+  for (const {r, c} of scored) {
     board[r][c] = WHITE;
     if (checkWin(r, c, WHITE)) { board[r][c] = EMPTY; return [r, c]; }
     board[r][c] = EMPTY;
   }
 
   // 检查必须堵
-  for (const {r, c} of candidates) {
+  for (const {r, c} of scored) {
     board[r][c] = BLACK;
     if (checkWin(r, c, BLACK)) { board[r][c] = EMPTY; return [r, c]; }
     board[r][c] = EMPTY;
   }
 
   // 返回评分最高的
-  return [candidates[0].r, candidates[0].c];
+  return [scored[0].r, scored[0].c];
 }
 
 function aiMove() {
