@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock 数据生成 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.type-btn { padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; font-size: 14px; }
+.type-btn:hover, .type-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+.output { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; min-height: 200px; font-family: 'SF Mono', monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow: auto; max-height: 400px; }
+.controls { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>Mock 数据生成</h1>
+  </div>
+  <div class="tool-area">
+    <label>选择数据类型</label>
+    <div class="type-grid" id="typeGrid">
+      <button class="type-btn active" data-type="user">用户信息</button>
+      <button class="type-btn" data-type="address">地址</button>
+      <button class="type-btn" data-type="company">公司</button>
+      <button class="type-btn" data-type="article">文章</button>
+      <button class="type-btn" data-type="product">商品</button>
+      <button class="type-btn" data-type="lorem">Lorem 文本</button>
+    </div>
+    <div class="controls">
+      <label>生成数量</label>
+      <select id="count">
+        <option value="1">1 条</option>
+        <option value="5" selected>5 条</option>
+        <option value="10">10 条</option>
+        <option value="20">20 条</option>
+      </select>
+      <button class="btn btn-primary" onclick="generate()">生成数据</button>
+      <button class="btn btn-outline" onclick="copyText(output.textContent)">复制</button>
+    </div>
+    <div class="output" id="output"></div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){if(t)navigator.clipboard.writeText(t);showToast('已复制')}
+
+let currentType = 'user';
+document.getElementById('typeGrid').addEventListener('click', e => {
+  const btn = e.target.closest('.type-btn');
+  if (!btn) return;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentType = btn.dataset.type;
+});
+
+const output = document.getElementById('output');
+
+const SURNAMES = '王李张刘陈杨赵黄周吴徐孙马胡朱郭何罗高林梁谢宋唐许邓冯韩曹彭曾肖田董潘袁蒋蔡余杜叶程苏魏吕丁任沈姚卢姜崔钟谭陆汪范金石廖贾夏韦付方白邹孟熊秦邱江尹薛闫段雷侯龙史贺顾毛郝龚邵万钱严覃武戴莫孔向汤'.split('');
+const NAMES = '伟芳秀英敏静丽强磊军洋勇艳杰娟涛明超秀华刚桂英平志明建华建国建军文婷玲慧佳莉倩欣怡思琪雨晨旭阳子涵梓萱宇轩浩宇泽宇'.split('');
+const CITIES = ['北京','上海','广州','深圳','杭州','成都','武汉','南京','重庆','西安','苏州','天津','长沙','郑州','青岛','大连','厦门','宁波','无锡','佛山'];
+const STREETS = ['中山路','解放路','人民路','建设路','和平路','北京路','南京路','长安街','建国路','学院路','科技路','创新大道','湖滨路','花园路'];
+const COMPANIES = ['科技','信息','网络','数据','智能','云计算','电子商务','传媒','投资','咨询','实业','集团','创新','数字'];
+const COMPANY_PRE = ['阿里巴巴','腾讯','字节跳动','华为','小米','美团','京东','百度','网易','拼多多','快手','蚂蚁','联想','中兴'];
+const TITLES = ['如何提高开发效率','前端性能优化实践','深入理解 JavaScript','Docker 容器化入门','Linux 常用命令总结','Git 工作流最佳实践','微服务架构设计','数据库索引优化','API 设计原则','CI/CD 流水线搭建','TypeScript 高级技巧','React 状态管理方案'];
+const PRODUCTS = ['无线蓝牙耳机','机械键盘','智能手表','便携充电宝','USB-C 扩展坞','降噪耳机','运动手环','电子阅读器','迷你投影仪','无线鼠标','笔记本支架','手机壳'];
+const LOREM = '天地玄黄宇宙洪荒日月盈昃辰宿列张寒来暑往秋收冬藏闰余成岁律吕调阳云腾致雨露结为霜金生丽水玉出昆冈剑号巨阙珠称夜光果珍李柰菜重芥姜海咸河淡鳞潜羽翔'.split('');
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+function randPhone() { return '1' + pick(['3','4','5','6','7','8','9']) + String(randInt(100000000, 999999999)); }
+function randEmail(name) { return name.toLowerCase().replace(/\s/g,'') + '@' + pick(['qq.com','gmail.com','163.com','outlook.com','foxmail.com']); }
+function randDate() { return `${randInt(2020,2026)}-${String(randInt(1,12)).padStart(2,'0')}-${String(randInt(1,28)).padStart(2,'0')}`; }
+
+function genUser() {
+  const name = pick(SURNAMES) + pick(NAMES) + (Math.random()>0.5 ? pick(NAMES) : '');
+  const age = randInt(18, 60);
+  return { id: randInt(1000,99999), name, age, gender: pick(['男','女']), phone: randPhone(), email: randEmail(name), city: pick(CITIES), address: pick(CITIES) + '市' + pick(STREETS) + randInt(1,200) + '号', avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`, createdAt: randDate() };
+}
+function genAddress() { return { name: pick(SURNAMES)+pick(NAMES), phone: randPhone(), province: pick(CITIES)+'省', city: pick(CITIES)+'市', district: pick(['朝阳区','海淀区','浦东新区','南山区','西湖区','武侯区','江宁区','岳麓区']) + pick(['街道','路']) + randInt(1,500) + '号', zip: String(randInt(100000,999999)) }; }
+function genCompany() { return { id: randInt(100,9999), name: pick(COMPANY_PRE) + pick(COMPANIES), industry: pick(['互联网','金融','教育','医疗','电商','游戏','AI','SaaS']), employees: pick(['1-50','51-200','201-500','501-1000','1000+']), founded: randInt(2000,2023), website: 'https://www.' + pick(['tech','data','cloud','ai','smart']) + randInt(10,999) + '.com', address: pick(CITIES) }; }
+function genArticle() { return { id: randInt(1000,99999), title: pick(TITLES), author: pick(SURNAMES)+pick(NAMES), category: pick(['前端','后端','DevOps','数据库','AI','移动端']), tags: Array.from({length:randInt(2,4)},()=>pick(['JavaScript','TypeScript','React','Vue','Node.js','Docker','K8s','Python','Go','Rust'])), views: randInt(100,50000), likes: randInt(10,5000), createdAt: randDate() }; }
+function genProduct() { return { id: randInt(10000,99999), name: pick(PRODUCTS), price: (randInt(10,2000) + Math.random()).toFixed(2), currency: 'CNY', stock: randInt(0,9999), rating: (3 + Math.random()*2).toFixed(1), category: pick(['电子产品','数码配件','智能设备','办公用品']), brand: pick(['小米','华为','苹果','三星','索尼','联想','戴尔']) }; }
+function genLorem() { return Array.from({length:randInt(3,8)},()=>{ const len=randInt(10,30); return Array.from({length:len},()=>pick(LOREM)).join('')+'。'; }).join('\n'); }
+
+const generators = { user: genUser, address: genAddress, company: genCompany, article: genArticle, product: genProduct, lorem: genLorem };
+
+function generate() {
+  const count = parseInt(document.getElementById('count').value);
+  if (currentType === 'lorem') {
+    output.textContent = genLorem();
+    return;
+  }
+  const gen = generators[currentType];
+  const data = Array.from({length: count}, () => gen());
+  output.textContent = count === 1 ? JSON.stringify(data[0], null, 2) : JSON.stringify(data, null, 2);
+}
+
+generate();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON 转 TypeScript - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+@media (max-width: 768px) { .panels { grid-template-columns: 1fr; } }
+.panels textarea { min-height: 300px; font-family: 'SF Mono', monospace; font-size: 13px; line-height: 1.6; }
+.output { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; min-height: 300px; font-family: 'SF Mono', monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow: auto; }
+.error { color: #ef4444; font-size: 13px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>JSON 转 TypeScript</h1>
+  </div>
+  <div class="tool-area">
+    <div class="panels">
+      <div>
+        <label>输入 JSON</label>
+        <textarea id="jsonInput" placeholder='{"id": 1, "name": "test", "tags": ["a"], "meta": {"count": 10}}'></textarea>
+      </div>
+      <div>
+        <label>TypeScript 类型 <button class="btn btn-outline" style="padding:2px 8px;font-size:12px;margin-left:8px" onclick="copyText(document.getElementById('tsOutput').textContent)">复制</button></label>
+        <div class="output" id="tsOutput"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center">
+      <label>根类型名称</label>
+      <input type="text" id="typeName" value="RootType" style="width:200px" oninput="convert()">
+      <label><input type="checkbox" id="exportCheck" checked onchange="convert()"> export</label>
+    </div>
+    <div id="error" class="error"></div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){if(t)navigator.clipboard.writeText(t);showToast('已复制')}
+
+const input = document.getElementById('jsonInput');
+input.addEventListener('input', convert);
+
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function getTsType(value, name, interfaces) {
+  if (value === null) return 'null';
+  if (Array.isArray(value)) {
+    if (value.length === 0) return 'any[]';
+    const itemType = getTsType(value[0], capitalize(name) + 'Item', interfaces);
+    return itemType.includes('\n') ? `(${itemType})[]` : `${itemType}[]`;
+  }
+  if (typeof value === 'object') {
+    const typeName = capitalize(name);
+    const lines = [];
+    for (const [k, v] of Object.entries(value)) {
+      const safeName = /^[a-zA-Z_$][\w$]*$/.test(k) ? k : `"${k}"`;
+      lines.push(`  ${safeName}: ${getTsType(v, k, interfaces)};`);
+    }
+    interfaces.push({ name: typeName, body: lines.join('\n') });
+    return typeName;
+  }
+  if (typeof value === 'string') return 'string';
+  if (typeof value === 'number') return Number.isInteger(value) ? 'number' : 'number';
+  if (typeof value === 'boolean') return 'boolean';
+  return 'any';
+}
+
+function convert() {
+  const err = document.getElementById('error');
+  const out = document.getElementById('tsOutput');
+  err.textContent = '';
+  const val = input.value.trim();
+  if (!val) { out.textContent = ''; return; }
+  try {
+    const obj = JSON.parse(val);
+    const rootName = document.getElementById('typeName').value || 'RootType';
+    const isExport = document.getElementById('exportCheck').checked;
+    const interfaces = [];
+    getTsType(obj, rootName, interfaces);
+    const exp = isExport ? 'export ' : '';
+    out.textContent = interfaces.map(i => `${exp}interface ${i.name} {\n${i.body}\n}`).join('\n\n');
+  } catch(e) {
+    err.textContent = 'JSON 解析错误: ' + e.message;
+    out.textContent = '';
+  }
+}
+
+convert();
+</script>
+</body>
+</html>

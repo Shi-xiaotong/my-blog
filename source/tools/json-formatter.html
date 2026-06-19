@@ -38,6 +38,7 @@
     <div class="row" style="margin-bottom:16px">
       <button class="btn btn-primary" onclick="doFormat()">格式化</button>
       <button class="btn btn-outline" onclick="doMinify()">压缩</button>
+      <button class="btn btn-outline" onclick="doEscape()">转义</button>
       <button class="btn btn-outline" onclick="copyResult()">复制</button>
     </div>
     <div id="error" class="error"></div>
@@ -108,6 +109,22 @@ function doMinify() {
 
 function copyResult() {
   if (rawResult) copyText(rawResult);
+}
+
+function doEscape() {
+  const input = document.getElementById('input').value.trim();
+  const errEl = document.getElementById('error');
+  const outEl = document.getElementById('output');
+  errEl.textContent = '';
+  if (!input) { outEl.innerHTML = ''; return; }
+  try {
+    const obj = JSON.parse(input);
+    rawResult = JSON.stringify(JSON.stringify(obj));
+    outEl.innerHTML = syntaxHighlight(rawResult);
+  } catch(e) {
+    rawResult = JSON.stringify(input);
+    outEl.innerHTML = syntaxHighlight(rawResult);
+  }
 }
 </script>
 </body>

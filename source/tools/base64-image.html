@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base64 图片预览 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; color: var(--text-secondary); margin-bottom: 16px; transition: border-color 0.2s; }
+.drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: var(--primary-light); }
+.preview-area { text-align: center; margin: 16px 0; }
+.preview-area img { max-width: 100%; max-height: 400px; border-radius: 8px; border: 1px solid var(--border); }
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 16px 0; }
+.info-card { background: var(--primary-light); padding: 12px; border-radius: 8px; }
+.info-card .label { font-size: 12px; color: var(--text-secondary); }
+.info-card .value { font-size: 16px; font-weight: 700; color: var(--primary); }
+textarea.code { font-family: 'SF Mono', monospace; font-size: 12px; line-height: 1.4; min-height: 120px; resize: vertical; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>Base64 图片预览</h1>
+  </div>
+  <div class="tool-area">
+    <div class="drop-zone" id="dropZone">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>点击或拖拽图片转为 Base64</p>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+    <label>或粘贴 Base64 字符串预览</label>
+    <textarea class="code" id="base64Input" placeholder="data:image/png;base64,iVBORw0KGgo..." oninput="previewBase64()"></textarea>
+    <div id="infoArea"></div>
+    <div class="preview-area" id="previewArea"></div>
+    <div id="actions" style="display:none;text-align:center">
+      <button class="btn btn-primary" onclick="downloadImage()">下载图片</button>
+      <button class="btn btn-outline" onclick="copyText(document.getElementById('base64Input').value)">复制 Base64</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){if(t)navigator.clipboard.writeText(t);showToast('已复制')}
+
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+
+function formatSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(2) + ' MB';
+}
+
+function loadFile(f) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('base64Input').value = e.target.result;
+    showPreview(e.target.result, f.name, f.size, f.type);
+  };
+  reader.readAsDataURL(f);
+}
+
+function previewBase64() {
+  const val = document.getElementById('base64Input').value.trim();
+  if (!val) { document.getElementById('previewArea').innerHTML = ''; document.getElementById('infoArea').innerHTML = ''; document.getElementById('actions').style.display = 'none'; return; }
+  const src = val.startsWith('data:') ? val : 'data:image/png;base64,' + val;
+  showPreview(src, null, null, null);
+}
+
+function showPreview(src, name, size, type) {
+  const img = new Image();
+  img.onload = () => {
+    document.getElementById('previewArea').innerHTML = '';
+    document.getElementById('previewArea').appendChild(img);
+    const base64Size = Math.round(src.length * 3 / 4);
+    const info = [
+      { label: '尺寸', value: img.width + ' × ' + img.height },
+      { label: 'Base64 大小', value: formatSize(base64Size) },
+    ];
+    if (name) info.push({ label: '文件名', value: name });
+    if (size) info.push({ label: '原始大小', value: formatSize(size) });
+    if (type) info.push({ label: 'MIME', value: type });
+    document.getElementById('infoArea').innerHTML = '<div class="info-grid">' + info.map(i => `<div class="info-card"><div class="label">${i.label}</div><div class="value">${i.value}</div></div>`).join('') + '</div>';
+    document.getElementById('actions').style.display = 'block';
+    window._imgSrc = src;
+  };
+  img.onerror = () => { document.getElementById('previewArea').innerHTML = '<p style="color:#ef4444">无法解析为图片</p>'; };
+  img.src = src;
+}
+
+function downloadImage() {
+  if (!window._imgSrc) return;
+  const a = document.createElement('a');
+  a.href = window._imgSrc;
+  a.download = 'image.png';
+  a.click();
+  showToast('下载成功');
+}
+</script>
+</body>
+</html>

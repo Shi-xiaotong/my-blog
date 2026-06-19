@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User-Agent 解析 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.ua-input { font-family: 'SF Mono', monospace; font-size: 13px; min-height: 80px; line-height: 1.5; }
+.result-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+.result-card { background: var(--primary-light); padding: 14px; border-radius: 8px; }
+.result-card .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.result-card .value { font-size: 15px; font-weight: 600; color: var(--primary); word-break: break-all; }
+.ua-list { margin-top: 16px; }
+.ua-list h3 { font-size: 14px; margin-bottom: 8px; color: var(--text-secondary); }
+.ua-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+.ua-item:hover { border-color: var(--primary); }
+.ua-item .name { font-weight: 600; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>User-Agent 解析</h1>
+  </div>
+  <div class="tool-area">
+    <label>粘贴 User-Agent 字符串</label>
+    <textarea class="ua-input" id="uaInput" placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" oninput="parse()"></textarea>
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button class="btn btn-outline" onclick="detectCurrent()">检测当前浏览器</button>
+      <button class="btn btn-outline" onclick="copyText(document.getElementById('uaInput').value)">复制 UA</button>
+    </div>
+    <div id="result"></div>
+    <div class="ua-list">
+      <h3>常用 UA 示例（点击填入）</h3>
+      <div id="examples"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){if(t)navigator.clipboard.writeText(t);showToast('已复制')}
+
+const examples = [
+  { name: 'Chrome (Windows)', ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' },
+  { name: 'Firefox (macOS)', ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0' },
+  { name: 'Safari (iPhone)', ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1' },
+  { name: 'Edge (Windows)', ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0' },
+  { name: 'Android Chrome', ua: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36' },
+  { name: 'WeChat', ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.44' },
+  { name: 'Googlebot', ua: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)' },
+  { name: 'curl', ua: 'curl/8.4.0' },
+];
+
+document.getElementById('examples').innerHTML = examples.map(e =>
+  `<div class="ua-item" onclick="document.getElementById('uaInput').value='${e.ua.replace(/'/g,"\\'")}';parse()"><span class="name">${e.name}</span><span style="color:var(--text-secondary);font-size:12px;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.ua}</span></div>`
+).join('');
+
+function detectCurrent() {
+  document.getElementById('uaInput').value = navigator.userAgent;
+  parse();
+}
+
+function parse() {
+  const ua = document.getElementById('uaInput').value.trim();
+  const el = document.getElementById('result');
+  if (!ua) { el.innerHTML = ''; return; }
+
+  const lc = ua.toLowerCase();
+  let browser = 'Unknown', browserVer = '';
+  let os = 'Unknown', osVer = '';
+  let device = 'Desktop', engine = '';
+
+  // Browser
+  if (lc.includes('edg/')) { browser = 'Microsoft Edge'; browserVer = ua.match(/Edg\/([\d.]+)/)?.[1] || ''; }
+  else if (lc.includes('opr/') || lc.includes('opera')) { browser = 'Opera'; browserVer = ua.match(/(?:OPR|Opera)[\s/]?([\d.]+)/)?.[1] || ''; }
+  else if (lc.includes('chrome') && !lc.includes('edg')) { browser = 'Chrome'; browserVer = ua.match(/Chrome\/([\d.]+)/)?.[1] || ''; }
+  else if (lc.includes('firefox')) { browser = 'Firefox'; browserVer = ua.match(/Firefox\/([\d.]+)/)?.[1] || ''; }
+  else if (lc.includes('safari') && !lc.includes('chrome')) { browser = 'Safari'; browserVer = ua.match(/Version\/([\d.]+)/)?.[1] || ''; }
+  else if (lc.includes('msie') || lc.includes('trident')) { browser = 'Internet Explorer'; browserVer = ua.match(/(?:MSIE |rv:)([\d.]+)/)?.[1] || ''; }
+  else if (lc.includes('micromessenger')) { browser = 'WeChat'; browserVer = ua.match(/MicroMessenger\/([\d.]+)/)?.[1] || ''; }
+  else if (lc.includes('curl')) { browser = 'curl'; browserVer = ua.match(/curl\/([\d.]+)/)?.[1] || ''; }
+  else if (lc.includes('googlebot')) { browser = 'Googlebot'; browserVer = ua.match(/Googlebot\/([\d.]+)/)?.[1] || ''; }
+
+  // OS
+  if (lc.includes('windows nt 10')) { os = 'Windows'; osVer = '10/11'; }
+  else if (lc.includes('windows nt 6.3')) { os = 'Windows'; osVer = '8.1'; }
+  else if (lc.includes('windows nt 6.1')) { os = 'Windows'; osVer = '7'; }
+  else if (lc.includes('windows')) { os = 'Windows'; }
+  else if (lc.includes('mac os x')) { os = 'macOS'; osVer = ua.match(/Mac OS X ([\d_]+)/)?.[1]?.replace(/_/g, '.') || ''; }
+  else if (lc.includes('iphone os') || lc.includes('iphone')) { os = 'iOS'; osVer = ua.match(/iPhone OS ([\d_]+)/)?.[1]?.replace(/_/g, '.') || ua.match(/CPU iPhone OS ([\d_]+)/)?.[1]?.replace(/_/g, '.') || ''; }
+  else if (lc.includes('ipad')) { os = 'iPadOS'; osVer = ua.match(/OS ([\d_]+)/)?.[1]?.replace(/_/g, '.') || ''; }
+  else if (lc.includes('android')) { os = 'Android'; osVer = ua.match(/Android ([\d.]+)/)?.[1] || ''; }
+  else if (lc.includes('linux')) { os = 'Linux'; }
+  else if (lc.includes('cros')) { os = 'Chrome OS'; }
+
+  // Device
+  if (lc.includes('mobile') || lc.includes('iphone') || lc.includes('android')) device = 'Mobile';
+  else if (lc.includes('tablet') || lc.includes('ipad')) device = 'Tablet';
+  else if (lc.includes('bot') || lc.includes('crawler') || lc.includes('spider')) device = 'Bot';
+
+  // Engine
+  if (lc.includes('gecko') && lc.includes('firefox')) engine = 'Gecko';
+  else if (lc.includes('applewebkit')) engine = 'WebKit';
+  else if (lc.includes('trident')) engine = 'Trident';
+
+  const items = [
+    { label: '浏览器', value: browser + (browserVer ? ' ' + browserVer : '') },
+    { label: '操作系统', value: os + (osVer ? ' ' + osVer : '') },
+    { label: '设备类型', value: device },
+    { label: '渲染引擎', value: engine || '-' },
+  ];
+
+  el.innerHTML = '<div class="result-grid">' + items.map(i =>
+    `<div class="result-card"><div class="label">${i.label}</div><div class="value">${i.value}</div></div>`
+  ).join('') + '</div>';
+}
+
+parse();
+</script>
+</body>
+</html>

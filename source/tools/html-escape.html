@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML 转义 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+@media (max-width: 768px) { .panels { grid-template-columns: 1fr; } }
+.panels textarea { min-height: 250px; font-family: 'SF Mono', monospace; font-size: 13px; line-height: 1.6; }
+.btn-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.ref-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+.ref-table th, .ref-table td { border: 1px solid var(--border); padding: 8px 12px; font-size: 13px; }
+.ref-table th { background: var(--bg); text-align: left; }
+.ref-table code { font-family: 'SF Mono', monospace; color: var(--primary); }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>HTML 转义</h1>
+  </div>
+  <div class="tool-area">
+    <div class="panels">
+      <div>
+        <label>原文</label>
+        <textarea id="plainInput" placeholder="输入包含 HTML 字符的文本..."></textarea>
+      </div>
+      <div>
+        <label>转义结果</label>
+        <textarea id="escapedInput" placeholder="输入 HTML 实体编码..."></textarea>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="escape()">转义 →</button>
+      <button class="btn btn-primary" onclick="unescape()">← 反转义</button>
+      <button class="btn btn-outline" onclick="copyText(document.getElementById('escapedInput').value)">复制转义</button>
+    </div>
+    <label>常用 HTML 实体</label>
+    <table class="ref-table">
+      <thead><tr><th>字符</th><th>实体</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>&lt;</td><td><code>&amp;lt;</code></td><td>小于号</td></tr>
+        <tr><td>&gt;</td><td><code>&amp;gt;</code></td><td>大于号</td></tr>
+        <tr><td>&amp;</td><td><code>&amp;amp;</code></td><td>和号</td></tr>
+        <tr><td>&quot;</td><td><code>&amp;quot;</code></td><td>双引号</td></tr>
+        <tr><td>&apos;</td><td><code>&amp;apos;</code></td><td>单引号</td></tr>
+        <tr><td>&nbsp;</td><td><code>&amp;nbsp;</code></td><td>不换行空格</td></tr>
+        <tr><td>&copy;</td><td><code>&amp;copy;</code></td><td>版权符号</td></tr>
+        <tr><td>&reg;</td><td><code>&amp;reg;</code></td><td>注册商标</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){if(t)navigator.clipboard.writeText(t);showToast('已复制')}
+
+function escape() {
+  const text = document.getElementById('plainInput').value;
+  const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'};
+  document.getElementById('escapedInput').value = text.replace(/[&<>"']/g, c => map[c]);
+}
+
+function unescape() {
+  const text = document.getElementById('escapedInput').value;
+  const map = {'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&apos;':"'","&#39;":"'"};
+  document.getElementById('plainInput').value = text.replace(/&amp;|&lt;|&gt;|&quot;|&apos;|&#39;/g, m => map[m]);
+}
+</script>
+</body>
+</html>

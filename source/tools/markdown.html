@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown 预览 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.editor-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; height: 70vh; }
+.editor-pane, .preview-pane { display: flex; flex-direction: column; }
+.editor-pane { border-right: 1px solid var(--border); }
+.pane-header { padding: 8px 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary); background: var(--bg); border-bottom: 1px solid var(--border); }
+.editor-pane textarea { flex: 1; border: none; border-radius: 0; resize: none; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.6; padding: 12px; }
+.preview-pane .preview-content { flex: 1; overflow: auto; padding: 12px 16px; }
+.preview-content h1,.preview-content h2,.preview-content h3 { margin: 16px 0 8px; }
+.preview-content h1 { font-size: 1.6em; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+.preview-content h2 { font-size: 1.3em; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+.preview-content h3 { font-size: 1.1em; }
+.preview-content p { margin: 8px 0; line-height: 1.7; }
+.preview-content code { background: var(--bg); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', monospace; }
+.preview-content pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 12px 0; }
+.preview-content pre code { background: none; padding: 0; }
+.preview-content blockquote { border-left: 4px solid var(--primary); padding: 8px 16px; margin: 12px 0; color: var(--text-secondary); background: var(--primary-light); border-radius: 0 8px 8px 0; }
+.preview-content ul, .preview-content ol { padding-left: 24px; margin: 8px 0; }
+.preview-content li { margin: 4px 0; line-height: 1.6; }
+.preview-content table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+.preview-content th, .preview-content td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; font-size: 14px; }
+.preview-content th { background: var(--bg); font-weight: 600; }
+.preview-content a { color: var(--primary); text-decoration: none; }
+.preview-content a:hover { text-decoration: underline; }
+.preview-content img { max-width: 100%; border-radius: 8px; }
+.preview-content hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+.preview-content input[type="checkbox"] { margin-right: 6px; }
+@media (max-width: 768px) { .editor-wrap { grid-template-columns: 1fr; height: auto; } .editor-pane { border-right: none; border-bottom: 1px solid var(--border); } .editor-pane textarea { min-height: 200px; } .preview-pane { min-height: 300px; } }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>Markdown 预览</h1>
+  </div>
+  <div class="editor-wrap">
+    <div class="editor-pane">
+      <div class="pane-header">Markdown 源码</div>
+      <textarea id="mdInput" placeholder="在此输入 Markdown..."># Hello Markdown
+
+这是一款**在线 Markdown 预览工具**，支持实时渲染。
+
+## 功能特性
+
+- 实时预览
+- 语法高亮
+- 表格支持
+- 任务列表
+
+### 代码块
+
+```javascript
+function hello() {
+  console.log('Hello World!');
+}
+```
+
+### 表格
+
+| 名称 | 类型 | 说明 |
+|------|------|------|
+| id | number | 主键 |
+| name | string | 名称 |
+
+> 引用文本示例
+
+- [x] 已完成
+- [ ] 待完成</textarea>
+    </div>
+    <div class="preview-pane">
+      <div class="pane-header">预览</div>
+      <div class="preview-content" id="preview"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+
+const input = document.getElementById('mdInput');
+const preview = document.getElementById('preview');
+
+function render() {
+  preview.innerHTML = marked.parse(input.value);
+}
+
+input.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片裁剪 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; color: var(--text-secondary); margin-bottom: 16px; transition: border-color 0.2s; }
+.drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: var(--primary-light); }
+.crop-wrap { position: relative; display: inline-block; max-width: 100%; margin: 16px auto; cursor: crosshair; }
+.crop-wrap canvas { display: block; max-width: 100%; }
+.crop-overlay { position: absolute; border: 2px dashed var(--primary); background: rgba(59,130,246,0.1); pointer-events: none; }
+.info-row { display: flex; gap: 16px; margin: 12px 0; flex-wrap: wrap; align-items: center; }
+.info-row label { display: flex; align-items: center; gap: 4px; font-size: 13px; }
+.info-row input[type="number"] { width: 80px; padding: 4px 8px; font-size: 13px; }
+.preview-area { text-align: center; margin: 16px 0; }
+.preview-area canvas { max-width: 100%; border: 1px solid var(--border); border-radius: 8px; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>图片裁剪</h1>
+  </div>
+  <div class="tool-area">
+    <div class="drop-zone" id="dropZone">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>点击或拖拽图片到此处上传</p>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+    <div id="cropArea" style="display:none">
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">在图片上拖拽选择裁剪区域</p>
+      <div style="overflow:auto;text-align:center">
+        <div class="crop-wrap" id="cropWrap">
+          <canvas id="sourceCanvas"></canvas>
+          <div class="crop-overlay" id="cropOverlay" style="display:none"></div>
+        </div>
+      </div>
+      <div class="info-row">
+        <label>X: <input type="number" id="cropX" value="0" min="0" oninput="updateFromInputs()"></label>
+        <label>Y: <input type="number" id="cropY" value="0" min="0" oninput="updateFromInputs()"></label>
+        <label>宽: <input type="number" id="cropW" value="0" min="1" oninput="updateFromInputs()"></label>
+        <label>高: <input type="number" id="cropH" value="0" min="1" oninput="updateFromInputs()"></label>
+        <button class="btn btn-primary" onclick="doCrop()">裁剪</button>
+        <button class="btn btn-outline" onclick="resetCrop()">重置</button>
+      </div>
+    </div>
+    <div id="resultArea" style="display:none">
+      <label>裁剪结果</label>
+      <div class="preview-area"><canvas id="resultCanvas"></canvas></div>
+      <div style="text-align:center">
+        <button class="btn btn-primary" onclick="download('png')">下载 PNG</button>
+        <button class="btn btn-outline" onclick="download('jpg')">下载 JPG</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+
+let img = null, scale = 1;
+let startX, startY, isDragging = false;
+
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+
+function loadFile(f) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    img = new Image();
+    img.onload = () => {
+      const maxW = Math.min(800, window.innerWidth - 60);
+      scale = img.width > maxW ? maxW / img.width : 1;
+      const canvas = document.getElementById('sourceCanvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      document.getElementById('cropArea').style.display = 'block';
+      document.getElementById('resultArea').style.display = 'none';
+      resetCrop();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(f);
+}
+
+const cropWrap = document.getElementById('cropWrap');
+const overlay = document.getElementById('cropOverlay');
+
+cropWrap.addEventListener('mousedown', e => {
+  const rect = cropWrap.getBoundingClientRect();
+  startX = e.clientX - rect.left;
+  startY = e.clientY - rect.top;
+  isDragging = true;
+  overlay.style.display = 'block';
+});
+
+cropWrap.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const rect = cropWrap.getBoundingClientRect();
+  const x = Math.max(0, Math.min(e.clientX - rect.left, cropWrap.offsetWidth));
+  const y = Math.max(0, Math.min(e.clientY - rect.top, cropWrap.offsetHeight));
+  const left = Math.min(startX, x), top = Math.min(startY, y);
+  const w = Math.abs(x - startX), h = Math.abs(y - startY);
+  overlay.style.left = left + 'px';
+  overlay.style.top = top + 'px';
+  overlay.style.width = w + 'px';
+  overlay.style.height = h + 'px';
+  document.getElementById('cropX').value = Math.round(left / scale);
+  document.getElementById('cropY').value = Math.round(top / scale);
+  document.getElementById('cropW').value = Math.round(w / scale);
+  document.getElementById('cropH').value = Math.round(h / scale);
+});
+
+document.addEventListener('mouseup', () => { isDragging = false; });
+
+function updateFromInputs() {
+  const x = parseInt(document.getElementById('cropX').value) || 0;
+  const y = parseInt(document.getElementById('cropY').value) || 0;
+  const w = parseInt(document.getElementById('cropW').value) || 0;
+  const h = parseInt(document.getElementById('cropH').value) || 0;
+  overlay.style.display = w > 0 && h > 0 ? 'block' : 'none';
+  overlay.style.left = (x * scale) + 'px';
+  overlay.style.top = (y * scale) + 'px';
+  overlay.style.width = (w * scale) + 'px';
+  overlay.style.height = (h * scale) + 'px';
+}
+
+function resetCrop() {
+  overlay.style.display = 'none';
+  document.getElementById('cropX').value = 0;
+  document.getElementById('cropY').value = 0;
+  document.getElementById('cropW').value = Math.round(document.getElementById('sourceCanvas').width / scale);
+  document.getElementById('cropH').value = Math.round(document.getElementById('sourceCanvas').height / scale);
+  document.getElementById('resultArea').style.display = 'none';
+}
+
+function doCrop() {
+  const x = parseInt(document.getElementById('cropX').value) || 0;
+  const y = parseInt(document.getElementById('cropY').value) || 0;
+  const w = parseInt(document.getElementById('cropW').value) || 0;
+  const h = parseInt(document.getElementById('cropH').value) || 0;
+  if (w <= 0 || h <= 0) { showToast('请选择裁剪区域'); return; }
+  const canvas = document.getElementById('resultCanvas');
+  canvas.width = w;
+  canvas.height = h;
+  canvas.getContext('2d').drawImage(img, x, y, w, h, 0, 0, w, h);
+  document.getElementById('resultArea').style.display = 'block';
+}
+
+function download(fmt) {
+  const canvas = document.getElementById('resultCanvas');
+  const mime = fmt === 'jpg' ? 'image/jpeg' : 'image/png';
+  canvas.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cropped.' + fmt;
+    a.click();
+    showToast('下载成功');
+  }, mime, 0.92);
+}
+</script>
+</body>
+</html>

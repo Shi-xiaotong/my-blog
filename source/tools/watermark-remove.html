@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片去水印 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; color: var(--text-secondary); margin-bottom: 16px; transition: border-color 0.2s; }
+.drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: var(--primary-light); }
+.canvas-wrap { position: relative; display: inline-block; max-width: 100%; margin: 0 auto; }
+.canvas-wrap canvas { display: block; max-width: 100%; cursor: crosshair; }
+.toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
+.toolbar label { display: flex; align-items: center; gap: 4px; font-size: 13px; white-space: nowrap; }
+.toolbar input[type="range"] { width: 100px; }
+.toolbar .sep { width: 1px; height: 24px; background: var(--border); }
+.mode-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); cursor: pointer; font-size: 13px; transition: all 0.15s; }
+.mode-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.mode-btn:hover { border-color: var(--primary); }
+.preview-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.preview-row > div { flex: 1; min-width: 200px; text-align: center; }
+.preview-row img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+.tip { font-size: 12px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>图片去水印</h1>
+  </div>
+  <div class="tool-area">
+    <div class="drop-zone" id="dropZone">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>点击或拖拽图片到此处上传</p>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+    <div id="editArea" style="display:none">
+      <div class="toolbar">
+        <label>模式:</label>
+        <button class="mode-btn active" data-mode="paint" onclick="setMode('paint')">涂抹擦除</button>
+        <button class="mode-btn" data-mode="blur" onclick="setMode('blur')">模糊遮盖</button>
+        <div class="sep"></div>
+        <label>画笔大小: <span id="brushVal">20</span>px</label>
+        <input type="range" id="brushSize" min="5" max="80" value="20" oninput="document.getElementById('brushVal').textContent=this.value">
+        <div class="sep"></div>
+        <button class="btn btn-outline" onclick="undo()" style="padding:4px 12px;font-size:12px">撤销</button>
+        <button class="btn btn-outline" onclick="resetCanvas()" style="padding:4px 12px;font-size:12px">重置</button>
+        <button class="btn btn-primary" onclick="doProcess()" style="padding:4px 16px;font-size:12px">处理</button>
+      </div>
+      <p class="tip">在图片上涂抹水印区域（会显示红色标记），然后点击「处理」按钮去除</p>
+      <div style="overflow:auto;text-align:center;margin:12px 0">
+        <div class="canvas-wrap">
+          <canvas id="mainCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+    <div id="resultArea" style="display:none">
+      <label>处理结果</label>
+      <div class="preview-row">
+        <div><p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">原图</p><img id="origPreview"></div>
+        <div><p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">处理后</p><img id="resultPreview"></div>
+      </div>
+      <div style="text-align:center;margin-top:12px">
+        <button class="btn btn-primary" onclick="download('png')">下载 PNG</button>
+        <button class="btn btn-outline" onclick="download('jpg')">下载 JPG</button>
+        <button class="btn btn-outline" onclick="backToEdit()">继续编辑</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+
+let img = null, scale = 1;
+let mode = 'paint';
+let isDrawing = false;
+let maskCanvas, maskCtx; // mask layer for marking watermark areas
+let history = [];
+
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+
+function loadFile(f) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    img = new Image();
+    img.onload = () => {
+      const maxW = Math.min(900, window.innerWidth - 60);
+      scale = img.width > maxW ? maxW / img.width : 1;
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      // Create mask canvas
+      maskCanvas = document.createElement('canvas');
+      maskCanvas.width = canvas.width;
+      maskCanvas.height = canvas.height;
+      maskCtx = maskCanvas.getContext('2d');
+
+      history = [];
+      saveHistory();
+
+      document.getElementById('editArea').style.display = 'block';
+      document.getElementById('resultArea').style.display = 'none';
+      document.getElementById('origPreview').src = canvas.toDataURL();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(f);
+}
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+}
+
+function saveHistory() {
+  history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+  if (history.length > 30) history.shift();
+}
+
+function undo() {
+  if (history.length > 1) {
+    history.pop();
+    ctx.putImageData(history[history.length - 1], 0, 0);
+    maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+  }
+}
+
+function resetCanvas() {
+  if (!img) return;
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+  history = [];
+  saveHistory();
+}
+
+function getCanvasPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: (clientX - rect.left) * (canvas.width / rect.width),
+    y: (clientY - rect.top) * (canvas.height / rect.height)
+  };
+}
+
+canvas.addEventListener('mousedown', e => { isDrawing = true; draw(e); });
+canvas.addEventListener('mousemove', e => { if (isDrawing) draw(e); });
+canvas.addEventListener('mouseup', () => { isDrawing = false; });
+canvas.addEventListener('mouseleave', () => { isDrawing = false; });
+canvas.addEventListener('touchstart', e => { e.preventDefault(); isDrawing = true; draw(e); }, {passive:false});
+canvas.addEventListener('touchmove', e => { e.preventDefault(); if (isDrawing) draw(e); }, {passive:false});
+canvas.addEventListener('touchend', () => { isDrawing = false; });
+
+function draw(e) {
+  const pos = getCanvasPos(e);
+  const brushR = parseInt(document.getElementById('brushSize').value) / 2;
+
+  // Draw on mask
+  maskCtx.fillStyle = 'rgba(255,0,0,0.4)';
+  maskCtx.beginPath();
+  maskCtx.arc(pos.x, pos.y, brushR, 0, Math.PI * 2);
+  maskCtx.fill();
+
+  // Redraw: original image + mask overlay
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(maskCanvas, 0, 0);
+}
+
+function doProcess() {
+  if (!img) return;
+
+  // Get mask data
+  const maskData = maskCtx.getImageData(0, 0, maskCanvas.width, maskCanvas.height);
+  const maskPixels = maskData.data;
+
+  // Get original image data from a fresh draw
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = canvas.width;
+  tempCanvas.height = canvas.height;
+  const tempCtx = tempCanvas.getContext('2d');
+  tempCtx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  const imgData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
+  const pixels = imgData.data;
+
+  const w = canvas.width, h = canvas.height;
+
+  // Build mask array (true = watermark area)
+  const isMask = new Uint8Array(w * h);
+  for (let i = 0; i < w * h; i++) {
+    if (maskPixels[i * 4 + 3] > 50) isMask[i] = 1;
+  }
+
+  if (mode === 'blur') {
+    // Gaussian-like blur on masked areas
+    const radius = parseInt(document.getElementById('brushSize').value);
+    const src = new Uint8ClampedArray(pixels);
+
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (!isMask[y * w + x]) continue;
+        let r = 0, g = 0, b = 0, count = 0;
+        for (let dy = -radius; dy <= radius; dy++) {
+          for (let dx = -radius; dx <= radius; dx++) {
+            const nx = x + dx, ny = y + dy;
+            if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+              const idx = (ny * w + nx) * 4;
+              r += src[idx]; g += src[idx+1]; b += src[idx+2];
+              count++;
+            }
+          }
+        }
+        const idx = (y * w + x) * 4;
+        pixels[idx] = r / count;
+        pixels[idx+1] = g / count;
+        pixels[idx+2] = b / count;
+      }
+    }
+  } else {
+    // Inpainting: sample from nearby non-masked pixels
+    // Multi-pass approach: fill mask edges first, then inward
+    const filled = new Uint8Array(w * h);
+    const src = new Uint8ClampedArray(pixels);
+
+    // Mark non-mask as already filled
+    for (let i = 0; i < w * h; i++) {
+      if (!isMask[i]) filled[i] = 1;
+    }
+
+    // Iterative fill - each pass fills pixels adjacent to filled ones
+    const maxIter = Math.max(w, h);
+    for (let iter = 0; iter < maxIter; iter++) {
+      let changed = false;
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const idx = y * w + x;
+          if (!isMask[idx] || filled[idx]) continue;
+
+          // Sample from nearby filled pixels
+          let r = 0, g = 0, b = 0, count = 0;
+          const sampleR = 3 + Math.floor(iter / 3);
+          for (let dy = -sampleR; dy <= sampleR; dy++) {
+            for (let dx = -sampleR; dx <= sampleR; dx++) {
+              const nx = x + dx, ny = y + dy;
+              if (nx >= 0 && nx < w && ny >= 0 && ny < h && filled[ny * w + nx]) {
+                const si = (ny * w + nx) * 4;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                const weight = 1 / (dist + 1);
+                r += src[si] * weight;
+                g += src[si+1] * weight;
+                b += src[si+2] * weight;
+                count += weight;
+              }
+            }
+          }
+
+          if (count > 0) {
+            const pi = idx * 4;
+            pixels[pi] = r / count;
+            pixels[pi+1] = g / count;
+            pixels[pi+2] = b / count;
+            filled[idx] = 1;
+            changed = true;
+          }
+        }
+      }
+      if (!changed) break;
+    }
+  }
+
+  // Apply result
+  ctx.putImageData(imgData, 0, 0);
+  maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+  saveHistory();
+
+  // Show result
+  document.getElementById('resultPreview').src = canvas.toDataURL();
+  document.getElementById('resultArea').style.display = 'block';
+  showToast('处理完成');
+}
+
+function backToEdit() {
+  document.getElementById('resultArea').style.display = 'none';
+}
+
+function download(fmt) {
+  const mime = fmt === 'jpg' ? 'image/jpeg' : 'image/png';
+  canvas.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'watermark-removed.' + fmt;
+    a.click();
+    showToast('下载成功');
+  }, mime, 0.92);
+}
+</script>
+</body>
+</html>
