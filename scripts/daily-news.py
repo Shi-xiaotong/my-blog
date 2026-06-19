@@ -107,7 +107,7 @@ def main():
 
     title_m = re.search(r'^#\s+(.+)', final, re.MULTILINE)
     title = title_m.group(1) if title_m else f"{date_cn}每日热点"
-    tags = ["每日热点"] + [m.group(1)[:8] for m in re.finditer(r'^##\s+(.+)', final, re.MULTILINE)]
+    tags = ["每日热点"]
 
     body = re.sub(r'^#\s+.*\n', '', final, count=1).strip()
     paras = body.split('\n\n')
@@ -120,7 +120,7 @@ date: {datetime.now().strftime("%Y-%m-%d %H:%M:00")}
 categories:
   - daily-news
 tags:
-  - {'  - '.join(tags)}
+{chr(10).join(f'  - {t}' for t in tags)}
 cover: {img_urls[0] if img_urls else ''}
 ---
 

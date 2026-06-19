@@ -4,7 +4,7 @@ date: 2026-06-19 06:20:00
 categories:
   - daily-news
 tags:
-  - 每日热点  - 苹果Vision  - 某大厂AI模型集  - 量子计算机首次实  - 社交媒体新规：你
+  - 每日热点
 cover: https://img.233002.xyz/blog/daily-news-2026-06-19-1.png
 ---
 
