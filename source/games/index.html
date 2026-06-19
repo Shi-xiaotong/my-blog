@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小游戏 - 233002.xyz</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.game-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-decoration: none; color: var(--text); transition: all 0.2s; display: flex; gap: 16px; }
+.game-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--primary); }
+.game-thumb { width: 80px; height: 80px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.game-thumb svg { width: 40px; height: 40px; }
+.game-meta h3 { font-size: 17px; margin-bottom: 4px; }
+.game-meta p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 6px; }
+.game-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; background: var(--primary-light); color: var(--primary); }
+.best-score { font-size: 12px; color: var(--warning); margin-top: 4px; }
+@media (max-width: 640px) { .games-grid { grid-template-columns: 1fr; } .game-thumb { width: 60px; height: 60px; } .game-thumb svg { width: 30px; height: 30px; } }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container-wide">
+<a href="/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回首页</a>
+<div class="header-center">
+  <h1>小游戏</h1>
+  <p>经典小游戏合集，纯前端零依赖，即开即玩</p>
+</div>
+<div class="games-grid" id="gamesGrid"></div>
+<div class="footer"><p>更多游戏开发中 · <a href="/">233002.xyz</a></p></div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='light';h.setAttribute('data-theme',d?'':'light');localStorage.setItem('game-theme',d?'dark':'light');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('game-theme');if(s==='light'){document.documentElement.setAttribute('data-theme','light');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'}})()
+
+const games = [
+  { id:'2048', name:'2048', desc:'滑动合并数字方块，挑战最高分', tag:'益智', scoreKey:'best_2048', color:'#f59e0b', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="4" width="16" height="16" rx="3"/><rect x="28" y="4" width="16" height="16" rx="3"/><rect x="4" y="28" width="16" height="16" rx="3"/><rect x="28" y="28" width="16" height="16" rx="3"/><text x="12" y="16" font-size="10" font-weight="bold" fill="currentColor" stroke="none" text-anchor="middle">2</text><text x="36" y="16" font-size="10" font-weight="bold" fill="currentColor" stroke="none" text-anchor="middle">0</text><text x="12" y="40" font-size="10" font-weight="bold" fill="currentColor" stroke="none" text-anchor="middle">4</text><text x="36" y="40" font-size="10" font-weight="bold" fill="currentColor" stroke="none" text-anchor="middle">8</text></svg>' },
+  { id:'snake', name:'贪吃蛇', desc:'控制蛇吃食物，越长越难', tag:'经典', scoreKey:'best_snake', color:'#22c55e', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 24c0-4 4-8 8-8s8 4 8 0 4-8 8-8 8 4 8 8"/><circle cx="38" cy="16" r="2" fill="currentColor"/><circle cx="10" cy="28" r="6" stroke-dasharray="2 2"/></svg>' },
+  { id:'memory', name:'记忆翻牌', desc:'翻开卡牌找到所有配对', tag:'休闲', scoreKey:null, color:'#a855f7', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="6" width="14" height="18" rx="2"/><rect x="18" y="6" width="14" height="18" rx="2" stroke-dasharray="4 2"/><rect x="32" y="6" width="12" height="18" rx="2"/><rect x="10" y="28" width="14" height="18" rx="2"/><rect x="24" y="28" width="14" height="18" rx="2" stroke-dasharray="4 2"/></svg>' },
+  { id:'minesweeper', name:'扫雷', desc:'经典扫雷，三个难度可选', tag:'策略', scoreKey:'best_minesweeper', color:'#ef4444', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="24" cy="24" r="10"/><line x1="24" y1="8" x2="24" y2="14"/><line x1="24" y1="34" x2="24" y2="40"/><line x1="8" y1="24" x2="14" y2="24"/><line x1="34" y1="24" x2="40" y2="24"/><line x1="12.7" y1="12.7" x2="17" y2="17"/><line x1="31" y1="31" x2="35.3" y2="35.3"/><line x1="35.3" y1="12.7" x2="31" y2="17"/><line x1="17" y1="31" x2="12.7" y2="35.3"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg>' },
+  { id:'typing', name:'打字速度', desc:'测试你的打字速度和准确率', tag:'技能', scoreKey:'best_wpm', color:'#3b82f6', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="14" width="40" height="24" rx="3"/><rect x="10" y="20" width="4" height="4" rx="1"/><rect x="18" y="20" width="4" height="4" rx="1"/><rect x="26" y="20" width="4" height="4" rx="1"/><rect x="34" y="20" width="4" height="4" rx="1"/><rect x="14" y="28" width="4" height="4" rx="1"/><rect x="22" y="28" width="4" height="4" rx="1"/><rect x="30" y="28" width="4" height="4" rx="1"/><line x1="18" y1="36" x2="30" y2="36"/></svg>' },
+  { id:'tetris', name:'俄罗斯方块', desc:'经典方块消除，挑战极限', tag:'经典', scoreKey:'best_tetris', color:'#ec4899', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="16" y="4" width="16" height="8" rx="1"/><rect x="8" y="12" width="8" height="8" rx="1"/><rect x="16" y="12" width="8" height="8" rx="1"/><rect x="24" y="12" width="8" height="8" rx="1"/><rect x="16" y="20" width="8" height="8" rx="1"/><rect x="8" y="28" width="8" height="8" rx="1"/><rect x="16" y="28" width="8" height="8" rx="1"/><rect x="24" y="28" width="8" height="8" rx="1"/><rect x="32" y="28" width="8" height="8" rx="1"/><rect x="8" y="36" width="8" height="8" rx="1"/></svg>' },
+  { id:'wordle', name:'Wordle', desc:'6次机会猜出5个字母的单词', tag:'益智', scoreKey:'best_wordle', color:'#538d4e', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="4" width="8" height="8" rx="1" fill="#538d4e"/><rect x="14" y="4" width="8" height="8" rx="1" fill="#b59f3b"/><rect x="24" y="4" width="8" height="8" rx="1"/><rect x="34" y="4" width="8" height="8" rx="1"/><rect x="4" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/><rect x="24" y="14" width="8" height="8" rx="1" fill="#538d4e"/><rect x="34" y="14" width="8" height="8" rx="1"/><rect x="4" y="24" width="8" height="8" rx="1" fill="#b59f3b"/><rect x="14" y="24" width="8" height="8" rx="1"/><rect x="24" y="24" width="8" height="8" rx="1"/><rect x="34" y="24" width="8" height="8" rx="1" fill="#538d4e"/><rect x="4" y="34" width="8" height="8" rx="1"/><rect x="14" y="34" width="8" height="8" rx="1" fill="#538d4e"/><rect x="24" y="34" width="8" height="8" rx="1"/><rect x="34" y="34" width="8" height="8" rx="1"/></svg>' },
+  { id:'sudoku', name:'数独', desc:'经典数字逻辑谜题', tag:'策略', scoreKey:null, color:'#0ea5e9', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="40" height="40" rx="2"/><line x1="4" y1="18" x2="44" y2="18"/><line x1="4" y1="32" x2="44" y2="32"/><line x1="18" y1="4" x2="18" y2="44"/><line x1="32" y1="4" x2="32" y2="44"/><text x="11" y="15" font-size="8" fill="currentColor" stroke="none" text-anchor="middle">5</text><text x="25" y="15" font-size="8" fill="currentColor" stroke="none" text-anchor="middle">3</text><text x="39" y="29" font-size="8" fill="currentColor" stroke="none" text-anchor="middle">9</text><text x="11" y="43" font-size="8" fill="currentColor" stroke="none" text-anchor="middle">8</text></svg>' },
+  { id:'flappy', name:'Flappy Bird', desc:'点击控制飞行，躲避障碍物', tag:'街机', scoreKey:'best_flappy', color:'#f97316', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5"><ellipse cx="24" cy="24" rx="10" ry="8" fill="#f7dc6f"/><circle cx="28" cy="21" r="3" fill="#fff"/><circle cx="29" cy="21" r="1.5" fill="#000"/><path d="M34 24l6-2-6-2" fill="#e74c3c"/><line x1="6" y1="38" x2="6" y2="18" stroke-width="3"/><line x1="6" y1="18" x2="18" y2="18" stroke-width="3"/><line x1="6" y1="38" x2="18" y2="38" stroke-width="3"/></svg>' },
+  { id:'life', name:'生命游戏', desc:'Conway元胞自动机，观察生命演化', tag:'模拟', scoreKey:null, color:'#8b5cf6', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="24" cy="12" r="3" fill="currentColor"/><circle cx="36" cy="12" r="3"/><circle cx="12" cy="24" r="3"/><circle cx="24" cy="24" r="3" fill="currentColor"/><circle cx="36" cy="24" r="3" fill="currentColor"/><circle cx="12" cy="36" r="3" fill="currentColor"/><circle cx="24" cy="36" r="3"/><circle cx="36" cy="36" r="3" fill="currentColor"/></svg>' },
+  { id:'pixel', name:'像素画板', desc:'绘制像素艺术，导出PNG图片', tag:'创作', scoreKey:null, color:'#0ea5e9', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="8" height="8" fill="#ef4444"/><rect x="12" y="4" width="8" height="8" fill="#f59e0b"/><rect x="20" y="4" width="8" height="8" fill="#22c55e"/><rect x="28" y="4" width="8" height="8" fill="#3b82f6"/><rect x="36" y="4" width="8" height="8" fill="#a855f7"/><rect x="4" y="12" width="8" height="8" fill="#ec4899"/><rect x="12" y="12" width="40" height="28" rx="2" stroke-dasharray="4 2"/><path d="M30 30l-6 12 12-6z" fill="currentColor" stroke="none"/></svg>' },
+  { id:'tictactoe', name:'井字棋', desc:'人机对战，Minimax AI不可战胜', tag:'策略', scoreKey:null, color:'#10b981', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="4" x2="18" y2="44"/><line x1="30" y1="4" x2="30" y2="44"/><line x1="4" y1="18" x2="44" y2="18"/><line x1="4" y1="30" x2="44" y2="30"/><circle cx="10" cy="10" r="4" stroke="#3b82f6"/><line x1="23" y1="7" x2="27" y2="13" stroke="#ef4444"/><line x1="27" y1="7" x2="23" y2="13" stroke="#ef4444"/><circle cx="38" cy="24" r="4" stroke="#3b82f6"/><line x1="7" y1="34" x2="13" y2="40" stroke="#ef4444"/><line x1="13" y1="34" x2="7" y2="40" stroke="#ef4444"/></svg>' },
+  { id:'pinball', name:'弹球台', desc:'物理弹球，挡板击球得分', tag:'街机', scoreKey:'best_pinball', color:'#f97316', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><circle cx="24" cy="16" r="6" fill="#fbbf24"/><line x1="8" y1="38" x2="20" y2="30" stroke-width="4" stroke-linecap="round"/><line x1="40" y1="38" x2="28" y2="30" stroke-width="4" stroke-linecap="round"/><circle cx="16" cy="20" r="4"/><circle cx="32" cy="20" r="4"/><circle cx="24" cy="28" r="4"/></svg>' },
+  { id:'gomoku', name:'五子棋', desc:'人机对战，启发式AI对手', tag:'策略', scoreKey:null, color:'#d97706', icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="16" x2="44" y2="16"/><line x1="4" y1="32" x2="44" y2="32"/><line x1="16" y1="4" x2="16" y2="44"/><line x1="32" y1="4" x2="32" y2="44"/><circle cx="16" cy="16" r="5" fill="#111"/><circle cx="32" cy="32" r="5" fill="#ccc" stroke="#999"/><circle cx="16" cy="32" r="5" fill="#111"/><circle cx="32" cy="16" r="5" fill="#ccc" stroke="#999"/><circle cx="24" cy="24" r="5" fill="#111"/></svg>' },
+];
+
+const grid = document.getElementById('gamesGrid');
+grid.innerHTML = games.map(g => {
+  const best = g.scoreKey ? localStorage.getItem(g.scoreKey) : null;
+  const bestHtml = best ? `<div class="best-score">最高: ${best}</div>` : '';
+  return `<a href="/games/${g.id}.html" class="game-card">
+    <div class="game-thumb" style="background:${g.color}22;color:${g.color}">${g.icon}</div>
+    <div class="game-meta"><h3>${g.name}</h3><p>${g.desc}</p><span class="game-tag">${g.tag}</span>${bestHtml}</div>
+  </a>`;
+}).join('');
+</script>
+</body>
+</html>

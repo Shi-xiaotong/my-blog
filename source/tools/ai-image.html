@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 图片生成 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.prompt-area { margin-bottom: 16px; }
+.prompt-area textarea { min-height: 80px; resize: vertical; font-size: 15px; line-height: 1.6; }
+.options { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: end; }
+.options label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+.options select, options input { padding: 8px 12px; }
+.mode-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.mode-tab { padding: 8px 20px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); color: var(--text); cursor: pointer; font-size: 14px; transition: all 0.15s; }
+.mode-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.result-area { text-align: center; margin: 16px 0; min-height: 200px; display: flex; align-items: center; justify-content: center; }
+.result-area img { max-width: 100%; max-height: 500px; border-radius: 8px; border: 1px solid var(--border); }
+.result-area .placeholder { color: var(--text-secondary); font-size: 14px; }
+.loading { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--text-secondary); }
+.loading .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.img2img-upload { border: 2px dashed var(--border); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 16px; transition: all 0.2s; }
+.img2img-upload:hover { border-color: var(--primary); background: var(--primary-light); }
+.img2img-upload img { max-width: 200px; max-height: 150px; border-radius: 8px; margin-top: 8px; }
+.presets { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.presets button { padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 12px; cursor: pointer; }
+.presets button:hover { border-color: var(--primary); color: var(--primary); }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>AI 图片生成</h1>
+  </div>
+  <div class="tool-area">
+    <div class="mode-tabs">
+      <button class="mode-tab active" onclick="setMode('txt2img')">文生图</button>
+      <button class="mode-tab" onclick="setMode('img2img')">图生图</button>
+    </div>
+
+    <div id="img2imgUpload" style="display:none">
+      <div class="img2img-upload" id="dropZone">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p>点击或拖拽上传原图</p>
+        <input type="file" id="fileInput" accept="image/*" style="display:none">
+        <img id="previewImg" style="display:none">
+      </div>
+    </div>
+
+    <div class="prompt-area">
+      <label>描述你想要的图片</label>
+      <textarea id="prompt" placeholder="例如：A luminous floating city above a misty canyon at sunrise, cinematic realism, wide-angle composition, rich details, soft golden light"></textarea>
+    </div>
+
+    <label style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">快速填充:</label>
+    <div class="presets">
+      <button onclick="fillPreset('风景')">风景</button>
+      <button onclick="fillPreset('人物')">人物</button>
+      <button onclick="fillPreset('科幻')">科幻</button>
+      <button onclick="fillPreset('动漫')">动漫</button>
+      <button onclick="fillPreset('产品')">产品图</button>
+      <button onclick="fillPreset('抽象')">抽象艺术</button>
+    </div>
+
+    <div class="options">
+      <div>
+        <label>尺寸</label>
+        <select id="size">
+          <option value="1024x1024">1:1 (1024×1024)</option>
+          <option value="1024x768" selected>4:3 (1024×768)</option>
+          <option value="768x1024">3:4 (768×1024)</option>
+          <option value="1280x720">16:9 (1280×720)</option>
+          <option value="720x1280">9:16 (720×1280)</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="genBtn" onclick="generate()">生成图片</button>
+    </div>
+
+    <div class="result-area" id="resultArea">
+      <div class="placeholder">输入描述后点击「生成图片」</div>
+    </div>
+
+    <div id="actionBtns" style="display:none;text-align:center;margin-top:12px">
+      <button class="btn btn-primary" onclick="downloadImg()">下载图片</button>
+      <button class="btn btn-outline" onclick="copyUrl()">复制链接</button>
+      <button class="btn btn-outline" onclick="generate()">重新生成</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+
+const AI_ENDPOINT = 'https://ai.233002.xyz'; // Worker 地址
+let currentMode = 'txt2img';
+let imageData = null; // base64 for img2img
+let currentUrl = '';
+
+const PRESETS = {
+  '风景': 'A breathtaking mountain landscape at golden hour, dramatic clouds, crystal clear lake reflection, cinematic photography, ultra detailed, 8k resolution',
+  '人物': 'Portrait of a young woman with flowing hair, soft natural lighting, bokeh background, professional photography, sharp focus, warm tones',
+  '科幻': 'A futuristic cyberpunk city at night, neon lights, flying vehicles, holographic billboards, rain-soaked streets, cinematic realism, high detail',
+  '动漫': 'Anime style illustration, vibrant colors, detailed character design, dynamic pose, beautiful scenery background, studio ghibli inspired, high quality',
+  '产品': 'Clean product photography, minimalist white background, soft shadows, professional studio lighting, high-end commercial style, sharp details',
+  '抽象': 'Abstract digital art, flowing colors, geometric shapes, ethereal glow, cosmic theme, vibrant gradients, modern artistic style, 4k wallpaper'
+};
+
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.mode-tab').forEach(b => b.classList.toggle('active', b.textContent.includes(m === 'txt2img' ? '文生图' : '图生图')));
+  document.getElementById('img2imgUpload').style.display = m === 'img2img' ? 'block' : 'none';
+}
+
+function fillPreset(key) {
+  document.getElementById('prompt').value = PRESETS[key] || '';
+}
+
+// File upload for img2img
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor = 'var(--primary)'; });
+dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = ''; });
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.style.borderColor = ''; if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+
+function loadFile(f) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    imageData = e.target.result; // data:image/xxx;base64,...
+    const img = document.getElementById('previewImg');
+    img.src = imageData;
+    img.style.display = 'block';
+    showToast('图片已加载');
+  };
+  reader.readAsDataURL(f);
+}
+
+async function generate() {
+  const prompt = document.getElementById('prompt').value.trim();
+  if (!prompt) { showToast('请输入图片描述'); return; }
+  if (currentMode === 'img2img' && !imageData) { showToast('请先上传原图'); return; }
+
+  const size = document.getElementById('size').value;
+  const btn = document.getElementById('genBtn');
+  const resultArea = document.getElementById('resultArea');
+  const actionBtns = document.getElementById('actionBtns');
+
+  btn.disabled = true;
+  btn.textContent = '生成中...';
+  actionBtns.style.display = 'none';
+  resultArea.innerHTML = '<div class="loading"><div class="spinner"></div><p>AI 正在生成图片，请稍候...</p></div>';
+
+  try {
+    const body = {
+      model: 'agnes-image-2.1-flash',
+      prompt: prompt,
+      size: size,
+      extra_body: { response_format: 'url' }
+    };
+
+    // img2img: add source image
+    if (currentMode === 'img2img' && imageData) {
+      body.extra_body.image = [imageData];
+    }
+
+    const res = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) throw new Error('API error: ' + res.status);
+    const data = await res.json();
+
+    const url = data?.data?.[0]?.url;
+    const b64 = data?.data?.[0]?.b64_json;
+
+    if (url) {
+      currentUrl = url;
+      resultArea.innerHTML = `<img src="${url}" alt="AI Generated">`;
+      actionBtns.style.display = 'block';
+    } else if (b64) {
+      const src = 'data:image/png;base64,' + b64;
+      currentUrl = src;
+      resultArea.innerHTML = `<img src="${src}" alt="AI Generated">`;
+      actionBtns.style.display = 'block';
+    } else {
+      throw new Error('No image in response');
+    }
+  } catch (e) {
+    resultArea.innerHTML = `<div class="placeholder" style="color:#ef4444">生成失败: ${e.message}</div>`;
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = '生成图片';
+}
+
+function downloadImg() {
+  if (!currentUrl) return;
+  const a = document.createElement('a');
+  a.href = currentUrl;
+  a.download = 'ai-generated.png';
+  a.click();
+  showToast('下载成功');
+}
+
+function copyUrl() {
+  if (!currentUrl) return;
+  navigator.clipboard.writeText(currentUrl);
+  showToast('链接已复制');
+}
+</script>
+</body>
+</html>

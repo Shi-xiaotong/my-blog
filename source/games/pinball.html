@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>弹球台 - 小游戏</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.game-container { max-width: 400px; margin: 0 auto; }
+.game-area { display: flex; justify-content: center; margin: 16px 0; }
+.game-area canvas { border-radius: 12px; border: 2px solid var(--border); touch-action: none; }
+.controls { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
+.flipper-btns { display: none; gap: 8px; justify-content: center; margin-top: 12px; }
+.flipper-btns button { flex: 1; max-width: 150px; height: 60px; border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); color: var(--text); font-size: 16px; font-weight: 600; cursor: pointer; }
+.flipper-btns button:active { background: var(--primary); color: #fff; }
+.tip { text-align: center; font-size: 13px; color: var(--text-secondary); margin-top: 8px; }
+@media (hover: none) and (pointer: coarse) { .flipper-btns { display: flex; } }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/games/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回游戏</a>
+    <h1>弹球台</h1>
+  </div>
+  <div class="score-bar">
+    <div class="score-item"><div class="score-label">分数</div><div class="score-value" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">最高</div><div class="score-value" id="best">0</div></div>
+    <div class="score-item"><div class="score-label">球数</div><div class="score-value" id="balls">3</div></div>
+  </div>
+  <div class="game-container">
+    <div class="game-area"><canvas id="canvas" width="360" height="540"></canvas></div>
+    <div class="flipper-btns">
+      <button onmousedown="leftDown=true" onmouseup="leftDown=false" ontouchstart="leftDown=true" ontouchend="leftDown=false">左挡板</button>
+      <button onmousedown="rightDown=true" onmouseup="rightDown=false" ontouchstart="rightDown=true" ontouchend="rightDown=false">右挡板</button>
+    </div>
+    <div class="controls">
+      <button class="btn btn-primary" onclick="launchBall()">发射</button>
+      <button class="btn btn-outline" onclick="newGame()">新游戏</button>
+    </div>
+    <p class="tip">A/左箭头 = 左挡板 | D/右箭头 = 右挡板 | 空格 = 发射</p>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='light';h.setAttribute('data-theme',d?'':'light');localStorage.setItem('game-theme',d?'dark':'light');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('game-theme');if(s==='light'){document.documentElement.setAttribute('data-theme','light');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'}})()
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+let ball, flippers, bumpers, score, best, balls, leftDown, rightDown, launched, particles;
+
+best = parseInt(localStorage.getItem('best_pinball')) || 0;
+document.getElementById('best').textContent = best;
+
+function init() {
+  flippers = {
+    left: { x: 100, y: 480, angle: 0.4, length: 60, width: 10 },
+    right: { x: 260, y: 480, angle: Math.PI - 0.4, length: 60, width: 10 }
+  };
+  bumpers = [
+    { x: 100, y: 180, r: 25, color: '#ef4444', points: 100 },
+    { x: 180, y: 140, r: 20, color: '#f59e0b', points: 150 },
+    { x: 260, y: 180, r: 25, color: '#22c55e', points: 100 },
+    { x: 140, y: 260, r: 18, color: '#3b82f6', points: 200 },
+    { x: 220, y: 260, r: 18, color: '#a855f7', points: 200 },
+    { x: 180, y: 320, r: 22, color: '#ec4899', points: 150 },
+  ];
+  particles = [];
+  newGame();
+}
+
+function newGame() {
+  score = 0; balls = 3; launched = false;
+  leftDown = false; rightDown = false;
+  document.getElementById('score').textContent = '0';
+  document.getElementById('balls').textContent = '3';
+  resetBall();
+}
+
+function resetBall() {
+  launched = false;
+  ball = { x: 340, y: 450, vx: 0, vy: 0, r: 8 };
+}
+
+function launchBall() {
+  if (launched) return;
+  launched = true;
+  ball.vy = -8 - Math.random() * 3;
+  ball.vx = -1 - Math.random() * 2;
+}
+
+function addParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 1 + Math.random() * 3;
+    particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 1, color });
+  }
+}
+
+function update() {
+  if (!launched) return;
+
+  // Gravity
+  ball.vy += 0.15;
+
+  // Move
+  ball.x += ball.vx;
+  ball.y += ball.vy;
+
+  // Damping
+  ball.vx *= 0.999;
+
+  // Wall collisions
+  if (ball.x - ball.r < 10) { ball.x = 10 + ball.r; ball.vx = Math.abs(ball.vx) * 0.8; }
+  if (ball.x + ball.r > W - 10) { ball.x = W - 10 - ball.r; ball.vx = -Math.abs(ball.vx) * 0.8; }
+  if (ball.y - ball.r < 10) { ball.y = 10 + ball.r; ball.vy = Math.abs(ball.vy) * 0.8; }
+
+  // Bumper collisions
+  bumpers.forEach(b => {
+    const dx = ball.x - b.x, dy = ball.y - b.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < ball.r + b.r) {
+      const nx = dx / dist, ny = dy / dist;
+      const relVel = ball.vx * nx + ball.vy * ny;
+      if (relVel < 0) {
+        ball.vx -= 1.8 * relVel * nx;
+        ball.vy -= 1.8 * relVel * ny;
+      }
+      ball.x = b.x + (b.r + ball.r + 1) * nx;
+      ball.y = b.y + (b.r + ball.r + 1) * ny;
+      score += b.points;
+      document.getElementById('score').textContent = score;
+      addParticles(b.x, b.y, b.color, 8);
+    }
+  });
+
+  // Flipper update
+  const leftTarget = leftDown ? -0.6 : 0.4;
+  const rightTarget = rightDown ? Math.PI + 0.6 : Math.PI - 0.4;
+  flippers.left.angle += (leftTarget - flippers.left.angle) * 0.3;
+  flippers.right.angle += (rightTarget - flippers.right.angle) * 0.3;
+
+  // Flipper collisions
+  [flippers.left, flippers.right].forEach(f => {
+    const ex = f.x + Math.cos(f.angle) * f.length;
+    const ey = f.y + Math.sin(f.angle) * f.length;
+    // Line segment collision
+    const dx = ex - f.x, dy = ey - f.y;
+    const len2 = dx * dx + dy * dy;
+    let t = ((ball.x - f.x) * dx + (ball.y - f.y) * dy) / len2;
+    t = Math.max(0, Math.min(1, t));
+    const cx = f.x + t * dx, cy = f.y + t * dy;
+    const distX = ball.x - cx, distY = ball.y - cy;
+    const dist = Math.sqrt(distX * distX + distY * distY);
+    if (dist < ball.r + f.width / 2) {
+      const nx = distX / dist, ny = distY / dist;
+      const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+      const flipSpeed = (leftDown || rightDown) ? 12 : 4;
+      ball.vx = nx * flipSpeed + (leftDown || rightDown ? (f === flippers.left ? 2 : -2) : 0);
+      ball.vy = ny * flipSpeed - 2;
+      ball.x = cx + (ball.r + f.width / 2 + 1) * nx;
+      ball.y = cy + (ball.r + f.width / 2 + 1) * ny;
+    }
+  });
+
+  // Ball lost
+  if (ball.y > H + 20) {
+    balls--;
+    document.getElementById('balls').textContent = balls;
+    if (balls <= 0) {
+      if (score > best) { best = score; localStorage.setItem('best_pinball', best); document.getElementById('best').textContent = best; }
+      setTimeout(() => alert('游戏结束! 得分: ' + score), 100);
+      newGame();
+    } else {
+      resetBall();
+    }
+  }
+
+  // Particles
+  particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.03; p.vy += 0.05; });
+  particles = particles.filter(p => p.life > 0);
+}
+
+function draw() {
+  // Background
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, W, H);
+
+  // Walls
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(10, 10); ctx.lineTo(10, H); ctx.moveTo(W-10, 10); ctx.lineTo(W-10, H); ctx.moveTo(10, 10); ctx.lineTo(W-10, 10);
+  ctx.stroke();
+
+  // Guide rails
+  ctx.strokeStyle = '#475569';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(10, 400); ctx.lineTo(60, 460);
+  ctx.moveTo(W-10, 400); ctx.lineTo(W-60, 460);
+  ctx.stroke();
+
+  // Bumpers
+  bumpers.forEach(b => {
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+    ctx.fillStyle = b.color + '44';
+    ctx.fill();
+    ctx.strokeStyle = b.color;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px -apple-system';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(b.points, b.x, b.y);
+  });
+
+  // Flippers
+  [flippers.left, flippers.right].forEach(f => {
+    const ex = f.x + Math.cos(f.angle) * f.length;
+    const ey = f.y + Math.sin(f.angle) * f.length;
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = f.width;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(f.x, f.y); ctx.lineTo(ex, ey);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.width / 2 + 2, 0, Math.PI * 2);
+    ctx.fillStyle = '#64748b';
+    ctx.fill();
+  });
+
+  // Particles
+  particles.forEach(p => {
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3 * p.life, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  // Ball
+  if (ball) {
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+    ctx.fillStyle = '#fbbf24';
+    ctx.fill();
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // Shine
+    ctx.beginPath();
+    ctx.arc(ball.x - 2, ball.y - 2, 2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.fill();
+  }
+
+  // Launch indicator
+  if (!launched) {
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '14px -apple-system';
+    ctx.textAlign = 'center';
+    ctx.fillText('按空格发射', W/2, 500);
+  }
+}
+
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') leftDown = true;
+  if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') rightDown = true;
+  if (e.key === ' ') { e.preventDefault(); launchBall(); }
+});
+document.addEventListener('keyup', e => {
+  if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') leftDown = false;
+  if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') rightDown = false;
+});
+
+init();
+gameLoop();
+</script>
+</body>
+</html>

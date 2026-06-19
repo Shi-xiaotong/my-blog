@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 文案助手 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.template-btn { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; font-size: 13px; }
+.template-btn:hover { border-color: var(--primary); color: var(--primary); }
+.template-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.input-area { margin-bottom: 16px; }
+.input-area textarea { min-height: 80px; resize: vertical; font-size: 14px; line-height: 1.6; }
+.output-area { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; min-height: 200px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; position: relative; }
+.output-area .placeholder { color: var(--text-secondary); }
+.options { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: end; }
+.options select { padding: 8px 12px; }
+.lang-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.lang-btn { padding: 4px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 12px; cursor: pointer; }
+.lang-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>AI 文案助手</h1>
+  </div>
+  <div class="tool-area">
+    <label>选择模板</label>
+    <div class="template-grid">
+      <button class="template-btn active" onclick="selectTemplate('write')">写文章</button>
+      <button class="template-btn" onclick="selectTemplate('marketing')">营销文案</button>
+      <button class="template-btn" onclick="selectTemplate('translate')">翻译</button>
+      <button class="template-btn" onclick="selectTemplate('rewrite')">改写润色</button>
+      <button class="template-btn" onclick="selectTemplate('summarize')">摘要总结</button>
+      <button class="template-btn" onclick="selectTemplate('code')">代码助手</button>
+      <button class="template-btn" onclick="selectTemplate('email')">写邮件</button>
+      <button class="template-btn" onclick="selectTemplate('custom')">自定义</button>
+    </div>
+
+    <div class="input-area">
+      <label id="inputLabel">输入你的需求</label>
+      <textarea id="input" placeholder="例如：写一篇关于人工智能发展趋势的博客文章，500字左右"></textarea>
+    </div>
+
+    <div class="options">
+      <div>
+        <label>语言</label>
+        <div class="lang-row">
+          <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+          <button class="lang-btn" onclick="setLang('en')">English</button>
+          <button class="lang-btn" onclick="setLang('ja')">日本語</button>
+        </div>
+      </div>
+      <div>
+        <label>创意度</label>
+        <select id="temperature">
+          <option value="0.3">严谨</option>
+          <option value="0.7" selected>平衡</option>
+          <option value="1.0">创意</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="genBtn" onclick="generate()">生成</button>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <label>生成结果</label>
+      <button class="btn btn-outline" style="padding:4px 10px;font-size:12px" onclick="copyOutput()">复制</button>
+    </div>
+    <div class="output-area" id="output">
+      <span class="placeholder">选择模板，输入需求，点击「生成」</span>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+
+const AI_ENDPOINT = 'https://ai.233002.xyz';
+let currentTemplate = 'write';
+let currentLang = 'zh';
+
+const TEMPLATES = {
+  write: {
+    label: '输入文章主题和要求',
+    placeholder: '例如：写一篇关于人工智能发展趋势的博客文章，500字左右，包含3个小标题',
+    system: '你是一位专业的中文写作助手。根据用户的需求，写出高质量、结构清晰的文章。使用 Markdown 格式。'
+  },
+  marketing: {
+    label: '输入产品/活动信息',
+    placeholder: '例如：为一款新的AI编程助手写一段App Store描述，突出免费、智能、支持多语言',
+    system: '你是一位资深营销文案专家。根据用户提供的信息，写出吸引人的营销文案。文案要简洁有力，突出卖点。'
+  },
+  translate: {
+    label: '输入要翻译的文本',
+    placeholder: '例如：The quick brown fox jumps over the lazy dog',
+    system: '你是一位专业翻译。将用户输入的文本翻译为指定语言。只输出翻译结果，不要解释。目标语言：中文。如果用户指定了其他语言则按要求翻译。'
+  },
+  rewrite: {
+    label: '输入要改写的文本',
+    placeholder: '粘贴需要润色或改写的文本...',
+    system: '你是一位文字润色专家。帮用户改写文本，使其更流畅、专业、有文采。保持原意不变，提升表达质量。'
+  },
+  summarize: {
+    label: '输入要总结的内容',
+    placeholder: '粘贴需要总结的文章或长文本...',
+    system: '你是一位信息提炼专家。将用户输入的内容总结为简洁的要点。使用要点列表格式，保留关键信息。'
+  },
+  code: {
+    label: '描述你的编程需求',
+    placeholder: '例如：用Python写一个函数，输入一个列表，返回去重后按频率排序的结果',
+    system: '你是一位资深程序员。根据用户需求编写清晰、高效、有注释的代码。解释关键逻辑。'
+  },
+  email: {
+    label: '输入邮件目的和要点',
+    placeholder: '例如：给客户写一封邮件，说明项目延期两周，原因是需求变更，保证质量不受影响',
+    system: '你是一位商务邮件写作专家。根据用户描述的目的和要点，写出专业、得体的邮件。注意语气和格式。'
+  },
+  custom: {
+    label: '输入你的指令',
+    placeholder: '自由输入任何需求...',
+    system: '你是一位全能AI助手。根据用户的指令提供高质量的回答和帮助。'
+  }
+};
+
+function selectTemplate(key) {
+  currentTemplate = key;
+  document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.template-btn[onclick="selectTemplate('${key}')"]`).classList.add('active');
+  const t = TEMPLATES[key];
+  document.getElementById('inputLabel').textContent = t.label;
+  document.getElementById('input').placeholder = t.placeholder;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+}
+
+async function generate() {
+  const input = document.getElementById('input').value.trim();
+  if (!input) { showToast('请输入内容'); return; }
+
+  const btn = document.getElementById('genBtn');
+  const output = document.getElementById('output');
+  const temperature = parseFloat(document.getElementById('temperature').value);
+
+  btn.disabled = true;
+  btn.textContent = '生成中...';
+  output.innerHTML = '<span class="placeholder">AI 正在生成，请稍候...</span>';
+
+  const template = TEMPLATES[currentTemplate];
+  let system = template.system;
+
+  // Language override
+  if (currentLang === 'en') system += ' Always respond in English.';
+  else if (currentLang === 'ja') system += ' 必ず日本語で回答してください。';
+
+  try {
+    const res = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'agnes-2.0-flash',
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: input }
+        ],
+        temperature: temperature,
+        max_tokens: 2000
+      })
+    });
+
+    if (!res.ok) throw new Error('API error: ' + res.status);
+    const data = await res.json();
+    const content = data?.choices?.[0]?.message?.content || '';
+
+    // Simple markdown rendering
+    output.innerHTML = renderMarkdown(content);
+  } catch (e) {
+    output.innerHTML = `<span style="color:#ef4444">生成失败: ${e.message}</span>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '生成';
+}
+
+function renderMarkdown(md) {
+  return md
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/^### (.*$)/gm, '<h3 style="margin:16px 0 8px;font-size:1.1em">$1</h3>')
+    .replace(/^## (.*$)/gm, '<h2 style="margin:20px 0 10px;font-size:1.2em;border-bottom:1px solid var(--border);padding-bottom:6px">$1</h2>')
+    .replace(/^# (.*$)/gm, '<h1 style="margin:24px 0 12px;font-size:1.4em">$1</h1>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:13px">$1</code>')
+    .replace(/^- (.*$)/gm, '<li style="margin:4px 0;padding-left:8px">• $1</li>')
+    .replace(/^\d+\. (.*$)/gm, '<li style="margin:4px 0;padding-left:8px">$1</li>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
+
+function copyOutput() {
+  const text = document.getElementById('output').textContent;
+  if (text && !text.includes('选择模板')) {
+    navigator.clipboard.writeText(text);
+    showToast('已复制');
+  }
+}
+</script>
+</body>
+</html>
