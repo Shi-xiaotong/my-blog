@@ -690,6 +690,11 @@ async function saveHistory(){
   }catch(e){}
 }
 
+// Save on seek, pause, and page leave
+video.addEventListener('seeked',function(){if(isLoggedIn()&&currentDetail)saveHistory();});
+video.addEventListener('pause',function(){if(isLoggedIn()&&currentDetail)saveHistory();});
+window.addEventListener('beforeunload',function(){if(isLoggedIn()&&currentDetail)saveHistory();});
+
 // Player controls
 window.togglePlay=function(){if(video.paused)video.play().catch(function(){});else video.pause();};
 video.addEventListener('play',function(){document.getElementById('playBtn').innerHTML='<i class="fas fa-pause"></i>';});
