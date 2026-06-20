@@ -201,6 +201,7 @@ async function joinRoom() {
   const name = document.getElementById('joinName').value.trim() || '猜词者';
   const code = document.getElementById('joinCode').value.trim();
   if (!code || code.length !== 4) { document.getElementById('lobbyError').textContent = '请输入4位房间号'; return; }
+  document.getElementById('lobbyError').textContent = '加入中...';
   try {
     const res = await fetch(API + '/api/room/join', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ code, playerName: name }) });
     const data = await res.json();
@@ -208,6 +209,7 @@ async function joinRoom() {
     state.playerId = data.playerId;
     state.code = code;
     state.role = 'guesser';
+    document.getElementById('lobbyError').textContent = '';
     enterGame(data.room);
   } catch(e) { document.getElementById('lobbyError').textContent = '加入失败: ' + e.message; }
 }
