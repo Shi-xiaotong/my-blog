@@ -33,6 +33,7 @@
 #play-page .volume-wrap{display:flex;align-items:center;gap:4px}
 #play-page .volume-wrap input[type=range]{width:70px;accent-color:#ffd93d}
 #play-page .speed-btn{font-size:13px!important;padding:4px 8px!important;background:#333!important;border-radius:4px;color:#ffd93d!important}
+#play-page .skip-ad-btn{font-size:12px!important;padding:4px 10px!important;background:#e94560!important;border-radius:4px;color:#fff!important;font-weight:600!important;letter-spacing:.5px;cursor:pointer!important;border:none!important}
 #play-page .skip-btn{font-size:12px!important;padding:4px 10px!important;background:#e94560!important;border-radius:4px;color:#fff!important;display:flex;align-items:center;gap:4px}
 #play-page .skip-settings{position:relative;display:inline-block}
 #play-page .skip-dropdown{display:none;position:absolute;bottom:100%;right:0;background:#222;border:1px solid #444;border-radius:6px;padding:8px;z-index:20;min-width:140px;box-shadow:0 -4px 16px rgba(0,0,0,.5)}
@@ -96,6 +97,7 @@
 #play-page .volume-wrap{display:none}
 #play-page .speed-btn{font-size:11px!important;padding:4px 6px!important;flex-shrink:0}
 #play-page .skip-btn{font-size:10px!important;padding:4px 6px!important;flex-shrink:0}
+#play-page .skip-ad-btn{font-size:10px!important;padding:4px 6px!important;flex-shrink:0}
 #play-page .skip-btn span{display:none}
 #play-page .skip-settings{display:none}
 #play-page .danmaku-bar{gap:6px;padding:6px 8px}
@@ -222,7 +224,7 @@
         <button onclick="toggleMute()" id="muteBtn"><i class="fas fa-volume-up"></i></button>
         <input type="range" min="0" max="100" value="100" id="volumeSlider" oninput="setVolume(this.value)">
       </div>
-      <button class="quality-badge" id="qualityBadge" title="当前清晰度">--</button>
+      <button class="skip-ad-btn" onclick="skipAd()" title="跳过广告 (快进10秒)"><i class="fas fa-forward"></i> 跳广告</button>
       <button class="skip-btn" onclick="skipIntro()" title="跳过片头"><i class="fas fa-forward"></i> <span id="skipLabel">90s</span></button>
       <button onclick="toggleFullscreen()" title="全屏(F)"><i class="fas fa-expand"></i></button>
       <div class="more-wrap">
@@ -334,7 +336,7 @@ function detectQualityFromVideo(){
   if(h>0){
     var label=h+'p';
     if(w>0) label=w+'x'+h;
-    document.getElementById('qualityBadge').textContent=label;
+    var qb=document.getElementById('qualityBadge');if(qb)qb.textContent=label;
   }
 }
 video.addEventListener('loadedmetadata',function(){
@@ -591,7 +593,7 @@ window.playEpisode=function(index){
         }
         var label=best.height?(best.height+'p'):(best.width?best.width+'p':'HD');
         if(levels.length>1)label+=' ('+levels.length+'档)';
-        document.getElementById('qualityBadge').textContent=label;
+        var qb=document.getElementById('qualityBadge');if(qb)qb.textContent=label;
       }else{
         // Single level or no level info - detect from video element after play
         setTimeout(detectQualityFromVideo,1000);
@@ -603,7 +605,7 @@ window.playEpisode=function(index){
       if(hls.levels&&hls.currentLevel>=0){
         var lvl=hls.levels[hls.currentLevel];
         if(lvl&&lvl.height){
-          document.getElementById('qualityBadge').textContent=lvl.height+'p';
+          var qb=document.getElementById('qualityBadge');if(qb)qb.textContent=lvl.height+'p';
         }
       }
     });
@@ -770,6 +772,7 @@ document.addEventListener('fullscreenchange',onFullscreenChange);
 document.addEventListener('webkitfullscreenchange',onFullscreenChange);
 
 window.skipIntro=function(){video.currentTime=Math.min(video.currentTime+skipIntroTime,video.duration||Infinity);};
+window.skipAd=function(){video.currentTime=Math.min(video.currentTime+10,video.duration||Infinity);showToast('快进 10s');};
 window.toggleSkipSettings=function(){}; // Now handled by inline input in more menu
 window.toggleMoreMenu=function(){document.getElementById('moreDropdown').classList.toggle('show');};
 window.closeMoreMenu=function(){document.getElementById('moreDropdown').classList.remove('show');};
