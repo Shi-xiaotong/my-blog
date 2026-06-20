@@ -32,6 +32,7 @@ skip_render:
   - 'js/**'
   - 'live2d/**'
   - 'anime/index.html'
+  - 'anime/track.js'
   - 'anime/play/**'
   - 'anime/history/**'
   - 'tools/**'
