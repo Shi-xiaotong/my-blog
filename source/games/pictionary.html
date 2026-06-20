@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你画我猜 - 小游戏</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+/* Lobby */
+#lobby { text-align: center; }
+#lobby h1 { font-size: 2em; margin-bottom: 8px; }
+#lobby p { color: var(--text-secondary); margin-bottom: 24px; }
+.lobby-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 16px; display: inline-block; min-width: 300px; text-align: left; }
+.lobby-section h3 { margin-bottom: 12px; }
+.input-group { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+.input-group label { min-width: 60px; font-size: 14px; }
+.input-group input { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); font-size: 14px; }
+.btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+.btn-primary { background: var(--primary, #4f8cff); color: #fff; }
+.btn-primary:hover { opacity: 0.85; }
+.room-code-display { font-size: 3em; font-weight: 800; letter-spacing: 12px; text-align: center; color: var(--primary, #4f8cff); margin: 16px 0; font-family: monospace; }
+.copy-hint { font-size: 12px; color: var(--text-secondary); text-align: center; }
+
+/* Game */
+#game { display: none; }
+.game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.score-bar { display: flex; gap: 16px; font-size: 14px; }
+.score-bar span { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px; }
+.game-layout { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.canvas-area { position: relative; }
+canvas#draw { display: block; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: crosshair; background: #fff; }
+.tools { display: flex; gap: 6px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+.color-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+.color-btn.active { border-color: var(--text); transform: scale(1.15); }
+.size-btn { padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); cursor: pointer; font-size: 12px; }
+.size-btn.active { background: var(--primary, #4f8cff); color: #fff; border-color: var(--primary, #4f8cff); }
+.tool-btn { padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); cursor: pointer; font-size: 12px; }
+.tool-btn.active { background: var(--primary, #4f8cff); color: #fff; }
+.side-panel { min-width: 260px; max-width: 300px; display: flex; flex-direction: column; gap: 10px; }
+.panel-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.panel-box h3 { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+.word-hint { font-size: 2em; font-weight: 700; text-align: center; letter-spacing: 6px; min-height: 48px; display: flex; align-items: center; justify-content: center; }
+.status-msg { font-size: 14px; text-align: center; color: var(--text-secondary); margin-bottom: 8px; }
+.guess-input-wrap { display: flex; gap: 6px; }
+.guess-input-wrap input { flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); font-size: 14px; }
+.guess-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+.guess-item { font-size: 13px; padding: 4px 8px; border-radius: 6px; background: var(--bg); }
+.guess-item.correct { background: #22c55e22; color: #22c55e; font-weight: 600; }
+.celebration { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.celebration-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 40px; text-align: center; animation: pop 0.3s ease; }
+@keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.celebration-box h2 { font-size: 2em; margin-bottom: 8px; }
+.celebration-box p { color: var(--text-secondary); }
+.wait-overlay { text-align: center; padding: 60px 20px; }
+.wait-overlay h2 { margin-bottom: 12px; }
+.back-link { display: inline-block; margin-bottom: 16px; color: var(--text-secondary); text-decoration: none; font-size: 14px; }
+.back-link:hover { color: var(--primary); }
+#statusBar { text-align: center; font-size: 14px; color: var(--text-secondary); padding: 8px; }
+
+@media (max-width: 640px) {
+  .game-layout { flex-direction: column; align-items: center; }
+  canvas#draw { width: 100% !important; max-width: 400px; height: auto !important; }
+  .side-panel { max-width: 100%; width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/games/" class="back-link">← 返回游戏列表</a>
+
+  <!-- LOBBY -->
+  <div id="lobby">
+    <h1>🎨 你画我猜</h1>
+    <p>一人画画，一人猜词，看看谁更默契！</p>
+
+    <div class="lobby-section">
+      <h3>创建房间</h3>
+      <div class="input-group">
+        <label>昵称</label>
+        <input id="createName" placeholder="输入你的昵称" maxlength="12">
+      </div>
+      <button class="btn btn-primary" onclick="createRoom()" style="width:100%">创建房间</button>
+    </div>
+
+    <div id="roomCreated" style="display:none" class="lobby-section">
+      <h3>房间已创建！</h3>
+      <div class="room-code-display" id="roomCodeDisplay"></div>
+      <div class="copy-hint">把房间号发给朋友，等待TA加入 ↗</div>
+      <div style="text-align:center;margin-top:12px">
+        <button class="btn btn-primary" onclick="copyCode()">复制房间号</button>
+      </div>
+    </div>
+
+    <div class="lobby-section">
+      <h3>加入房间</h3>
+      <div class="input-group">
+        <label>昵称</label>
+        <input id="joinName" placeholder="输入你的昵称" maxlength="12">
+      </div>
+      <div class="input-group">
+        <label>房间号</label>
+        <input id="joinCode" placeholder="4位数字" maxlength="4" inputmode="numeric">
+      </div>
+      <button class="btn btn-primary" onclick="joinRoom()" style="width:100%">加入房间</button>
+    </div>
+    <div id="lobbyError" style="color:#ef4444;margin-top:8px;text-align:center"></div>
+  </div>
+
+  <!-- GAME -->
+  <div id="game">
+    <div class="game-header">
+      <div class="score-bar">
+        <span id="scoreDisplay">画师 0 : 0 猜词者</span>
+        <span id="roundDisplay">第 0 轮</span>
+      </div>
+      <div id="roleDisplay" style="font-size:14px;font-weight:600"></div>
+    </div>
+    <div id="statusBar"></div>
+    <div class="game-layout">
+      <div class="canvas-area">
+        <canvas id="draw" width="400" height="400"></canvas>
+        <div class="tools" id="toolsPanel">
+          <button class="color-btn active" data-color="#000000" style="background:#000"></button>
+          <button class="color-btn" data-color="#ef4444" style="background:#ef4444"></button>
+          <button class="color-btn" data-color="#f97316" style="background:#f97316"></button>
+          <button class="color-btn" data-color="#eab308" style="background:#eab308"></button>
+          <button class="color-btn" data-color="#22c55e" style="background:#22c55e"></button>
+          <button class="color-btn" data-color="#3b82f6" style="background:#3b82f6"></button>
+          <button class="color-btn" data-color="#8b5cf6" style="background:#8b5cf6"></button>
+          <button class="color-btn" data-color="#ec4899" style="background:#ec4899"></button>
+          <button class="color-btn" data-color="#fff" style="background:#fff;border:1px solid #ccc"></button>
+          <span style="margin-left:8px"></span>
+          <button class="size-btn active" data-size="3">细</button>
+          <button class="size-btn" data-size="8">中</button>
+          <button class="size-btn" data-size="16">粗</button>
+          <span style="margin-left:8px"></span>
+          <button class="tool-btn" id="eraserBtn">橡皮</button>
+          <button class="tool-btn" onclick="clearCanvas()">清除</button>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="panel-box">
+          <h3>题目</h3>
+          <div class="word-hint" id="wordHint">等待开始...</div>
+        </div>
+        <div class="panel-box" id="guessPanel">
+          <h3>猜一猜</h3>
+          <div class="guess-input-wrap">
+            <input id="guessInput" placeholder="输入你的猜测" maxlength="20">
+            <button class="btn btn-primary" onclick="submitGuess()">猜!</button>
+          </div>
+        </div>
+        <div class="panel-box">
+          <h3>猜测记录</h3>
+          <div class="guess-list" id="guessList"></div>
+        </div>
+        <button class="btn btn-primary" id="startBtn" onclick="startGame()" style="display:none;width:100%">开始游戏</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://pictionary.233002.workers.dev';
+let state = { playerId: '', code: '', role: '', room: null };
+let pollTimer = null;
+let localPoints = [];
+let lastSentIdx = 0;
+let drawColor = '#000000';
+let drawSize = 3;
+let isEraser = false;
+let isDrawing = false;
+
+const canvas = document.getElementById('draw');
+const ctx = canvas.getContext('2d');
+
+// --- Lobby ---
+async function createRoom() {
+  const name = document.getElementById('createName').value.trim() || '画师';
+  try {
+    const res = await fetch(API + '/api/room/create', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ playerName: name }) });
+    const data = await res.json();
+    state.playerId = data.playerId;
+    state.code = data.code;
+    state.role = 'drawer';
+    document.getElementById('roomCodeDisplay').textContent = data.code;
+    document.getElementById('roomCreated').style.display = '';
+    document.getElementById('lobbyError').textContent = '';
+    // Start polling for room join
+    pollTimer = setInterval(pollState, 500);
+  } catch(e) { document.getElementById('lobbyError').textContent = '创建失败: ' + e.message; }
+}
+
+function copyCode() {
+  navigator.clipboard?.writeText(state.code);
+}
+
+async function joinRoom() {
+  const name = document.getElementById('joinName').value.trim() || '猜词者';
+  const code = document.getElementById('joinCode').value.trim();
+  if (!code || code.length !== 4) { document.getElementById('lobbyError').textContent = '请输入4位房间号'; return; }
+  try {
+    const res = await fetch(API + '/api/room/join', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ code, playerName: name }) });
+    const data = await res.json();
+    if (data.error) { document.getElementById('lobbyError').textContent = data.error; return; }
+    state.playerId = data.playerId;
+    state.code = code;
+    state.role = 'guesser';
+    enterGame(data.room);
+  } catch(e) { document.getElementById('lobbyError').textContent = '加入失败: ' + e.message; }
+}
+
+function enterGame(room) {
+  state.room = room;
+  document.getElementById('lobby').style.display = 'none';
+  document.getElementById('game').style.display = '';
+  if (state.role === 'guesser') {
+    document.getElementById('toolsPanel').style.display = 'none';
+    document.getElementById('guessPanel').style.display = '';
+  }
+  updateUI();
+  if (!pollTimer) pollTimer = setInterval(pollState, 500);
+}
+
+// --- Polling ---
+async function pollState() {
+  try {
+    const res = await fetch(`${API}/api/room/${state.code}/state?playerId=${state.playerId}`);
+    const room = await res.json();
+    if (room.error) return;
+    const wasStatus = state.room?.status;
+    state.room = room;
+
+    // If room just got a guesser, transition to game
+    if (wasStatus === 'waiting' && room.status === 'waiting' && room.guesser && state.role === 'drawer') {
+      // guesser joined
+    }
+
+    // If guesser joined and we're drawer waiting, auto show start button
+    updateUI();
+
+    // Sync drawing for guesser
+    if (state.role === 'guesser') {
+      syncRemoteDrawing(room.drawing);
+    }
+
+    // Handle guessed - show celebration briefly
+    if (room.status === 'playing' && wasStatus === 'guessed') {
+      // already handled inline
+    }
+  } catch(e) {}
+}
+
+function updateUI() {
+  const room = state.room;
+  if (!room) return;
+  const isDrawer = room.drawer?.id === state.playerId;
+
+  // Update role display
+  const myName = isDrawer ? room.drawer?.name : room.guesser?.name;
+  document.getElementById('roleDisplay').textContent = isDrawer ? '🖌️ 你是画师' : '🔍 你是猜词者';
+
+  // Score
+  document.getElementById('scoreDisplay').textContent = `${room.drawer?.name || '画师'} ${room.score?.drawer || 0} : ${room.score?.guesser || 0} ${room.guesser?.name || '猜词者'}`;
+  document.getElementById('roundDisplay').textContent = `第 ${room.round || 0} 轮`;
+
+  // Status & word
+  if (room.status === 'waiting') {
+    document.getElementById('statusBar').textContent = room.guesser ? '准备开始！' : '等待对手加入...';
+    document.getElementById('wordHint').textContent = '等待开始...';
+    document.getElementById('startBtn').style.display = (isDrawer && room.guesser) ? '' : 'none';
+  } else if (room.status === 'playing') {
+    document.getElementById('statusBar').textContent = isDrawer ? '请画出题目！' : '看图猜词！';
+    document.getElementById('wordHint').textContent = room.word || '???';
+    document.getElementById('startBtn').style.display = 'none';
+  }
+
+  // Guesses
+  renderGuesses(room.guesses || []);
+}
+
+function renderGuesses(guesses) {
+  const list = document.getElementById('guessList');
+  list.innerHTML = guesses.map(g =>
+    `<div class="guess-item ${g.correct ? 'correct' : ''}">${esc(g.player)}: ${esc(g.text)}${g.correct ? ' ✅' : ''}</div>`
+  ).join('');
+  list.scrollTop = list.scrollHeight;
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// --- Drawing ---
+canvas.addEventListener('mousedown', startDraw);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', endDraw);
+canvas.addEventListener('mouseleave', endDraw);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); startDraw(touchPos(e)); }, { passive: false });
+canvas.addEventListener('touchmove', e => { e.preventDefault(); draw(touchPos(e)); }, { passive: false });
+canvas.addEventListener('touchend', e => { e.preventDefault(); endDraw(); }, { passive: false });
+
+function touchPos(e) {
+  const t = e.touches[0];
+  const r = canvas.getBoundingClientRect();
+  return { offsetX: (t.clientX - r.left) * (canvas.width / r.width), offsetY: (t.clientY - r.top) * (canvas.height / r.height) };
+}
+
+function startDraw(e) {
+  if (state.role !== 'drawer' || state.room?.status !== 'playing') return;
+  isDrawing = true;
+  const x = (e.offsetX ?? e.offsetX) / canvas.width;
+  const y = (e.offsetY ?? e.offsetY) / canvas.height;
+  const color = isEraser ? '#ffffff' : drawColor;
+  const point = { x, y, color, size: isEraser ? 20 : drawSize, type: 'move' };
+  localPoints.push(point);
+  renderPoint(ctx, point, canvas.width, canvas.height);
+}
+
+function draw(e) {
+  if (!isDrawing || state.role !== 'drawer') return;
+  const x = (e.offsetX ?? e.offsetX) / canvas.width;
+  const y = (e.offsetY ?? e.offsetY) / canvas.height;
+  const color = isEraser ? '#ffffff' : drawColor;
+  const point = { x, y, color, size: isEraser ? 20 : drawSize, type: 'line' };
+  localPoints.push(point);
+  renderPoint(ctx, point, canvas.width, canvas.height);
+}
+
+function endDraw() { isDrawing = false; }
+
+// Send drawing points every 500ms
+setInterval(async () => {
+  if (state.role !== 'drawer' || localPoints.length <= lastSentIdx) return;
+  const batch = localPoints.slice(lastSentIdx);
+  lastSentIdx = localPoints.length;
+  try {
+    await fetch(`${API}/api/room/${state.code}/draw`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ playerId: state.playerId, points: batch })
+    });
+  } catch(e) {}
+}, 500);
+
+function renderPoint(c, p, w, h) {
+  c.strokeStyle = p.color;
+  c.lineWidth = p.size;
+  c.lineCap = 'round';
+  c.lineJoin = 'round';
+  if (p.type === 'move') {
+    c.beginPath();
+    c.moveTo(p.x * w, p.y * h);
+  } else {
+    c.lineTo(p.x * w, p.y * h);
+    c.stroke();
+    c.beginPath();
+    c.moveTo(p.x * w, p.y * h);
+  }
+}
+
+// Guesser: sync remote drawing
+let remoteIdx = 0;
+function syncRemoteDrawing(drawing) {
+  if (!drawing || drawing.length <= remoteIdx) {
+    // If drawing got shorter (new round), reset
+    if (drawing && drawing.length < remoteIdx) {
+      remoteIdx = 0;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    return;
+  }
+  for (let i = remoteIdx; i < drawing.length; i++) {
+    renderPoint(ctx, drawing[i], canvas.width, canvas.height);
+  }
+  remoteIdx = drawing.length;
+}
+
+// Clear canvas (drawer only)
+function clearCanvas() {
+  if (state.role !== 'drawer') return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  localPoints = [];
+  lastSentIdx = 0;
+}
+
+// --- Tools ---
+document.querySelectorAll('.color-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    drawColor = btn.dataset.color;
+    isEraser = false;
+    document.getElementById('eraserBtn').classList.remove('active');
+  });
+});
+
+document.querySelectorAll('.size-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    drawSize = parseInt(btn.dataset.size);
+  });
+});
+
+document.getElementById('eraserBtn').addEventListener('click', function() {
+  isEraser = !isEraser;
+  this.classList.toggle('active');
+});
+
+// --- Game actions ---
+async function startGame() {
+  try {
+    const res = await fetch(`${API}/api/room/${state.code}/start`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ playerId: state.playerId })
+    });
+    const data = await res.json();
+    if (data.word) {
+      // Clear canvas for new round
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      localPoints = [];
+      lastSentIdx = 0;
+      remoteIdx = 0;
+    }
+  } catch(e) {}
+}
+
+async function submitGuess() {
+  const input = document.getElementById('guessInput');
+  const guess = input.value.trim();
+  if (!guess) return;
+  input.value = '';
+  try {
+    const res = await fetch(`${API}/api/room/${state.code}/guess`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ playerId: state.playerId, guess })
+    });
+    const data = await res.json();
+    if (data.correct) {
+      showCelebration(data.message);
+    }
+  } catch(e) {}
+}
+
+document.getElementById('guessInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitGuess();
+});
+
+function showCelebration(msg) {
+  const div = document.createElement('div');
+  div.className = 'celebration';
+  div.innerHTML = `<div class="celebration-box"><h2>🎉 猜对了！</h2><p>${esc(msg)}</p></div>`;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 2500);
+  // Reset local drawing state
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  localPoints = [];
+  lastSentIdx = 0;
+  remoteIdx = 0;
+}
+</script>
+<script src="track.js"></script>
+</body>
+</html>
