@@ -337,11 +337,11 @@ function toggleTheme() {
   const html = document.documentElement;
   const isLight = html.getAttribute('data-theme') === 'light';
   html.setAttribute('data-theme', isLight ? '' : 'light');
-  localStorage.setItem('theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('anime-theme', isLight ? 'dark' : 'light');
   document.querySelector('.theme-toggle').textContent = isLight ? '🌙' : '☀️';
 }
 (function() {
-  const saved = localStorage.getItem('theme');
+  const saved = localStorage.getItem('anime-theme');
   if (saved === 'light') {
     document.documentElement.setAttribute('data-theme', 'light');
     document.querySelector('.theme-toggle').textContent = '☀️';

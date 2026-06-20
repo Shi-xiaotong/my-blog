@@ -18,12 +18,16 @@ hexo.extend.helper.register('inject_head_js', function () {
       get: key => {
         const itemStr = localStorage.getItem(key)
         if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
+        try {
+          const { value, expiry } = JSON.parse(itemStr)
+          if (Date.now() > expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return value
+        } catch {
+          return itemStr
         }
-        return value
       }
     }
 
