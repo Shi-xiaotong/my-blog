@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 起名助手 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.type-btn { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; font-size: 13px; }
+.type-btn:hover { border-color: var(--primary); color: var(--primary); }
+.type-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.form-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.form-row label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; flex: 1; min-width: 120px; }
+.form-row input, .form-row select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 14px; }
+.radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.radio-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 13px; cursor: pointer; transition: all 0.15s; }
+.radio-btn:hover { border-color: var(--primary); }
+.radio-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.input-area textarea { min-height: 60px; resize: vertical; font-size: 14px; line-height: 1.6; }
+.name-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; transition: all 0.15s; }
+.name-card:hover { border-color: var(--primary); box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.name-title { font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+.name-title .copy-btn { font-size: 12px; padding: 3px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); cursor: pointer; font-weight: 400; }
+.name-title .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+.name-detail { font-size: 14px; line-height: 1.8; color: var(--text); margin-top: 6px; }
+.name-detail strong { color: var(--primary); }
+.output-area { margin-top: 16px; min-height: 100px; }
+.output-area .placeholder { color: var(--text-secondary); font-size: 14px; }
+.style-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 6px; margin-bottom: 12px; }
+.style-btn { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 12px; cursor: pointer; transition: all 0.15s; text-align: center; }
+.style-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+#extraFields { display: none; }
+#babyFields { display: none; }
+#styleFields { display: none; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>AI 起名助手</h1>
+  </div>
+  <div class="tool-area">
+    <label>选择起名类型</label>
+    <div class="type-grid">
+      <button class="type-btn active" onclick="selectType('baby')">👶 宝宝起名</button>
+      <button class="type-btn" onclick="selectType('company')">🏢 公司起名</button>
+      <button class="type-btn" onclick="selectType('nick')">💬 网名</button>
+      <button class="type-btn" onclick="selectType('pet')">🐾 宠物名</button>
+    </div>
+
+    <div id="babyFields">
+      <div class="form-row">
+        <label>
+          姓氏
+          <input type="text" id="surname" placeholder="例如：张、李、王">
+        </label>
+        <label>
+          性别
+          <div class="radio-group" style="margin-top:4px">
+            <span class="radio-btn active" onclick="setGender(this,'男')">男</span>
+            <span class="radio-btn" onclick="setGender(this,'女')">女</span>
+            <span class="radio-btn" onclick="setGender(this,'不限')">不限</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div id="extraFields">
+      <div class="form-row">
+        <label>
+          姓氏 / 前缀（可选）
+          <input type="text" id="extraName" placeholder="例如：李、腾讯、小">
+        </label>
+      </div>
+    </div>
+
+    <div id="styleFields">
+      <label>风格偏好</label>
+      <div class="style-grid">
+        <button class="style-btn active" onclick="setStyle(this,'古典')">古典</button>
+        <button class="style-btn" onclick="setStyle(this,'现代')">现代</button>
+        <button class="style-btn" onclick="setStyle(this,'洋气')">洋气</button>
+        <button class="style-btn" onclick="setStyle(this,'文艺')">文艺</button>
+        <button class="style-btn" onclick="setStyle(this,'大气')">大气</button>
+        <button class="style-btn" onclick="setStyle(this,'可爱')">可爱</button>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <label>关键词 / 寓意</label>
+      <textarea id="keywords" placeholder="例如：聪明、健康、大气、有文化底蕴、事业有成"></textarea>
+    </div>
+
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+      <label style="font-size:13px">生成数量</label>
+      <select id="count" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card-bg);color:var(--text)">
+        <option value="5">5 个</option>
+        <option value="8" selected>8 个</option>
+        <option value="10">10 个</option>
+      </select>
+      <button class="btn btn-primary" id="genBtn" onclick="generate()">✨ 开始起名</button>
+    </div>
+
+    <label>起名结果</label>
+    <div class="output-area" id="output">
+      <span class="placeholder">选择类型，填写信息，点击「开始起名」</span>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+
+const AI_ENDPOINT = 'https://ai.233002.xyz';
+let currentType = 'baby';
+let currentGender = '男';
+let currentStyle = '古典';
+
+function selectType(type) {
+  currentType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.type-btn[onclick="selectType('${type}')"]`).classList.add('active');
+  document.getElementById('babyFields').style.display = type === 'baby' ? 'block' : 'none';
+  document.getElementById('extraFields').style.display = type !== 'baby' ? 'block' : 'none';
+  document.getElementById('styleFields').style.display = (type === 'nick' || type === 'company') ? 'block' : 'none';
+  // Update extra field placeholder
+  const extraInput = document.getElementById('extraName');
+  if (type === 'company') extraInput.placeholder = '例如：前缀或行业关键词，如"腾讯"';
+  else if (type === 'nick') extraInput.placeholder = '例如：前缀或主题，如"小"';
+  else if (type === 'pet') extraInput.placeholder = '例如：宠物种类，如"橘猫、柯基"';
+}
+
+function setGender(el, gender) {
+  currentGender = gender;
+  el.parentElement.querySelectorAll('.radio-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function setStyle(el, style) {
+  currentStyle = style;
+  el.parentElement.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function buildSystemPrompt() {
+  const count = document.getElementById('count').value;
+  const keywords = document.getElementById('keywords').value.trim();
+
+  if (currentType === 'baby') {
+    return `你是一位精通国学、诗词和五行八字的起名大师。请为宝宝起${count}个名字。
+要求：
+- 姓氏：${document.getElementById('surname').value || '未指定'}
+- 性别：${currentGender}
+- 关键词/寓意：${keywords || '美好、聪慧'}
+请严格按以下JSON格式返回，不要有其他内容：
+[{"name":"完整姓名","meaning":"名字含义解释","origin":"出处/典故","wuxing":"五行分析"}]
+每个名字要有文化底蕴，解释清楚含义和来源。`;
+  } else if (currentType === 'company') {
+    return `你是一位品牌命名专家，擅长为公司起朗朗上口、寓意深远的名字。请起${count}个公司名。
+要求：
+- 前缀/行业：${document.getElementById('extraName').value || '未指定'}
+- 风格：${currentStyle}
+- 关键词/寓意：${keywords || '创新、可信赖'}
+请严格按以下JSON格式返回，不要有其他内容：
+[{"name":"公司名称","meaning":"名称含义","origin":"命名思路","wuxing":""}]
+名字要好记、大气、有品牌感。`;
+  } else if (currentType === 'nick') {
+    return `你是一位创意网名设计师，能起出个性、好听、有记忆点的网名。请起${count}个网名。
+要求：
+- 前缀/主题：${document.getElementById('extraName').value || '未指定'}
+- 风格：${currentStyle}
+- 关键词/寓意：${keywords || '有个性'}
+请严格按以下JSON格式返回，不要有其他内容：
+[{"name":"网名","meaning":"含义解读","origin":"创意来源","wuxing":""}]
+网名要独特、好记、适合社交平台使用。`;
+  } else {
+    return `你是一位宠物起名达人，能起出可爱、有趣、好叫的宠物名字。请起${count}个宠物名。
+要求：
+- 宠物种类：${document.getElementById('extraName').value || '未指定'}
+- 关键词/寓意：${keywords || '可爱、好听'}
+请严格按以下JSON格式返回，不要有其他内容：
+[{"name":"宠物名","meaning":"名字含义","origin":"灵感来源","wuxing":""}]
+名字要萌、好叫、有爱。`;
+  }
+}
+
+function renderNameCards(names) {
+  const hasWuxing = currentType === 'baby';
+  return names.map((n, i) => `
+    <div class="name-card">
+      <div class="name-title">
+        <span>${i + 1}. ${n.name}</span>
+        <button class="copy-btn" onclick="copyName('${n.name.replace(/'/g, "\\'")}')">复制</button>
+      </div>
+      <div class="name-detail">
+        <strong>含义：</strong>${n.meaning}<br>
+        <strong>出处：</strong>${n.origin}
+        ${hasWuxing && n.wuxing ? `<br><strong>五行：</strong>${n.wuxing}` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+async function generate() {
+  const btn = document.getElementById('genBtn');
+  const output = document.getElementById('output');
+
+  if (currentType === 'baby' && !document.getElementById('surname').value.trim()) {
+    showToast('请输入姓氏');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '起名中...';
+  output.innerHTML = '<span class="placeholder">AI 正在为您精心起名，请稍候...</span>';
+
+  try {
+    const res = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [
+          { role: 'system', content: buildSystemPrompt() },
+          { role: 'user', content: '请开始起名，严格按JSON格式返回。' }
+        ],
+        temperature: 0.9,
+        max_tokens: 2000
+      })
+    });
+
+    if (!res.ok) throw new Error('API error: ' + res.status);
+    const data = await res.json();
+    const content = data?.choices?.[0]?.message?.content || '';
+
+    // Try to extract JSON from response
+    let names = [];
+    try {
+      const jsonMatch = content.match(/\[[\s\S]*\]/);
+      if (jsonMatch) {
+        names = JSON.parse(jsonMatch[0]);
+      }
+    } catch (e) {
+      // Fallback: display raw content
+      output.innerHTML = `<div class="name-card"><div class="name-detail">${renderMarkdown(content)}</div></div>`;
+      btn.disabled = false;
+      btn.textContent = '✨ 开始起名';
+      return;
+    }
+
+    if (names.length > 0) {
+      output.innerHTML = renderNameCards(names);
+    } else {
+      output.innerHTML = `<div class="name-card"><div class="name-detail">${renderMarkdown(content)}</div></div>`;
+    }
+  } catch (e) {
+    output.innerHTML = `<span style="color:#ef4444">生成失败: ${e.message}</span>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✨ 开始起名';
+}
+
+function copyName(name) {
+  navigator.clipboard.writeText(name);
+  showToast(`已复制「${name}」`);
+}
+
+function renderMarkdown(md) {
+  return md
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`(.*?)`/g, '<code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:13px">$1</code>')
+    .replace(/^- (.*$)/gm, '<li style="margin:4px 0;padding-left:8px">• $1</li>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
+</script>
+<script src="track.js"></script>
+</body>
+</html>

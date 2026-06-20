@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 代码解释 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.input-area textarea { min-height: 200px; resize: vertical; font-size: 14px; line-height: 1.6; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; tab-size: 2; }
+.options-row { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: end; }
+.options-row label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+.options-row select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 14px; }
+.action-btns { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.action-btns .btn { flex: 1; min-width: 100px; }
+.output-area { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; min-height: 200px; font-size: 14px; line-height: 1.8; position: relative; overflow-x: auto; }
+.output-area .placeholder { color: var(--text-secondary); }
+.output-area pre { background: #1e1e2e; color: #cdd6f4; padding: 14px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 10px 0; font-family: 'SF Mono', 'Fira Code', Consolas, monospace; }
+.output-area code.inline { background: var(--bg); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', Consolas, monospace; }
+.output-area h2 { margin: 20px 0 10px; font-size: 1.2em; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+.output-area h3 { margin: 16px 0 8px; font-size: 1.1em; }
+.output-area li { margin: 4px 0; padding-left: 8px; }
+.output-area strong { color: var(--primary); }
+.line-numbers { position: relative; }
+.line-numbers::before { content: attr(data-lines); position: absolute; left: 0; top: 0; color: #585b70; font-size: 12px; line-height: 1.6; text-align: right; padding-right: 8px; border-right: 1px solid #313244; pointer-events: none; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>AI 代码解释</h1>
+  </div>
+  <div class="tool-area">
+    <div class="input-area">
+      <label>粘贴代码</label>
+      <textarea id="code" placeholder="将代码粘贴到这里...&#10;&#10;支持 JavaScript、Python、Java、Go、Rust、SQL 等语言"></textarea>
+    </div>
+
+    <div class="options-row">
+      <label>
+        编程语言
+        <select id="language">
+          <option value="auto">🔍 自动检测</option>
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="go">Go</option>
+          <option value="rust">Rust</option>
+          <option value="sql">SQL</option>
+          <option value="typescript">TypeScript</option>
+          <option value="c">C / C++</option>
+          <option value="php">PHP</option>
+          <option value="ruby">Ruby</option>
+          <option value="shell">Shell</option>
+          <option value="other">其他</option>
+        </select>
+      </label>
+      <label>
+        解释风格
+        <select id="level">
+          <option value="beginner">初学者友好</option>
+          <option value="intermediate" selected>中级开发者</option>
+          <option value="advanced">高级/深入</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="action-btns">
+      <button class="btn btn-primary" id="btnExplain" onclick="doAction('explain')">📖 逐行解释</button>
+      <button class="btn btn-outline" id="btnSummary" onclick="doAction('summary')">📋 概括总结</button>
+      <button class="btn btn-outline" id="btnBug" onclick="doAction('bug')">🐛 找 Bug</button>
+      <button class="btn btn-outline" id="btnOptimize" onclick="doAction('optimize')">⚡ 优化建议</button>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <label>解释结果</label>
+      <button class="btn btn-outline" style="padding:4px 10px;font-size:12px" onclick="copyOutput()">复制</button>
+    </div>
+    <div class="output-area" id="output">
+      <span class="placeholder">粘贴代码，选择语言和功能后点击按钮</span>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+
+const AI_ENDPOINT = 'https://ai.233002.xyz';
+
+const BASE_SYSTEM = '你是一个编程老师。用通俗易懂的中文解释代码。避免专业术语，用比喻帮助理解。';
+
+const ACTION_PROMPTS = {
+  explain: `请逐行解释以下代码。要求：
+- 每一行或每一小段代码后面跟着解释
+- 用通俗语言说明这行代码做了什么
+- 用生活中的比喻帮助理解
+- 标注关键概念和设计模式
+- 最后给出整体总结
+用markdown格式输出，代码部分用代码块包裹。`,
+
+  summary: `请概括总结这段代码。包括：
+- 这段代码的整体功能是什么（一句话总结）
+- 主要的输入和输出
+- 核心逻辑流程（用步骤说明）
+- 用了哪些技术/设计模式
+- 适用场景
+用markdown格式输出。`,
+
+  bug: `请仔细检查这段代码，找出可能存在的Bug和问题。包括：
+- 语法错误
+- 逻辑错误
+- 边界条件未处理
+- 潜在的性能问题
+- 安全隐患
+- 代码风格问题
+对每个问题，说明：问题是什么、在哪里、为什么是问题、如何修复。
+如果没有找到问题，也要说明代码是正确的。
+用markdown格式输出。`,
+
+  optimize: `请对这段代码提出优化建议。包括：
+- 性能优化：如何让代码跑得更快
+- 可读性优化：如何让代码更清晰
+- 代码结构优化：如何让代码更优雅
+- 最佳实践建议
+每个建议给出优化前和优化后的代码对比。
+用markdown格式输出。`
+};
+
+function getSystemPrompt(action) {
+  const lang = document.getElementById('language').value;
+  const level = document.getElementById('level').value;
+  let langHint = lang === 'auto' ? '自动检测' : lang;
+  let levelHint = level === 'beginner' ? '初学者，需要详细解释基础概念' :
+                  level === 'intermediate' ? '有一定经验的开发者' :
+                  '资深开发者，可以深入底层原理';
+
+  return `${BASE_SYSTEM}
+编程语言：${langHint}。如果用户选择自动检测，请根据代码特征判断语言。
+解释对象水平：${levelHint}。
+
+${ACTION_PROMPTS[action]}`;
+}
+
+async function doAction(action) {
+  const code = document.getElementById('code').value.trim();
+  if (!code) { showToast('请先粘贴代码'); return; }
+
+  const btnMap = { explain: 'btnExplain', summary: 'btnSummary', bug: 'btnBug', optimize: 'btnOptimize' };
+  const btn = document.getElementById(btnMap[action]);
+  const output = document.getElementById('output');
+  const origText = btn.textContent;
+
+  document.querySelectorAll('.action-btns .btn').forEach(b => b.disabled = true);
+  btn.textContent = '分析中...';
+  output.innerHTML = '<span class="placeholder">AI 正在分析代码，请稍候...</span>';
+
+  try {
+    const res = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [
+          { role: 'system', content: getSystemPrompt(action) },
+          { role: 'user', content: '请分析以下代码：\n\n```\n' + code + '\n```' }
+        ],
+        temperature: 0.5,
+        max_tokens: 3000
+      })
+    });
+
+    if (!res.ok) throw new Error('API error: ' + res.status);
+    const data = await res.json();
+    const content = data?.choices?.[0]?.message?.content || '';
+
+    output.innerHTML = renderMarkdown(content);
+  } catch (e) {
+    output.innerHTML = `<span style="color:#ef4444">分析失败: ${e.message}</span>`;
+  }
+
+  document.querySelectorAll('.action-btns .btn').forEach(b => b.disabled = false);
+  btn.textContent = origText;
+}
+
+function renderMarkdown(md) {
+  // Escape HTML first
+  let html = md
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Code blocks with syntax highlighting hints
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+    const langLabel = lang ? `<div style="font-size:11px;color:#a6adc8;margin-bottom:6px;text-transform:uppercase">${lang}</div>` : '';
+    return `<pre>${langLabel}<code>${code.trim()}</code></pre>`;
+  });
+
+  // Inline code
+  html = html.replace(/`([^`\n]+)`/g, '<code class="inline">$1</code>');
+
+  // Headers
+  html = html.replace(/^#### (.*$)/gm, '<h4 style="margin:12px 0 6px;font-size:1em">$1</h4>');
+  html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.*$)/gm, '<h1 style="margin:24px 0 12px;font-size:1.4em">$1</h1>');
+
+  // Bold and italic
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+  // Lists
+  html = html.replace(/^- (.*$)/gm, '<li>• $1</li>');
+  html = html.replace(/^\d+\. (.*$)/gm, (match, p1, offset, str) => {
+    return `<li>${match.match(/^\d+/)[0]}. ${p1}</li>`;
+  });
+
+  // Line breaks (but not inside pre blocks)
+  const parts = html.split(/(<pre[\s\S]*?<\/pre>)/);
+  html = parts.map((part, i) => {
+    if (part.startsWith('<pre')) return part;
+    return part
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, '<br>');
+  }).join('');
+
+  return html;
+}
+
+function copyOutput() {
+  const text = document.getElementById('output').textContent;
+  if (text && !text.includes('粘贴代码')) {
+    navigator.clipboard.writeText(text);
+    showToast('已复制');
+  }
+}
+</script>
+<script src="track.js"></script>
+</body>
+</html>
