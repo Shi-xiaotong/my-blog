@@ -31,7 +31,7 @@ theme_color:
 
 nav:
   # 导航栏 logo 图片
-  logo:
+  logo: https://img.233002.xyz/blog/logo.png
   display_title: true
   display_post_title: true
   # 是否固定导航栏
@@ -81,7 +81,7 @@ social:
 # 图片设置
 # --------------------------------------
 
-favicon: /img/favicon.ico
+favicon: /img/favicon-32.png
 
 avatar:
   img: /img/picture.png
