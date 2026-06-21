@@ -81,7 +81,7 @@ social:
 # 图片设置
 # --------------------------------------
 
-favicon: /img/favicon-32.png
+favicon: /img/favicon-32.png?v=2
 
 avatar:
   img: /img/picture.png
