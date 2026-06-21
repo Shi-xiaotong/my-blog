@@ -121,8 +121,6 @@ r2_media:
   bucket: myblog
   endpoint: https://32b5283fd99d2ea2abdc19507a5cf8d3.r2.cloudflarestorage.com
   public_base_url: https://img.233002.xyz
-  access_key_id: 836c8a05e7faba14f3aaef9ce5a717c0
-  secret_access_key: 85aabfd7412c190a58544cd1a63a709cc53d1392c79f974c5fe782dd2773e2cc
   key_prefix: blog
 
 # 部署
