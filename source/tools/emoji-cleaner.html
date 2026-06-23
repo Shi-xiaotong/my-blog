@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emoji 清理器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>Emoji 清理器</h1></div>
+  <div class="tool-area">
+    <div class="section"><label>输入文本</label><textarea id="input" rows="4" placeholder="Hello 👋 World 🌍! 你好 🇨🇳"></textarea></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn btn-primary" onclick="removeEmoji()">移除 Emoji</button>
+      <button class="btn btn-outline" onclick="extractEmoji()">提取 Emoji</button>
+      <button class="btn btn-outline" onclick="replaceEmoji()">替换为文字</button>
+    </div>
+    <div style="margin-top:12px"><label>结果</label><div class="result-box" id="output" style="word-break:break-all;min-height:40px;font-size:14px;cursor:pointer" onclick="copyText(this.textContent)" title="点击复制"></div></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+const emojiRegex=/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{200D}\u{20E3}\u{FE0F}]/gu;
+function removeEmoji(){document.getElementById('output').textContent=document.getElementById('input').value.replace(emojiRegex,'')}
+function extractEmoji(){const emojis=document.getElementById('input').value.match(emojiRegex);document.getElementById('output').textContent=emojis?emojis.join(' '):'未找到 Emoji'}
+function replaceEmoji(){
+  const emojiMap={'😀':'[微笑]','😂':'[大笑]','🥰':'[喜欢]','😍':'[花痴]','🤔':'[思考]','😎':'[酷]','👍':'[点赞]','❤️':'[爱心]','🎉':'[庆祝]','🔥':'[火焰]','⭐':'[星星]','🌟':'[亮星]','💯':'[满分]','✅':'[对勾]','❌':'[叉号]','⚡':'[闪电]','🌈':'[彩虹]','☀️':'[太阳]','🌙':'[月亮]','🎵':'[音符]','📚':'[书籍]','💻':'[电脑]','🚀':'[火箭]','🏆':'[奖杯]','💪':'[肌肉]','🤝':'[握手]','👏':'[鼓掌]','🙏':'[祈祷]','✨':'[闪光]','💡':'[灯泡]','📌':'[图钉]','🔑':'[钥匙]','🎯':'[靶心]','📝':'[笔记]','🗓️':'[日历]','⏰':'[闹钟]','🔔':'[铃铛]','💬':'[对话]','📢':'[喇叭]','📣':'[扩音器]','📱':'[手机]','🖥️':'[显示器]','⌨️':'[键盘]','🖱️':'[鼠标]','🔌':'[插头]','💾':'[软盘]','📷':'[相机]','🎬':'[场记板]','🎮':'[游戏手柄]','🕹️':'[摇杆]','🎧':'[耳机]','📻':'[收音机]','🔊':'[扬声器]','🎤':'[麦克风]','🎸':'[吉他]','🥁':'[鼓]','🎹':'[钢琴]','🎺':'[小号]','🎻':'[小提琴]','🪗':'[手风琴]','🎷':'[萨克斯]','🎲':'[骰子]','♟️':'[棋子]','🎭':'[表演]','🎨':'[调色板]','🖼️':'[相框]','🎪':'[马戏团]','🎠':'[旋转木马]','🎡':'[摩天轮]','🎢':'[过山车]','🏠':'[房子]','🏡':'[花园]','🏢':'[办公楼]','🏗️':'[建筑]','🏭':'[工厂]','🏯':'[城堡]','🗼':'[塔]','🗽':'[自由女神]','⛪':'[教堂]','🕌':'[清真寺]','🕍':'[寺庙]','⛩️':'[神社]','🛕':'[印度庙]','🏰':'[城堡]','🚀':'[火箭]','✈️':'[飞机]','🚁':'[直升机]','🛸':'[飞碟]','🚂':'[火车]','🚃':'[电车]','🚄':'[高铁]','🚅':'[子弹头]','🚆':'[列车]','🚇':'[地铁]','🚈':'[轻轨]','🚉':'[车站]','🚊':'[有轨电车]','🚝':'[单轨]','🚞':'[登山铁路]','🚋':'[车厢]','🚌':'[公交车]','🚍':'[迎面公交]','🚎':'[电车]','🚐':'[小巴]','🚑':'[救护车]','🚒':'[消防车]','🚓':'[警车]','🚔':'[迎面警车]','🚕':'[出租车]','🚖':'[迎面出租]','🚗':'[汽车]','🚘':'[迎面汽车]','🚙':'[越野车]','🛎️':'[行李车]','🚚':'[卡车]','🚛':'[拖车]','🚜':'[拖拉机]','🏎️':'[赛车]','🏍️':'[摩托车]','🛵':'[踏板车]','🦽':'[手动轮椅]','🦼':'[电动轮椅]','🛺':'[突突车]','🚲':'[自行车]','🛴':'[滑板车]','🛹':'[滑板]','🚏':'[公交站]','🛣️':'[高速公路]','🛤️':'[铁轨]','⛽':'[加油站]','🚨':'[警灯]','🚥':'[横向灯]','🚦':'[竖向灯]','🛑':'[停车牌]','🚧':'[路障]','⚓':'[锚]','⛵':'[帆船]','🛶':'[独木舟]','🚤':'[快艇]','🛳️':'[渡轮]','⛴️':'[ ferry]','🚢':'[轮船]','🗺️':'[世界地图]','🗾':'[日本地图]','🧭':'[指南针]','🏔️':'[雪山]','⛰️':'[山]','🌋':'[火山]','🗻':'[富士山]','🏕️':'[露营]','🏖️':'[海滩]','🏜️':'[沙漠]','🏝️':'[孤岛]','🏞️':'[公园]','🏟️':'[体育场]','🏛️':'[古典建筑]','🏗️':'[建筑工地]','🧱':'[砖块]','🪨':'[岩石]','🪵':'[木头]','🛖':'[小屋]','🏘️':'[房屋群]','🏚️':'[空屋]','🏠':'[房子]','🏡':'[带花园的房子]','🏢':'[办公楼]','🏣':'[邮局]','🏤':'[邮局]','🏥':'[医院]','🏦':'[银行]','🏨':'[酒店]','🏩':'[爱情酒店]','🏪':'[便利店]','🏫':'[学校]','🏬':'[百货商店]','🏭':'[工厂]','🏯':'[城堡]','🏰':'[城堡]','💒':'[婚礼]','🗼':'[塔]','🗽':'[自由女神]','⛪':'[教堂]','🕌':'[清真寺]','🛕':'[印度庙]','🕍':'[犹太会堂]','⛩️':'[神社入口]','🕋':'[克尔白]','⛲':'[喷泉]','⛺':'[帐篷]','🌁':'[雾]','🌃':'[夜景]','🏙️':'[城市天际线]','🌄':'[日出过山]','🌅':'[日出]','🌆':'[城市黄昏]','🌇':'[日落]','🌉':'[夜桥]','♨️':'[温泉]','🎠':'[旋转木马]','🛝':'[滑梯]','🎡':'[摩天轮]','🎢':'[过山车]','💈':'[理发店]','🎪':'[马戏团帐篷]'};
+  const input=document.getElementById('input').value;
+  let result=input;
+  const emojis=input.match(emojiRegex);
+  if(emojis){
+    emojis.forEach(e=>{if(emojiMap[e])result=result.split(e).join(emojiMap[e])});
+  }
+  document.getElementById('output').textContent=result;
+}
+</script>
+</body>
+</html>

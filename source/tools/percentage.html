@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>百分比计算器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>百分比计算器</h1></div>
+  <div class="tool-area">
+    <div class="section" style="padding:16px;background:var(--bg);border-radius:12px;margin-bottom:16px">
+      <div style="font-size:15px;margin-bottom:8px">A 的百分之多少是 B？</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input type="number" id="percent" placeholder="%" style="width:80px">
+        <span>%</span>
+        <input type="number" id="total" placeholder="总数" style="width:100px">
+        <span>=</span>
+        <div id="resultA" style="font-size:18px;font-weight:bold;min-width:60px"></div>
+      </div>
+    </div>
+    <div class="section" style="padding:16px;background:var(--bg);border-radius:12px;margin-bottom:16px">
+      <div style="font-size:15px;margin-bottom:8px">A 是 B 的百分之多少？</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input type="number" id="part" placeholder="部分" style="width:100px">
+        <span>是</span>
+        <input type="number" id="total2" placeholder="总数" style="width:100px">
+        <span>的 %</span>
+        <div id="resultB" style="font-size:18px;font-weight:bold;min-width:60px"></div>
+      </div>
+    </div>
+    <div class="section" style="padding:16px;background:var(--bg);border-radius:12px">
+      <div style="font-size:15px;margin-bottom:8px">数值增减百分比</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input type="number" id="from" placeholder="原值" style="width:100px">
+        <span>变为</span>
+        <input type="number" id="to" placeholder="新值" style="width:100px">
+        <span>，变化 %</span>
+        <div id="resultC" style="font-size:18px;font-weight:bold;min-width:80px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+document.getElementById('percent').addEventListener('input',calcA);
+document.getElementById('total').addEventListener('input',calcA);
+document.getElementById('part').addEventListener('input',calcB);
+document.getElementById('total2').addEventListener('input',calcB);
+document.getElementById('from').addEventListener('input',calcC);
+document.getElementById('to').addEventListener('input',calcC);
+function calcA(){const p=parseFloat(document.getElementById('percent').value);const t=parseFloat(document.getElementById('total').value);document.getElementById('resultA').textContent=(p&&t?(p/100*t).toFixed(4).replace(/\.?0+$/,'')):''}
+function calcB(){const p=parseFloat(document.getElementById('part').value);const t=parseFloat(document.getElementById('total2').value);document.getElementById('resultB').textContent=(p&&t?(p/t*100).toFixed(2).replace(/\.?0+$/,'')+'%'):''}
+function calcC(){const f=parseFloat(document.getElementById('from').value);const t=parseFloat(document.getElementById('to').value);if(f&&t){const c=(t-f)/Math.abs(f)*100;document.getElementById('resultC').textContent=(c>=0?'+':'')+c.toFixed(2).replace(/\.?0+$/,'')+'%'}}
+</script>
+</body>
+</html>

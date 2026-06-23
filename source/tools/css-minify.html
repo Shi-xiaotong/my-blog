@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS 压缩/格式化 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>CSS 压缩/格式化</h1></div>
+  <div class="tool-area">
+    <div class="section"><label>输入 CSS</label><textarea id="input" rows="8" placeholder="body {&#10;  margin: 0;&#10;  padding: 0;&#10;}"></textarea></div>
+    <div class="row" style="margin-top:12px"><button class="btn btn-primary" onclick="format()">格式化</button><button class="btn btn-outline" onclick="compress()">压缩</button></div>
+    <div style="margin-top:12px"><label>结果</label><textarea id="output" rows="10" readonly style="cursor:pointer" onclick="copyText(this.value)" title="点击复制"></textarea></div>
+    <div style="margin-top:8px;font-size:13px;color:var(--text-secondary)">原始: <span id="origSize">0</span>B → 结果: <span id="resultSize">0</span>B</div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function format(){
+  const css=document.getElementById('input').value;
+  let formatted=css.replace(/\}\s*\{/g,'}\n{\n').replace(/;\s*/g,';\n').replace(/\/\*/g,'\n/*').replace(/\*\//g,'*/\n');
+  document.getElementById('output').value=formatted;
+  document.getElementById('origSize').textContent=new Blob([css]).size;
+  document.getElementById('resultSize').textContent=new Blob([formatted]).size;
+}
+function compress(){
+  let css=document.getElementById('input').value;
+  css=css.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s+/g,' ').replace(/\s*([{}:;,>)])\s*/g,'$1').trim();
+  document.getElementById('output').value=css;
+  document.getElementById('origSize').textContent=new Blob([css]).size;
+  document.getElementById('resultSize').textContent=new Blob([css]).size;
+}
+document.getElementById('input').addEventListener('input',function(){document.getElementById('origSize').textContent=new Blob([this.value]).size});
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>渐变色生成器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.gradient-preview{height:120px;border-radius:12px;margin:16px 0;border:1px solid var(--border)}
+.color-inputs{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.color-group{display:flex;flex-direction:column;gap:4px;align-items:center}
+.color-group input[type="color"]{width:48px;height:48px;border:none;cursor:pointer;border-radius:8px}
+.color-group input[type="range"]{width:120px}
+.code-output{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:'SF Mono',monospace;font-size:13px;cursor:pointer;white-space:pre-wrap;word-break:break-all}
+.angle-display{font-size:14px;color:var(--text-secondary);min-width:40px;text-align:center}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>渐变色生成器</h1></div>
+  <div class="tool-area">
+    <div class="color-inputs">
+      <div class="color-group"><label>颜色 1</label><input type="color" id="color1" value="#3b82f6" oninput="update()"></div>
+      <div class="color-group"><label>颜色 2</label><input type="color" id="color2" value="#8b5cf6" oninput="update()"></div>
+      <div class="color-group"><label>角度</label><input type="range" id="angle" min="0" max="360" value="135" oninput="update()"><span class="angle-display" id="angleDisplay">135°</span></div>
+      <div class="color-group"><label>类型</label><select id="type" onchange="update()" style="padding:8px;border-radius:8px;border:1px solid var(--border)"><option value="linear">线性渐变</option><option value="radial">径向渐变</option></select></div>
+    </div>
+    <div class="gradient-preview" id="preview"></div>
+    <div><label>CSS 代码</label><div class="code-output" id="codeOutput" onclick="copyText(this.textContent)" title="点击复制"></div></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function update(){
+  const c1=document.getElementById('color1').value;
+  const c2=document.getElementById('color2').value;
+  const angle=document.getElementById('angle').value;
+  const type=document.getElementById('type').value;
+  document.getElementById('angleDisplay').textContent=angle+'°';
+  const css=type==='linear'?'linear-gradient('+angle+'deg, '+c1+', '+c2+')':'radial-gradient(circle, '+c1+', '+c2+')';
+  document.getElementById('preview').style.background=css;
+  document.getElementById('codeOutput').textContent='background: '+css+';';
+}
+update();
+</script>
+</body>
+</html>

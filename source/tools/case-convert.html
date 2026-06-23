@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大小写转换 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>大小写转换</h1></div>
+  <div class="tool-area">
+    <div class="section"><label>输入文本</label><textarea id="input" rows="4" placeholder="输入需要转换的文本"></textarea></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn btn-primary" onclick="convert('upper')">大写</button>
+      <button class="btn btn-primary" onclick="convert('lower')">小写</button>
+      <button class="btn btn-outline" onclick="convert('title')">首字母大写</button>
+      <button class="btn btn-outline" onclick="convert('sentence')">句首大写</button>
+      <button class="btn btn-outline" onclick="convert('camel')">camelCase</button>
+      <button class="btn btn-outline" onclick="convert('pascal')">PascalCase</button>
+      <button class="btn btn-outline" onclick="convert('snake')">snake_case</button>
+      <button class="btn btn-outline" onclick="convert('kebab')">kebab-case</button>
+      <button class="btn btn-outline" onclick="convert('swap')">交换大小写</button>
+    </div>
+    <div style="margin-top:12px"><label>结果</label><textarea id="output" rows="4" readonly style="cursor:pointer" onclick="copyText(this.value)" title="点击复制"></textarea></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function convert(type){
+  const input=document.getElementById('input').value;
+  let result;
+  switch(type){
+    case'upper':result=input.toUpperCase();break;
+    case'lower':result=input.toLowerCase();break;
+    case'title':result=input.replace(/\w\S*/g,t=>t.charAt(0).toUpperCase()+t.slice(1).toLowerCase());break;
+    case'sentence':result=input.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g,c=>c.toUpperCase());break;
+    case'camel':result=input.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g,(m,c)=>c.toUpperCase());break;
+    case'pascal':result=input.replace(/(^|[\s-])(\w)/g,(m,c)=>c.toUpperCase()).replace(/[\s-]/g,'');break;
+    case'snake':result=input.toLowerCase().replace(/[^a-zA-Z0-9]+/g,'_').replace(/^_|_$/g,'');break;
+    case'kebab':result=input.toLowerCase().replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-|-$/g,'');break;
+    case'swap':result=input.split('').map(c=>c===c.toUpperCase()?c.toLowerCase():c.toUpperCase()).join('');break;
+  }
+  document.getElementById('output').value=result;
+}
+</script>
+</body>
+</html>

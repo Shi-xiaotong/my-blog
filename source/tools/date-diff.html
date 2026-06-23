@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日期差值计算器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>日期差值计算器</h1></div>
+  <div class="tool-area">
+    <div class="row">
+      <div><label>开始日期</label><input type="date" id="start" style="width:100%"></div>
+      <div><label>结束日期</label><input type="date" id="end" style="width:100%"></div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="calc()">计算</button>
+    <div id="results" style="margin-top:16px"></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function calc(){
+  const start=new Date(document.getElementById('start').value);
+  const end=new Date(document.getElementById('end').value);
+  if(isNaN(start.getTime())||isNaN(end.getTime())){alert('请选择有效日期');return}
+  const diff=Math.abs(end-start);
+  const days=Math.floor(diff/86400000);
+  const hours=days*24;
+  const minutes=hours*60;
+  const weeks=Math.floor(days/7);
+  const months=Math.abs(end.getMonth()-start.getMonth())+(end.getFullYear()-start.getFullYear())*12;
+  const years=Math.floor(months/12);
+  const remainMonths=months%12;
+  const remainDays=days-weeks*7-remainMonths*30;
+  document.getElementById('results').innerHTML=
+    '<div class="result-box">'+
+    '<div class="result-line"><span class="result-label">相差天数</span><span class="result-value">'+days+' 天</span></div>'+
+    '<div class="result-line"><span class="result-label">相差小时</span><span class="result-value">'+hours+' 小时</span></div>'+
+    '<div class="result-line"><span class="result-label">相差分钟</span><span class="result-value">'+minutes+' 分钟</span></div>'+
+    '<div class="result-line"><span class="result-label">相差周数</span><span class="result-value">'+weeks+' 周</span></div>'+
+    '<div class="result-line"><span class="result-label">相差年月日</span><span class="result-value">'+years+' 年 '+remainMonths+' 月 '+Math.max(remainDays,0)+' 天</span></div>'+
+    '</div>';
+}
+document.getElementById('start').value=new Date().toISOString().split('T')[0];
+document.getElementById('end').value=new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>

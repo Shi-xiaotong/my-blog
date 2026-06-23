@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随机数 / 随机抽取 / 掷骰子 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.result-display{font-size:3em;font-weight:bold;text-align:center;padding:20px;font-family:'SF Mono',monospace;color:var(--primary)}
+.dice-display{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.die{width:64px;height:64px;background:var(--card-bg);border:2px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2em;font-weight:bold}
+.pick-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.pick-item{padding:8px 16px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:14px}
+.pick-item.highlight{background:var(--primary);color:#fff;border-color:var(--primary)}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>随机数 / 随机抽取 / 掷骰子</h1></div>
+  <div class="tool-area">
+    <div class="cat-tabs" style="display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap">
+      <button class="cat-tab active" onclick="switchMode('rand')" style="padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;font-size:13px">随机数</button>
+      <button class="cat-tab" onclick="switchMode('pick')" style="padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;font-size:13px">随机抽取</button>
+      <button class="cat-tab" onclick="switchMode('dice')" style="padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;font-size:13px">掷骰子</button>
+    </div>
+
+    <div id="modeRand">
+      <div class="row">
+        <div><label>最小值</label><input type="number" id="min" value="1" style="width:100%"></div>
+        <div><label>最大值</label><input type="number" id="max" value="100" style="width:100%"></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="genRandom()">生成</button></div>
+      </div>
+      <div class="result-display" id="randResult">?</div>
+    </div>
+
+    <div id="modePick" style="display:none">
+      <div class="section"><label>输入选项（每行一个）</label><textarea id="pickInput" rows="4" placeholder="张三&#10;李四&#10;王五&#10;赵六"></textarea></div>
+      <div class="row"><div><label>抽取数量</label><input type="number" id="pickCount" value="1" min="1" style="width:80px"></div>
+      <div style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="genPick()">抽取</button></div></div>
+      <div class="pick-list" id="pickResult"></div>
+    </div>
+
+    <div id="modeDice" style="display:none">
+      <div class="row">
+        <div><label>骰子数量</label><input type="number" id="diceCount" value="2" min="1" max="10" style="width:80px"></div>
+        <div><label>每颗面数</label><input type="number" id="diceFaces" value="6" min="2" max="100" style="width:80px"></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="rollDice()">掷骰子</button></div>
+      </div>
+      <div class="dice-display" id="diceResult"></div>
+      <div class="result-display" id="diceTotal" style="font-size:1.5em"></div>
+    </div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function switchMode(mode){
+  document.getElementById('modeRand').style.display=mode==='rand'?'':'none';
+  document.getElementById('modePick').style.display=mode==='pick'?'':'none';
+  document.getElementById('modeDice').style.display=mode==='dice'?'':'none';
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+function genRandom(){
+  const min=parseInt(document.getElementById('min').value);
+  const max=parseInt(document.getElementById('max').value);
+  const result=Math.floor(Math.random()*(max-min+1))+min;
+  document.getElementById('randResult').textContent=result;
+}
+function genPick(){
+  const items=document.getElementById('pickInput').value.trim().split('\n').filter(l=>l.trim());
+  const count=Math.min(parseInt(document.getElementById('pickCount').value)||1,items.length);
+  const shuffled=[...items].sort(()=>Math.random()-0.5);
+  const picked=shuffled.slice(0,count);
+  document.getElementById('pickResult').innerHTML=picked.map(p=>'<div class="pick-item highlight">'+p+'</div>').join('');
+}
+function rollDice(){
+  const count=parseInt(document.getElementById('diceCount').value)||2;
+  const faces=parseInt(document.getElementById('diceFaces').value)||6;
+  const results=[];let total=0;
+  for(let i=0;i<count;i++){const r=Math.floor(Math.random()*faces)+1;results.push(r);total+=r}
+  document.getElementById('diceResult').innerHTML=results.map(r=>'<div class="die">'+r+'</div>').join('');
+  document.getElementById('diceTotal').textContent='总和: '+total;
+}
+</script>
+</body>
+</html>

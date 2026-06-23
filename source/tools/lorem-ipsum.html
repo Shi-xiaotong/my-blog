@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lorem Ipsum 生成器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>Lorem Ipsum 生成器</h1></div>
+  <div class="tool-area">
+    <div class="section">
+      <div class="row">
+        <div><label>段落数</label><input type="number" id="count" value="3" min="1" max="50" style="width:100%"></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="generate()">生成</button></div>
+      </div>
+    </div>
+    <div style="margin-top:12px"><label>结果</label><div class="result-box" id="output" style="font-size:14px;line-height:1.8;cursor:pointer" onclick="copyText(this.textContent)" title="点击复制"></div></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+const words=['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','in','cididunt','ut','labore','et','dolore','magna','aliqua','ut','enim','ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','ut','aliquip','ex','ea','commodo','consequat','duis','aute','irure','dolor','in','reprehenderit','in','voluptate','velit','esse','cillum','fugiat','nulla','pariatur','excepteur','sint','occaecat','cupidatat','non','proident','sunt','culpa','qui','officia','deserunt','mollit','anim','id','est','laborum'];
+function generate(){
+  const count=parseInt(document.getElementById('count').value)||3;
+  const paragraphs=[];
+  for(let p=0;p<count;p++){
+    const sentences=2+Math.floor(Math.random()*4);
+    const sentenceArr=[];
+    for(let s=0;s<sentences;s++){
+      const len=8+Math.floor(Math.random()*12);
+      let sentence=[];
+      for(let i=0;i<len;i++)sentence.push(words[Math.floor(Math.random()*words.length)]);
+      sentence[0]=sentence[0].charAt(0).toUpperCase()+sentence[0].slice(1);
+      sentence.push('.');
+      sentenceArr.push(sentence.join(' '));
+    }
+    paragraphs.push(sentenceArr.join(' '));
+  }
+  document.getElementById('output').innerHTML=paragraphs.map(p=>'<p style="margin-bottom:12px;text-indent:2em">'+p+'</p>').join('');
+}
+generate();
+</script>
+</body>
+</html>

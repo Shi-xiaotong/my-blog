@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>进制转换 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.conv-row { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+.conv-row input { flex:1; }
+.conv-row label { min-width:60px; font-size:14px; }
+.result-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
+.result-item { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px; cursor:pointer; }
+.result-item:hover { border-color:var(--primary); }
+.result-item .label { font-size:12px; color:var(--text-secondary); margin-bottom:4px; }
+.result-item .value { font-family:'SF Mono',monospace; font-size:14px; word-break:break-all; }
+@media(max-width:640px) { .result-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>进制转换</h1></div>
+  <div class="tool-area">
+    <div class="conv-row">
+      <label>输入进制</label>
+      <select id="fromBase"><option value="2">二进制</option><option value="8">八进制</option><option value="10" selected>十进制</option><option value="16">十六进制</option></select>
+      <input type="text" id="inputVal" placeholder="输入数值" oninput="convert()">
+    </div>
+    <div class="result-grid" id="results"></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark')}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function convert(){
+  const val=document.getElementById('inputVal').value.trim();
+  const fromBase=parseInt(document.getElementById('fromBase').value);
+  const el=document.getElementById('results');
+  if(!val){el.innerHTML='';return}
+  let num;try{num=parseInt(val,fromBase)}catch(e){el.innerHTML='<div class="result-item"><div class="label">错误</div><div class="value" style="color:#ef4444">无效的'+fromBase+'进制数</div></div>';return}
+  if(isNaN(num)){el.innerHTML='<div class="result-item"><div class="label">错误</div><div class="value" style="color:#ef4444">无法解析</div></div>';return}
+  const isNeg=num<0;const abs=Math.abs(num);
+  const bases=[{n:2,l:'二进制'},{n:8,l:'八进制'},{n:10,l:'十进制'},{n:16,l:'十六进制'}];
+  el.innerHTML=bases.map(b=>{
+    const v=(isNeg?'-':'')+abs.toString(b.n);
+    return'<div class="result-item" onclick="copyText(\''+v.replace(/'/g,"\\'")+'\')"><div class="label">'+b.l+'</div><div class="value">'+v+'</div></div>'
+  }).join('')
+}
+</script>
+</body>
+</html>

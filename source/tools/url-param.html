@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL 参数生成器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>URL 参数生成器</h1></div>
+  <div class="tool-area">
+    <div class="section"><label>基础 URL</label><input type="text" id="baseUrl" placeholder="https://example.com" oninput="buildUrl()"></div>
+    <div id="params">
+      <div class="param-row" style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+        <input type="text" class="param-key" placeholder="键名" oninput="buildUrl()" style="flex:1">
+        <input type="text" class="param-val" placeholder="值" oninput="buildUrl()" style="flex:1">
+        <button class="btn btn-outline" onclick="this.parentElement.remove();buildUrl()" style="padding:4px 8px">✕</button>
+      </div>
+    </div>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="addParam()">+ 添加参数</button>
+    <div style="margin-top:16px"><label>生成结果</label><div class="result-box" id="output" style="word-break:break-all;min-height:40px;font-family:'SF Mono',monospace;font-size:14px;cursor:pointer" onclick="copyText(this.textContent)" title="点击复制"></div></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function addParam(){document.getElementById('params').innerHTML+='<div class="param-row" style="display:flex;gap:8px;margin-bottom:8px;align-items:center"><input type="text" class="param-key" placeholder="键名" oninput="buildUrl()" style="flex:1"><input type="text" class="param-val" placeholder="值" oninput="buildUrl()" style="flex:1"><button class="btn btn-outline" onclick="this.parentElement.remove();buildUrl()" style="padding:4px 8px">✕</button></div>'}
+function buildUrl(){
+  const base=document.getElementById('baseUrl').value.trim();
+  const keys=document.querySelectorAll('.param-key');const vals=document.querySelectorAll('.param-val');
+  const params=[];
+  for(let i=0;i<keys.length;i++){if(keys[i].value)params.push(encodeURIComponent(keys[i].value)+'='+encodeURIComponent(vals[i].value||''))}
+  const url=params.length?base+(base.includes('?')?'&':'?')+params.join('&'):base;
+  document.getElementById('output').textContent=url;
+}
+</script>
+</body>
+</html>

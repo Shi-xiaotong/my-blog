@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>行号添加器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>行号添加器</h1></div>
+  <div class="tool-area">
+    <div class="section"><label>输入文本</label><textarea id="input" rows="8" placeholder="第一行&#10;第二行&#10;第三行"></textarea></div>
+    <div class="row" style="margin-top:12px">
+      <div><label>起始行号</label><input type="number" id="startNum" value="1" min="0" style="width:80px"></div>
+      <div><label>分隔符</label><input type="text" id="separator" value=". " style="width:60px"></div>
+      <button class="btn btn-primary" onclick="addNumbers()">添加行号</button>
+      <button class="btn btn-outline" onclick="removeNumbers()">去除行号</button>
+    </div>
+    <div style="margin-top:12px"><label>结果</label><textarea id="output" rows="8" readonly style="cursor:pointer" onclick="copyText(this.value)" title="点击复制"></textarea></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function addNumbers(){
+  const lines=document.getElementById('input').value.split('\n');
+  const start=parseInt(document.getElementById('startNum').value)||1;
+  const sep=document.getElementById('separator').value;
+  document.getElementById('output').value=lines.map((l,i)=>(start+i)+sep+l).join('\n');
+}
+function removeNumbers(){
+  const lines=document.getElementById('input').value.split('\n');
+  document.getElementById('output').value=lines.map(l=>l.replace(/^\d+[.\s-]+\s*/,'')).join('\n');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON 键名排序 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>JSON 键名排序</h1></div>
+  <div class="tool-area">
+    <div class="section"><label>输入 JSON</label><textarea id="input" rows="6" placeholder='{"zebra":1,"apple":2,"banana":3}'></textarea></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn btn-primary" onclick="sortKeys('asc')">升序排列</button>
+      <button class="btn btn-outline" onclick="sortKeys('desc')">降序排列</button>
+    </div>
+    <div style="margin-top:12px"><label>结果</label><textarea id="output" rows="10" readonly style="cursor:pointer" onclick="copyText(this.value)" title="点击复制"></textarea></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function sortObject(obj,order){
+  if(obj===null||typeof obj!=='object'||Array.isArray(obj))return obj;
+  const sorted={};
+  const keys=Object.keys(obj).sort((a,b)=>order==='asc'?a.localeCompare(b):b.localeCompare(a));
+  keys.forEach(k=>sorted[k]=sortObject(obj[k],order));
+  return sorted;
+}
+function sortKeys(order){
+  try{
+    const json=JSON.parse(document.getElementById('input').value);
+    document.getElementById('output').value=JSON.stringify(sortObject(json,order),null,2);
+  }catch(e){document.getElementById('output').value='JSON 解析失败: '+e.message}
+}
+</script>
+</body>
+</html>

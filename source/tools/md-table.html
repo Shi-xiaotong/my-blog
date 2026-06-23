@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown 表格生成器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>Markdown 表格生成器</h1></div>
+  <div class="tool-area">
+    <div class="row" style="margin-bottom:12px">
+      <div><label>列数</label><input type="number" id="cols" value="3" min="1" max="20" style="width:80px"></div>
+      <div style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="buildTable()">生成表格</button></div>
+    </div>
+    <div id="tableEditor"></div>
+    <div style="margin-top:12px"><label>Markdown 输出</label><textarea id="output" rows="6" readonly style="cursor:pointer" onclick="copyText(this.value)" title="点击复制"></textarea></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function buildTable(){
+  const cols=parseInt(document.getElementById('cols').value)||3;
+  let html='<table style="width:100%;border-collapse:collapse"><thead><tr>';
+  for(let i=0;i<cols;i++)html+='<th style="border:1px solid var(--border);padding:8px"><input type="text" class="md-header" placeholder="列'+(i+1)+'" oninput="updateMd()" style="width:100%;border:none;background:transparent;font-size:13px;color:var(--text)"></th>';
+  html+='</tr></thead><tbody>';
+  for(let r=0;r<5;r++){html+='<tr>';for(let c=0;c<cols;c++)html+='<td style="border:1px solid var(--border);padding:4px"><input type="text" class="md-cell" placeholder="" oninput="updateMd()" style="width:100%;border:none;background:transparent;font-size:13px;color:var(--text)"></td>';html+='</tr>'}
+  html+='</tbody></table>';
+  document.getElementById('tableEditor').innerHTML=html;
+  updateMd();
+}
+function updateMd(){
+  const headers=[...document.querySelectorAll('.md-header')].map(i=>i.value||'');
+  const rows=[...document.querySelectorAll('.md-cell')].reduce((acc,input,idx)=>{const col=idx%headers.length;const row=Math.floor(idx/headers.length);if(!acc[row])acc[row]=[];acc[row][col]=input.value;return acc},[]);
+  let md=headers.map(h=>'|'+h).join('')+'|\n';
+  md+=headers.map(()=>'|---').join('')+'|\n';
+  rows.forEach(row=>{md+=row.map(c=>'|'+(c||'')).join('')+'|\n'});
+  document.getElementById('output').value=md;
+}
+buildTable();
+</script>
+</body>
+</html>

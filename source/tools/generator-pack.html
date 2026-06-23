@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gitignore / Robots / Sitemap / Meta 生成器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.tab-bar{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab-btn{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);cursor:pointer;font-size:14px;font-family:inherit}
+.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.output-area{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'SF Mono',monospace;font-size:13px;white-space:pre-wrap;word-break:break-all;min-height:200px;cursor:pointer}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>Gitignore / Robots / Sitemap / Meta 生成器</h1></div>
+  <div class="tool-area">
+    <div class="tab-bar" id="tabs">
+      <button class="tab-btn active" onclick="switchTab('gitignore')">.gitignore</button>
+      <button class="tab-btn" onclick="switchTab('robots')">robots.txt</button>
+      <button class="tab-btn" onclick="switchTab('sitemap')">sitemap.xml</button>
+      <button class="tab-btn" onclick="switchTab('meta')">Meta 标签</button>
+    </div>
+    <div id="tabContent"></div>
+    <div style="margin-top:12px"><label>生成结果</label><div class="output-area" id="output" onclick="copyText(this.textContent)" title="点击复制"></div></div>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="copyText(document.getElementById('output').textContent)">复制</button>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+let currentTab='gitignore';
+const templates={
+  gitignore:{
+    desc:'选择需要的忽略规则',
+    options:['node_modules','dist','build','.env','.idea','.vscode','*.log','.DS_Store','coverage','.next'],
+    gen(selected){
+      const rules={'node_modules':'node_modules/','dist':'dist/','build':'build/','.env':'.env*','.idea':'.idea/','.vscode':'.vscode/','*.log':'*.log','.DS_Store':'.DS_Store','coverage':'coverage/','.next':'.next/'};
+      return selected.map(s=>rules[s]||s).join('\n');
+    }
+  },
+  robots:{
+    desc:'配置 robots.txt',
+    inputs:[{id:'allowAll',label:'允许所有爬虫',type:'checkbox'},{id:'sitemapUrl',label:'Sitemap 地址',type:'text',placeholder:'https://example.com/sitemap.xml'}],
+    gen(values){
+      let r='User-agent: *\n';r+=values.allowAll?'Allow: /\n':'Disallow: /\n';
+      if(values.sitemapUrl)r+='Sitemap: '+values.sitemapUrl;
+      return r;
+    }
+  },
+  sitemap:{
+    desc:'配置 sitemap.xml',
+    inputs:[{id:'domain',label:'域名',type:'text',placeholder:'https://example.com'},{id:'urls',label:'URL 列表（每行一个）',type:'textarea',placeholder:'/\n/about\n/blog'}],
+    gen(values){
+      const urls=(values.urls||'').trim().split('\n').filter(u=>u.trim()).map(u=>u.trim());
+      if(!urls.length)return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>';
+      const locs=urls.map(u=>{const full=values.domain&&!u.startsWith('http')?values.domain+u:u;return'  <url>\n    <loc>'+full+'</loc>\n    <lastmod>'+new Date().toISOString().slice(0,10)+'</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>'}).join('\n');
+      return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+locs+'\n</urlset>';
+    }
+  },
+  meta:{
+    desc:'生成 HTML Meta 标签',
+    inputs:[{id:'title',label:'页面标题',type:'text',placeholder:'My Website'},{id:'desc',label:'页面描述',type:'text',placeholder:'A wonderful website'},{id:'keywords',label:'关键词',type:'text',placeholder:'web, html, css'},{id:'author',label:'作者',type:'text',placeholder:'John Doe'},{id:'ogType',label:'OG Type',type:'text',placeholder:'website'}],
+    gen(values){
+      let m='<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n';
+      if(values.title)m+='<title>'+values.title+'</title>\n';
+      if(values.desc)m+='<meta name="description" content="'+values.desc+'">\n';
+      if(values.keywords)m+='<meta name="keywords" content="'+values.keywords+'">\n';
+      if(values.author)m+='<meta name="author" content="'+values.author+'">\n';
+      m+='<meta property="og:title" content="'+(values.title||'')+'">\n';
+      m+='<meta property="og:description" content="'+(values.desc||'')+'">\n';
+      m+='<meta property="og:type" content="'+(values.ogType||'website')+'">\n';
+      return m;
+    }
+  }
+};
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{const names=['gitignore','robots','sitemap','meta'];b.classList.toggle('active',names[i]===tab)});
+  renderTab();
+}
+function renderTab(){
+  const t=templates[currentTab];
+  const c=document.getElementById('tabContent');
+  let html='<p style="color:var(--text-secondary);margin-bottom:12px">'+t.desc+'</p>';
+  if(t.options)html+='<div style="display:flex;flex-wrap:wrap;gap:8px">'+t.options.map(o=>'<label style="display:flex;align-items:center;gap:4px;font-size:14px"><input type="checkbox" data-opt="'+o+'" checked> '+o+'</label>').join('')+'</div>';
+  if(t.inputs)html+='<div style="display:flex;flex-direction:column;gap:8px">'+t.inputs.map(i=>'<label style="font-size:13px">'+i.label+'<input type="'+(i.type==='checkbox'?'checkbox':'text')" id="input_'+i.id+'" placeholder="'+(i.placeholder||'')+'" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;margin-top:4px" '+(i.type==='checkbox'?'checked':'')+'></label>').join('')+'</div>';
+  c.innerHTML=html;
+  if(t.options)c.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.addEventListener('change',renderOutput));
+  if(t.inputs)c.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',renderOutput));
+  renderOutput();
+}
+function renderOutput(){
+  const t=templates[currentTab];
+  if(currentTab==='gitignore'){
+    const selected=Array.from(c.querySelectorAll('input:checked')).map(cb=>cb.dataset.opt);
+    document.getElementById('output').textContent=t.gen(selected);
+  }else{
+    const values={};
+    t.inputs.forEach(i=>{const el=document.getElementById('input_'+i.id);values[i.id]=el.type==='checkbox'?el.checked:el.value});
+    document.getElementById('output').textContent=t.gen(values);
+  }
+}
+const c=document.getElementById('tabContent');
+renderTab();
+</script>
+</body>
+</html>

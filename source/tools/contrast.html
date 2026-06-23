@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>颜色对比度检测 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.preview-box{height:100px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;margin:16px 0;border:1px solid var(--border)}
+.score-box{text-align:center;padding:16px;border-radius:12px;margin:12px 0}
+.score-pass{background:#dcfce7;color:#166534}
+.score-fail{background:#fef2f2;color:#991b1b}
+.score-label{font-size:14px;margin-top:4px}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>颜色对比度检测</h1></div>
+  <div class="tool-area">
+    <div class="color-inputs" style="display:flex;gap:16px;align-items:center;margin-bottom:16px">
+      <div style="text-align:center"><label>前景色</label><input type="color" id="fg" value="#ffffff" oninput="calc()" style="width:48px;height:48px;border:none;cursor:pointer;border-radius:8px"><br><input type="text" id="fgText" value="#ffffff" oninput="syncColor('fg')" style="width:80px;text-align:center;margin-top:4px"></div>
+      <div style="text-align:center"><label>背景色</label><input type="color" id="bg" value="#000000" oninput="calc()" style="width:48px;height:48px;border:none;cursor:pointer;border-radius:8px"><br><input type="text" id="bgText" value="#000000" oninput="syncColor('bg')" style="width:80px;text-align:center;margin-top:4px"></div>
+    </div>
+    <div class="preview-box" id="preview">预览文字 Preview</div>
+    <div id="scoreBox" class="score-box score-pass">对比度: <strong id="ratio">21.00:1</strong></div>
+    <div id="wcag"></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function hexToRgb(hex){hex=hex.replace('#','');if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');return[parseInt(hex.substr(0,2),16),parseInt(hex.substr(2,2),16),parseInt(hex.substr(4,2),16)]}
+function relativeLuminance(r,g,b){const[rs,gs,bs]=[r,g,b].map(c=>{c/=255;return c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4)});return 0.2126*rs+0.7152*gs+0.0722*bs}
+function calc(){
+  const fg=hexToRgb(document.getElementById('fg').value);const bg=hexToRgb(document.getElementById('bg').value);
+  const l1=relativeLuminance(...fg);const l2=relativeLuminance(...bg);
+  const lighter=Math.max(l1,l2);const darker=Math.min(l1,l2);
+  const ratio=(lighter+0.05)/(darker+0.05);
+  document.getElementById('preview').style.color='#'+fg.map(c=>c.toString(16).padStart(2,'0')).join('');
+  document.getElementById('preview').style.background='#'+bg.map(c=>c.toString(16).padStart(2,'0')).join('');
+  document.getElementById('ratio').textContent=ratio.toFixed(2)+':1';
+  const wcag=document.getElementById('wcag');
+  wcag.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
+    [['AA 普通文本',ratio>=4.5],['AA 大号文本',ratio>=3],['AAA 普通文本',ratio>=7],['AAA 大号文本',ratio>=4.5]].map(([label,pass])=>
+      '<div class="score-box '+(pass?'score-pass':'score-fail')+'" style="padding:8px"><strong>'+label+'</strong><div class="score-label">'+(pass?'✅ 通过':'❌ 不通过')+'</div></div>'
+    ).join('')+'</div>';
+}
+function syncColor(id){const v=document.getElementById(id+'Text').value;if(/^#[0-9a-fA-F]{6}$/.test(v)){document.getElementById(id).value=v;calc()}}
+calc();
+</script>
+</body>
+</html>

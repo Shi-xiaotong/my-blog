@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMI / 工资 / 房贷计算器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.calc-tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.calc-tab{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;font-size:13px}
+.calc-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>BMI / 工资 / 房贷计算器</h1></div>
+  <div class="tool-area">
+    <div class="calc-tabs" id="calcTabs">
+      <button class="calc-tab active" onclick="switchCalc('bmi')">BMI 计算器</button>
+      <button class="calc-tab" onclick="switchCalc('salary')">工资计算器</button>
+      <button class="calc-tab" onclick="switchCalc('mortgage')">房贷计算器</button>
+    </div>
+
+    <div id="calcBmi">
+      <div class="row">
+        <div><label>身高 (cm)</label><input type="number" id="height" placeholder="175" style="width:100%"></div>
+        <div><label>体重 (kg)</label><input type="number" id="weight" placeholder="70" style="width:100%"></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="calcBmi()">计算</button></div>
+      </div>
+      <div id="bmiResult" style="margin-top:16px"></div>
+    </div>
+
+    <div id="calcSalary" style="display:none">
+      <div class="row">
+        <div><label>税前月薪 (元)</label><input type="number" id="grossSalary" placeholder="20000" style="width:100%"></div>
+        <div><label>五险一金比例 (%)</label><input type="number" id="insuranceRate" value="17.5" step="0.1" style="width:100%"></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px" onclick="calcSalary()">计算</button>
+      <div id="salaryResult" style="margin-top:16px"></div>
+    </div>
+
+    <div id="calcMortgage" style="display:none">
+      <div class="row">
+        <div><label>贷款总额 (万)</label><input type="number" id="loanAmount" placeholder="100" style="width:100%"></div>
+        <div><label>年利率 (%)</label><input type="number" id="annualRate" value="3.5" step="0.01" style="width:100%"></div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div><label>贷款年限</label><input type="number" id="loanYears" value="30" style="width:100%"></div>
+        <div style="display:flex;gap:8px;align-items:flex-end">
+          <label style="display:flex;align-items:center;gap:4px"><input type="radio" name="mortgageType" value="equal" checked> 等额本息</label>
+          <label style="display:flex;align-items:center;gap:4px"><input type="radio" name="mortgageType" value="principal"> 等额本金</label>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px" onclick="calcMortgage()">计算</button>
+      <div id="mortgageResult" style="margin-top:16px"></div>
+    </div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function switchCalc(type){
+  ['Bmi','Salary','Mortgage'].forEach(t=>{const el=document.getElementById('calc'+t);el.style.display=(type===t.toLowerCase()?'':'none')});
+  document.querySelectorAll('.calc-tab').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');
+}
+function calcBmi(){
+  const h=parseFloat(document.getElementById('height').value)/100;
+  const w=parseFloat(document.getElementById('weight').value);
+  if(!h||!w){alert('请输入有效的身高和体重');return}
+  const bmi=w/(h*h);
+  let level,color;
+  if(bmi<18.5){level='偏瘦';color='#3b82f6'}
+  else if(bmi<24){level='正常';color='#22c55e'}
+  else if(bmi<28){level='偏胖';color='#f59e0b'}
+  else{level='肥胖';color='#ef4444'}
+  document.getElementById('bmiResult').innerHTML='<div class="result-box" style="text-align:center"><div style="font-size:2em;font-weight:bold;color:'+color+'">'+bmi.toFixed(1)+'</div><div style="font-size:14px;color:var(--text-secondary);margin-top:4px">BMI 指数 — '+level+'</div>'+
+    '<div style="margin-top:12px;font-size:12px;color:var(--text-secondary)">18.5以下偏瘦 | 18.5-23.9正常 | 24-27.9偏胖 | 28以上肥胖</div></div>';
+}
+function calcSalary(){
+  const gross=parseFloat(document.getElementById('grossSalary').value);
+  const rate=parseFloat(document.getElementById('insuranceRate').value)/100;
+  if(!gross){alert('请输入税前月薪');return}
+  const insurance=gross*rate;
+  const taxable=gross-insurance;
+  let tax=0;
+  if(taxable>130000)tax=taxable*0.45-7169;
+  else if(taxable>80000)tax=taxable*0.35-7169;
+  else if(taxable>55000)tax=taxable*0.30-5269;
+  else if(taxable>35000)tax=taxable*0.25-3269;
+  else if(taxable>25000)tax=taxable*0.20-1669;
+  else if(taxable>12000)tax=taxable*0.10-210;
+  else if(taxable>3000)tax=taxable*0.03;
+  tax=Math.max(0,tax);
+  const net=gross-insurance-tax;
+  document.getElementById('salaryResult').innerHTML='<div class="result-box">'+
+    '<div class="result-line"><span class="result-label">税前月薪</span><span class="result-value">¥'+gross.toFixed(2)+'</span></div>'+
+    '<div class="result-line"><span class="result-label">五险一金</span><span class="result-value">-¥'+insurance.toFixed(2)+'</span></div>'+
+    '<div class="result-line"><span class="result-label">个人所得税</span><span class="result-value">-¥'+tax.toFixed(2)+'</span></div>'+
+    '<div class="result-line" style="font-weight:bold"><span class="result-label">税后月薪</span><span class="result-value" style="color:#22c55e">¥'+net.toFixed(2)+'</span></div>'+
+    '<div class="result-line"><span class="result-label">年到手</span><span class="result-value">¥'+(net*12).toFixed(2)+'</span></div>'+
+    '</div>';
+}
+function calcMortgage(){
+  const amount=parseFloat(document.getElementById('loanAmount').value)*10000;
+  const annualRate=parseFloat(document.getElementById('annualRate').value)/100;
+  const years=parseInt(document.getElementById('loanYears').value);
+  if(!amount||!years){alert('请输入有效数据');return}
+  const monthlyRate=annualRate/12;
+  const months=years*12;
+  const type=document.querySelector('input[name="mortgageType"]:checked').value;
+  let result;
+  if(type==='equal'){
+    const monthlyPayment=amount*(monthlyRate*Math.pow(1+monthlyRate,months))/(Math.pow(1+monthlyRate,months)-1);
+    const totalPay=monthlyPayment*months;
+    const totalInterest=totalPay-amount;
+    result='<div class="result-box">'+
+      '<div class="result-line"><span class="result-label">月供</span><span class="result-value">¥'+monthlyPayment.toFixed(2)+'</span></div>'+
+      '<div class="result-line"><span class="result-label">还款总额</span><span class="result-value">¥'+totalPay.toFixed(2)+'</span></div>'+
+      '<div class="result-line"><span class="result-label">总利息</span><span class="result-value">¥'+totalInterest.toFixed(2)+'</span></div>'+
+      '</div>';
+  }else{
+    const principalPerMonth=amount/months;
+    const firstMonth=principalPerMonth+amount*monthlyRate;
+    const lastMonth=principalPerMonth+principalPerMonth*monthlyRate;
+    const totalInterest=amount*monthlyRate*(months+1)/2;
+    const totalPay=amount+totalInterest;
+    result='<div class="result-box">'+
+      '<div class="result-line"><span class="result-label">首月月供</span><span class="result-value">¥'+firstMonth.toFixed(2)+'</span></div>'+
+      '<div class="result-line"><span class="result-label">末月月供</span><span class="result-value">¥'+lastMonth.toFixed(2)+'</span></div>'+
+      '<div class="result-line"><span class="result-label">还款总额</span><span class="result-value">¥'+totalPay.toFixed(2)+'</span></div>'+
+      '<div class="result-line"><span class="result-label">总利息</span><span class="result-value">¥'+totalInterest.toFixed(2)+'</span></div>'+
+      '</div>';
+  }
+  document.getElementById('mortgageResult').innerHTML=result;
+}
+</script>
+</body>
+</html>

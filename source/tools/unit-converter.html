@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单位换算器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.cat-tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.cat-tab{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;font-size:13px}
+.cat-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>单位换算器</h1></div>
+  <div class="tool-area">
+    <div class="cat-tabs" id="catTabs">
+      <button class="cat-tab active" onclick="switchCat('length')">长度</button>
+      <button class="cat-tab" onclick="switchCat('weight')">重量</button>
+      <button class="cat-tab" onclick="switchCat('temp')">温度</button>
+      <button class="cat-tab" onclick="switchCat('speed')">速度</button>
+      <button class="cat-tab" onclick="switchCat('data')">存储</button>
+      <button class="cat-tab" onclick="switchCat('area')">面积</button>
+    </div>
+    <div class="row">
+      <div><label>从</label><input type="number" id="fromVal" placeholder="数值" oninput="convert()" style="width:100%"></div>
+      <div><label>单位</label><select id="fromUnit" onchange="convert()" style="width:100%"></select></div>
+    </div>
+    <div style="text-align:center;font-size:24px;margin:12px 0">↓</div>
+    <div class="row">
+      <div><label>到</label><input type="number" id="toVal" readonly style="width:100%;font-weight:bold"></div>
+      <div><label>单位</label><select id="toUnit" onchange="convert()" style="width:100%"></select></div>
+    </div>
+    <div style="margin-top:12px;font-size:13px;color:var(--text-secondary)" id="formula"></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+const units={
+  length:{m:1,km:1000,cm:0.01,mm:0.001,mi:1609.344,yd:0.9144,ft:0.3048,in:0.0254},
+  weight:{kg:1,g:0.001,mg:1e-6,lb:0.453592,oz:0.0283495,t:1000},
+  speed:{mps:1,kmh:0.277778,mph:0.44704,knot:0.514444},
+  data:{byte:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776,PB:1125899906842624},
+  area:{m2:1,km2:1e6,cm2:1e-4,ha:10000,acre:4046.86,ft2:0.092903},
+  temp:{celsius:'C',fahrenheit:'F',kelvin:'K'}
+};
+let currentCat='length';
+function switchCat(cat){
+  currentCat=cat;
+  document.querySelectorAll('.cat-tab').forEach(b=>b.textContent={length:'长度',weight:'重量',temp:'温度',speed:'速度',data:'存储',area:'面积'}[cat]===b.textContent?'active':b.textContent);
+  const sel=units[cat];const keys=Object.keys(sel);
+  ['fromUnit','toUnit'].forEach(id=>{
+    const el=document.getElementById(id);el.innerHTML=keys.map(k=>'<option value="'+k+'">'+k+'</option>').join('');
+  });
+  if(keys.length>1)document.getElementById('toUnit').value=keys[1];
+  convert();
+}
+function convert(){
+  const val=parseFloat(document.getElementById('fromVal').value);
+  const from=document.getElementById('fromUnit').value;
+  const to=document.getElementById('toUnit').value;
+  if(isNaN(val)){document.getElementById('toVal').value='';document.getElementById('formula').textContent='';return}
+  let result;
+  if(currentCat==='temp'){
+    let celsius;
+    if(from==='celsius')celsius=val;
+    else if(from==='fahrenheit')celsius=(val-32)*5/9;
+    else celsius=val-273.15;
+    if(to==='celsius')result=celsius;
+    else if(to==='fahrenheit')result=celsius*9/5+32;
+    else result=celsius+273.15;
+  }else{
+    const fromFactor=units[currentCat][from];
+    const toFactor=units[currentCat][to];
+    result=val*fromFactor/toFactor;
+  }
+  document.getElementById('toVal').value=parseFloat(result.toPrecision(10));
+  document.getElementById('formula').textContent=val+' '+from+' = '+parseFloat(result.toPrecision(10))+' '+to;
+}
+switchCat('length');
+</script>
+</body>
+</html>

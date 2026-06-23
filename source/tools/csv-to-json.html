@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV 转 JSON - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>CSV 转 JSON</h1></div>
+  <div class="tool-area">
+    <div class="section"><label>输入 CSV</label><textarea id="input" rows="6" placeholder="name,age,city&#10;John,30,New York&#10;Jane,25,Boston"></textarea></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="convert()">转换</button>
+    <div style="margin-top:12px"><label>结果</label><textarea id="output" rows="10" readonly style="cursor:pointer" onclick="copyText(this.value)" title="点击复制"></textarea></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+function parseCsvLine(line){
+  const result=[];let current='';let inQuotes=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(inQuotes){if(ch==='"'){if(line[i+1]==='"'){current+='"';i++}else inQuotes=false}else current+=ch}
+    else{if(ch==='"')inQuotes=true;else if(ch===','){result.push(current.trim());current=''}else current+=ch}
+  }
+  result.push(current.trim());return result;
+}
+function convert(){
+  try{
+    const lines=document.getElementById('input').value.trim().split('\n').map(l=>l.trim()).filter(l=>l);
+    if(lines.length<2){document.getElementById('output').value='至少需要表头+一行数据';return}
+    const headers=parseCsvLine(lines[0]);
+    const arr=lines.slice(1).map(line=>{
+      const values=parseCsvLine(line);
+      const obj={};headers.forEach((h,i)=>obj[h]=values[i]||'');
+      return obj;
+    });
+    document.getElementById('output').value=JSON.stringify(arr,null,2);
+  }catch(e){document.getElementById('output').value='解析失败: '+e.message}
+}
+</script>
+</body>
+</html>

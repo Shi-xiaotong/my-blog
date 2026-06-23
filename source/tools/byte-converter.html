@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字节大小转换 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>字节大小转换</h1></div>
+  <div class="tool-area">
+    <div class="section">
+      <div class="row"><div><label>数值</label><input type="number" id="input" placeholder="输入字节数" oninput="convert()" style="width:100%"></div>
+      <div><label>单位</label><select id="unit" onchange="convert()" style="width:100%"><option value="B">Byte (B)</option><option value="KB">Kilobyte (KB)</option><option value="MB" selected>Megabyte (MB)</option><option value="GB">Gigabyte (GB)</option><option value="TB">Terabyte (TB)</option><option value="PB">Petabyte (PB)</option></select></div></div>
+    </div>
+    <div id="results" style="margin-top:16px"></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function convert(){
+  const val=parseFloat(document.getElementById('input').value);
+  const unit=document.getElementById('unit').value;
+  if(isNaN(val)){document.getElementById('results').innerHTML='';return}
+  const multipliers={B:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776,PB:1125899906842624};
+  const bytes=val*multipliers[unit];
+  const items=[
+    {label:'Byte (B)',val:bytes},
+    {label:'Kilobyte (KB)',val:bytes/1024},
+    {label:'Megabyte (MB)',val:bytes/1048576},
+    {label:'Gigabyte (GB)',val:bytes/1073741824},
+    {label:'Terabyte (TB)',val:bytes/1099511627776},
+    {label:'Petabyte (PB)',val:bytes/1125899906842624},
+    {label:'Bit',val:bytes*8},
+    {label:'Kilobit (Kb)',val:bytes*8/1024},
+    {label:'Megabit (Mb)',val:bytes*8/1048576},
+  ];
+  document.getElementById('results').innerHTML=items.map(i=>
+    '<div class="result-line"><span class="result-label">'+i.label+'</span><span class="result-value">'+(i.val>=1?i.val.toFixed(4).replace(/\.?0+$/,''):i.val<0.001?i.val.toExponential(4):i.val.toFixed(6).replace(/\.?0+$/,''))+'</span></div>'
+  ).join('');
+}
+</script>
+</body>
+</html>

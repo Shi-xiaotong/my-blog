@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NanoID / ULID 生成器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.gen-option{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.gen-option label{min-width:80px}
+.gen-option input{width:80px}
+.gen-result{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:'SF Mono',monospace;font-size:14px;margin:8px 0;word-break:break-all;cursor:pointer}
+.gen-history{margin-top:16px}
+.gen-history-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-family:'SF Mono',monospace;font-size:13px}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>NanoID / ULID 生成器</h1></div>
+  <div class="tool-area">
+    <div class="section">
+      <div class="gen-option"><label>类型</label><select id="type" onchange="updateOptions()" style="flex:1"><option value="nanoid">NanoID</option><option value="ulid">ULID</option></select></div>
+      <div class="gen-option"><label>数量</label><input type="number" id="count" value="5" min="1" max="100" style="flex:1"><button class="btn btn-primary" onclick="generate()" style="flex:0">生成</button></div>
+      <div id="nanoidOptions">
+        <div class="gen-option"><label>长度</label><input type="number" id="length" value="21" min="1" max="128" style="flex:1"></div>
+        <div class="gen-option"><label>字符集</label><select id="alphabet" style="flex:1"><option value="alphanumeric">字母数字</option><option value="hex">十六进制</option><option value="url">URL安全</option></select></div>
+      </div>
+    </div>
+    <div id="results"></div>
+    <div class="gen-history" id="history" style="display:none"><h3>历史记录</h3><div id="historyList"></div></div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+function showToast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+function copyText(t){navigator.clipboard.writeText(String(t));showToast('已复制')}
+const ALPHABETS={alphanumeric:'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',hex:'0123456789abcdef',url:'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'};
+function genNanoId(len,alphabet){
+  const chars=ALPHABETS[alphabet]||ALPHABETS.alphanumeric;const bytes=new Uint8Array(len);crypto.getRandomValues(bytes);
+  let id='';for(let i=0;i<len;i++)id+=chars[bytes[i]%chars.length];return id;
+}
+function genUlid(){
+  const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);
+  const hex=Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');
+  return hex.substring(0,10)+'-'+hex.substring(10,14)+'-'+hex.substring(14,18)+'-'+hex.substring(18,22)+'-'+hex.substring(22);
+}
+function generate(){
+  const type=document.getElementById('type').value;
+  const count=parseInt(document.getElementById('count').value)||1;
+  const results=[];
+  for(let i=0;i<count;i++){
+    if(type==='nanoid')results.push(genNanoId(parseInt(document.getElementById('length').value)||21,document.getElementById('alphabet').value));
+    else results.push(genUlid());
+  }
+  const container=document.getElementById('results');
+  container.innerHTML=results.map(r=>'<div class="gen-result" onclick="copyText(\''+r.replace(/'/g,"\\'")+'\')" title="点击复制">'+r+'</div>').join('');
+  const hist=document.getElementById('history');hist.style.display='block';
+  const list=document.getElementById('historyList');
+  results.reverse().forEach(r=>{list.innerHTML+='<div class="gen-history-item"><span>'+r+'</span><button class="btn btn-outline" onclick="copyText(\''+r.replace(/'/g,"\\'")+'\')" style="padding:2px 8px;font-size:12px">复制</button></div>'});
+}
+function updateOptions(){document.getElementById('nanoidOptions').style.display=document.getElementById('type').value==='nanoid'?'':'none'}
+updateOptions();
+</script>
+</body>
+</html>

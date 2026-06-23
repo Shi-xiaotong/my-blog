@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>倒计时器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.timer-display{font-size:3em;font-weight:bold;text-align:center;font-family:'SF Mono',monospace;padding:20px;color:var(--primary)}
+.timer-display.warning{color:#f59e0b}
+.timer-display.danger{color:#ef4444;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.progress-bar{height:8px;background:var(--border);border-radius:4px;margin:16px 0;overflow:hidden}
+.progress-fill{height:100%;background:var(--primary);border-radius:4px;transition:width 1s linear}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header"><a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a><h1>倒计时器</h1></div>
+  <div class="tool-area">
+    <div class="section">
+      <div class="row">
+        <div><label>小时</label><input type="number" id="hours" value="0" min="0" style="width:100%"></div>
+        <div><label>分钟</label><input type="number" id="minutes" value="5" min="0" max="59" style="width:100%"></div>
+        <div><label>秒</label><input type="number" id="seconds" value="0" min="0" max="59" style="width:100%"></div>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" onclick="startTimer()">开始</button>
+        <button class="btn btn-outline" onclick="pauseTimer()">暂停</button>
+        <button class="btn btn-outline" onclick="resetTimer()">重置</button>
+      </div>
+    </div>
+    <div class="timer-display" id="display">00:05:00</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:100%"></div></div>
+    <div style="text-align:center;font-size:14px;color:var(--text-secondary)" id="status">就绪</div>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark')}
+;(function(){const s=localStorage.getItem('tool-theme');if(s==='dark')document.documentElement.setAttribute('data-theme','dark')})();
+let timerInterval=null;let totalSeconds=0;let remainingSeconds=0;
+function formatTime(s){const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const sec=s%60;return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
+function updateDisplay(){
+  const display=document.getElementById('display');
+  display.textContent=formatTime(remainingSeconds);
+  const pct=totalSeconds>0?(remainingSeconds/totalSeconds*100):0;
+  document.getElementById('progress').style.width=pct+'%';
+  display.className='timer-display'+(remainingSeconds<=10&&remainingSeconds>0?' danger':remainingSeconds<=30?' warning':'');
+}
+function startTimer(){
+  clearInterval(timerInterval);
+  if(remainingSeconds<=0){
+    const h=parseInt(document.getElementById('hours').value)||0;
+    const m=parseInt(document.getElementById('minutes').value)||0;
+    const s=parseInt(document.getElementById('seconds').value)||0;
+    totalSeconds=h*3600+m*60+s;
+    remainingSeconds=totalSeconds;
+  }
+  if(totalSeconds<=0)return;
+  document.getElementById('status').textContent='倒计时中...';
+  timerInterval=setInterval(()=>{
+    remainingSeconds--;
+    updateDisplay();
+    if(remainingSeconds<=0){
+      clearInterval(timerInterval);
+      document.getElementById('status').textContent='⏰ 时间到！';
+      try{new Audio('data:audio/wav;base64,UklGRl9vT19teleXQBAABAAEARAAEQACABAAEABkYXRhQe8AAH//f/9//3//').play()}catch(e){}
+    }
+  },1000);
+  updateDisplay();
+}
+function pauseTimer(){clearInterval(timerInterval);document.getElementById('status').textContent='已暂停'}
+function resetTimer(){clearInterval(timerInterval);remainingSeconds=0;totalSeconds=0;updateDisplay();document.getElementById('status').textContent='已重置'}
+updateDisplay();
+</script>
+</body>
+</html>

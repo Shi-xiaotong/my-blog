@@ -22,6 +22,9 @@
 .tool-info h3 { font-size: 15px; margin-bottom: 4px; }
 .tool-info p { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
 .tool-count { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+.section-divider { border: none; border-top: 2px dashed var(--border); margin: 32px 0; }
+.ai-badge { font-size: 11px; background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+.local-badge { font-size: 11px; background: var(--primary); color: #fff; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
 @media (max-width: 640px) {
   .tools-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   .tool-card { padding: 14px; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
@@ -42,17 +45,29 @@
   </div>
 </div>
 
-<!-- 文本工具 -->
-<div class="category" data-category="text">
-  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></span> 文本工具</div>
+<!-- ========== 格式转换 ========== -->
+<div class="category" data-category="converter">
+  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> 格式转换 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/json-formatter.html" class="tool-card" data-keywords="json 格式化 压缩 校验 美化 转义">
       <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON 格式化</h3><p>JSON 格式化、压缩、转义、校验</p></div>
     </a>
-    <a href="/tools/markdown.html" class="tool-card" data-keywords="markdown md 预览 渲染 实时">
+    <a href="/tools/json-yaml.html" class="tool-card" data-keywords="json yaml yml 转换 互转 配置">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
+      <div class="tool-info"><h3>JSON YAML 互转</h3><p>JSON 与 YAML 格式互相转换</p></div>
+    </a>
+    <a href="/tools/json-ts.html" class="tool-card" data-keywords="json typescript ts 类型 interface 接口">
       <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
-      <div class="tool-info"><h3>Markdown 预览</h3><p>实时 Markdown 渲染预览</p></div>
+      <div class="tool-info"><h3>JSON 转 TS</h3><p>JSON 自动生成 TypeScript 接口类型</p></div>
+    </a>
+    <a href="/tools/csv-json.html" class="tool-card" data-keywords="csv json 转换 互转 表格 数据">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div>
+      <div class="tool-info"><h3>CSV JSON 互转</h3><p>CSV 表格数据与 JSON 互相转换</p></div>
+    </a>
+    <a href="/tools/timestamp.html" class="tool-card" data-keywords="时间戳 日期 unix 转换 epoch">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="tool-info"><h3>时间戳转换</h3><p>Unix 时间戳与日期互转</p></div>
     </a>
     <a href="/tools/base64.html" class="tool-card" data-keywords="base64 编码 解码 编解码">
       <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
@@ -70,40 +85,86 @@
       <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
       <div class="tool-info"><h3>Unicode 编解码</h3><p>Unicode 与中文互转</p></div>
     </a>
-    <a href="/tools/text-diff.html" class="tool-card" data-keywords="文本 对比 差异 diff 比较">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></div>
-      <div class="tool-info"><h3>文本对比</h3><p>两段文本差异对比，高亮显示不同</p></div>
+    <a href="/tools/base-convert.html" class="tool-card" data-keywords="进制 转换 二进制 八进制 十进制 十六进制">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 7h10v10H7z"/><path d="M7 12h10"/></svg></div>
+      <div class="tool-info"><h3>进制转换</h3><p>二进制、八进制、十进制、十六进制互转</p></div>
     </a>
-    <a href="/tools/word-count.html" class="tool-card" data-keywords="字数 统计 字符 单词 行数">
-      <div class="tool-icon" style="background:#fff7ed;color:#f97316;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
-      <div class="tool-info"><h3>字数统计</h3><p>中英文字符数、单词数、行数统计</p></div>
+    <a href="/tools/base32.html" class="tool-card" data-keywords="base32 编码 解码">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M2 12h20"/></svg></div>
+      <div class="tool-info"><h3>Base32 编解码</h3><p>Base32 编码与解码</p></div>
     </a>
-    <a href="/tools/password-gen.html" class="tool-card" data-keywords="密码 生成器 随机 安全 强密码">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
-      <div class="tool-info"><h3>密码生成器</h3><p>生成安全随机密码，可自定义规则</p></div>
+    <a href="/tools/base58.html" class="tool-card" data-keywords="base58 编码 解码 比特币">
+      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M14 8l-4 4 4 4"/></svg></div>
+      <div class="tool-info"><h3>Base58 编解码</h3><p>Base58 编码与解码</p></div>
+    </a>
+    <a href="/tools/base36.html" class="tool-card" data-keywords="base36 编码 解码">
+      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12h8"/></svg></div>
+      <div class="tool-info"><h3>Base36 编解码</h3><p>Base36 编码与解码</p></div>
+    </a>
+    <a href="/tools/hex-encode.html" class="tool-card" data-keywords="hex 十六进制 编码 解码">
+      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M4 4h16v16H4z"/></svg></div>
+      <div class="tool-info"><h3>HEX 编解码</h3><p>十六进制编码与解码</p></div>
+    </a>
+    <a href="/tools/base64url.html" class="tool-card" data-keywords="base64 url 安全 编码 解码">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+      <div class="tool-info"><h3>Base64 URL 安全编解码</h3><p>URL 安全的 Base64 编码与解码</p></div>
+    </a>
+    <a href="/tools/json-stringify.html" class="tool-card" data-keywords="json 字符串 转义 逃逸 escape">
+      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-info"><h3>JSON 字符串转义</h3><p>JSON 字符串转义与反转义</p></div>
+    </a>
+    <a href="/tools/json-to-xml.html" class="tool-card" data-keywords="json xml 转换 互转">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+      <div class="tool-info"><h3>JSON 转 XML</h3><p>JSON 格式转换为 XML 格式</p></div>
+    </a>
+    <a href="/tools/xml-to-json.html" class="tool-card" data-keywords="xml json 转换 互转">
+      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+      <div class="tool-info"><h3>XML 转 JSON</h3><p>XML 格式转换为 JSON 格式</p></div>
+    </a>
+    <a href="/tools/yaml-to-json.html" class="tool-card" data-keywords="yaml yml json 转换">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
+      <div class="tool-info"><h3>YAML 转 JSON</h3><p>YAML 格式转换为 JSON 格式</p></div>
+    </a>
+    <a href="/tools/csv-to-json.html" class="tool-card" data-keywords="csv json 转换">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div>
+      <div class="tool-info"><h3>CSV 转 JSON</h3><p>CSV 表格数据转换为 JSON</p></div>
+    </a>
+    <a href="/tools/json-to-csv.html" class="tool-card" data-keywords="json csv 转换">
+      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div>
+      <div class="tool-info"><h3>JSON 转 CSV</h3><p>JSON 数据转换为 CSV 表格</p></div>
+    </a>
+    <a href="/tools/csv-to-yaml.html" class="tool-card" data-keywords="csv yaml yml 转换">
+      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg></div>
+      <div class="tool-info"><h3>CSV 转 YAML</h3><p>CSV 表格数据转换为 YAML</p></div>
+    </a>
+    <a href="/tools/yaml-to-csv.html" class="tool-card" data-keywords="yaml yml csv 转换">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
+      <div class="tool-info"><h3>YAML 转 CSV</h3><p>YAML 数据转换为 CSV 表格</p></div>
+    </a>
+    <a href="/tools/tsv-to-json.html" class="tool-card" data-keywords="tsv json 转换 制表符">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-info"><h3>TSV 转 JSON</h3><p>制表符分隔数据转换为 JSON</p></div>
+    </a>
+    <a href="/tools/jsonl.html" class="tool-card" data-keywords="jsonl json lines 转换">
+      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="tool-info"><h3>JSONL 转换器</h3><p>JSON Lines 与 JSON 数组互转</p></div>
+    </a>
+    <a href="/tools/md-to-wechat.html" class="tool-card" data-keywords="markdown 微信 公众号 排版 转换">
+      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+      <div class="tool-info"><h3>Markdown 转公众号排版</h3><p>Markdown 转换为微信公众号 HTML 排版</p></div>
     </a>
   </div>
 </div>
 
-<!-- 开发工具 -->
+<hr class="section-divider">
+
+<!-- ========== 开发者工具 ========== -->
 <div class="category" data-category="dev">
-  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span> 开发工具</div>
+  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span> 开发者工具 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
-    <a href="/tools/json-yaml.html" class="tool-card" data-keywords="json yaml yml 转换 互转 配置">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
-      <div class="tool-info"><h3>JSON YAML 互转</h3><p>JSON 与 YAML 格式互相转换</p></div>
-    </a>
-    <a href="/tools/json-ts.html" class="tool-card" data-keywords="json typescript ts 类型 interface 接口">
+    <a href="/tools/markdown.html" class="tool-card" data-keywords="markdown md 预览 渲染 实时">
       <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
-      <div class="tool-info"><h3>JSON 转 TS</h3><p>JSON 自动生成 TypeScript 接口类型</p></div>
-    </a>
-    <a href="/tools/csv-json.html" class="tool-card" data-keywords="csv json 转换 互转 表格 数据">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div>
-      <div class="tool-info"><h3>CSV JSON 互转</h3><p>CSV 表格数据与 JSON 互相转换</p></div>
-    </a>
-    <a href="/tools/timestamp.html" class="tool-card" data-keywords="时间戳 日期 unix 转换 epoch">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-      <div class="tool-info"><h3>时间戳转换</h3><p>Unix 时间戳与日期互转</p></div>
+      <div class="tool-info"><h3>Markdown 预览</h3><p>实时 Markdown 渲染预览</p></div>
     </a>
     <a href="/tools/hash.html" class="tool-card" data-keywords="md5 sha 哈希 hash 加密 摘要">
       <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4"/><path d="M5 19.5C5.5 18 6 15 6 12"/><path d="M21 12c0 5.5-4.5 10-10 10"/><path d="M19 4.5C18.5 6 18 9 18 12"/></svg></div>
@@ -114,7 +175,7 @@
       <div class="tool-info"><h3>UUID 生成器</h3><p>批量生成 UUID v4，一键复制</p></div>
     </a>
     <a href="/tools/regex.html" class="tool-card" data-keywords="正则 表达式 regex 测试 匹配 预设">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/></svg></div>
+      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/></svg></div>
       <div class="tool-info"><h3>正则测试</h3><p>正则表达式在线测试，高亮匹配</p></div>
     </a>
     <a href="/tools/color.html" class="tool-card" data-keywords="颜色 转换 hex rgb hsl 拾色器">
@@ -149,49 +210,150 @@
       <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v7h18V3z"/><path d="M21 14H3v7h18v-7z"/><path d="M12 3v7"/><path d="M12 14v7"/></svg></div>
       <div class="tool-info"><h3>CSS 单位换算</h3><p>px/rem/em/vw/% 实时换算</p></div>
     </a>
+    <a href="/tools/gradient.html" class="tool-card" data-keywords="渐变色 颜色 gradient css 生成器">
+      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/></svg></div>
+      <div class="tool-info"><h3>渐变色生成器</h3><p>可视化渐变色生成，支持线性/径向</p></div>
+    </a>
+    <a href="/tools/json-key-sort.html" class="tool-card" data-keywords="json 键名 排序 升序 降序">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+      <div class="tool-info"><h3>JSON 键名排序</h3><p>递归排序 JSON 对象的键名</p></div>
+    </a>
+    <a href="/tools/nanoid-ulid.html" class="tool-card" data-keywords="nanoid ulid 生成 唯一 id">
+      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M16 8h-6a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8"/></svg></div>
+      <div class="tool-info"><h3>NanoID / ULID 生成器</h3><p>生成 NanoID 和 ULID 标识符</p></div>
+    </a>
+    <a href="/tools/generator-pack.html" class="tool-card" data-keywords="gitignore robots sitemap meta 生成器">
+      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="tool-info"><h3>Gitignore / Robots / Sitemap / Meta</h3><p>常用配置文件一键生成</p></div>
+    </a>
+    <a href="/tools/contrast.html" class="tool-card" data-keywords="颜色 对比度 wcag 无障碍 检测">
+      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <div class="tool-info"><h3>颜色对比度检测</h3><p>WCAG 无障碍对比度检测</p></div>
+    </a>
+    <a href="/tools/css-minify.html" class="tool-card" data-keywords="css 压缩 格式化 minify beautify">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg></div>
+      <div class="tool-info"><h3>CSS 压缩/格式化</h3><p>CSS 代码压缩与格式化</p></div>
+    </a>
+    <a href="/tools/url-param.html" class="tool-card" data-keywords="url 参数 生成器 query string">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+      <div class="tool-info"><h3>URL 参数生成器</h3><p>可视化生成 URL 查询参数</p></div>
+    </a>
   </div>
 </div>
 
-<!-- 图片工具 -->
-<div class="category" data-category="image">
-  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span> 图片工具</div>
+<hr class="section-divider">
+
+<!-- ========== 文本处理 ========== -->
+<div class="category" data-category="text">
+  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></span> 文本处理 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
-    <a href="/tools/watermark.html" class="tool-card" data-keywords="图片 水印 添加 文字 logo">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h4m1 8l-4-4h8l-4 4z"/></svg></div>
-      <div class="tool-info"><h3>图片加水印</h3><p>给图片添加文字或图片水印</p></div>
+    <a href="/tools/text-diff.html" class="tool-card" data-keywords="文本 对比 差异 diff 比较">
+      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></div>
+      <div class="tool-info"><h3>文本对比</h3><p>两段文本差异对比，高亮显示不同</p></div>
     </a>
-    <a href="/tools/watermark-remove.html" class="tool-card" data-keywords="图片 去水印 擦除 删除 水印去除 消除">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l16 16M20 4L4 20"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
-      <div class="tool-info"><h3>图片去水印</h3><p>涂抹选区去除图片水印</p></div>
+    <a href="/tools/word-count.html" class="tool-card" data-keywords="字数 统计 字符 单词 行数">
+      <div class="tool-icon" style="background:#fff7ed;color:#f97316;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+      <div class="tool-info"><h3>字数统计</h3><p>中英文字符数、单词数、行数统计</p></div>
     </a>
-    <a href="/tools/image-compress.html" class="tool-card" data-keywords="图片 压缩 体积 缩小 质量">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg></div>
-      <div class="tool-info"><h3>图片压缩</h3><p>在线压缩图片体积，质量可调</p></div>
+    <a href="/tools/case-convert.html" class="tool-card" data-keywords="大小写 转换 upper lower camel pascal snake kebab">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></div>
+      <div class="tool-info"><h3>大小写转换</h3><p>UPPER/lower/camelCase/snake_case 等</p></div>
+    </a>
+    <a href="/tools/lorem-ipsum.html" class="tool-card" data-keywords="lorem ipsum 占位文本 生成器">
+      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+      <div class="tool-info"><h3>Lorem Ipsum 生成器</h3><p>生成占位文本，用于设计原型</p></div>
+    </a>
+    <a href="/tools/url-slug.html" class="tool-card" data-keywords="url slug 生成器 链接 友好">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+      <div class="tool-info"><h3>URL Slug 生成器</h3><p>中文文本转 URL 友好 slug</p></div>
+    </a>
+    <a href="/tools/text-tools.html" class="tool-card" data-keywords="文本 去重 排序 清理 行号 反转">
+      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg></div>
+      <div class="tool-info"><h3>文本去重/排序/清理</h3><p>去重、排序、去空行、加行号、反转</p></div>
+    </a>
+    <a href="/tools/cipher.html" class="tool-card" data-keywords="rot13 凯撒 摩斯 密码 编码 解码">
+      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+      <div class="tool-info"><h3>ROT13 / 凯撒 / 摩斯电码</h3><p>经典密码编码与解码</p></div>
+    </a>
+    <a href="/tools/text-binary.html" class="tool-card" data-keywords="二进制 文本 转换 编码">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h8M23 10v6h-8"/><path d="M8 4c0 2.5 2 5 4 6-2 1-4 3.5-4 6"/><path d="M16 14c0-2.5-2-5-4-6 2-1 4-3.5 4-6"/></svg></div>
+      <div class="tool-info"><h3>文本转二进制</h3><p>文本与二进制互转</p></div>
+    </a>
+    <a href="/tools/json-to-table.html" class="tool-card" data-keywords="json markdown 表格 转换">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div>
+      <div class="tool-info"><h3>JSON 转 Markdown 表格</h3><p>JSON 数组自动转为 Markdown 表格</p></div>
+    </a>
+    <a href="/tools/emoji-cleaner.html" class="tool-card" data-keywords="emoji 表情 清理 移除 提取">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+      <div class="tool-info"><h3>Emoji 清理器</h3><p>移除/提取/替换 Emoji 表情</p></div>
+    </a>
+    <a href="/tools/md-table.html" class="tool-card" data-keywords="markdown 表格 生成器 在线">
+      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div>
+      <div class="tool-info"><h3>Markdown 表格生成器</h3><p>可视化编辑生成 Markdown 表格</p></div>
+    </a>
+    <a href="/tools/line-numbers.html" class="tool-card" data-keywords="行号 添加 去除 代码">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+      <div class="tool-info"><h3>行号添加器</h3><p>为文本批量添加或去除行号</p></div>
+    </a>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========== 实用工具 ========== -->
+<div class="category" data-category="utility">
+  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> 实用工具 <span class="local-badge">纯本地</span></div>
+  <div class="tools-grid">
+    <a href="/tools/password-gen.html" class="tool-card" data-keywords="密码 生成器 随机 安全 强密码">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+      <div class="tool-info"><h3>密码生成器</h3><p>生成安全随机密码，可自定义规则</p></div>
+    </a>
+    <a href="/tools/password-strength.html" class="tool-card" data-keywords="密码 强度 检测 安全">
+      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="tool-info"><h3>密码强度检测</h3><p>检测密码安全性，给出改进建议</p></div>
     </a>
     <a href="/tools/qr-code.html" class="tool-card" data-keywords="二维码 qr code 生成 生成器">
       <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="4" height="4"/><path d="M18 14h4v4h-4z"/></svg></div>
       <div class="tool-info"><h3>二维码生成</h3><p>文本/网址生成二维码，可下载</p></div>
     </a>
-    <a href="/tools/image-convert.html" class="tool-card" data-keywords="图片 格式 转换 png jpg webp">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
-      <div class="tool-info"><h3>图片格式转换</h3><p>PNG/JPG/WebP/BMP 格式互转</p></div>
+    <a href="/tools/percentage.html" class="tool-card" data-keywords="百分比 计算器 计算">
+      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h6a2 2 0 1 1 0 4"/><path d="M8 16h6"/></svg></div>
+      <div class="tool-info"><h3>百分比计算器</h3><p>A 的 B% 是多少、增减百分比</p></div>
     </a>
-    <a href="/tools/base64-image.html" class="tool-card" data-keywords="base64 图片 预览 编码 解码 转换">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
-      <div class="tool-info"><h3>Base64 图片</h3><p>图片与 Base64 互转，实时预览</p></div>
+    <a href="/tools/date-diff.html" class="tool-card" data-keywords="日期 差值 计算 天数">
+      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="tool-info"><h3>日期差值计算器</h3><p>计算两个日期之间的天数/周数/月数</p></div>
     </a>
-    <a href="/tools/image-crop.html" class="tool-card" data-keywords="图片 裁剪 剪切 裁切 选区">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v4H2M6 6h12a2 2 0 0 1 2 2v12M18 22v-4h4M18 18H6a2 2 0 0 1-2-2V4"/></svg></div>
-      <div class="tool-info"><h3>图片裁剪</h3><p>拖拽选区裁剪图片，支持导出</p></div>
+    <a href="/tools/multi-calculator.html" class="tool-card" data-keywords="bmi 工资 房贷 计算器">
+      <div class="tool-icon" style="background:#fff7ed;color:#f97316;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg></div>
+      <div class="tool-info"><h3>BMI / 工资 / 房贷计算器</h3><p>BMI 指数、税后工资、房贷月供</p></div>
+    </a>
+    <a href="/tools/random.html" class="tool-card" data-keywords="随机数 随机抽取 掷骰子 抽签">
+      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div>
+      <div class="tool-info"><h3>随机数 / 随机抽取 / 掷骰子</h3><p>随机数生成、名单抽取、骰子</p></div>
+    </a>
+    <a href="/tools/unit-converter.html" class="tool-card" data-keywords="单位 换算 长度 重量 温度 速度 存储">
+      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 12l4-8M22 12l-4-8"/></svg></div>
+      <div class="tool-info"><h3>单位换算器</h3><p>长度/重量/温度/速度/存储/面积</p></div>
+    </a>
+    <a href="/tools/byte-converter.html" class="tool-card" data-keywords="字节 大小 转换 b kb mb gb tb pb">
+      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M14 12h4"/></svg></div>
+      <div class="tool-info"><h3>字节大小转换</h3><p>B/KB/MB/GB/TB/PB 互转</p></div>
+    </a>
+    <a href="/tools/timer.html" class="tool-card" data-keywords="倒计时 计时器 闹钟">
+      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="tool-info"><h3>倒计时器</h3><p>设置倒计时，时间到提醒</p></div>
     </a>
   </div>
 </div>
 
-<!-- AI 工具 -->
+<hr class="section-divider">
+
+<!-- ========== AI 工具 ========== -->
 <div class="category" data-category="ai">
-  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M18 14h.01"/><path d="M6 14h.01"/><path d="M12 22v-4M8 22h8"/><circle cx="12" cy="14" r="4"/></svg></span> AI 工具</div>
+  <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M18 14h.01"/><path d="M6 14h.01"/><path d="M12 22v-4M8 22h8"/><circle cx="12" cy="14" r="4"/></svg></span> AI 工具 <span class="ai-badge">需 API Key</span></div>
   <div class="tools-grid">
-    <a href="/tools/ai-image.html" class="tool-card" data-keywords="ai 图片 生成 文生图 ai绘画 midjourney 人工智能">
+    <a href="/tools/ai-image.html" class="tool-card" data-keywords="ai 图片 生成 文生图 ai绘画 人工智能">
       <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
       <div class="tool-info"><h3>AI 图片生成</h3><p>文字描述生成图片，支持图生图</p></div>
     </a>
@@ -204,7 +366,7 @@
       <div class="tool-info"><h3>AI 起名</h3><p>宝宝/公司/网名/宠物名，五行分析</p></div>
     </a>
     <a href="/tools/ai-resume.html" class="tool-card" data-keywords="ai 简历 优化 诊断 面试 自我评价">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
       <div class="tool-info"><h3>AI 简历优化</h3><p>简历诊断、优化建议、模拟面试</p></div>
     </a>
     <a href="/tools/ai-code-explain.html" class="tool-card" data-keywords="ai 代码 解释 说明 review 找bug 优化">
@@ -220,26 +382,19 @@
 </div>
 
 <script>
-// Theme
 function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.getAttribute('data-theme') === 'dark';
   html.setAttribute('data-theme', isDark ? '' : 'dark');
   localStorage.setItem('tool-theme', isDark ? 'light' : 'dark');
-  const btn = document.querySelector('.theme-toggle');
-  btn.innerHTML = isDark
-    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
 }
 (function() {
   const saved = localStorage.getItem('tool-theme');
   if (saved === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
-    document.querySelector('.theme-toggle').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
   }
 })();
 
-// Search
 function filterTools() {
   const q = document.getElementById('searchInput').value.toLowerCase().trim();
   document.querySelectorAll('.tool-card').forEach(card => {
