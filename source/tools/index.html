@@ -11,6 +11,10 @@
 .search-box input:focus { border-color: var(--primary); }
 .search-box .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
 .category { margin-bottom: 32px; }
+.quick-nav { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); padding: 8px 0; margin-bottom: 16px; display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; backdrop-filter: blur(8px); }
+.quick-nav a { padding: 4px 12px; border-radius: 20px; font-size: 13px; text-decoration: none; color: var(--text-secondary); border: 1px solid var(--border); background: var(--card-bg); transition: all 0.15s; white-space: nowrap; }
+.quick-nav a:hover { color: var(--primary); border-color: var(--primary); }
+.quick-nav a.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 .category-title { font-size: 1.2em; font-weight: 600; margin-bottom: 16px; padding-left: 4px; display: flex; align-items: center; gap: 8px; color: var(--text); }
 .category-title .cat-icon { color: var(--primary); }
 .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
@@ -43,10 +47,19 @@
     <span class="search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
     <input type="text" id="searchInput" placeholder="搜索工具..." oninput="filterTools()">
   </div>
+  </div>
+
+<!-- Quick Category Navigation -->
+<div class="quick-nav" id="quickNav">
+  <a href="#cat-converter" data-cat="converter">格式转换</a>
+  <a href="#cat-dev" data-cat="dev">开发者工具</a>
+  <a href="#cat-text" data-cat="text">文本处理</a>
+  <a href="#cat-utility" data-cat="utility">实用工具</a>
+  <a href="#cat-ai" data-cat="ai">AI 工具</a>
 </div>
 
 <!-- ========== 格式转换 ========== -->
-<div class="category" data-category="converter">
+<div class="category" data-category="converter" id="cat-converter">
   <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> 格式转换 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/json-formatter.html" class="tool-card" data-keywords="json 格式化 压缩 校验 美化 转义">
@@ -159,7 +172,7 @@
 <hr class="section-divider">
 
 <!-- ========== 开发者工具 ========== -->
-<div class="category" data-category="dev">
+<div class="category" data-category="dev" id="cat-dev">
   <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span> 开发者工具 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/markdown.html" class="tool-card" data-keywords="markdown md 预览 渲染 实时">
@@ -244,7 +257,7 @@
 <hr class="section-divider">
 
 <!-- ========== 文本处理 ========== -->
-<div class="category" data-category="text">
+<div class="category" data-category="text" id="cat-text">
   <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></span> 文本处理 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/text-diff.html" class="tool-card" data-keywords="文本 对比 差异 diff 比较">
@@ -301,7 +314,7 @@
 <hr class="section-divider">
 
 <!-- ========== 实用工具 ========== -->
-<div class="category" data-category="utility">
+<div class="category" data-category="utility" id="cat-utility">
   <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> 实用工具 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/password-gen.html" class="tool-card" data-keywords="密码 生成器 随机 安全 强密码">
@@ -350,7 +363,7 @@
 <hr class="section-divider">
 
 <!-- ========== AI 工具 ========== -->
-<div class="category" data-category="ai">
+<div class="category" data-category="ai" id="cat-ai">
   <div class="category-title"><span class="cat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M18 14h.01"/><path d="M6 14h.01"/><path d="M12 22v-4M8 22h8"/><circle cx="12" cy="14" r="4"/></svg></span> AI 工具 <span class="ai-badge">需 API Key</span></div>
   <div class="tools-grid">
     <a href="/tools/ai-image.html" class="tool-card" data-keywords="ai 图片 生成 文生图 ai绘画 人工智能">
@@ -395,6 +408,100 @@ function toggleTheme() {
   }
 })();
 
+// ===== Quick Category Navigation =====
+const catLinks = document.querySelectorAll('.quick-nav a');
+const catElements = document.querySelectorAll('.category');
+
+// Smooth scroll on category link click
+catLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      const offset = document.getElementById('quickNav').offsetHeight + 16;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+
+// Highlight active category on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const cat = entry.target.getAttribute('data-category');
+      catLinks.forEach(l => l.classList.toggle('active', l.dataset.cat === cat));
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+catElements.forEach(el => observer.observe(el));
+
+// ===== Scroll Position Persistence =====
+function saveState() {
+  const state = {
+    scrollTop: window.scrollY,
+    category: getCurrentVisibleCategory(),
+    search: document.getElementById('searchInput').value.trim()
+  };
+  sessionStorage.setItem('toolbox-state', JSON.stringify(state));
+}
+
+function getCurrentVisibleCategory() {
+  let closest = null;
+  let minDist = Infinity;
+  const navHeight = document.getElementById('quickNav').offsetHeight + 16;
+  catElements.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const dist = rect.top - navHeight;
+    if (dist <= 0 && dist > -200 && Math.abs(dist) < minDist) {
+      minDist = Math.abs(dist);
+      closest = el.getAttribute('data-category');
+    }
+  });
+  return closest;
+}
+
+function restoreState() {
+  const raw = sessionStorage.getItem('toolbox-state');
+  if (!raw) return false;
+  try {
+    const state = JSON.parse(raw);
+    // Restore search
+    if (state.search) {
+      document.getElementById('searchInput').value = state.search;
+      filterTools();
+    }
+    // Restore scroll to category
+    if (state.category) {
+      const target = document.querySelector('[data-category="' + state.category + '"]');
+      if (target) {
+        setTimeout(() => {
+          const navHeight = document.getElementById('quickNav').offsetHeight + 16;
+          const top = target.getBoundingClientRect().top + window.scrollY - navHeight;
+          window.scrollTo({ top, behavior: 'instant' });
+        }, 50);
+        return true;
+      }
+    }
+    if (state.scrollTop) {
+      setTimeout(() => window.scrollTo(0, state.scrollTop), 50);
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+// Save state on every scroll and search change
+let scrollTimer;
+window.addEventListener('scroll', () => {
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(saveState, 100);
+}, { passive: true });
+document.getElementById('searchInput').addEventListener('input', () => {
+  saveState();
+});
+
+// ===== Search & Filter =====
 function filterTools() {
   const q = document.getElementById('searchInput').value.toLowerCase().trim();
   document.querySelectorAll('.tool-card').forEach(card => {
@@ -405,7 +512,11 @@ function filterTools() {
     const visible = cat.querySelectorAll('.tool-card:not(.hidden)').length;
     cat.style.display = visible ? '' : 'none';
   });
+  saveState();
 }
+
+// Restore state on page load
+restoreState();
 </script>
 <script src="track.js"></script>
 </body>
