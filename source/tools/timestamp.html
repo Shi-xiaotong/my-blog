@@ -15,6 +15,10 @@
 .result-label { color: var(--text-secondary); font-size: 13px; }
 .result-value { font-family: 'SF Mono', monospace; font-size: 13px; cursor: pointer; }
 .result-value:hover { color: var(--primary); }
+.unit-toggle { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.unit-btn { flex: 1; padding: 10px 12px; border: none; background: var(--bg); color: var(--text-secondary); font-size: 14px; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.unit-btn.active { background: var(--primary); color: #fff; }
+.unit-btn:hover:not(.active) { background: var(--border); }
 </style>
 </head>
 <body>
@@ -37,10 +41,10 @@
       <label>时间戳 → 日期</label>
       <div class="row">
         <input type="text" id="tsInput" placeholder="输入时间戳，如 1700000000">
-        <select id="tsUnit">
-          <option value="s">秒 (s)</option>
-          <option value="ms">毫秒 (ms)</option>
-        </select>
+        <div class="unit-toggle" id="tsUnitToggle">
+          <button type="button" class="unit-btn active" data-value="s">秒</button>
+          <button type="button" class="unit-btn" data-value="ms">毫秒</button>
+        </div>
         <button class="btn btn-primary" onclick="tsToDate()">转换</button>
       </div>
       <div id="tsResult" class="result-box" style="display:none"></div>
@@ -86,9 +90,19 @@ function getRelativeTime(date) {
   return Math.floor(abs/31536000000) + ' 年' + suffix;
 }
 
+// Unit toggle for tsToDate
+document.querySelectorAll('#tsUnitToggle .unit-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#tsUnitToggle .unit-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    tsToDate();
+  });
+});
+
 function tsToDate() {
   const val = document.getElementById('tsInput').value.trim();
-  const unit = document.getElementById('tsUnit').value;
+  const activeBtn = document.querySelector('#tsUnitToggle .unit-btn.active');
+  const unit = activeBtn ? activeBtn.dataset.value : 's';
   const el = document.getElementById('tsResult');
   if (!val || isNaN(val)) { el.style.display='none'; return; }
   let ms = parseInt(val);
