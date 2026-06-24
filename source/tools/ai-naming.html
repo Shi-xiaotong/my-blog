@@ -40,7 +40,7 @@
 <div class="container">
   <div class="header">
     <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
-    <h1>AI 起名助手</h1>
+    <h1>AI 起名助手 <span style="font-size:14px;color:var(--text-secondary);font-weight:400">· Agnes 2.0 Flash</span></h1>
   </div>
   <div class="tool-area">
     <label>选择起名类型</label>
@@ -217,7 +217,7 @@ async function generate() {
 
   btn.disabled = true;
   btn.textContent = '起名中...';
-  output.innerHTML = '<span class="placeholder">AI 正在为您精心起名，请稍候...</span>';
+  output.innerHTML = '<span class="placeholder">Agnes 2.0 Flash 正在为您精心起名，请稍候...</span>';
 
   try {
     const res = await fetch(AI_ENDPOINT, {
