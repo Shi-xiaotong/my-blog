@@ -49,7 +49,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: true
+post_asset_folder: false
 relative_link: false
 future: true
 syntax_highlighter: highlight.js
@@ -127,12 +127,6 @@ r2_media:
 ## Docs: https://hexo.io/zh-cn/docs/one-command-deployment
 deploy:
   - type: r2-media
-  - type: ''
-
-# 音乐播放器
-aplayer:
-  meting: true
-  asset_inject: false
 
 # Sitemap
 sitemap:

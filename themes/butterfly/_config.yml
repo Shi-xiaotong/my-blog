@@ -140,7 +140,7 @@ error_img:
 
 # 简单 404 页面
 error_404:
-  enable: false
+  enable: true
   subtitle: '页面未找到'
   background: /img/error-page.png
 
@@ -312,7 +312,7 @@ footer:
   nav:
   owner:
     enable: true
-    since: 2026
+    since: 2025
   # 主题和框架的版权
   copyright:
     enable: false

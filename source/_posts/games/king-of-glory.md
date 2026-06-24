@@ -8,7 +8,6 @@ tags:
   - MOBA
 categories:
   - life
-toc: true
 ---
 
 # 王者荣耀：现象级手游是如何炼成的

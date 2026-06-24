@@ -8,7 +8,6 @@ tags:
   - 历史
 categories:
   - history
-toc: true
 ---
 
 # 唐朝：从盛世到衰落的百年风云

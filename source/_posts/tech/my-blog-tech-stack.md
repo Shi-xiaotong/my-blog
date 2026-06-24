@@ -10,7 +10,6 @@ tags:
   - 自动化
 categories:
   - tech
-toc: true
 ---
 
 > 一个人，一个博客，一段从手工部署到 AI 自动化的折腾之旅。

@@ -8,7 +8,6 @@ tags:
   - life
 categories:
   - science
-toc: true
 ---
 
 # ChatGPT与我的日常：AI时代的工作变革

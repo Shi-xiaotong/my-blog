@@ -7,7 +7,6 @@ tags:
   - 随想
 categories:
   - notes
-toc: true
 ---
 
 「代码改变世界，文字记录生活」

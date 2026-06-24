@@ -8,7 +8,6 @@ tags:
   - JavaScript
 categories:
   - tech
-toc: true
 ---
 
 # 为什么选择TypeScript？一次前端开发的真实体验

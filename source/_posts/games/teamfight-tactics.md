@@ -8,7 +8,6 @@ tags:
   - 自走棋
 categories:
   - life
-toc: true
 ---
 
 # 金铲铲之战：下棋也能上瘾的自走棋

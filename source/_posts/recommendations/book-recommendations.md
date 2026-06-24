@@ -8,7 +8,6 @@ tags:
   - 推荐
 categories:
   - life
-toc: true
 ---
 
 # 我的阅读书单：这几本书改变了我

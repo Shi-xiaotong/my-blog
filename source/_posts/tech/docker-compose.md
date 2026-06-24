@@ -7,7 +7,6 @@ tags:
   - Docker Compose
 categories:
   - tech
-toc: true
 ---
 
 # Docker Compose快速指南

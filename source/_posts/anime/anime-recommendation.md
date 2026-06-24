@@ -8,7 +8,6 @@ tags:
 
 categories:
   - anime
-toc: true
 ---
 
 # 二次元入坑指南：这些番剧值得一看

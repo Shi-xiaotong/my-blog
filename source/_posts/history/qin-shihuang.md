@@ -7,7 +7,6 @@ tags:
   - 人物
 categories:
   - history
-toc: true
 ---
 
 # 秦始皇：千古一帝的功过是非

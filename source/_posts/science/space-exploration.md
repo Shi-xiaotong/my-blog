@@ -8,7 +8,6 @@ tags:
   - history
 categories:
   - science
-toc: true
 ---
 
 # 从登月到火星：人类太空探索简史

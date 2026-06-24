@@ -8,7 +8,6 @@ tags:
 
 categories:
   - anime
-toc: true
 ---
 
 # 火影忍者：那些年我们追过的忍者梦

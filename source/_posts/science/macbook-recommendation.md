@@ -8,7 +8,6 @@ tags:
   - 数码
 categories:
   - science
-toc: true
 ---
 
 # MacBook选购指南：2026年苹果笔记本怎么选

@@ -8,7 +8,6 @@ tags:
 
 categories:
   - anime
-toc: true
 ---
 
 # 咒术回战：当代最燃热血番

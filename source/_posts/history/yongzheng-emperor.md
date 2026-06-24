@@ -8,7 +8,6 @@ tags:
   - 人物
 categories:
   - history
-toc: true
 ---
 
 # 雍正皇帝：改革者的孤独与坚持

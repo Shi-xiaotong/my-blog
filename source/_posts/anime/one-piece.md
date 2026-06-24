@@ -8,7 +8,6 @@ tags:
 
 categories:
   - anime
-toc: true
 ---
 
 # 海贼王：梦想与羁绊的史诗

@@ -7,7 +7,6 @@ tags:
   - 运维
 categories:
   - tech
-toc: true
 ---
 
 # Linux常用命令总结

@@ -8,7 +8,6 @@ tags:
   - FPS
 categories:
   - life
-toc: true
 ---
 
 # 穿越火线：那些年我们一起枪战的青春

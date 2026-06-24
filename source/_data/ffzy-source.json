@@ -18,8 +18,7 @@
   },
   "worker": {
     "name": "ffzy-proxy",
-    "domain": "ffzy.233002.xyz",
-    "project": "/Users/shixiaotong/Documents/dev/projects/ffzy-proxy"
+    "domain": "ffzy.233002.xyz"
   },
   "player": {
     "hls_cdn": "https://cdn.jsdelivr.net/npm/hls.js@latest",

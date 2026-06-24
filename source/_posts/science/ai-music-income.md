@@ -8,7 +8,6 @@ tags:
   - 科技
 categories:
   - science
-toc: true
 ---
 
 # AI写歌月入十几万：音乐创作的平民化时代来了？

@@ -8,7 +8,6 @@ tags:
   - 科技
 categories:
   - science
-toc: true
 ---
 
 # AI的隐形代价：2030年耗水量够13亿人用一年
