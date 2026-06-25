@@ -159,6 +159,7 @@ async function generate() {
   try {
     const body = {
       model: 'agnes-image-2.1-flash',
+      endpoint: 'images/generations',
       prompt: prompt,
       size: size,
       extra_body: { response_format: 'url' }
