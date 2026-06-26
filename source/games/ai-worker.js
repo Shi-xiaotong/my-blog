@@ -48,10 +48,10 @@ export default {
       // 从请求中移除自定义字段，剩下的全部转发给 Agnes
       delete body.endpoint;
 
-      // 文本模型限制 max_tokens
+      // 文本模型限制 max_tokens（默认上限 4096，工具页可传更大值）
       if (endpoint === 'chat/completions') {
-        if (!body.max_tokens || body.max_tokens > 2048) {
-          body.max_tokens = 512;
+        if (!body.max_tokens || body.max_tokens > 4096) {
+          body.max_tokens = 2048;
         }
       }
 
