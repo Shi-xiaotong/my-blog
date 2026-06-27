@@ -31,9 +31,7 @@ body {
   color: var(--text);
   min-height: 100vh;
 }
-.container { max-width: 1000px; margin: 0 auto; padding: 16px; }
-
-/* Header */
+.container { max-width: 1400px; margin: 0 auto; padding: 16px; }
 .header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 0; margin-bottom: 16px; border-bottom: 1px solid var(--border);
@@ -47,7 +45,6 @@ body {
   transition: all 0.2s;
 }
 .back-link:hover { background: var(--primary); color: #0f0f1a; }
-
 .theme-toggle {
   width: 36px; height: 36px; border-radius: 50%;
   border: 1px solid var(--border); background: var(--card-bg); color: var(--text);
@@ -56,45 +53,24 @@ body {
 }
 .theme-toggle:hover { border-color: var(--primary); }
 
-/* Input area */
-.input-area {
-  display: flex; gap: 8px; margin-bottom: 16px;
+/* Tabs */
+.tab-bar { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab-btn {
+  padding: 6px 16px; border: 1px solid var(--border); border-radius: 20px;
+  background: transparent; color: var(--text-secondary);
+  cursor: pointer; font-size: 13px; transition: all 0.2s;
 }
-.url-input {
-  flex: 1; padding: 10px 14px; border-radius: 10px;
-  border: 1px solid var(--border); background: var(--card-bg);
-  color: var(--text); font-size: 14px; outline: none;
-  transition: border-color 0.2s;
-}
-.url-input:focus { border-color: var(--primary); }
-.url-input::placeholder { color: var(--text-secondary); }
-.play-btn {
-  padding: 10px 24px; border-radius: 10px; border: none;
-  background: var(--primary); color: #0f0f1a; font-weight: 600;
-  cursor: pointer; font-size: 14px; transition: all 0.2s;
-  white-space: nowrap;
-}
-.play-btn:hover { background: var(--primary-hover); color: #fff; }
-.play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.tab-btn.active { background: var(--primary); color: #0f0f1a; border-color: var(--primary); font-weight: 600; }
+.tab-btn:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
 
-/* History */
-.history {
-  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+/* Layout */
+.layout { display: grid; grid-template-columns: 1fr 340px; gap: 16px; }
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .channel-sidebar { max-height: 300px; }
 }
-.history-tag {
-  padding: 4px 12px; border-radius: 16px; font-size: 12px;
-  background: var(--card-bg); border: 1px solid var(--border);
-  color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
-}
-.history-tag:hover { border-color: var(--primary); color: var(--primary); }
-.history-clear {
-  padding: 4px 12px; border-radius: 16px; font-size: 12px;
-  background: transparent; border: 1px solid #ff4444;
-  color: #ff4444; cursor: pointer; transition: all 0.2s;
-}
-.history-clear:hover { background: #ff4444; color: #fff; }
 
-/* Player area */
+/* Player */
 .player-area { position: relative; }
 .video-wrapper {
   position: relative; width: 100%; padding-top: 56.25%;
@@ -104,17 +80,12 @@ body {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   background: #000;
 }
-
-/* Empty state */
 .empty-state {
   position: absolute; inset: 0; display: flex; align-items: center;
   justify-content: center; flex-direction: column; gap: 12px;
   color: var(--text-secondary);
 }
 .empty-state i { font-size: 48px; opacity: 0.3; }
-.empty-state p { font-size: 14px; }
-
-/* Loading */
 .loading-overlay {
   position: absolute; inset: 0; background: rgba(0,0,0,0.7);
   display: none; align-items: center; justify-content: center;
@@ -127,8 +98,6 @@ body {
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* Error */
 .error-state {
   position: absolute; inset: 0; display: none; align-items: center;
   justify-content: center; flex-direction: column; gap: 12px;
@@ -144,28 +113,91 @@ body {
 }
 .retry-btn:hover { background: var(--primary); color: #0f0f1a; }
 
-/* Status bar */
-.status-bar {
-  display: flex; align-items: center; gap: 12px;
-  padding: 8px 0; font-size: 12px; color: var(--text-secondary);
+/* Channel info bar */
+.channel-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; font-size: 14px;
 }
+.channel-bar .ch-name { font-weight: 600; }
+.channel-bar .ch-status { font-size: 12px; color: var(--text-secondary); }
 .live-dot {
   display: inline-block; width: 8px; height: 8px; border-radius: 50%;
   background: #ff4444; margin-right: 4px; animation: pulse 1.5s infinite;
 }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-/* Help section */
-.help-section {
-  margin-top: 20px; padding: 16px; background: var(--card-bg);
-  border-radius: var(--radius); border: 1px solid var(--border);
+/* Sidebar */
+.channel-sidebar {
+  background: var(--card-bg); border-radius: var(--radius);
+  border: 1px solid var(--border); display: flex; flex-direction: column;
+  max-height: calc(100vh - 100px);
 }
-.help-section h3 { font-size: 14px; color: var(--primary); margin-bottom: 8px; }
-.help-section ol { font-size: 13px; color: var(--text-secondary); padding-left: 20px; line-height: 1.8; }
-.help-section code {
-  background: var(--bg); padding: 2px 6px; border-radius: 4px;
-  font-size: 12px; color: var(--primary);
+.sidebar-header { padding: 12px; border-bottom: 1px solid var(--border); }
+.search-box {
+  position: relative; margin-bottom: 10px;
 }
+.search-box input {
+  width: 100%; padding: 8px 12px 8px 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text); font-size: 14px; outline: none;
+  transition: border-color 0.2s;
+}
+.search-box input:focus { border-color: var(--primary); }
+.search-box i {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-secondary); font-size: 14px;
+}
+.channel-list {
+  flex: 1; overflow-y: auto; padding: 8px;
+}
+.channel-list::-webkit-scrollbar { width: 4px; }
+.channel-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.channel-group-title {
+  font-size: 11px; color: var(--text-secondary); padding: 8px 4px 4px;
+  text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+  position: sticky; top: 0; background: var(--card-bg); z-index: 1;
+}
+.channel-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: 8px; cursor: pointer;
+  transition: all 0.15s; margin-bottom: 2px;
+}
+.channel-item:hover { background: var(--border); }
+.channel-item.active { background: var(--primary); color: #0f0f1a; }
+.ch-logo {
+  width: 36px; height: 36px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-weight: bold; font-size: 12px;
+}
+.ch-name {
+  font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  flex: 1;
+}
+.ch-badge {
+  font-size: 10px; padding: 1px 6px; border-radius: 8px;
+  background: rgba(255,255,255,0.15); flex-shrink: 0;
+}
+.channel-item.active .ch-badge { background: rgba(0,0,0,0.2); }
+.no-results {
+  text-align: center; padding: 40px 20px; color: var(--text-secondary);
+}
+.no-results i { font-size: 32px; margin-bottom: 8px; display: block; }
+
+/* Loading channels */
+.loading-channels {
+  text-align: center; padding: 40px; color: var(--text-secondary);
+}
+.loading-channels .spinner {
+  width: 30px; height: 30px; border: 3px solid var(--border);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+.fail-msg {
+  text-align: center; padding: 20px; color: var(--text-secondary);
+  font-size: 13px;
+}
+.fail-msg a { color: var(--primary); }
 
 .footer {
   text-align: center; padding: 20px 0; color: var(--text-secondary);
@@ -183,62 +215,74 @@ body {
     <button class="theme-toggle" onclick="toggleTheme()" title="切换主题"><i class="fas fa-adjust"></i></button>
   </div>
 
-  <div class="status-bar">
-    <div><i class="fas fa-info-circle"></i> 粘贴 m3u8 直播源地址即可播放</div>
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">全部</button>
+    <button class="tab-btn" data-tab="cctv" onclick="switchTab('cctv')">CCTV</button>
+    <button class="tab-btn" data-tab="卫视" onclick="switchTab('卫视')">卫视</button>
+    <button class="tab-btn" data-tab="其他" onclick="switchTab('其他')">其他</button>
   </div>
 
-  <!-- Input -->
-  <div class="input-area">
-    <input type="text" class="url-input" id="url-input" placeholder="粘贴 m3u8 直播源 URL，例如 http://xxx.m3u8" onkeydown="if(event.key==='Enter')playFromInput()">
-    <button class="play-btn" id="play-btn" onclick="playFromInput()">播放</button>
-  </div>
-
-  <!-- History -->
-  <div class="history" id="history"></div>
-
-  <!-- Player -->
-  <div class="player-area">
-    <div class="video-wrapper">
-      <video id="player" controls autoplay playsinline></video>
-      <div class="empty-state" id="empty-state">
-        <i class="fas fa-tv"></i>
-        <p>粘贴一个 m3u8 直播源地址开始观看</p>
+  <div class="layout">
+    <!-- Player -->
+    <div class="player-area">
+      <div class="video-wrapper">
+        <video id="player" controls autoplay playsinline></video>
+        <div class="empty-state" id="empty-state">
+          <i class="fas fa-tv"></i>
+          <p>从右侧列表选择一个频道</p>
+        </div>
+        <div class="loading-overlay" id="loading">
+          <div class="spinner"></div>
+          <span style="color:#fff;font-size:13px;">正在加载...</span>
+        </div>
+        <div class="error-state" id="error-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p id="error-msg">播放失败</p>
+          <button class="retry-btn" onclick="retryPlay()">重试</button>
+        </div>
       </div>
-      <div class="loading-overlay" id="loading">
-        <div class="spinner"></div>
-        <span style="color:#fff;font-size:13px;">正在加载...</span>
-      </div>
-      <div class="error-state" id="error-state">
-        <i class="fas fa-exclamation-triangle"></i>
-        <p id="error-msg">频道加载失败</p>
-        <button class="retry-btn" onclick="retryPlay()">重试</button>
+      <div class="channel-bar">
+        <span class="ch-name" id="current-name">等待选择频道</span>
+        <span class="ch-status" id="current-status"></span>
       </div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;">
-      <div style="font-size:14px;font-weight:600;" id="current-name"></div>
-      <div style="font-size:12px;color:var(--text-secondary);" id="current-status"></div>
-    </div>
-  </div>
 
-  <!-- Help -->
-  <div class="help-section">
-    <h3><i class="fas fa-lightbulb"></i> 如何获取直播源？</h3>
-    <ol>
-      <li>搜索 "IPTV m3u8 直播源" 获取公开可用的直播地址</li>
-      <li>使用路由器或内网 IPTV 的 m3u8 地址</li>
-      <li>注意：部分直播源可能有地域限制或时效性</li>
-      <li>支持的格式：<code>m3u8</code>（HLS）和 <code>mp4</code> 视频流</li>
-    </ol>
+    <!-- Sidebar -->
+    <div class="channel-sidebar">
+      <div class="sidebar-header">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="search-input" placeholder="搜索频道..." oninput="filterChannels()">
+        </div>
+      </div>
+      <div class="channel-list" id="channel-list">
+        <div class="loading-channels">
+          <div class="spinner"></div>
+          <p>正在加载频道列表...</p>
+          <p style="font-size:11px;margin-top:4px;">从 GitHub 获取 Free-TV IPTV 源</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="footer">
-    仅供学习研究使用 · 直播源来自第三方
+    数据源: Free-TV IPTV · 频道可用性取决于您的网络环境 · 仅供学习研究
   </div>
 </div>
 
 <script>
+const SOURCES = [
+  'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8',
+  'https://ghproxy.net/https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8',
+  'https://cdn.jsdelivr.net/gh/Free-TV/IPTV@master/playlist.m3u8'
+];
+
+let channels = [];
 let currentChannel = null;
 let hls = null;
+let currentTab = 'all';
+let filteredChannels = [];
 
 // Theme
 function toggleTheme() {
@@ -252,173 +296,267 @@ function toggleTheme() {
   if (t) document.documentElement.setAttribute('data-theme', t);
 })();
 
-// History management
-function getHistory() {
-  try {
-    return JSON.parse(localStorage.getItem('live-history') || '[]');
-  } catch { return []; }
+// Parse M3U
+function parseM3U(text) {
+  const result = [];
+  const lines = text.split('\n');
+  let current = null;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.startsWith('#EXTINF:')) {
+      const info = line.substring(10);
+      const nameMatch = info.match(/,(.+)$/);
+      const name = nameMatch ? nameMatch[1].trim() : 'Unknown';
+      
+      // Extract metadata
+      const logoMatch = info.match(/tvg-logo="([^"]*)"/);
+      const logo = logoMatch ? logoMatch[1] : '';
+      
+      const groupMatch = info.match(/group-title="([^"]*)"/);
+      const group = groupMatch ? groupMatch[1] : '';
+      
+      const countryMatch = info.match(/tvg-country="([A-Z]{2})"/);
+      const country = countryMatch ? countryMatch[1] : '';
+      
+      current = { name, logo, group, country };
+    } else if (line && !line.startsWith('#') && current) {
+      current.url = line;
+      // Filter: only HTTP/HTTPS, no IPv6, no YouTube/Twitch
+      if ((line.startsWith('http://') || line.startsWith('https://')) &&
+          !line.includes('youtube.com') && !line.includes('twitch.tv') &&
+          !line.includes('youtu.be') &&
+          !line.includes('[')) {
+        result.push({...current});
+      }
+      current = null;
+    }
+  }
+  return result;
 }
-function saveToHistory(name, url) {
-  let history = getHistory();
-  // Remove duplicate
-  history = history.filter(h => h.url !== url);
-  // Add to front
-  history.unshift({ name: name || url.substring(0, 30), url });
-  // Keep last 10
-  if (history.length > 10) history = history.slice(0, 10);
-  localStorage.setItem('live-history', JSON.stringify(history));
-  renderHistory();
+
+// Classify channel
+function classify(ch) {
+  const n = ch.name.toUpperCase();
+  if (/CCTV/.test(n)) return 'cctv';
+  if (/卫视|TV/.test(ch.name) && !/CCTV/.test(n)) return '卫视';
+  return '其他';
 }
-function clearHistory() {
-  localStorage.removeItem('live-history');
-  renderHistory();
+
+// Load channels from source
+async function loadChannels() {
+  const listEl = document.getElementById('channel-list');
+  
+  for (const source of SOURCES) {
+    try {
+      const resp = await fetch(source, { signal: AbortSignal.timeout(15000) });
+      if (!resp.ok) continue;
+      const text = await resp.text();
+      const parsed = parseM3U(text);
+      
+      if (parsed.length > 0) {
+        channels = parsed;
+        // Deduplicate by URL
+        const seen = new Set();
+        channels = channels.filter(ch => {
+          if (seen.has(ch.url)) return false;
+          seen.add(ch.url);
+          return true;
+        });
+        // Add classification
+        channels.forEach(ch => ch.category = classify(ch));
+        
+        listEl.innerHTML = `<div style="padding:8px;font-size:12px;color:var(--text-secondary);">共 ${channels.length} 个频道</div>` + listEl.innerHTML.replace('<div class="loading-channels">...</div>', '');
+        renderChannels();
+        return;
+      }
+    } catch (e) {
+      console.warn(`Source failed: ${source}`, e.message);
+    }
+  }
+  
+  // All sources failed
+  listEl.innerHTML = `
+    <div class="fail-msg">
+      <i class="fas fa-exclamation-circle" style="font-size:24px;display:block;margin-bottom:8px;color:var(--text-secondary);"></i>
+      频道列表加载失败<br>
+      <a href="https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8" target="_blank">手动下载 M3U 文件</a>
+      或粘贴 m3u8 URL 播放
+    </div>
+    <div style="padding:12px;">
+      <input type="text" class="url-input" id="fallback-input" 
+        style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;"
+        placeholder="或在此粘贴 m3u8 直播源 URL">
+      <button onclick="playFallback()" style="margin-top:8px;width:100%;padding:8px;border-radius:8px;border:1px solid var(--primary);background:transparent;color:var(--primary);cursor:pointer;">播放</button>
+    </div>`;
 }
-function renderHistory() {
-  const history = getHistory();
-  const container = document.getElementById('history');
-  if (history.length === 0) {
-    container.innerHTML = '';
+
+function playFallback() {
+  const input = document.getElementById('fallback-input');
+  if (input && input.value.trim()) {
+    playUrl(input.value.trim(), '自定义频道');
+  }
+}
+
+// Render channels
+function renderChannels() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  
+  let tabs = currentTab === 'all' ? ['cctv','卫视','其他'] : [currentTab];
+  filteredChannels = channels.filter(ch => 
+    tabs.includes(ch.category) && ch.name.toLowerCase().includes(search)
+  );
+  
+  if (filteredChannels.length === 0) {
+    document.getElementById('channel-list').innerHTML += 
+      '<div class="no-results"><i class="fas fa-search"></i><p>没有找到匹配的频道</p></div>';
     return;
   }
-  let html = history.map((h, i) =>
-    `<span class="history-tag" onclick="playUrl('${h.url.replace(/'/g, "\\'")}', '${h.name.replace(/'/g, "\\'")}')">${h.name}</span>`
-  ).join('');
-  html += `<button class="history-clear" onclick="clearHistory()"><i class="fas fa-trash"></i> 清除</button>`;
-  container.innerHTML = html;
+  
+  // Group
+  const groups = {};
+  filteredChannels.forEach(ch => {
+    const g = ch.group || '其他';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(ch);
+  });
+  
+  // Build HTML
+  let html = '';
+  const groupOrder = ['CCTV', '央视', 'China', 'CETV', '教育', '卫视频道', '卫视', '其他'];
+  const sortedGroups = Object.keys(groups).sort((a, b) => {
+    const ia = groupOrder.findIndex(g => a.includes(g));
+    const ib = groupOrder.findIndex(g => b.includes(g));
+    if (ia >= 0 && ib >= 0) return ia - ib;
+    if (ia >= 0) return -1;
+    if (ib >= 0) return 1;
+    return a.localeCompare(b);
+  });
+  
+  for (const g of sortedGroups) {
+    if (groups[g].length === 0) continue;
+    html += `<div class="channel-group-title">${g}</div>`;
+    groups[g].forEach(ch => {
+      const isActive = currentChannel && currentChannel.url === ch.url;
+      const initials = ch.name.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '').substring(0, 2);
+      const colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#34495e','#16a085','#c0392b'];
+      const ci = (initials.charCodeAt(0) + (initials.charCodeAt(1) || 0)) % colors.length;
+      
+      html += `
+        <div class="channel-item ${isActive ? 'active' : ''}" onclick="playChannel(${JSON.stringify(ch).replace(/"/g, '&quot;')})">
+          <div class="ch-logo" style="background:${colors[ci]}40;color:${colors[ci]}">${initials}</div>
+          <span class="ch-name">${ch.name}</span>
+          ${isActive ? '<span class="ch-badge">播放中</span>' : ''}
+        </div>`;
+    });
+  }
+  
+  // Prepend to existing content (after the count div)
+  const existing = document.querySelector('.channel-list > div:first-child');
+  const listEl = document.getElementById('channel-list');
+  if (existing) {
+    listEl.innerHTML = '';
+    listEl.innerHTML = existing.outerHTML + html;
+  } else {
+    listEl.innerHTML = html;
+  }
+}
+
+function filterChannels() {
+  renderChannels();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+  renderChannels();
 }
 
 // Play
-function playFromInput() {
-  const input = document.getElementById('url-input');
-  const url = input.value.trim();
-  if (!url) return;
-  
-  // Extract name from URL
-  let name = '';
-  try {
-    const urlObj = new URL(url);
-    const pathname = urlObj.pathname.split('/').pop();
-    name = decodeURIComponent(pathname) || '未知频道';
-  } catch {
-    name = '自定义频道';
-  }
-  
-  playUrl(url, name);
-  input.value = '';
-}
-
-function playUrl(url, name) {
-  currentChannel = { url, name };
+function playChannel(channel) {
+  currentChannel = channel;
   const video = document.getElementById('player');
   const loading = document.getElementById('loading');
   const errorState = document.getElementById('error-state');
   const emptyState = document.getElementById('empty-state');
   const statusText = document.getElementById('current-status');
   const nameEl = document.getElementById('current-name');
-  const playBtn = document.getElementById('play-btn');
-
-  // UI updates
+  
   emptyState.style.display = 'none';
   errorState.classList.remove('show');
   loading.classList.add('show');
-  nameEl.textContent = name;
-  statusText.textContent = '正在连接...';
-  playBtn.disabled = true;
-
-  // Destroy previous HLS
-  if (hls) {
-    hls.destroy();
-    hls = null;
-  }
-
-  // Save to history
-  saveToHistory(name, url);
-
-  // Detect stream type
-  const isM3u8 = url.includes('.m3u8') || url.includes('playlist');
-  const isHttp = url.startsWith('http://');
-
-  if (isM3u8) {
-    // HLS playback
-    if (Hls.isSupported()) {
-      hls = new Hls({
-        maxBufferLength: 30,
-        maxMaxBufferLength: 60,
-        startLevel: -1,
-        debug: false
-      });
-      hls.loadSource(url);
-      hls.attachMedia(video);
-      
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        loading.classList.remove('show');
-        statusText.textContent = '播放中';
-        playBtn.disabled = false;
-        video.play().catch(() => {});
-      });
-      
-      hls.on(Hls.Events.ERROR, (event, data) => {
-        if (data.fatal) {
-          loading.classList.remove('show');
-          errorState.classList.add('show');
-          statusText.textContent = '连接失败';
-          playBtn.disabled = false;
-          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            document.getElementById('error-msg').textContent = '网络错误，频道可能已失效或不支持跨域访问';
-            setTimeout(() => hls.startLoad(), 3000);
-          } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-            hls.recoverMediaError();
-          } else {
-            document.getElementById('error-msg').textContent = '播放失败，该频道可能已下线';
-          }
-        }
-      });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Safari native HLS
-      video.src = url;
-      video.addEventListener('loadedmetadata', () => {
-        loading.classList.remove('show');
-        statusText.textContent = '播放中';
-        playBtn.disabled = false;
-        video.play().catch(() => {});
-      });
-      video.addEventListener('error', () => {
-        loading.classList.remove('show');
-        errorState.classList.add('show');
-        statusText.textContent = '播放失败';
-        playBtn.disabled = false;
-        document.getElementById('error-msg').textContent = 'Safari 也无法播放此频道';
-      });
-    } else {
-      loading.classList.remove('show');
-      errorState.classList.add('show');
-      document.getElementById('error-msg').textContent = '您的浏览器不支持 HLS 播放';
-      playBtn.disabled = false;
-    }
-  } else {
-    // Direct video (mp4 etc)
+  nameEl.textContent = channel.name;
+  statusText.innerHTML = '<span class="live-dot"></span>正在连接...';
+  
+  if (hls) { hls.destroy(); hls = null; }
+  
+  const url = channel.url;
+  
+  if (url.startsWith('http://')) {
     video.src = url;
     video.play().then(() => {
       loading.classList.remove('show');
-      statusText.textContent = '播放中';
-      playBtn.disabled = false;
-    }).catch(err => {
+      statusText.innerHTML = '<span class="live-dot"></span>播放中';
+    }).catch(() => {
       loading.classList.remove('show');
       errorState.classList.add('show');
       statusText.textContent = '播放失败';
-      playBtn.disabled = false;
-      document.getElementById('error-msg').textContent = err.message || '无法播放此视频';
+    });
+    return;
+  }
+  
+  if (Hls.isSupported()) {
+    hls = new Hls({ maxBufferLength: 30, maxMaxBufferLength: 60, startLevel: -1, debug: false });
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      loading.classList.remove('show');
+      statusText.innerHTML = '<span class="live-dot"></span>播放中';
+      video.play().catch(() => {});
+    });
+    
+    hls.on(Hls.Events.ERROR, (event, data) => {
+      if (data.fatal) {
+        loading.classList.remove('show');
+        errorState.classList.add('show');
+        statusText.textContent = '连接失败';
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          document.getElementById('error-msg').textContent = '网络错误，该频道可能已下线或不可访问';
+          setTimeout(() => hls.startLoad(), 3000);
+        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hls.recoverMediaError();
+        } else {
+          document.getElementById('error-msg').textContent = '播放失败';
+        }
+      }
+    });
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = url;
+    video.addEventListener('loadedmetadata', () => {
+      loading.classList.remove('show');
+      statusText.innerHTML = '<span class="live-dot"></span>播放中';
+      video.play().catch(() => {});
+    });
+    video.addEventListener('error', () => {
+      loading.classList.remove('show');
+      errorState.classList.add('show');
+      statusText.textContent = '播放失败';
     });
   }
 }
 
-function retryPlay() {
-  if (currentChannel) {
-    playUrl(currentChannel.url, currentChannel.name);
-  }
+function playUrl(url, name) {
+  playChannel({ url, name, logo: '', group: '', category: '其他' });
 }
 
-// Keyboard shortcuts
+function retryPlay() {
+  if (currentChannel) playChannel(currentChannel);
+}
+
+// Keyboard
 document.addEventListener('keydown', (e) => {
   const video = document.getElementById('player');
   if (e.key === ' ' && video && document.activeElement.tagName !== 'INPUT') {
@@ -426,16 +564,13 @@ document.addEventListener('keydown', (e) => {
     video.paused ? video.play() : video.pause();
   }
   if (e.key === 'f' && video && document.activeElement.tagName !== 'INPUT') {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      video.requestFullscreen?.();
-    }
+    if (document.fullscreenElement) document.exitFullscreen();
+    else video.requestFullscreen?.();
   }
 });
 
 // Init
-renderHistory();
+loadChannels();
 </script>
 </body>
 </html>
