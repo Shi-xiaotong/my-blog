@@ -31,7 +31,7 @@ theme_color:
 
 nav:
   # 导航栏 logo 图片
-  logo: https://img.233002.xyz/blog/logo.png
+  logo: https://img.233002.xyz/blog/logo.png?v=2024062101
   display_title: true
   display_post_title: true
   # 是否固定导航栏
@@ -43,6 +43,7 @@ menu:
   天气: /weather/ || fas fa-cloud-sun
   更多:
     影视屋: /anime/ || fas fa-film
+    电视直播: /live/ || fas fa-broadcast-tower
     工具箱: /tools/ || fas fa-toolbox
     小游戏: /games/ || fas fa-gamepad
   友链: /links/ || fas fa-link
@@ -81,7 +82,7 @@ social:
 # 图片设置
 # --------------------------------------
 
-favicon: /img/favicon-32.png?v=2
+favicon: /img/favicon-64.png?v=3
 
 avatar:
   img: /img/picture.png

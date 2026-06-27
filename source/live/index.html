@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电视直播 - 233002.xyz</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
+<style>
+:root {
+  --primary: #ffd93d;
+  --primary-hover: #ff6b6b;
+  --bg: #0f0f1a;
+  --card-bg: #1a1a2e;
+  --text: #e0e0e0;
+  --text-secondary: #888;
+  --border: #2a2a3e;
+  --radius: 12px;
+}
+[data-theme="light"] {
+  --bg: #f5f5fa;
+  --card-bg: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #666;
+  --border: #e0e0e8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+.container { max-width: 1400px; margin: 0 auto; padding: 16px; }
+
+/* Header */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; margin-bottom: 16px; border-bottom: 1px solid var(--border);
+}
+.header h1 { font-size: 22px; color: var(--primary); }
+.header h1 i { margin-right: 8px; }
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--primary); text-decoration: none; font-size: 14px;
+  padding: 6px 14px; border: 1px solid var(--primary); border-radius: 20px;
+  transition: all 0.2s;
+}
+.back-link:hover { background: var(--primary); color: #0f0f1a; }
+
+/* Theme toggle */
+.theme-toggle {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--card-bg); color: var(--text);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all 0.2s;
+}
+.theme-toggle:hover { border-color: var(--primary); }
+
+/* Layout */
+.layout { display: grid; grid-template-columns: 1fr 320px; gap: 16px; }
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .channel-sidebar { max-height: 400px; }
+}
+
+/* Player area */
+.player-area { position: relative; }
+.video-wrapper {
+  position: relative; width: 100%; padding-top: 56.25%;
+  background: #000; border-radius: var(--radius); overflow: hidden;
+}
+.video-wrapper video {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: #000;
+}
+.channel-info {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0;
+}
+.channel-logo {
+  width: 48px; height: 48px; border-radius: 8px;
+  background: var(--card-bg); display: flex; align-items: center;
+  justify-content: center; overflow: hidden; flex-shrink: 0;
+}
+.channel-logo img { width: 100%; height: 100%; object-fit: contain; }
+.channel-logo i { font-size: 24px; color: var(--primary); }
+.channel-name { font-size: 18px; font-weight: 600; }
+.channel-badge {
+  font-size: 11px; padding: 2px 8px; border-radius: 10px;
+  background: var(--primary); color: #0f0f1a; font-weight: 600;
+}
+.live-dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  background: #ff4444; margin-right: 6px; animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Error state */
+.error-state {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  text-align: center; color: var(--text-secondary);
+}
+.error-state i { font-size: 48px; margin-bottom: 12px; display: block; }
+.error-state p { font-size: 14px; }
+.retry-btn {
+  margin-top: 12px; padding: 8px 20px; border: 1px solid var(--primary);
+  border-radius: 20px; background: transparent; color: var(--primary);
+  cursor: pointer; font-size: 13px; transition: all 0.2s;
+}
+.retry-btn:hover { background: var(--primary); color: #0f0f1a; }
+
+/* Loading state */
+.loading-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 12px;
+}
+.loading-overlay .spinner {
+  width: 40px; height: 40px; border: 3px solid var(--border);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Sidebar */
+.channel-sidebar {
+  background: var(--card-bg); border-radius: var(--radius);
+  border: 1px solid var(--border); display: flex; flex-direction: column;
+  max-height: calc(100vh - 100px);
+}
+.sidebar-header {
+  padding: 12px; border-bottom: 1px solid var(--border);
+}
+.search-box {
+  position: relative; margin-bottom: 10px;
+}
+.search-box input {
+  width: 100%; padding: 8px 12px 8px 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text); font-size: 14px; outline: none;
+  transition: border-color 0.2s;
+}
+.search-box input:focus { border-color: var(--primary); }
+.search-box i {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-secondary); font-size: 14px;
+}
+.tab-bar { display: flex; gap: 4px; }
+.tab-btn {
+  flex: 1; padding: 6px 8px; border: none; border-radius: 6px;
+  background: transparent; color: var(--text-secondary);
+  cursor: pointer; font-size: 12px; transition: all 0.2s;
+}
+.tab-btn.active { background: var(--primary); color: #0f0f1a; font-weight: 600; }
+.tab-btn:hover:not(.active) { background: var(--border); }
+
+/* Channel list */
+.channel-list {
+  flex: 1; overflow-y: auto; padding: 8px;
+}
+.channel-list::-webkit-scrollbar { width: 4px; }
+.channel-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.channel-group-title {
+  font-size: 11px; color: var(--text-secondary); padding: 8px 4px 4px;
+  text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+  position: sticky; top: 0; background: var(--card-bg); z-index: 1;
+}
+.channel-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: 8px; cursor: pointer;
+  transition: all 0.15s; margin-bottom: 2px;
+}
+.channel-item:hover { background: var(--border); }
+.channel-item.active { background: var(--primary); color: #0f0f1a; }
+.channel-item .ch-logo {
+  width: 36px; height: 36px; border-radius: 6px;
+  background: var(--bg); display: flex; align-items: center;
+  justify-content: center; overflow: hidden; flex-shrink: 0;
+}
+.channel-item .ch-logo img { width: 100%; height: 100%; object-fit: contain; }
+.channel-item .ch-logo i { font-size: 16px; color: var(--text-secondary); }
+.channel-item.active .ch-logo i { color: #0f0f1a; }
+.channel-item .ch-name {
+  font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  flex: 1;
+}
+.channel-item .ch-badge {
+  font-size: 10px; padding: 1px 6px; border-radius: 8px;
+  background: rgba(255,255,255,0.15); flex-shrink: 0;
+}
+.channel-item.active .ch-badge { background: rgba(0,0,0,0.2); }
+
+/* No results */
+.no-results {
+  text-align: center; padding: 40px 20px; color: var(--text-secondary);
+}
+.no-results i { font-size: 32px; margin-bottom: 8px; display: block; }
+
+/* Footer */
+.footer {
+  text-align: center; padding: 20px 0; color: var(--text-secondary);
+  font-size: 12px; border-top: 1px solid var(--border); margin-top: 20px;
+}
+
+/* Status bar */
+.status-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 0; font-size: 12px; color: var(--text-secondary);
+}
+.status-bar .status-item { display: flex; align-items: center; gap: 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="/anime/" class="back-link"><i class="fas fa-arrow-left"></i> 返回影视屋</a>
+      <h1><i class="fas fa-broadcast-tower"></i>电视直播</h1>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="切换主题"><i class="fas fa-adjust"></i></button>
+  </div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-item"><i class="fas fa-signal"></i> <span id="status-text">就绪</span></div>
+    <div class="status-item"><i class="fas fa-tv"></i> <span id="channel-count">15</span> 个频道</div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="layout">
+    <!-- Player -->
+    <div class="player-area">
+      <div class="video-wrapper">
+        <video id="player" controls autoplay playsinline></video>
+        <div class="loading-overlay" id="loading" style="display:none;">
+          <div class="spinner"></div>
+          <span style="color:#fff;font-size:13px;">正在加载...</span>
+        </div>
+        <div class="error-state" id="error-state" style="display:none;">
+          <i class="fas fa-satellite-dish"></i>
+          <p>频道加载失败</p>
+          <p style="font-size:12px;margin-top:4px;color:#666;">该频道可能暂时不可用</p>
+          <button class="retry-btn" onclick="retryPlay()">重试</button>
+        </div>
+      </div>
+      <div class="channel-info">
+        <div class="channel-logo" id="current-logo">
+          <i class="fas fa-broadcast-tower"></i>
+        </div>
+        <div>
+          <div class="channel-name" id="current-name">选择一个频道开始观看</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">
+            <span class="live-dot" id="live-dot" style="display:none;"></span>
+            <span id="current-status">等待选择</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="channel-sidebar">
+      <div class="sidebar-header">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="search-input" placeholder="搜索频道..." oninput="filterChannels()">
+        </div>
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">全部</button>
+          <button class="tab-btn" data-tab="cctv" onclick="switchTab('cctv')">央视</button>
+          <button class="tab-btn" data-tab="cetv" onclick="switchTab('cetv')">教育</button>
+          <button class="tab-btn" data-tab="other" onclick="switchTab('other')">其他</button>
+        </div>
+      </div>
+      <div class="channel-list" id="channel-list">
+        <!-- Channels rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    数据来源: Free-TV IPTV / iptv-org · 仅供学习研究使用
+  </div>
+</div>
+
+<script>
+// Channel data embedded
+const CHANNELS = [
+  {"url":"https://node1.olelive.com:6443/live/CCTV1HD/hls.m3u8","name":"CCTV-1 综合","logo":"https://i.imgur.com/uHU6Vc0.png","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV2HD/hls.m3u8","name":"CCTV-2 财经","logo":"https://i.imgur.com/6C9JEYt.png","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV5HD/hls.m3u8","name":"CCTV-5 体育","logo":"https://i.imgur.com/Mut2omN.png","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV5PHD/hls.m3u8","name":"CCTV-5+ 体育赛事","logo":"https://i.imgur.com/UNjmQVS.png","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV7HD/hls.m3u8","name":"CCTV-7 国防军事","logo":"https://i.imgur.com/GhXlUpM.png","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV8HD/hls.m3u8","name":"CCTV-8 电视剧","logo":"https://i.imgur.com/Qg1opg9.png","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV9HD/hls.m3u8","name":"CCTV-9 纪录","logo":"https://i.imgur.com/Ruyzhu5.png","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV10HD/hls.m3u8","name":"CCTV-10 科教","logo":"https://i.imgur.com/W8JNs1s.png","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV13HD/hls.m3u8","name":"CCTV-13 新闻","logo":"https://i.imgur.com/pPO8uJN.png","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV17HD/hls.m3u8","name":"CCTV-17 农业农村","logo":"https://i.imgur.com/XMsoHut.png","group":"cctv"},
+  {"url":"http://txycsbl.centv.cn/zb/0628cetv1.m3u8","name":"CETV-1","logo":"https://i.imgur.com/AMcIAOV.png","group":"cetv"},
+  {"url":"http://txycsbl.centv.cn/zb/0822cetv2.m3u8","name":"CETV-2","logo":"https://i.imgur.com/a9mvoeP.png","group":"cetv"},
+  {"url":"http://txycsbl.centv.cn/zb/0822cetv3.m3u8","name":"CETV-3","logo":"https://i.imgur.com/t8o5ZKt.png","group":"cetv"},
+  {"url":"http://txycsbl.centv.cn/zb/0822cetv4.m3u8","name":"CETV-4","logo":"https://i.imgur.com/BRe0ybV.png","group":"cetv"},
+  {"url":"https://brics.bonus-tv.ru/cdn/brics/chinese/playlist.m3u8","name":"TV BRICS Chinese","logo":"https://i.imgur.com/896132Z.png","group":"other"}
+];
+
+let currentChannel = null;
+let hls = null;
+let currentTab = 'all';
+let filteredChannels = [...CHANNELS];
+
+// Theme
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+  localStorage.setItem('live-theme', html.getAttribute('data-theme'));
+}
+(function() {
+  const t = localStorage.getItem('live-theme');
+  if (t) document.documentElement.setAttribute('data-theme', t);
+})();
+
+// Render channel list
+function renderChannels() {
+  const list = document.getElementById('channel-list');
+  const search = document.getElementById('search-input').value.toLowerCase();
+  
+  // Filter by tab
+  let tabs = currentTab === 'all' ? ['cctv','cetv','other'] : [currentTab];
+  
+  // Filter by search
+  filteredChannels = CHANNELS.filter(ch => 
+    tabs.includes(ch.group) && 
+    ch.name.toLowerCase().includes(search)
+  );
+
+  if (filteredChannels.length === 0) {
+    list.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><p>没有找到匹配的频道</p></div>';
+    return;
+  }
+
+  // Group by category
+  const groups = {
+    cctv: { label: 'CCTV 央视', channels: [] },
+    cetv: { label: 'CETV 教育', channels: [] },
+    other: { label: '其他频道', channels: [] }
+  };
+  filteredChannels.forEach(ch => {
+    if (groups[ch.group]) groups[ch.group].channels.push(ch);
+  });
+
+  let html = '';
+  for (const [key, group] of Object.entries(groups)) {
+    if (group.channels.length === 0) continue;
+    html += `<div class="channel-group-title">${group.label}</div>`;
+    group.channels.forEach((ch, i) => {
+      const isActive = currentChannel && currentChannel.url === ch.url;
+      const logoHtml = ch.logo 
+        ? `<img src="${ch.logo}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-broadcast-tower\\'></i>'">`
+        : `<i class="fas fa-broadcast-tower"></i>`;
+      html += `
+        <div class="channel-item ${isActive ? 'active' : ''}" onclick="playChannel(${JSON.stringify(ch).replace(/"/g, '&quot;')})">
+          <div class="ch-logo">${logoHtml}</div>
+          <span class="ch-name">${ch.name}</span>
+          ${isActive ? '<span class="ch-badge">播放中</span>' : ''}
+        </div>`;
+    });
+  }
+  list.innerHTML = html;
+}
+
+// Play channel
+function playChannel(channel) {
+  currentChannel = channel;
+  const video = document.getElementById('player');
+  const loading = document.getElementById('loading');
+  const errorState = document.getElementById('error-state');
+  const liveDot = document.getElementById('live-dot');
+  const statusText = document.getElementById('current-status');
+  
+  // Update UI
+  document.getElementById('current-name').textContent = channel.name;
+  document.getElementById('current-logo').innerHTML = channel.logo
+    ? `<img src="${channel.logo}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-broadcast-tower\\'></i>'">`
+    : `<i class="fas fa-broadcast-tower"></i>`;
+  liveDot.style.display = 'inline-block';
+  statusText.textContent = '正在连接...';
+  loading.style.display = 'flex';
+  errorState.style.display = 'none';
+
+  // Destroy previous HLS instance
+  if (hls) {
+    hls.destroy();
+    hls = null;
+  }
+
+  const url = channel.url;
+
+  // Check if it's an HTTP URL (for mixed content)
+  if (url.startsWith('http://')) {
+    // Direct HTTP - try native playback first
+    video.src = url;
+    video.play().then(() => {
+      loading.style.display = 'none';
+      statusText.textContent = '播放中';
+    }).catch(err => {
+      loading.style.display = 'none';
+      errorState.style.display = 'block';
+      statusText.textContent = '播放失败';
+      console.error('Playback error:', err);
+    });
+    return;
+  }
+
+  // HLS playback
+  if (Hls.isSupported()) {
+    hls = new Hls({
+      maxBufferLength: 30,
+      maxMaxBufferLength: 60,
+      startLevel: -1, // auto quality
+      debug: false
+    });
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      loading.style.display = 'none';
+      statusText.textContent = '播放中';
+      video.play().catch(() => {});
+    });
+    
+    hls.on(Hls.Events.ERROR, (event, data) => {
+      if (data.fatal) {
+        loading.style.display = 'none';
+        errorState.style.display = 'block';
+        statusText.textContent = '连接失败';
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          setTimeout(() => hls.startLoad(), 3000);
+        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hls.recoverMediaError();
+        }
+      }
+    });
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    // Safari native HLS
+    video.src = url;
+    video.addEventListener('loadedmetadata', () => {
+      loading.style.display = 'none';
+      statusText.textContent = '播放中';
+      video.play().catch(() => {});
+    });
+    video.addEventListener('error', () => {
+      loading.style.display = 'none';
+      errorState.style.display = 'block';
+      statusText.textContent = '播放失败';
+    });
+  }
+}
+
+// Retry
+function retryPlay() {
+  if (currentChannel) {
+    playChannel(currentChannel);
+  }
+}
+
+// Tab switch
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+  renderChannels();
+}
+
+// Search filter
+function filterChannels() {
+  renderChannels();
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  const video = document.getElementById('player');
+  if (e.key === ' ' && video) {
+    e.preventDefault();
+    video.paused ? video.play() : video.pause();
+  }
+  if (e.key === 'f' && video) {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      video.requestFullscreen?.();
+    }
+  }
+});
+
+// Init
+renderChannels();
+document.getElementById('channel-count').textContent = CHANNELS.length;
+</script>
+</body>
+</html>
