@@ -292,21 +292,21 @@ body {
 <script>
 // Channel data embedded
 const CHANNELS = [
-  {"url":"https://node1.olelive.com:6443/live/CCTV1HD/hls.m3u8","name":"CCTV-1 综合","logo":"https://i.imgur.com/uHU6Vc0.png","group":"cctv"},
-  {"url":"https://node1.olelive.com:6443/live/CCTV2HD/hls.m3u8","name":"CCTV-2 财经","logo":"https://i.imgur.com/6C9JEYt.png","group":"cctv"},
-  {"url":"https://node1.olelive.com:6443/live/CCTV5HD/hls.m3u8","name":"CCTV-5 体育","logo":"https://i.imgur.com/Mut2omN.png","group":"cctv"},
-  {"url":"https://node1.olelive.com:6443/live/CCTV5PHD/hls.m3u8","name":"CCTV-5+ 体育赛事","logo":"https://i.imgur.com/UNjmQVS.png","group":"cctv"},
-  {"url":"https://node1.olelive.com:6443/live/CCTV7HD/hls.m3u8","name":"CCTV-7 国防军事","logo":"https://i.imgur.com/GhXlUpM.png","group":"cctv"},
-  {"url":"https://node1.olelive.com:6443/live/CCTV8HD/hls.m3u8","name":"CCTV-8 电视剧","logo":"https://i.imgur.com/Qg1opg9.png","group":"cctv"},
-  {"url":"https://node1.olelive.com:6443/live/CCTV9HD/hls.m3u8","name":"CCTV-9 纪录","logo":"https://i.imgur.com/Ruyzhu5.png","group":"cctv"},
-  {"url":"https://node1.olelive.com:6443/live/CCTV10HD/hls.m3u8","name":"CCTV-10 科教","logo":"https://i.imgur.com/W8JNs1s.png","group":"cctv"},
-  {"url":"https://node1.olelive.com:6443/live/CCTV13HD/hls.m3u8","name":"CCTV-13 新闻","logo":"https://i.imgur.com/pPO8uJN.png","group":"cctv"},
-  {"url":"https://node1.olelive.com:6443/live/CCTV17HD/hls.m3u8","name":"CCTV-17 农业农村","logo":"https://i.imgur.com/XMsoHut.png","group":"cctv"},
-  {"url":"http://txycsbl.centv.cn/zb/0628cetv1.m3u8","name":"CETV-1","logo":"https://i.imgur.com/AMcIAOV.png","group":"cetv"},
-  {"url":"http://txycsbl.centv.cn/zb/0822cetv2.m3u8","name":"CETV-2","logo":"https://i.imgur.com/a9mvoeP.png","group":"cetv"},
-  {"url":"http://txycsbl.centv.cn/zb/0822cetv3.m3u8","name":"CETV-3","logo":"https://i.imgur.com/t8o5ZKt.png","group":"cetv"},
-  {"url":"http://txycsbl.centv.cn/zb/0822cetv4.m3u8","name":"CETV-4","logo":"https://i.imgur.com/BRe0ybV.png","group":"cetv"},
-  {"url":"https://brics.bonus-tv.ru/cdn/brics/chinese/playlist.m3u8","name":"TV BRICS Chinese","logo":"https://i.imgur.com/896132Z.png","group":"other"}
+  {"url":"https://node1.olelive.com:6443/live/CCTV1HD/hls.m3u8","name":"CCTV-1 综合","logo":"","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV2HD/hls.m3u8","name":"CCTV-2 财经","logo":"","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV5HD/hls.m3u8","name":"CCTV-5 体育","logo":"","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV5PHD/hls.m3u8","name":"CCTV-5+ 体育赛事","logo":"","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV7HD/hls.m3u8","name":"CCTV-7 国防军事","logo":"","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV8HD/hls.m3u8","name":"CCTV-8 电视剧","logo":"","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV9HD/hls.m3u8","name":"CCTV-9 纪录","logo":"","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV10HD/hls.m3u8","name":"CCTV-10 科教","logo":"","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV13HD/hls.m3u8","name":"CCTV-13 新闻","logo":"","group":"cctv"},
+  {"url":"https://node1.olelive.com:6443/live/CCTV17HD/hls.m3u8","name":"CCTV-17 农业农村","logo":"","group":"cctv"},
+  {"url":"http://txycsbl.centv.cn/zb/0628cetv1.m3u8","name":"CETV-1","logo":"","group":"cetv"},
+  {"url":"http://txycsbl.centv.cn/zb/0822cetv2.m3u8","name":"CETV-2","logo":"","group":"cetv"},
+  {"url":"http://txycsbl.centv.cn/zb/0822cetv3.m3u8","name":"CETV-3","logo":"","group":"cetv"},
+  {"url":"http://txycsbl.centv.cn/zb/0822cetv4.m3u8","name":"CETV-4","logo":"","group":"cetv"},
+  {"url":"https://brics.bonus-tv.ru/cdn/brics/chinese/playlist.m3u8","name":"TV BRICS Chinese","logo":"","group":"other"}
 ];
 
 let currentChannel = null;
@@ -361,12 +361,12 @@ function renderChannels() {
     html += `<div class="channel-group-title">${group.label}</div>`;
     group.channels.forEach((ch, i) => {
       const isActive = currentChannel && currentChannel.url === ch.url;
-      const logoHtml = ch.logo 
-        ? `<img src="${ch.logo}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-broadcast-tower\\'></i>'">`
-        : `<i class="fas fa-broadcast-tower"></i>`;
-      html += `
-        <div class="channel-item ${isActive ? 'active' : ''}" onclick="playChannel(${JSON.stringify(ch).replace(/"/g, '&quot;')})">
-          <div class="ch-logo">${logoHtml}</div>
+          const initials = ch.name.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '').substring(0, 2);
+          const colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#34495e','#16a085','#c0392b'];
+          const ci = initials.charCodeAt(0) % colors.length;
+          html += `
+            <div class="channel-item ${isActive ? 'active' : ''}" onclick="playChannel(${JSON.stringify(ch).replace(/"/g, '&quot;')})">
+              <div class="ch-logo" style="background:${colors[ci]}40;color:${colors[ci]}">${initials}</div>
           <span class="ch-name">${ch.name}</span>
           ${isActive ? '<span class="ch-badge">播放中</span>' : ''}
         </div>`;
@@ -386,9 +386,10 @@ function playChannel(channel) {
   
   // Update UI
   document.getElementById('current-name').textContent = channel.name;
-  document.getElementById('current-logo').innerHTML = channel.logo
-    ? `<img src="${channel.logo}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-broadcast-tower\\'></i>'">`
-    : `<i class="fas fa-broadcast-tower"></i>`;
+  const initials = channel.name.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '').substring(0, 2);
+  const colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#34495e','#16a085','#c0392b'];
+  const ci = initials.charCodeAt(0) % colors.length;
+  document.getElementById('current-logo').innerHTML = `<span style="font-size:20px;font-weight:bold;color:${colors[ci]}">${initials}</span>`;
   liveDot.style.display = 'inline-block';
   statusText.textContent = '正在连接...';
   loading.style.display = 'flex';
@@ -401,6 +402,10 @@ function playChannel(channel) {
   }
 
   const url = channel.url;
+  // Use proxy for HTTPS URLs to bypass CORS
+  const proxiedUrl = url.startsWith('https://')
+    ? `https://hls.233002.xyz/?url=${encodeURIComponent(url)}`
+    : url;
 
   // Check if it's an HTTP URL (for mixed content)
   if (url.startsWith('http://')) {
@@ -426,7 +431,7 @@ function playChannel(channel) {
       startLevel: -1, // auto quality
       debug: false
     });
-    hls.loadSource(url);
+    hls.loadSource(proxiedUrl);
     hls.attachMedia(video);
     
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
