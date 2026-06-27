@@ -5,5 +5,4 @@
   "messages": [
     "来自 Bilibili Live 的 22 哦 ~"
   ]
-  // 注意：bilibili-live/33 的模型文件已保留但未启用，如需切换请修改上方 models 数组
 }

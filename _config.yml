@@ -38,7 +38,6 @@ skip_render:
   - 'tools/**'
   - 'games/**'
   - '**/*.json'
-  - 'live/**'
 
 # 写作
 new_post_name: :title.md # 新文章的文件名
