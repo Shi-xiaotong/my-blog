@@ -2,7 +2,7 @@
 title: Re:从零开始的异世界生活——第三季与第四季深度解析：从水门都市到监视塔的绝望与希望
 date: 2026-06-28
 categories:
-  - 动漫评论
+  - anime
 tags:
   - Re:Zero
   - 异世界
