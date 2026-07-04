@@ -78,9 +78,14 @@ top_img: false
   flex-shrink: 0;
   margin-right: 12px;
   background: #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+/* 加这一行！针对图片本身进行缩放裁剪 */
+.friend-link-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 关键属性：让图片铺满容器，并自动裁剪 */
+  display: block;
 }
 .friend-link-avatar img {
   width: 100%;
