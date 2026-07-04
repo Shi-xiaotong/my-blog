@@ -1,6 +1,2 @@
-/* Hide name/email/url fields in CWD comment form — auto-filled by site-auth */
-.cwd-comment-form .cwd-form-row .cwd-form-field:nth-child(1),
-.cwd-comment-form .cwd-form-row .cwd-form-field:nth-child(2),
-.cwd-comment-form .cwd-form-row .cwd-form-field:nth-child(3) {
-  display: none !important;
-}
+/* CWD Comment Form — show name/email/url fields when not logged in */
+/* When user is logged in via site-auth, fields are auto-filled (cwd-auth-hook.js) */
