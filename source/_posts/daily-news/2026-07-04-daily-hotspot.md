@@ -5,7 +5,7 @@ categories:
   - daily-news
 tags:
   - 每日热点
-cover: 
+cover: https://img.233002.xyz/blog/daily-news-2026-07-04-1.png
 ---
 
 # 2026-07-04 | 当AI开始写段子，人类的幽默感要失业了吗？

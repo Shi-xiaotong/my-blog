@@ -167,7 +167,8 @@ def main():
     ]
     for t in tags:
         md_lines.append(f"  - {t}")
-    md_lines.append(f"cover: {img_urls[0] if img_urls else ''}")
+    if img_urls[0]:
+        md_lines.append(f"cover: {img_urls[0]}")
     md_lines.append("---")
     md_lines.append("")
     md_lines.append(body)

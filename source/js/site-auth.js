@@ -19,7 +19,7 @@ function render(){
       +'<button class="auth-logout" onclick="siteAuthLogout()" title="退出"><i class="fas fa-sign-out-alt"></i></button>'
       +'</div>';
   }else{
-    bar.innerHTML='<button class="auth-login-btn" onclick="showSiteLoginModal()"><i class="fas fa-user"></i> 登录</button>';
+    bar.innerHTML='';
   }
 }
 
