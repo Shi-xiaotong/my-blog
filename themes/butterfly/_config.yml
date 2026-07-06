@@ -39,6 +39,7 @@ nav:
 
 menu:
   首页: / || fas fa-home
+  导航: /bookmarks/ || fas fa-compass
   万年历: /calendar/ || fas fa-calendar-alt
   天气: /weather/ || fas fa-cloud-sun
   更多:

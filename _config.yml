@@ -37,6 +37,7 @@ skip_render:
   - 'anime/history/**'
   - 'tools/**'
   - 'games/**'
+  - 'bookmarks/**'
   - '**/*.json'
 
 # 写作
