@@ -87,11 +87,6 @@ top_img: false
   object-fit: cover; /* 关键属性：让图片铺满容器，并自动裁剪 */
   display: block;
 }
-.friend-link-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 .friend-link-avatar.no-icon {
   background: linear-gradient(135deg, #49b1f5, #6dc3fa);
 }
