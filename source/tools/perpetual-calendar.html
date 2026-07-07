@@ -186,18 +186,52 @@ body { background: transparent; min-height: 100vh; }
   border-radius: 12px;
   padding: 16px;
   box-shadow: var(--glass-shadow);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: all 0.2s var(--ease-out);
+  position: relative;
+  overflow: hidden;
 }
+.cal-info-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.cal-info-card.info-primary::before { background: linear-gradient(90deg, #2563EB, #818CF8); }
+.cal-info-card.info-accent::before { background: linear-gradient(90deg, #F97316, #FB923C); }
+.cal-info-card.info-term::before { background: linear-gradient(90deg, #22C55E, #4ADE80); }
+.cal-info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-hover);
+}
+.cal-info-card .info-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+.cal-info-card.info-primary .info-icon { background: rgba(37,99,235,0.1); }
+.cal-info-card.info-accent .info-icon { background: rgba(249,115,22,0.1); }
+.cal-info-card.info-term .info-icon { background: rgba(34,197,94,0.1); }
+.cal-info-card .info-body { flex: 1; min-width: 0; }
 .cal-info-card .info-label {
   font-size: 11px;
   color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .cal-info-card .info-value {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--text);
+  line-height: 1.3;
 }
 .cal-info-card .info-sub {
   font-size: 12px;
@@ -321,9 +355,30 @@ body { background: transparent; min-height: 100vh; }
   </div>
 
   <div class="cal-info" id="calInfo">
-    <div class="cal-info-card"><div class="info-label">农历</div><div class="info-value" id="infoLunar">—</div><div class="info-sub" id="infoLunarYear">—</div></div>
-    <div class="cal-info-card"><div class="info-label">生肖</div><div class="info-value" id="infoZodiac">—</div><div class="info-sub" id="infoZodiacYear">—</div></div>
-    <div class="cal-info-card"><div class="info-label">节气</div><div class="info-value" id="infoTerm">—</div><div class="info-sub" id="infoTermDate">—</div></div>
+    <div class="cal-info-card info-primary">
+      <div class="info-icon">🌙</div>
+      <div class="info-body">
+        <div class="info-label">农历</div>
+        <div class="info-value" id="infoLunar">—</div>
+        <div class="info-sub" id="infoLunarYear">—</div>
+      </div>
+    </div>
+    <div class="cal-info-card info-accent">
+      <div class="info-icon">🐉</div>
+      <div class="info-body">
+        <div class="info-label">生肖 · 干支</div>
+        <div class="info-value" id="infoZodiac">—</div>
+        <div class="info-sub" id="infoZodiacYear">—</div>
+      </div>
+    </div>
+    <div class="cal-info-card info-term">
+      <div class="info-icon">🌿</div>
+      <div class="info-body">
+        <div class="info-label">节气</div>
+        <div class="info-value" id="infoTerm">—</div>
+        <div class="info-sub" id="infoTermDate">—</div>
+      </div>
+    </div>
   </div>
 </div>
 

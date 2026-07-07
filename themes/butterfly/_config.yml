@@ -39,10 +39,10 @@ nav:
 
 menu:
   首页: / || fas fa-home
-  导航: /bookmarks/ || fas fa-compass
-  万年历: /calendar/ || fas fa-calendar-alt
-  天气: /weather/ || fas fa-cloud-sun
   更多:
+    导航: /bookmarks/ || fas fa-compass
+    万年历: /calendar/ || fas fa-calendar-alt
+    天气: /weather/ || fas fa-cloud-sun
     影视屋: /anime/ || fas fa-film
     工具箱: /tools/ || fas fa-toolbox
     小游戏: /games/ || fas fa-gamepad

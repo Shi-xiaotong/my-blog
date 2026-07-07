@@ -173,7 +173,67 @@ html::before {
   background: rgba(30,41,59,0.5) !important;
 }
 
-/* ─── 11. ⭐ Butterfly Error Images → CSS Replacements ─── */
+/* ─── 11. ⭐ Compact Pagination (no glass card wrapper) ─── */
+.layout > .recent-posts .pagination {
+  margin-top: 24px;
+  text-align: center;
+  background: none !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.layout > .recent-posts .pagination .page-number,
+.layout > .recent-posts .pagination .extend,
+.layout > .recent-posts .pagination .space {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0 4px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary, #94A3B8);
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(226,232,240,0.3);
+  transition: all 0.2s cubic-bezier(0,0,0.2,1);
+  text-decoration: none;
+}
+.layout > .recent-posts .pagination .page-number:hover,
+.layout > .recent-posts .pagination .extend:hover {
+  background: var(--primary-light, rgba(129,140,248,0.3));
+  color: var(--primary, #818CF8);
+  border-color: var(--primary, #818CF8);
+  transform: translateY(-1px);
+}
+.layout > .recent-posts .pagination .page-number.current {
+  background: var(--primary, #2563EB) !important;
+  color: #fff !important;
+  border-color: var(--primary, #2563EB) !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+}
+.layout > .recent-posts .pagination .space {
+  background: none !important;
+  border: none !important;
+  width: auto;
+  padding: 0 4px;
+  color: var(--text-tertiary, #94A3B8);
+}
+[data-theme="dark"] .layout > .recent-posts .pagination .page-number,
+[data-theme="dark"] .layout > .recent-posts .pagination .extend {
+  background: rgba(30,41,59,0.5);
+  border-color: rgba(51,65,85,0.3);
+}
+[data-theme="dark"] .layout > .recent-posts .pagination .page-number.current {
+  background: var(--primary, #818CF8) !important;
+  border-color: var(--primary, #818CF8) !important;
+}
+
+/* ─── 12. Butterfly Error Images → CSS Replacements ─── */
 /* Replace 404 page image with CSS illustration */
 .type-404 .error-content .error-img img {
   display: none !important;
@@ -264,7 +324,90 @@ html::before {
   color: var(--text, #E2E8F0);
 }
 
-/* ─── 15. Replaced images fallback ─── */
+/* ─── 15. ⭐ Nav Dropdown Grid Layout ─── */
+#nav .menus_items .sub-menus {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 8px !important;
+  min-width: 240px;
+  background: rgba(255,255,255,0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(226,232,240,0.5) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12) !important;
+}
+[data-theme="dark"] #nav .menus_items .sub-menus {
+  background: rgba(30,41,59,0.85) !important;
+  border-color: rgba(51,65,85,0.5) !important;
+}
+#nav .menus_items .sub-menus .menu-item {
+  display: flex !important;
+  align-items: center;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  transition: all 0.15s ease-out;
+  white-space: nowrap;
+}
+#nav .menus_items .sub-menus .menu-item:hover {
+  background: var(--primary-light, rgba(129,140,248,0.15)) !important;
+}
+#nav .menus_items .sub-menus .menu-item a {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ─── 16. ⭐ Login Modal & Auth Theming (replace yellow → design system) ─── */
+#site-login-modal .slm-box {
+  border-radius: 16px !important;
+  background: rgba(255,255,255,0.9) !important;
+  backdrop-filter: blur(20px) !important;
+}
+[data-theme="dark"] #site-login-modal .slm-box {
+  background: rgba(30,41,59,0.9) !important;
+}
+#site-login-modal .slm-box h3 {
+  background: linear-gradient(135deg, #2563EB, #F97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 22px;
+}
+#site-login-modal .slm-tab.active {
+  color: var(--primary, #2563EB) !important;
+  border-bottom-color: var(--primary, #2563EB) !important;
+}
+#site-login-modal .slm-submit {
+  background: var(--primary, #2563EB) !important;
+  border-radius: 8px !important;
+}
+#site-login-modal .slm-submit:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+#site-login-modal .slm-send-btn {
+  border-color: var(--primary, #2563EB) !important;
+  color: var(--primary, #2563EB) !important;
+  border-radius: 8px !important;
+}
+
+/* Anime page theme colors (replace yellow) */
+#anime-page .anime-nav,
+.anime-header,
+#anime-page .btn-primary,
+#anime-page .anime-tag.active {
+  background: var(--primary, #2563EB) !important;
+}
+#anime-page .btn-primary:hover {
+  filter: brightness(1.1);
+}
+#anime-page a {
+  color: var(--primary, #2563EB) !important;
+}
+
+/* ─── 17. Replaced images fallback ─── */
 /* When img has src that fails, show CSS gradient */
 img.error-img-fallback,
 .friend-link-avatar img[src*="friend_404"] {
