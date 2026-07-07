@@ -1136,7 +1136,8 @@ inject:
     # 注入 site-override.css 桥接Butterfly→common.css
     - <link rel="stylesheet" href="/tools/site-override.css">
   bottom:
-    #天气
+    # 太空背景
+    - <script src="/tools/bg.js"></script>
     - <script src="/js/weather-store.js"></script>
     - <script src="/js/weather-widget.js"></script>
     #日历
