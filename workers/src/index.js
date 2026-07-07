@@ -569,6 +569,15 @@ async function handleGithubCallback(env, url) {
       return redirect(`${env.SITE_URL || "https://www.233002.xyz"}/user/?auth=${encoded2}`);
     }
   }
+  // Before upsert: check if this GitHub account is already linked to an existing user
+  const existingGithubLink = await env.DB.prepare("SELECT email FROM anime_user_auth_methods WHERE auth_type = 'github' AND auth_id = ?").bind(authId).first();
+  if (existingGithubLink) {
+    await env.DB.prepare("UPDATE anime_users SET last_login = datetime('now'), avatar_url = COALESCE(NULLIF(?1,''), avatar_url), display_name = COALESCE(NULLIF(?2,''), display_name), updated_at = datetime('now') WHERE email = ?3").bind(ghUser.avatar_url || "", ghUser.login || "", existingGithubLink.email).run();
+    const sessionToken3 = await createSession(env, existingGithubLink.email);
+    const user3 = await env.DB.prepare("SELECT email, display_name, avatar_url FROM anime_users WHERE email = ?").bind(existingGithubLink.email).first();
+    const encoded3 = encodeURIComponent(JSON.stringify({ token: sessionToken3, user: user3 }));
+    return redirect(`${env.SITE_URL || "https://www.233002.xyz"}/?auth=${encoded3}`);
+  }
   await upsertUser(env, primaryEmail, "github", authId, ghUser.login || "", ghUser.avatar_url || "");
   const sessionToken = await createSession(env, primaryEmail);
   const user = await env.DB.prepare("SELECT email, display_name, avatar_url FROM anime_users WHERE email = ?").bind(primaryEmail).first();
@@ -630,6 +639,16 @@ async function handleGoogleCallback(env, url) {
       const encoded2 = encodeURIComponent(JSON.stringify({ token: sessionToken2, user: user2 }));
       return redirect(`${env.SITE_URL || "https://www.233002.xyz"}/user/?auth=${encoded2}`);
     }
+  }
+  // Before upsert: check if this Google account is already linked to an existing user
+  const existingGoogleLink = await env.DB.prepare("SELECT email FROM anime_user_auth_methods WHERE auth_type = 'google' AND auth_id = ?").bind(authId).first();
+  if (existingGoogleLink) {
+    // Already linked — log in as that user instead of creating a new one
+    await env.DB.prepare("UPDATE anime_users SET last_login = datetime('now'), avatar_url = COALESCE(NULLIF(?1,''), avatar_url), display_name = COALESCE(NULLIF(?2,''), display_name), updated_at = datetime('now') WHERE email = ?3").bind(gUser.picture || "", gUser.name || "", existingGoogleLink.email).run();
+    const sessionToken3 = await createSession(env, existingGoogleLink.email);
+    const user3 = await env.DB.prepare("SELECT email, display_name, avatar_url FROM anime_users WHERE email = ?").bind(existingGoogleLink.email).first();
+    const encoded3 = encodeURIComponent(JSON.stringify({ token: sessionToken3, user: user3 }));
+    return redirect(`${env.SITE_URL || "https://www.233002.xyz"}/?auth=${encoded3}`);
   }
   await upsertUser(env, gUser.email, "google", authId, gUser.name || "", gUser.picture || "");
   const sessionToken = await createSession(env, gUser.email);
