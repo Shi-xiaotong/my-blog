@@ -1,0 +1,49 @@
+---
+title: Flappy Bird
+layout: game-page
+date: 2024-01-01 00:00:00
+description: Flappy Bird - 小游戏
+permalink: /games/flappy.html
+type: game
+---
+{% raw %}
+<style>
+
+.game-container { max-width: 400px; margin: 0 auto; }
+.game-area { display: flex; justify-content: center; margin: 16px 0; position: relative; }
+.game-area canvas { border-radius: 12px; border: 2px solid var(--border); cursor: pointer; touch-action: manipulation; }
+.start-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; z-index: 5; }
+.start-overlay h2 { font-size: 2em; margin-bottom: 12px; }
+.start-overlay p { color: var(--text-secondary); margin-bottom: 20px; }
+.tip { text-align: center; font-size: 13px; color: var(--text-secondary); margin-top: 8px; }
+
+</style>
+
+
+
+<div class="container">
+  <div class="header">
+    
+    <h1>Flappy Bird</h1>
+  </div>
+  <div class="score-bar">
+    <div class="score-item"><div class="score-label">分数</div><div class="score-value" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">最高</div><div class="score-value" id="best">0</div></div>
+  </div>
+  <div class="game-container">
+    <div class="game-area">
+      <canvas id="canvas" width="320" height="480"></canvas>
+      <div class="start-overlay" id="startOverlay">
+        <h2>Flappy Bird</h2>
+        <p>点击或按空格开始</p>
+        <button class="btn btn-primary" onclick="startGame()">开始游戏</button>
+      </div>
+    </div>
+    <p class="tip">点击屏幕 / 空格键 控制飞行</p>
+  </div>
+</div>
+
+
+
+<script src="/games/js/flappy.js"></script>
+{% endraw %}

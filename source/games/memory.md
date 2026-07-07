@@ -1,0 +1,76 @@
+---
+title: 记忆翻牌
+layout: game-page
+date: 2024-01-01 00:00:00
+description: 记忆翻牌 - 小游戏
+permalink: /games/memory.html
+type: game
+---
+{% raw %}
+<style>
+
+.game-container { max-width: 460px; margin: 0 auto; }
+.board { display: grid; gap: 8px; margin: 16px 0; perspective: 1000px; }
+.board.easy { grid-template-columns: repeat(4, 1fr); }
+.board.medium { grid-template-columns: repeat(5, 1fr); }
+.board.hard { grid-template-columns: repeat(6, 1fr); }
+.card { aspect-ratio: 1; cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.4s; }
+.card.flipped { transform: rotateY(180deg); }
+.card.matched { transform: rotateY(180deg); opacity: 0.6; pointer-events: none; }
+.card-face, .card-back { position: absolute; inset: 0; border-radius: 8px; display: flex; align-items: center; justify-content: center; backface-visibility: hidden; border: 2px solid var(--border); }
+.card-back { background: var(--primary); z-index: 1; }
+.card-back svg { width: 50%; height: 50%; color: rgba(255,255,255,0.5); }
+.card-face { background: var(--card-bg); transform: rotateY(180deg); }
+.card-face svg { width: 60%; height: 60%; }
+.difficulty { display: flex; gap: 8px; margin-bottom: 16px; justify-content: center; }
+.diff-btn { padding: 6px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); color: var(--text); cursor: pointer; font-size: 13px; transition: all 0.15s; }
+.diff-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.win-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; max-width: 320px; }
+.win-box h2 { margin-bottom: 12px; font-size: 1.5em; }
+.win-box p { color: var(--text-secondary); margin-bottom: 16px; }
+.win-stats { display: flex; gap: 24px; justify-content: center; margin-bottom: 20px; }
+.win-stat .num { font-size: 28px; font-weight: 700; color: var(--primary); font-family: 'SF Mono', monospace; }
+.win-stat .lbl { font-size: 12px; color: var(--text-secondary); }
+
+</style>
+
+
+
+<div class="container">
+  <div class="header">
+    
+    <h1>记忆翻牌</h1>
+  </div>
+  <div class="score-bar">
+    <div class="score-item"><div class="score-label">步数</div><div class="score-value" id="moves">0</div></div>
+    <div class="score-item"><div class="score-label">配对</div><div class="score-value" id="pairs">0/8</div></div>
+    <div class="score-item"><div class="score-label">时间</div><div class="score-value" id="timer">0:00</div></div>
+  </div>
+  <div class="difficulty">
+    <button class="diff-btn active" data-diff="easy" onclick="setDifficulty('easy')">简单 (4x4)</button>
+    <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium')">中等 (5x4)</button>
+    <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">困难 (6x6)</button>
+  </div>
+  <div class="game-container">
+    <div class="board" id="board"></div>
+    <div style="text-align:center"><button class="btn btn-primary" onclick="newGame()">新游戏</button></div>
+  </div>
+</div>
+
+<div class="win-overlay" id="winOverlay" style="display:none">
+  <div class="win-box">
+    <h2>Congratulations</h2>
+    <p>你完成了所有配对</p>
+    <div class="win-stats">
+      <div class="win-stat"><div class="num" id="winMoves">0</div><div class="lbl">步数</div></div>
+      <div class="win-stat"><div class="num" id="winTime">0:00</div><div class="lbl">用时</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="closeWin();newGame()">再来一局</button>
+  </div>
+</div>
+
+
+
+<script src="/games/js/memory.js"></script>
+{% endraw %}

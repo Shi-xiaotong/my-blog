@@ -1,0 +1,13 @@
+{
+  "name": "my-blog-auth",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "init-db": "wrangler d1 execute my-blog-auth --file=./schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

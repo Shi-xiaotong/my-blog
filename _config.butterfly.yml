@@ -28,7 +28,7 @@ inject:
     - <script src="/js/calendar-widget.js"></script>
     # CWD评论系统
     - <script src="https://unpkg.com/cwd-widget@0.1.11/dist/cwd.js"></script>
-    - <script>function initCWD(){var wrap=document.querySelector('.comment-wrap');if(!wrap)return;wrap.innerHTML='<div id="cwd-comments"></div>';function init(){if(typeof CWDComments==='undefined')return;new CWDComments({el:'#cwd-comments',apiBaseUrl:'https://cwd-api.233002.xyz',siteId:'blog',lang:'zh-CN',customCssUrl:'/css/cwd-custom.css'}).mount();}if(typeof CWDComments!=='undefined'){init();}else{var t=setInterval(function(){if(typeof CWDComments!=='undefined'){clearInterval(t);init();}},100);setTimeout(function(){clearInterval(t);},10000);}}document.addEventListener('DOMContentLoaded',initCWD);document.addEventListener('pjax:complete',initCWD);</script>
+    - <script>function initCWD(){var wrap=document.querySelector('.comment-wrap');if(!wrap)return;wrap.innerHTML='<div id="cwd-comments"></div>';function init(){if(typeof CWDComments==='undefined')return;new CWDComments({el:'#cwd-comments',apiBaseUrl:'https://cwd-api.233002.xyz',siteId:'blog',lang:'zh-CN',customCssUrl:'/css/cwd-custom.css',adminEmail:'no-admin'}).mount();}if(typeof CWDComments!=='undefined'){init();}else{var t=setInterval(function(){if(typeof CWDComments!=='undefined'){clearInterval(t);init();}},100);setTimeout(function(){clearInterval(t);},10000);}}document.addEventListener('DOMContentLoaded',initCWD);document.addEventListener('pjax:complete',initCWD);</script>
     # 音乐播放器
     - <script src="/js/music-player.js"></script>
     # 个人中心

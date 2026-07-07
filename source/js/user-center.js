@@ -1,5 +1,6 @@
 (function(){
-var API='https://ffzy.233002.xyz';
+var AUTH_API='https://auth.233002.xyz';
+var DATA_API='https://ffzy.233002.xyz';
 var $=function(id){return document.getElementById(id);};
 
 function init(){
@@ -11,7 +12,8 @@ function api(path,opt){
   var t=token();if(t)headers['Authorization']='Bearer '+t;
   var ctrl=new AbortController();
   var timer=setTimeout(function(){ctrl.abort();},10000);
-  return fetch(API+path,{method:opt.method||'GET',headers:headers,body:opt.body?JSON.stringify(opt.body):undefined,signal:ctrl.signal})
+  var base=path.indexOf('/api/auth/')===0?AUTH_API:DATA_API;
+  return fetch(base+path,{method:opt.method||'GET',headers:headers,body:opt.body?JSON.stringify(opt.body):undefined,signal:ctrl.signal})
     .then(function(r){clearTimeout(timer);return r.json();})
     .catch(function(e){clearTimeout(timer);throw e;});
 }
@@ -33,15 +35,27 @@ function render(data){
   var em=$('ucEmail');if(em)em.textContent=u.email||'未绑定邮箱';
   var parts=[];
   if(u.created_at)parts.push('注册于 '+u.created_at.split('T')[0]);
-  if(u.auth_type)parts.push('主要登录: '+u.auth_type);
   var mt=$('ucMeta');if(mt)mt.textContent=parts.join(' · ');
 
   var linked=data.linked||[];
   var types={};
-  linked.forEach(function(a){types[a.auth_type]=a.auth_id;});
+  linked.forEach(function(a){types[a.provider]=a.provider_id;});
   setStatus('github',types.github||null);
   setStatus('google',types.google||null);
   setStatus('email',u.email||null);
+
+  // Password section
+  var ps=$('ucPasswordSection');
+  if(ps){
+    if(data.has_password){
+      ps.innerHTML='<h3 class="uc-card-title"><i class="fas fa-lock"></i> 密码管理</h3>'
+        +'<button class="uc-btn uc-btn-secondary" onclick="ucShowChangePwdModal()"><i class="fas fa-key"></i> 修改密码</button>';
+    }else{
+      ps.innerHTML='<h3 class="uc-card-title"><i class="fas fa-lock"></i> 密码管理</h3>'
+        +'<p class="uc-hint" style="text-align:left;padding:0 0 8px;color:#ffd93d">你还没有设置密码，请设置密码以便邮箱登录</p>'
+        +'<button class="uc-btn uc-btn-primary" onclick="ucShowSetPwdModal()"><i class="fas fa-key"></i> 设置密码</button>';
+    }
+  }
 }
 
 function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -66,7 +80,7 @@ function setStatus(type,val){
 }
 
 function linkAccount(type){
-  window.location.href=API+'/api/auth/'+type+'?link_token='+encodeURIComponent(token());
+  window.location.href=AUTH_API+'/api/auth/'+type+'?link_token='+encodeURIComponent(token());
 }
 
 function unlinkAccount(type){
@@ -75,6 +89,50 @@ function unlinkAccount(type){
     if(d.error){alert(d.error);return;}
     load();
   });
+}
+
+// Show change password modal
+function showChangePwdModal(){
+  var m=$('ucPwdModal');if(!m)return;
+  m.classList.add('show');
+  $('ucPwdOldInput').value='';
+  $('ucPwdNewInput').value='';
+  $('ucPwdConfirmInput').value='';
+  $('ucPwdError').textContent='';
+  $('ucPwdTitle').textContent='修改密码';
+  $('ucPwdOldWrap').style.display='';
+  $('ucPwdOldInput').focus();
+}
+
+function showSetPwdModal(){
+  var m=$('ucPwdModal');if(!m)return;
+  m.classList.add('show');
+  $('ucPwdOldInput').value='';
+  $('ucPwdNewInput').value='';
+  $('ucPwdConfirmInput').value='';
+  $('ucPwdError').textContent='';
+  $('ucPwdTitle').textContent='设置密码';
+  $('ucPwdOldWrap').style.display='none';
+  $('ucPwdNewInput').focus();
+}
+
+function changePassword(){
+  var oldPwd=$('ucPwdOldInput')?$('ucPwdOldInput').value:'';
+  var newPwd=$('ucPwdNewInput').value;
+  var confirmPwd=$('ucPwdConfirmInput').value;
+  var err=$('ucPwdError');
+  if(!newPwd||newPwd.length<6){err.textContent='密码至少6位';return;}
+  if(newPwd!==confirmPwd){err.textContent='两次密码不一致';return;}
+  var isSet=$('ucPwdOldWrap').style.display==='none';
+  var body=isSet?{new_password:newPwd}:{old_password:oldPwd,new_password:newPwd};
+  var btn=$('ucPwdSaveBtn');if(btn)btn.disabled=true;
+  api('/api/auth/password',{method:'PUT',body:body}).then(function(d){
+    if(btn)btn.disabled=false;
+    if(d.error){err.textContent=d.error;return;}
+    alert('密码'+(isSet?'设置':'修改')+'成功');
+    $('ucPwdModal').classList.remove('show');
+    load();
+  }).catch(function(){if(btn)btn.disabled=false;err.textContent='网络错误';});
 }
 
 // Bind events safely
@@ -132,24 +190,47 @@ if(as)as.onclick=function(){
 var am=$('ucAvatarModal');
 if(am)am.addEventListener('click',function(e){if(e.target===this){var m=$('ucAvatarModal');if(m)m.classList.remove('show');}});
 
+// Password modal events
+var pwdModal=$('ucPwdModal');
+if(pwdModal){
+  pwdModal.addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
+  var pwdCancel=$('ucPwdCancel');
+  if(pwdCancel)pwdCancel.onclick=function(){pwdModal.classList.remove('show');};
+  var pwdSave=$('ucPwdSaveBtn');
+  if(pwdSave)pwdSave.onclick=changePassword;
+}
+
 var lb=$('ucLogoutBtn');
 if(lb)lb.onclick=function(){
   if(!confirm('确定退出登录？'))return;
-  fetch(API+'/api/auth/logout',{method:'POST',headers:{'Authorization':'Bearer '+token()}}).catch(function(){});
+  fetch(AUTH_API+'/api/auth/logout',{method:'POST',headers:{'Authorization':'Bearer '+token()}}).catch(function(){});
   localStorage.removeItem('anime_token');localStorage.removeItem('anime_user');
   window.location.href='/';
 };
 
 var db=$('ucDeleteBtn');
 if(db)db.onclick=function(){
-  if(!confirm('确定要注销账号？所有数据将被删除且无法恢复！'))return;
-  if(!confirm('最后确认：真的要永久删除你的账号吗？'))return;
-  api('/api/auth/account',{method:'DELETE'}).then(function(d){
-    if(d.error){alert(d.error);return;}
+  var m=$('ucDeleteModal');
+  if(m)m.classList.add('show');
+};
+
+var dc=$('ucDeleteCancel');
+if(dc)dc.onclick=function(){var m=$('ucDeleteModal');if(m)m.classList.remove('show');};
+
+var dk=$('ucDeleteConfirm');
+if(dk)dk.onclick=function(){
+  var pwdInput=$('ucDeletePwdInput');
+  var pwd=pwdInput?pwdInput.value:'';
+  var err=$('ucDeleteError');
+  api('/api/auth/account',{method:'DELETE',body:{password:pwd}}).then(function(d){
+    if(d.error){if(err)err.textContent=d.error;return;}
     localStorage.removeItem('anime_token');localStorage.removeItem('anime_user');
     alert('账号已注销');window.location.href='/';
-  });
+  }).catch(function(){if(err)err.textContent='网络错误';});
 };
+
+var dm=$('ucDeleteModal');
+if(dm)dm.addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
 
 var lg=$('ucLoginBtn');
 if(lg)lg.onclick=function(){if(window.showSiteLoginModal)showSiteLoginModal();};
@@ -215,4 +296,45 @@ var timer=setInterval(function(){
   if(document.getElementById('ucLoading')){clearInterval(timer);init();}
   if(tries>100){clearInterval(timer);}
 },200);
+
+// Expose functions for HTML onclick
+window.ucShowChangePwdModal=function(){
+  var m=document.getElementById('ucPwdModal');if(!m)return;
+  m.classList.add('show');
+  var o=document.getElementById('ucPwdOldInput');if(o){o.value='';o.focus();}
+  var n=document.getElementById('ucPwdNewInput');if(n)n.value='';
+  var c=document.getElementById('ucPwdConfirmInput');if(c)c.value='';
+  var e=document.getElementById('ucPwdError');if(e)e.textContent='';
+  var t=document.getElementById('ucPwdTitle');if(t)t.textContent='修改密码';
+  var w=document.getElementById('ucPwdOldWrap');if(w)w.style.display='';
+};
+window.ucShowSetPwdModal=function(){
+  var m=document.getElementById('ucPwdModal');if(!m)return;
+  m.classList.add('show');
+  var o=document.getElementById('ucPwdOldInput');if(o)o.value='';
+  var n=document.getElementById('ucPwdNewInput');if(n){n.value='';n.focus();}
+  var c=document.getElementById('ucPwdConfirmInput');if(c)c.value='';
+  var e=document.getElementById('ucPwdError');if(e)e.textContent='';
+  var t=document.getElementById('ucPwdTitle');if(t)t.textContent='设置密码';
+  var w=document.getElementById('ucPwdOldWrap');if(w)w.style.display='none';
+};
+window.ucChangePassword=function(){
+  var oldPwd=(document.getElementById('ucPwdOldInput')||{}).value||'';
+  var newPwd=(document.getElementById('ucPwdNewInput')||{}).value;
+  var confirmPwd=(document.getElementById('ucPwdConfirmInput')||{}).value;
+  var err=document.getElementById('ucPwdError');
+  if(!newPwd||newPwd.length<6){if(err)err.textContent='密码至少6位';return;}
+  if(newPwd!==confirmPwd){if(err)err.textContent='两次密码不一致';return;}
+  var isSet=(document.getElementById('ucPwdOldWrap')||{}).style.display==='none';
+  var tkn=localStorage.getItem('anime_token')||'';
+  var body=isSet?{new_password:newPwd}:{old_password:oldPwd,new_password:newPwd};
+  fetch('https://auth.233002.xyz/api/auth/password',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tkn},body:JSON.stringify(body)})
+  .then(function(r){return r.json()})
+  .then(function(d){
+    if(d.error){if(err)err.textContent=d.error;return;}
+    alert('密码'+(isSet?'设置':'修改')+'成功');
+    var m=document.getElementById('ucPwdModal');if(m)m.classList.remove('show');
+    window.location.reload();
+  }).catch(function(){if(err)err.textContent='网络错误';});
+};
 })();

@@ -33,6 +33,6 @@
     "lunar-javascript": "^1.7.7"
   },
   "devDependencies": {
-    "wrangler": "^4.97.0"
+    "wrangler": "^4.107.0"
   }
 }

@@ -82,7 +82,7 @@ social:
 # 图片设置
 # --------------------------------------
 
-favicon: /img/favicon-64.png?v=3
+favicon: /img/favicon.ico
 
 avatar:
   img: /img/picture.png
@@ -1060,6 +1060,7 @@ pjax:
   enable: true
   # 从 pjax 中排除指定的页面，例如 '/music/'
   exclude:
+    - /games/
   # - /xxxxxx/
 
 # 注入 css 和脚本 (aplayer/meting)
@@ -1143,9 +1144,7 @@ inject:
     #日历
     - <script src="/js/lunar.js"></script>
     - <script src="/js/calendar-widget.js"></script>
-    #CWD评论系统
-    - <script src="https://unpkg.com/cwd-widget@0.1.11/dist/cwd.js"></script>
-    - <script>function initCWD(){var wrap=document.querySelector('.comment-wrap');if(!wrap)return;wrap.innerHTML='<div id="cwd-comments"></div>';function init(){if(typeof CWDComments==='undefined')return;new CWDComments({el:'#cwd-comments',apiBaseUrl:'https://cwd-api.233002.xyz',siteId:'blog',lang:'zh-CN'}).mount();}if(typeof CWDComments!=='undefined'){init();}else{var t=setInterval(function(){if(typeof CWDComments!=='undefined'){clearInterval(t);init();}},100);setTimeout(function(){clearInterval(t);},10000);}}document.addEventListener('DOMContentLoaded',initCWD);document.addEventListener('pjax:complete',initCWD);</script>
+
 
 # CDN 设置
 # 除非您知道如何工作，否则不要修改以下设置

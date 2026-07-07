@@ -30,14 +30,20 @@ code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
   - 'js/**'
-  - 'live2d/**'
   - 'anime/index.html'
   - 'anime/track.js'
   - 'anime/play/**'
   - 'anime/history/**'
   - 'tools/**'
-  - 'games/**'
-  - 'bookmarks/**'
+  - 'games/*.html'
+  - 'games/*.js'
+  - 'games/common.css'
+  - 'games/track.js'
+  - 'games/js/*.js'
+  - 'bookmarks/*.html'
+  - 'bookmarks/*.js'
+  - 'bookmarks/common.css'
+  - 'bookmarks/track.js'
   - '**/*.json'
 
 # 写作

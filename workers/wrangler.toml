@@ -1,0 +1,9 @@
+name = "my-blog-auth"
+main = "src/index.js"
+compatibility_date = "2025-04-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "my-blog-auth"
+database_id = "f08bf70a-1daa-48c1-ba9a-6e13304156a5"

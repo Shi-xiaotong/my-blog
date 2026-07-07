@@ -1,0 +1,90 @@
+---
+title: 数独
+layout: game-page
+date: 2024-01-01 00:00:00
+description: 数独 - 小游戏
+permalink: /games/sudoku.html
+type: game
+---
+{% raw %}
+<style>
+
+.game-wrap { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.board-container { position: relative; }
+.board { display: grid; grid-template-columns: repeat(9, 1fr); border: 3px solid var(--text); border-radius: 4px; background: var(--text); gap: 1px; width: 396px; height: 396px; }
+.board .cell { background: var(--card-bg); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; cursor: pointer; position: relative; user-select: none; -webkit-user-select: none; font-family: 'SF Mono', monospace; }
+.board .cell:nth-child(3n) { border-right: 2px solid var(--text); }
+.board .cell:nth-child(9n) { border-right: none; }
+.board .cell:nth-child(n+19):nth-child(-n+27),
+.board .cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--text); }
+.board .cell.given { color: var(--text); font-weight: 700; }
+.board .cell.user { color: var(--primary); }
+.board .cell.error { color: var(--danger); background: rgba(239,68,68,0.1); }
+.board .cell.selected { background: rgba(59,130,246,0.15); }
+.board .cell.highlight { background: rgba(59,130,246,0.08); }
+.board .cell .pencil { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); position: absolute; inset: 2px; font-size: 9px; color: var(--text-secondary); font-weight: 400; }
+.board .cell .pencil span { display: flex; align-items: center; justify-content: center; }
+.side-panel { display: flex; flex-direction: column; gap: 12px; min-width: 160px; }
+.numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.numpad button { height: 42px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 18px; font-weight: 600; cursor: pointer; font-family: 'SF Mono', monospace; }
+.numpad button:hover { border-color: var(--primary); color: var(--primary); }
+.numpad button:active { background: var(--primary); color: #fff; }
+.numpad button.erase { font-size: 13px; font-weight: 400; }
+.tool-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.tool-btns button { flex: 1; min-width: 70px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 12px; cursor: pointer; }
+.tool-btns button:hover { border-color: var(--primary); }
+.tool-btns button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.tool-btns button.active:hover { filter: brightness(1.1); }
+.win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.win-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; max-width: 320px; }
+.win-box h2 { margin-bottom: 8px; }
+.win-box p { color: var(--text-secondary); margin-bottom: 16px; }
+@media (max-width: 640px) { .game-wrap { flex-direction: column; align-items: center; } .board { width: 100%; max-width: 396px; height: auto; aspect-ratio: 1; } .side-panel { flex-direction: row; flex-wrap: wrap; width: 100%; max-width: 396px; } .numpad { flex: 1; } .tool-btns { flex: 1; } }
+
+</style>
+
+
+
+<div class="container">
+  <div class="header">
+    
+    <h1>数独</h1>
+  </div>
+  <div class="score-bar">
+    <div class="score-item"><div class="score-label">难度</div><div class="score-value" id="diffLabel">简单</div></div>
+    <div class="score-item"><div class="score-label">错误</div><div class="score-value" id="errors">0/3</div></div>
+    <div class="score-item"><div class="score-label">时间</div><div class="score-value" id="timer">0:00</div></div>
+  </div>
+  <div class="game-wrap">
+    <div class="board-container">
+      <div class="board" id="board"></div>
+    </div>
+    <div class="side-panel">
+      <div class="tool-btns">
+        <button id="pencilBtn" onclick="togglePencil()">笔记</button>
+        <button onclick="undoMove()">撤销</button>
+        <button onclick="getHint()">提示</button>
+        <button onclick="eraseCell()">擦除</button>
+      </div>
+      <div class="numpad" id="numpad"></div>
+      <div class="tool-btns" style="margin-top:8px">
+        <button onclick="newGame('easy')">简单</button>
+        <button onclick="newGame('medium')">中等</button>
+        <button onclick="newGame('hard')">困难</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="win-overlay" id="overlay" style="display:none">
+  <div class="win-box">
+    <h2>恭喜通关</h2>
+    <p id="winMsg"></p>
+    <button class="btn btn-primary" onclick="closeOverlay();newGame()">新游戏</button>
+  </div>
+</div>
+
+
+
+<script src="/games/js/sudoku.js"></script>
+{% endraw %}

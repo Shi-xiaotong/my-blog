@@ -1,0 +1,86 @@
+---
+title: AI 猜图
+layout: game-page
+date: 2024-01-01 00:00:00
+description: AI 猜图 - 小游戏
+permalink: /games/ai-guess.html
+type: game
+---
+{% raw %}
+<style>
+
+.game-container { max-width: 600px; margin: 0 auto; }
+.image-area { text-align: center; margin: 16px 0; min-height: 300px; display: flex; align-items: center; justify-content: center; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.image-area img { max-width: 100%; max-height: 400px; border-radius: 12px; }
+.image-area .placeholder { color: var(--text-secondary); padding: 40px; }
+.guess-area { display: flex; gap: 8px; margin-bottom: 16px; }
+.guess-area input { flex: 1; padding: 12px 16px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; background: var(--card-bg); color: var(--text); outline: none; }
+.guess-area input:focus { border-color: var(--primary); }
+.hint-area { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 16px; min-height: 60px; }
+.hint-area .msg { padding: 6px 0; font-size: 14px; border-bottom: 1px solid var(--border); }
+.hint-area .msg:last-child { border-bottom: none; }
+.hint-area .msg.system { color: var(--text-secondary); }
+.hint-area .msg.correct { color: var(--accent); font-weight: 600; }
+.hint-area .msg.wrong { color: var(--danger); }
+.hint-area .msg.ai { color: var(--primary); }
+.score-display { display: flex; gap: 16px; justify-content: center; margin-bottom: 16px; }
+.score-item { text-align: center; }
+.score-item .num { font-size: 28px; font-weight: 700; font-family: 'SF Mono', monospace; color: var(--primary); }
+.score-item .lbl { font-size: 12px; color: var(--text-secondary); }
+.loading { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--text-secondary); padding: 40px; }
+.loading .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.win-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; max-width: 360px; }
+.win-box h2 { margin-bottom: 8px; }
+.win-box p { color: var(--text-secondary); margin-bottom: 16px; }
+.tip { text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+
+</style>
+
+
+
+<div class="container">
+  <div class="header">
+    
+    <h1>AI 猜图</h1>
+  </div>
+  <div class="game-container">
+    <div class="score-display">
+      <div class="score-item"><div class="num" id="round">0</div><div class="lbl">轮次</div></div>
+      <div class="score-item"><div class="num" id="score">0</div><div class="lbl">得分</div></div>
+      <div class="score-item"><div class="num" id="streak">0</div><div class="lbl">连胜</div></div>
+    </div>
+
+    <div class="image-area" id="imageArea">
+      <div class="placeholder">点击「新的一轮」开始游戏</div>
+    </div>
+
+    <div class="hint-area" id="hintArea"></div>
+
+    <div class="guess-area">
+      <input type="text" id="guessInput" placeholder="猜猜这张图的描述词..." onkeydown="if(event.key==='Enter')makeGuess()">
+      <button class="btn btn-primary" onclick="makeGuess()">猜</button>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button class="btn btn-primary" id="newBtn" onclick="newRound()">新的一轮</button>
+      <button class="btn btn-outline" onclick="skipRound()">跳过 (看答案)</button>
+      <button class="btn btn-outline" onclick="getAIHint()">AI 提示</button>
+    </div>
+    <p class="tip">AI 会根据图片描述生成一张图，你需要猜出原始描述</p>
+  </div>
+</div>
+
+<div class="win-overlay" id="overlay" style="display:none">
+  <div class="win-box">
+    <h2 id="winTitle"></h2>
+    <p id="winMsg"></p>
+    <button class="btn btn-primary" onclick="closeOverlay();newRound()">再来一轮</button>
+  </div>
+</div>
+
+
+
+<script src="/games/js/ai-guess.js"></script>
+{% endraw %}

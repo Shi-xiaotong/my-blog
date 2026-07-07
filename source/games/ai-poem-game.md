@@ -1,0 +1,105 @@
+---
+title: AI 写诗对决
+layout: game-page
+date: 2024-01-01 00:00:00
+description: AI 写诗对决 - 小游戏
+permalink: /games/ai-poem-game.html
+type: game
+---
+{% raw %}
+<style>
+
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 0; min-height: 100vh; background: var(--bg); color: var(--text); }
+:root { --bg: #0f0f0f; --text: #e0e0e0; --card: #1a1a2e; --accent: #0ea5e9; --border: #2a2a4a; }
+body.light { --bg: #f5f5f5; --text: #222; --card: #fff; --accent: #0ea5e9; --border: #ddd; }
+.container { max-width: 650px; margin: 0 auto; padding: 16px; }
+.header { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.header a { color: var(--accent); text-decoration: none; font-size: 14px; }
+.theme-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+h1 { text-align: center; font-size: 1.6em; margin: 20px 0; }
+.section { margin: 20px 0; }
+.section label { display: block; font-size: 14px; color: #888; margin-bottom: 8px; }
+.keyword-inputs { display: flex; gap: 8px; }
+.keyword-inputs input { flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 15px; outline: none; text-align: center; }
+.keyword-inputs input:focus { border-color: var(--accent); }
+.style-selector { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 16px 0; }
+.style-btn { padding: 8px 18px; border-radius: 20px; border: 2px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; font-size: 14px; transition: all 0.2s; }
+.style-btn:hover, .style-btn.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+.generate-btn { display: block; margin: 20px auto; padding: 12px 32px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-size: 16px; cursor: pointer; }
+.generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.poem-display { background: var(--card); border: 2px solid var(--border); border-radius: 16px; padding: 32px; margin: 20px 0; text-align: center; font-size: 18px; line-height: 2.2; white-space: pre-wrap; min-height: 120px; display: flex; align-items: center; justify-content: center; }
+.poem-title { font-size: 14px; color: #888; margin-bottom: 12px; }
+.star-rating { display: flex; gap: 8px; justify-content: center; margin: 16px 0; }
+.star-btn { background: none; border: none; font-size: 32px; cursor: pointer; color: #444; transition: color 0.15s; }
+.star-btn.on { color: #eab308; }
+.star-btn:hover { color: #eab308; }
+.feedback { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 12px 0; font-size: 15px; line-height: 1.7; text-align: center; }
+.hidden { display: none; }
+@keyframes blink { 50% { opacity: 0.3; } }
+.loading::after { content: '...'; animation: blink 1s infinite; }
+.round-info { text-align: center; font-size: 13px; color: #888; margin: 8px 0; }
+
+</style>
+
+
+<div class="container">
+  <div class="header">
+    
+    <button class="theme-btn" onclick="toggleTheme()">🌓 主题</button>
+  </div>
+
+  <h1>✍️ AI写诗对决</h1>
+  <div class="round-info" id="roundInfo">输入关键词，选择风格，让AI为你写诗！</div>
+
+  <div class="section">
+    <label>输入3个关键词：</label>
+    <div class="keyword-inputs">
+      <input type="text" id="kw1" placeholder="关键词1" maxlength="10">
+      <input type="text" id="kw2" placeholder="关键词2" maxlength="10">
+      <input type="text" id="kw3" placeholder="关键词3" maxlength="10">
+    </div>
+  </div>
+
+  <div class="section">
+    <label>选择诗的风格：</label>
+    <div class="style-selector" id="styleSelector">
+      <button class="style-btn active" data-style="古诗">古诗</button>
+      <button class="style-btn" data-style="现代诗">现代诗</button>
+      <button class="style-btn" data-style="打油诗">打油诗</button>
+      <button class="style-btn" data-style="藏头诗">藏头诗</button>
+      <button class="style-btn" data-style="rap">Rap</button>
+    </div>
+  </div>
+
+  <button class="generate-btn" id="genBtn" onclick="generatePoem()">🖊️ 让AI写诗</button>
+
+  <div id="poemArea" class="hidden">
+    <div class="poem-display" id="poemDisplay"></div>
+
+    <div class="section" id="ratingSection">
+      <label>给这首诗打分：</label>
+      <div class="star-rating" id="starRating">
+        <button class="star-btn" data-star="1">⭐</button>
+        <button class="star-btn" data-star="2">⭐</button>
+        <button class="star-btn" data-star="3">⭐</button>
+        <button class="star-btn" data-star="4">⭐</button>
+        <button class="star-btn" data-star="5">⭐</button>
+      </div>
+    </div>
+
+    <div id="feedbackArea" class="hidden">
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div style="text-align:center; margin-top:16px;">
+      <button class="generate-btn" onclick="generatePoem()" id="retryBtn" style="font-size:14px; padding:8px 20px;">🔄 再来一首</button>
+      <button class="generate-btn" onclick="changeStyle()" style="font-size:14px; padding:8px 20px; background:var(--card); border:1px solid var(--border); color:var(--text);">换个风格试试</button>
+    </div>
+  </div>
+</div>
+
+<script src="ai.js"></script>
+
+
+<script src="/games/js/ai-poem-game.js"></script>
+{% endraw %}
