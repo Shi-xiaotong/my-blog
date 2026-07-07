@@ -273,7 +273,7 @@ img.error-img-fallback,
 .friend-link-avatar:has(img[src*="friend_404"]) {
   background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%) !important;
   border-radius: 50%;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
 }

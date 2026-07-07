@@ -100,12 +100,16 @@ top_img: false
 }
 .friend-link-avatar.no-icon {
   background: linear-gradient(135deg, #49b1f5, #6dc3fa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .friend-link-avatar.no-icon::after {
   content: attr(data-name);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
+  line-height: 1;
 }
 .friend-link-info {
   display: flex;
