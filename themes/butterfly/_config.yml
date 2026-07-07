@@ -1084,9 +1084,9 @@ instantpage: false
 # 懒加载
 # https://github.com/verlok/vanilla-lazyload
 lazyload:
-  enable: false
+  enable: true
   # 使用浏览器的原生懒加载而不是 vanilla-lazyload
-  native: false
+  native: true
   # 指定要使用懒加载的字段（site 或 post）
   field: site
   placeholder:

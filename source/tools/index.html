@@ -19,14 +19,14 @@
 .category-title { font-size: 1.2em; font-weight: 600; margin-bottom: 16px; padding-left: 4px; display: flex; align-items: center; gap: 8px; color: var(--text); }
 .category-title .cat-icon { color: var(--primary); }
 .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-.tool-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-decoration: none; color: var(--text); transition: all 0.2s; display: flex; align-items: flex-start; gap: 14px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.tool-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; text-decoration: none; color: var(--text); transition: all 0.2s; display: flex; align-items: flex-start; gap: 14px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .tool-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--primary); }
 .tool-card.hidden { display: none; }
 .tool-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .tool-icon svg { width: 22px; height: 22px; }
 .tool-info h3 { font-size: 15px; margin-bottom: 4px; }
 .tool-info p { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
-.tool-count { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+.skip-link { position: fixed; top: -100px; left: 16px; padding: 12px 20px; background: var(--primary); color: #fff; border-radius: 8px; z-index: 9999; text-decoration: none; font-size: 14px; font-weight: 500; transition: top 0.2s; } .skip-link:focus { top: 16px; } .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; } .tool-count { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
 .section-divider { border: none; border-top: 2px dashed var(--border); margin: 32px 0; }
 .ai-badge { font-size: 11px; background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
 .local-badge { font-size: 11px; background: var(--primary); color: #fff; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
@@ -38,20 +38,22 @@
 </style>
 </head>
 <body>
+<a href="#main-content" class="skip-link">跳到主要内容</a>
 <button class="theme-toggle" onclick="toggleTheme()" title="切换主题"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
 <div class="container-wide">
 <a href="/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回首页</a>
-<div class="header-center">
+<div id="main-content" class="header-center">
   <h1>在线工具箱</h1>
   <p>免费、快速、无需注册的在线实用工具集合</p>
-  <div class="search-box">
+  <div class="search-box" role="search" aria-label="搜索工具">
     <span class="search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
-    <input type="text" id="searchInput" placeholder="搜索工具..." oninput="filterTools()">
+    <input type="text" id="searchInput" placeholder="搜索工具..." aria-label="搜索工具关键词" oninput="filterTools()">
   </div>
   </div>
 
+<div id="searchResults" aria-live="polite" class="sr-only"></div>
 <!-- Quick Category Navigation -->
-<div class="quick-nav" id="quickNav">
+<nav class="quick-nav" id="quickNav" aria-label="工具分类导航">
   <a href="#cat-converter" data-cat="converter">格式转换</a>
   <a href="#cat-dev" data-cat="dev">开发者工具</a>
   <a href="#cat-crypto" data-cat="crypto">编码加密</a>
@@ -59,7 +61,7 @@
   <a href="#cat-time" data-cat="time">时间工具</a>
   <a href="#cat-image" data-cat="image">图片处理</a>
   <a href="#cat-ai" data-cat="ai">AI 工具</a>
-</div>
+</nav>
 
 
 <!-- ========== 格式转换 ========== -->
@@ -679,7 +681,7 @@ function restoreState() {
     }
     if (s.a) {
       const lnk = document.querySelector('.quick-nav [data-cat="' + s.a + '"]');
-      if (lnk) lnk.classList.add('active');
+      if (lnk) { lnk.classList.add('active'); lnk.setAttribute('aria-current','page'); }
     }
   } catch(e) {}
 }
