@@ -7,308 +7,897 @@
 <title>图片去水印 - 在线工具</title>
 <link rel="stylesheet" href="common.css">
 <style>
-.drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; color: var(--text-secondary); margin-bottom: 16px; transition: border-color 0.2s; }
-.drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: var(--primary-light); }
-.canvas-wrap { position: relative; display: inline-block; max-width: 100%; margin: 0 auto; }
-.canvas-wrap canvas { display: block; max-width: 100%; cursor: crosshair; }
-.toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
-.toolbar label { display: flex; align-items: center; gap: 4px; font-size: 13px; white-space: nowrap; }
-.toolbar input[type="range"] { width: 100px; }
+textarea { min-height: 120px; resize: vertical; font-size: 14px; line-height: 1.6; }
+.output-wrap { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; min-height: 60px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; margin-top: 8px; }
+.section + .section { margin-top: 20px; }
+.result-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; min-height: 80px; font-size: 14px; line-height: 1.8; text-align: center; margin-top: 8px; }
+canvas { max-width: 100%; border-radius: 8px; }
+
+/* Upload */
+.upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.upload-area:hover { border-color: var(--primary); background: var(--primary-light); }
+.upload-area input { display: none; }
+.upload-area .icon { font-size: 48px; margin-bottom: 8px; }
+.upload-area p { color: var(--text-secondary); font-size: 14px; }
+
+/* Mode tabs */
+.mode-tabs { display: flex; gap: 4px; margin: 16px 0 12px; border-bottom: 2px solid var(--border); }
+.mode-tab { padding: 10px 18px; cursor: pointer; font-size: 14px; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; border-radius: 6px 6px 0 0; }
+.mode-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+.mode-panel { display: none; }
+.mode-panel.active { display: block; }
+
+/* Canvas workspace */
+.workspace { position: relative; display: inline-block; border-radius: 8px; overflow: hidden; margin: 8px auto; }
+.workspace canvas { display: block; }
+#maskOverlay { position: absolute; top: 0; left: 0; cursor: crosshair; }
+
+/* Toolbar */
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 12px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; }
 .toolbar .sep { width: 1px; height: 24px; background: var(--border); }
-.mode-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); cursor: pointer; font-size: 13px; transition: all 0.15s; }
-.mode-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-.mode-btn:hover { border-color: var(--primary); }
-.preview-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
-.preview-row > div { flex: 1; min-width: 200px; text-align: center; }
-.preview-row img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
-.tip { font-size: 12px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
+
+/* Brush controls */
+.brush-wrap { display: flex; align-items: center; gap: 6px; }
+.brush-size { width: 80px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 13px; }
+.brush-prev { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+.brush-prev .dot { border-radius: 50%; background: rgba(239, 68, 68, 0.5); border: 1px solid #ef4444; }
+
+/* Threshold slider */
+.thresh-wrap { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); }
+.thresh-val { min-width: 40px; text-align: center; color: var(--primary); font-weight: 600; }
+input[type="range"] { width: 160px; }
+
+/* Hint */
+.hint-bar { font-size: 12px; color: var(--text-secondary); margin: 6px 0; display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* Compare slider */
+.compare { position: relative; display: inline-block; margin: 12px auto; }
+.compare canvas { display: block; }
+.compare-bar { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--primary); cursor: ew-resize; z-index: 10; box-shadow: 0 0 8px rgba(0,0,0,0.3); }
+
+/* Auto method options */
+.method-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+.method-card { padding: 14px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center; }
+.method-card:hover { border-color: var(--primary); background: var(--primary-light); }
+.method-card.active { border-color: var(--primary); background: var(--primary-light); }
+.method-card .icon { font-size: 24px; margin-bottom: 4px; }
+.method-card .name { font-size: 13px; font-weight: 600; }
+.method-card .desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+/* Progress */
+.progress { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin: 8px 0; }
+.progress-fill { height: 100%; background: var(--primary); width: 0; transition: width 0.3s; }
+
+/* Preview row */
+.preview-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.preview-card { border: 1px solid var(--border); border-radius: 8px; padding: 8px; text-align: center; }
+.preview-card .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.preview-card canvas { width: 100%; height: auto; border-radius: 4px; }
+
+/* Result */
+.result-area { margin-top: 16px; }
+.result-info { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; padding: 12px; background: var(--bg); border-radius: 8px; font-size: 13px; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .method-cards { grid-template-columns: 1fr; }
+  .preview-row { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 <button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-<div class="container">
+<div class="container container-wide">
   <div class="header">
-    <a href="/tools/" class="back-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
-    <h1>图片去水印</h1>
+    <a href="/tools/" class="back-link" onclick="history.back();return false;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>图片去水印 <span style="font-size:14px;color:var(--text-secondary);font-weight:400">· 纯前端工具</span></h1>
   </div>
   <div class="tool-area">
-    <div class="drop-zone" id="dropZone">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      <p>点击或拖拽图片到此处上传</p>
-      <input type="file" id="fileInput" accept="image/*" style="display:none">
+
+  <!-- Upload -->
+  <div class="upload-area" id="uploadArea" onclick="document.getElementById('wmFile').click()">
+    <div class="icon">🎨</div>
+    <p>上传需要去除水印的图片</p>
+    <p style="font-size:12px;margin-top:4px">纯前端处理，不上传服务器，隐私安全</p>
+    <input type="file" id="wmFile" accept="image/*" onchange="loadWm()">
+  </div>
+
+  <!-- Main panel -->
+  <div id="wsPanel" style="display:none">
+
+    <!-- Mode tabs -->
+    <div class="mode-tabs">
+      <div class="mode-tab active" data-mode="auto" onclick="switchMode('auto')">自动去除</div>
+      <div class="mode-tab" data-mode="manual" onclick="switchMode('manual')">手动涂抹</div>
+      <div class="mode-tab" data-mode="compare" onclick="switchMode('compare')">对比查看</div>
     </div>
-    <div id="editArea" style="display:none">
-      <div class="toolbar">
-        <label>模式:</label>
-        <button class="mode-btn active" data-mode="paint" onclick="setMode('paint')">涂抹擦除</button>
-        <button class="mode-btn" data-mode="blur" onclick="setMode('blur')">模糊遮盖</button>
-        <div class="sep"></div>
-        <label>画笔大小: <span id="brushVal">20</span>px</label>
-        <input type="range" id="brushSize" min="5" max="80" value="20" oninput="document.getElementById('brushVal').textContent=this.value">
-        <div class="sep"></div>
-        <button class="btn btn-outline" onclick="undo()" style="padding:4px 12px;font-size:12px">撤销</button>
-        <button class="btn btn-outline" onclick="resetCanvas()" style="padding:4px 12px;font-size:12px">重置</button>
-        <button class="btn btn-primary" onclick="doProcess()" style="padding:4px 16px;font-size:12px">处理</button>
+
+    <!-- Auto mode -->
+    <div class="mode-panel active" id="panel-auto">
+      <p class="hint-bar">选择最适合的方法自动检测水印区域，也可手动涂抹：</p>
+      <div class="method-cards">
+        <div class="method-card active" data-method="bright" onclick="setMethod('bright')">
+          <div class="icon">✨</div>
+          <div class="name">亮度检测</div>
+          <div class="desc">水印比背景亮/暗</div>
+        </div>
+        <div class="method-card" data-method="color" onclick="setMethod('color')">
+          <div class="icon">🎨</div>
+          <div class="name">颜色检测</div>
+          <div class="desc">指定水印颜色</div>
+        </div>
+        <div class="method-card" data-method="corner" onclick="setMethod('corner')">
+          <div class="icon">📌</div>
+          <div class="name">边角裁剪</div>
+          <div class="desc">水印在图片边角</div>
+        </div>
       </div>
-      <p class="tip">在图片上涂抹水印区域（会显示红色标记），然后点击「处理」按钮去除</p>
-      <div style="overflow:auto;text-align:center;margin:12px 0">
-        <div class="canvas-wrap">
-          <canvas id="mainCanvas"></canvas>
+
+      <!-- Method-specific controls -->
+      <div id="ctrl-bright">
+        <div class="thresh-wrap">
+          <span>阈值</span>
+          <input type="range" min="1" max="200" value="60" id="brightThresh" oninput="updateBrightThresh()">
+          <span class="thresh-val" id="brightThreshVal">60</span>
+          <span>· 数值越小检测越宽松</span>
+        </div>
+      </div>
+      <div id="ctrl-color" style="display:none">
+        <div class="thresh-wrap">
+          <span>水印颜色</span>
+          <input type="color" id="wmColor" value="#cccccc" style="width:36px;height:30px;border:1px solid var(--border);border-radius:4px;padding:0;cursor:pointer">
+          <span>色容差</span>
+          <input type="range" min="10" max="80" value="40" id="colorTol" oninput="document.getElementById('colorTolVal').textContent=this.value">
+          <span class="thresh-val" id="colorTolVal">40</span>
+        </div>
+      </div>
+      <div id="ctrl-corner" style="display:none">
+        <div class="thresh-wrap">
+          <span>裁剪比例</span>
+          <input type="range" min="1" max="20" value="5" id="cornerPct" oninput="document.getElementById('cornerPctVal').textContent=this.value+'%'">
+          <span class="thresh-val" id="cornerPctVal">5%</span>
+          <span>· 从四个边角裁剪</span>
+        </div>
+        <div class="hint-bar" style="margin-top:6px"><span>适合水印在图片角落的情况，自动裁剪去除</span></div>
+      </div>
+
+      <div class="btn-group" style="margin-top:12px">
+        <button class="btn btn-primary" onclick="autoRemove()">✨ 自动去除水印</button>
+        <button class="btn btn-outline" onclick="previewMask()">👁 预览检测</button>
+      </div>
+      <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+
+      <!-- Preview -->
+      <div class="preview-row" id="previewRow" style="display:none">
+        <div class="preview-card">
+          <div class="label">检测到的水印区域（红色）</div>
+          <canvas id="maskPreview"></canvas>
+        </div>
+        <div class="preview-card">
+          <div class="label">去除后效果</div>
+          <canvas id="resultPreview"></canvas>
         </div>
       </div>
     </div>
-    <div id="resultArea" style="display:none">
-      <label>处理结果</label>
-      <div class="preview-row">
-        <div><p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">原图</p><img id="origPreview"></div>
-        <div><p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">处理后</p><img id="resultPreview"></div>
+
+    <!-- Manual mode -->
+    <div class="mode-panel" id="panel-manual">
+      <div class="toolbar">
+        <button class="mode-btn active" data-act="mask" onclick="setAct('mask')">涂抹标记</button>
+        <button class="mode-btn" data-act="erase" onclick="setAct('erase')">擦除标记</button>
+        <span class="sep"></span>
+        <div class="brush-wrap">
+          <span style="font-size:13px;color:var(--text-secondary)">笔刷</span>
+          <input type="range" min="3" max="100" value="20" class="brush-size" oninput="brushSize=+this.value;updateBrushPrev()">
+          <div class="brush-prev"><div class="dot" id="brushDot"></div></div>
+        </div>
+        <span class="sep"></span>
+        <button class="btn btn-primary btn-sm" onclick="removeWatermark()">✨ 开始去除</button>
+        <button class="btn btn-outline btn-sm" onclick="resetMask()">重置</button>
+        <button class="btn btn-outline btn-sm" onclick="undo()">撤销</button>
       </div>
-      <div style="text-align:center;margin-top:12px">
-        <button class="btn btn-primary" onclick="download('png')">下载 PNG</button>
-        <button class="btn btn-outline" onclick="download('jpg')">下载 JPG</button>
-        <button class="btn btn-outline" onclick="backToEdit()">继续编辑</button>
+      <div class="hint-bar">
+        <span>🖊 涂抹水印区域</span>
+        <span>🧹 擦除误选区域</span>
+        <span>✨ 涂抹后点击"开始去除"</span>
+      </div>
+      <div class="workspace">
+        <canvas id="baseCanvas"></canvas>
+        <canvas id="maskOverlay"></canvas>
       </div>
     </div>
+
+    <!-- Compare mode -->
+    <div class="mode-panel" id="panel-compare">
+      <div class="compare">
+        <canvas id="origCanvas"></canvas>
+        <canvas id="resultCanvas"></canvas>
+        <div class="compare-bar" id="compareBar"></div>
+      </div>
+      <p class="hint" style="text-align:center">左右拖拽滑块查看对比</p>
+    </div>
+
+    <!-- Result -->
+    <div class="result-area" id="resultArea" style="display:none">
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="downloadWm()">💾 下载结果</button>
+        <button class="btn btn-outline" onclick="resetAll()">🔄 重新上传</button>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+// State
+var origImg = null, displayScale = 1;
+var baseCv, baseCtx, maskCv, maskCtx;
+var brushSize = 20, currentAct = 'mask';
+var maskHistory = [], maxHistory = 20;
+var isDrawing = false, lastX = 0, lastY = 0;
+var resultCanvas = null, resultCtx = null;
+var currentMethod = 'bright';
+
+// Init canvases
+function init() {
+  if (baseCv) return; // already initialized
+  baseCv = document.getElementById('baseCanvas');
+  if (!baseCv) { console.error('baseCanvas not found'); return; }
+  baseCtx = baseCv.getContext('2d', { willReadFrequently: true });
+  maskCv = document.getElementById('maskOverlay');
+  if (!maskCv) { console.error('maskOverlay not found'); return; }
+  maskCtx = maskCv.getContext('2d');
+  updateBrushPrev();
+  attachMaskEvents();
+}
+
+// Upload / load
+function loadWm() {
+  if (!baseCv || !maskCv) { showToast('页面尚未加载完成，请稍候'); return; }
+  var f = document.getElementById('wmFile').files[0];
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      origImg = img;
+      // Scale to fit display (max 800px)
+      var maxDim = Math.min(800, window.innerWidth - 60);
+      displayScale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+      var w = Math.floor(img.naturalWidth * displayScale);
+      var h = Math.floor(img.naturalHeight * displayScale);
+
+      baseCv.width = w; baseCv.height = h;
+      maskCv.width = w; maskCv.height = h;
+      baseCtx.drawImage(img, 0, 0, w, h);
+      baseCv.style.width = w + 'px';
+      baseCv.style.height = h + 'px';
+      maskCv.style.width = w + 'px';
+      maskCv.style.height = h + 'px';
+
+      // Clear mask
+      maskCtx.clearRect(0, 0, w, h);
+      maskHistory = [];
+
+      // Setup compare canvases
+      setupCompareCanvases(w, h);
+
+      document.getElementById('wsPanel').style.display = 'block';
+      document.getElementById('uploadArea').style.display = 'none';
+      document.getElementById('resultArea').style.display = 'none';
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(f);
+}
+
+// Drag & drop
+var ua = document.getElementById('uploadArea');
+ua.addEventListener('dragover', e => { e.preventDefault(); ua.style.borderColor = 'var(--primary)'; });
+ua.addEventListener('dragleave', () => { ua.style.borderColor = ''; });
+ua.addEventListener('drop', e => {
+  e.preventDefault(); ua.style.borderColor = '';
+  if (e.dataTransfer.files.length) {
+    document.getElementById('wmFile').files = e.dataTransfer.files;
+    loadWm();
+  }
+});
+
+// Compare setup
+function setupCompareCanvases(w, h) {
+  var oc = document.getElementById('origCanvas');
+  var rc = document.getElementById('resultCanvas');
+  oc.width = w; oc.height = h;
+  rc.width = w; rc.height = h;
+  var octx = oc.getContext('2d');
+  octx.drawImage(origImg, 0, 0, w, h);
+  var cb = document.querySelector('.compare');
+  cb.style.width = w + 'px';
+  cb.style.height = h + 'px';
+  oc.style.width = w + 'px'; oc.style.height = h + 'px';
+  rc.style.width = w + 'px'; rc.style.height = h + 'px';
+  setupCompareSlider(w);
+}
+
+// Compare slider
+function setupCompareSlider(w) {
+  var oc = document.getElementById('origCanvas');
+  var rc = document.getElementById('resultCanvas');
+  var bar = document.getElementById('compareBar');
+  var dragging = false;
+
+  function update(x) {
+    x = Math.max(0, Math.min(w, x));
+    oc.style.clipPath = 'polygon(0 0,' + x + 'px 0,' + x + 'px 100%,0 100%)';
+    rc.style.clipPath = 'polygon(' + x + 'px 0,100% 0,100% 100%,' + x + 'px 100%)';
+    bar.style.left = x + 'px';
+  }
+
+  function getPos(e) {
+    var rect = document.querySelector('.compare').getBoundingClientRect();
+    return (e.clientX - rect.left) * (w / rect.width);
+  }
+
+  document.querySelector('.compare').addEventListener('mousedown', function(e) { dragging = true; update(getPos(e)); });
+  window.addEventListener('mousemove', function(e) { if (dragging) update(getPos(e)); });
+  window.addEventListener('mouseup', function() { dragging = false; });
+  document.querySelector('.compare').addEventListener('touchstart', function(e) { dragging = true; update(getPos(e.touches[0])); });
+  window.addEventListener('touchmove', function(e) { if (dragging) update(getPos(e.touches[0])); });
+  window.addEventListener('touchend', function() { dragging = false; });
+
+  update(w / 2);
+}
+
+// Mode switching
+function switchMode(m) {
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + m));
+  if (m === 'compare' && resultCanvas) {
+    // Update compare result canvas
+    var rc = document.getElementById('resultCanvas');
+    var rctx = rc.getContext('2d');
+    rctx.clearRect(0, 0, rc.width, rc.height);
+    rctx.drawImage(resultCanvas, 0, 0, rc.width, rc.height);
+    var w = rc.width;
+    var oc = document.getElementById('origCanvas');
+    oc.style.clipPath = 'polygon(0 0,' + w/2 + 'px 0,' + w/2 + 'px 100%,0 100%)';
+    rc.style.clipPath = 'polygon(' + w/2 + 'px 0,100% 0,100% 100%,' + w/2 + 'px 100%)';
+    document.getElementById('compareBar').style.left = (w/2) + 'px';
+  }
+}
+
+// Method switching
+function setMethod(m) {
+  currentMethod = m;
+  document.querySelectorAll('.method-card').forEach(c => c.classList.toggle('active', c.dataset.method === m));
+  ['bright', 'color', 'corner'].forEach(k => {
+    var el = document.getElementById('ctrl-' + k);
+    if (el) el.style.display = k === m ? '' : 'none';
+  });
+}
+
+function updateBrightThresh() {
+  document.getElementById('brightThreshVal').textContent = document.getElementById('brightThresh').value;
+}
+
+// ===== MANUAL MODE =====
+function setAct(a) {
+  currentAct = a;
+  document.querySelectorAll('[data-act]').forEach(b => b.classList.toggle('active', b.dataset.act === a));
+  maskCv.style.cursor = a === 'mask' ? 'crosshair' : 'pointer';
+}
+
+function getPos(e) {
+  var rect = maskCv.getBoundingClientRect();
+  return {
+    x: Math.max(0, Math.min(maskCv.width - 1, (e.clientX - rect.left) * (maskCv.width / rect.width))),
+    y: Math.max(0, Math.min(maskCv.height - 1, (e.clientY - rect.top) * (maskCv.height / rect.height)))
+  };
+}
+
+function saveMaskState() {
+  maskHistory.push(maskCtx.getImageData(0, 0, maskCv.width, maskCv.height));
+  if (maskHistory.length > maxHistory) maskHistory.shift();
+}
+
+function undo() {
+  if (maskHistory.length === 0) return;
+  maskCtx.putImageData(maskHistory.pop(), 0, 0);
+}
+
+function drawBrush(x, y) {
+  var r = brushSize / 2;
+  if (currentAct === 'erase') {
+    maskCtx.globalCompositeOperation = 'destination-out';
+  } else {
+    maskCtx.globalCompositeOperation = 'source-over';
+    maskCtx.fillStyle = 'rgba(239, 68, 68, 0.55)';
+  }
+  maskCtx.beginPath();
+  maskCtx.arc(x, y, r, 0, Math.PI * 2);
+  maskCtx.fill();
+  maskCtx.globalCompositeOperation = 'source-over';
+}
+
+function drawLine(x1, y1, x2, y2) {
+  var dx = x2 - x1, dy = y2 - y1;
+  var len = Math.sqrt(dx * dx + dy * dy);
+  var steps = Math.max(1, Math.ceil(len / 2));
+  for (var i = 0; i <= steps; i++) {
+    var t = i / steps;
+    drawBrush(x1 + dx * t, y1 + dy * t);
+  }
+}
+
+function attachMaskEvents() {
+  if (!maskCv) { setTimeout(attachMaskEvents, 100); return; }
+  maskCv.addEventListener('mousedown', function(e) {
+    isDrawing = true;
+    var p = getPos(e);
+    lastX = p.x; lastY = p.y;
+    saveMaskState();
+    drawBrush(p.x, p.y);
+  });
+  maskCv.addEventListener('mousemove', function(e) {
+    if (!isDrawing) return;
+    var p = getPos(e);
+    drawLine(lastX, lastY, p.x, p.y);
+    lastX = p.x; lastY = p.y;
+  });
+  maskCv.addEventListener('mouseup', () => isDrawing = false);
+  maskCv.addEventListener('mouseleave', () => isDrawing = false);
+  maskCv.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    var t = e.touches[0];
+    maskCv.dispatchEvent(new MouseEvent('mousedown', { clientX: t.clientX, clientY: t.clientY }));
+  });
+  maskCv.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+    var t = e.touches[0];
+    maskCv.dispatchEvent(new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY }));
+  });
+  maskCv.addEventListener('touchend', function() {
+    maskCv.dispatchEvent(new MouseEvent('mouseup'));
+  });
+}
+
+function resetMask() {
+  saveMaskState();
+  maskCtx.clearRect(0, 0, maskCv.width, maskCv.height);
+}
+
+// ===== MANUAL REMOVAL =====
+function removeWatermark() {
+  if (!origImg) return;
+  showToast('正在去除水印...');
+  setTimeout(function() { runInpaint(); }, 50);
+}
+
+function runInpaint() {
+  var w = maskCv.width, h = maskCv.height;
+  var maskData = maskCtx.getImageData(0, 0, w, h);
+  var mask = maskData.data;
+  var baseData = baseCtx.getImageData(0, 0, w, h);
+  if (!baseData) { showToast('读取图片数据失败'); return; }
+
+  var img = new ImageData(new Uint8ClampedArray(baseData.data), w, h);
+  var d = img.data;
+
+  // Iterative diffusion - 8 passes
+  for (var pass = 0; pass < 8; pass++) {
+    var changed = false;
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        var i = (y * w + x) * 4;
+        if (mask[i + 3] < 128) continue;
+        var rS = 0, gS = 0, bS = 0, cnt = 0;
+        for (var dy = -3; dy <= 3; dy++) {
+          for (var dx = -3; dx <= 3; dx++) {
+            var nx = x + dx, ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+            var ni = (ny * w + nx) * 4;
+            if (mask[ni + 3] < 128) {
+              rS += d[ni]; gS += d[ni + 1]; bS += d[ni + 2]; cnt++;
+            }
+          }
+        }
+        if (cnt > 0) {
+          d[i] = rS / cnt; d[i + 1] = gS / cnt; d[i + 2] = bS / cnt;
+          mask[i + 3] = 10;
+          changed = true;
+        }
+      }
+    }
+    if (!changed) break;
+  }
+
+  baseCtx.putImageData(img, 0, 0);
+
+  // Create result canvas at original resolution
+  createResultCanvas();
+
+  // Update previews
+  document.getElementById('previewRow').style.display = '';
+  var mp = document.getElementById('maskPreview');
+  mp.width = w; mp.height = h;
+  var mpCtx = mp.getContext('2d');
+  mpCtx.drawImage(origImg, 0, 0, w, h);
+  mpCtx.globalCompositeOperation = 'source-over';
+  mpCtx.fillStyle = 'rgba(239, 68, 68, 0.35)';
+  for (var y = 0; y < h; y += 2) {
+    for (var x = 0; x < w; x += 2) {
+      if (maskData.data[(y * w + x) * 4 + 3] >= 128) {
+        mpCtx.fillRect(x, y, 2, 2);
+      }
+    }
+  }
+
+  var rp = document.getElementById('resultPreview');
+  rp.width = w; rp.height = h;
+  rp.getContext('2d').drawImage(baseCv, 0, 0);
+
+  // Show compare & result
+  switchMode('compare');
+  document.getElementById('resultArea').style.display = '';
+  showToast('去水印完成！');
+}
+
+// ===== AUTO REMOVAL =====
+function autoRemove() {
+  if (!origImg) return;
+  setProgress(10);
+  showToast('正在分析图片...');
+  setTimeout(function() {
+    switch(currentMethod) {
+      case 'bright': autoRemoveBright(); break;
+      case 'color': autoRemoveColor(); break;
+      case 'corner': autoRemoveCorner(); break;
+    }
+  }, 50);
+}
+
+function autoRemoveBright() {
+  var w = baseCv.width, h = baseCv.height;
+  var data = baseCtx.getImageData(0, 0, w, h);
+  var d = data.data;
+  var thresh = +document.getElementById('brightThresh').value;
+
+  // Build mask: detect pixels that differ significantly from local median
+  var mask = new Uint8Array(w * h);
+  var blockSize = 11;
+
+  // Simple approach: compare each pixel to a blurred version of the image
+  // Create a blur using box blur (fast)
+  var blur = createBoxBlur(d, w, h, blockSize);
+
+  for (var y = 0; y < h; y++) {
+    for (var x = 0; x < w; x++) {
+      var i = (y * w + x) * 4;
+      var bi = i;
+      var dr = Math.abs(d[i] - blur[bi]);
+      var dg = Math.abs(d[i + 1] - blur[bi + 1]);
+      var db = Math.abs(d[i + 2] - blur[bi + 2]);
+      if (dr + dg + db > thresh * 3) {
+        mask[y * w + x] = 255;
+      }
+    }
+  }
+
+  // Clean up - small isolated blobs (< 20px) are noise
+  mask = cleanMask(mask, w, h, 20);
+
+  // Apply mask to overlay
+  var mdata = maskCtx.createImageData(w, h);
+  for (var i = 0; i < w * h; i++) {
+    if (mask[i]) {
+      mdata.data[i * 4] = 239; mdata.data[i * 4 + 1] = 68; mdata.data[i * 4 + 2] = 68; mdata.data[i * 4 + 3] = 140;
+    }
+  }
+  maskCtx.putImageData(mdata, 0, 0);
+
+  // Show preview
+  setProgress(60);
+  setTimeout(function() {
+    // Run inpaint
+    applyMaskInpaint();
+    setProgress(100);
+  }, 50);
+}
+
+function autoRemoveColor() {
+  var w = baseCv.width, h = baseCv.height;
+  var data = baseCtx.getImageData(0, 0, w, h);
+  var d = data.data;
+  var hex = document.getElementById('wmColor').value;
+  var tr = parseInt(hex.substr(1, 2), 16);
+  var tg = parseInt(hex.substr(3, 2), 16);
+  var tb = parseInt(hex.substr(5, 2), 16);
+  var tol = +document.getElementById('colorTol').value;
+
+  var mask = new Uint8Array(w * h);
+  for (var y = 0; y < h; y++) {
+    for (var x = 0; x < w; x++) {
+      var i = (y * w + x) * 4;
+      var dr = Math.abs(d[i] - tr);
+      var dg = Math.abs(d[i + 1] - tg);
+      var db = Math.abs(d[i + 2] - tb);
+      if (dr + dg + db <= tol * 3) {
+        mask[y * w + x] = 255;
+      }
+    }
+  }
+
+  mask = cleanMask(mask, w, h, 30);
+
+  var mdata = maskCtx.createImageData(w, h);
+  for (var i = 0; i < w * h; i++) {
+    if (mask[i]) {
+      mdata.data[i * 4] = 239; mdata.data[i * 4 + 1] = 68; mdata.data[i * 4 + 2] = 68; mdata.data[i * 4 + 3] = 140;
+    }
+  }
+  maskCtx.putImageData(mdata, 0, 0);
+
+  setProgress(60);
+  setTimeout(applyMaskInpaint, 50);
+}
+
+function autoRemoveCorner() {
+  var pct = +document.getElementById('cornerPct').value / 100;
+  var w = baseCv.width, h = baseCv.height;
+  var bw = Math.floor(w * pct), bh = Math.floor(h * pct);
+
+  var mdata = maskCtx.createImageData(w, h);
+  for (var y = 0; y < h; y++) {
+    for (var x = 0; x < w; x++) {
+      var inMask = (y < bh || y >= h - bh) && (x < bw || x >= w - bw);
+      if (inMask) {
+        var i = (y * w + x) * 4;
+        mdata.data[i] = 239; mdata.data[i + 1] = 68; mdata.data[i + 2] = 68; mdata.data[i + 3] = 140;
+      }
+    }
+  }
+  maskCtx.putImageData(mdata, 0, 0);
+
+  setProgress(60);
+  setTimeout(applyMaskInpaint, 50);
+}
+
+function applyMaskInpaint() {
+  var w = maskCv.width, h = maskCv.height;
+  var maskData = maskCtx.getImageData(0, 0, w, h);
+  var mask = maskData.data;
+  var baseData = baseCtx.getImageData(0, 0, w, h);
+  var img = new ImageData(new Uint8ClampedArray(baseData.data), w, h);
+  var d = img.data;
+
+  for (var pass = 0; pass < 8; pass++) {
+    var changed = false;
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        var i = (y * w + x) * 4;
+        if (mask[i + 3] < 128) continue;
+        var rS = 0, gS = 0, bS = 0, cnt = 0;
+        for (var dy = -3; dy <= 3; dy++) {
+          for (var dx = -3; dx <= 3; dx++) {
+            var nx = x + dx, ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+            var ni = (ny * w + nx) * 4;
+            if (mask[ni + 3] < 128) {
+              rS += d[ni]; gS += d[ni + 1]; bS += d[ni + 2]; cnt++;
+            }
+          }
+        }
+        if (cnt > 0) {
+          d[i] = rS / cnt; d[i + 1] = gS / cnt; d[i + 2] = bS / cnt;
+          mask[i + 3] = 10;
+          changed = true;
+        }
+      }
+    }
+    if (!changed) break;
+    setProgress(60 + pass * 5);
+  }
+
+  baseCtx.putImageData(img, 0, 0);
+
+  // Update previews
+  document.getElementById('previewRow').style.display = '';
+  var mp = document.getElementById('maskPreview');
+  mp.width = w; mp.height = h;
+  var mpCtx = mp.getContext('2d');
+  mpCtx.drawImage(origImg, 0, 0, w, h);
+  mpCtx.fillStyle = 'rgba(239, 68, 68, 0.35)';
+  for (var y = 0; y < h; y += 2) {
+    for (var x = 0; x < w; x += 2) {
+      if (maskData.data[(y * w + x) * 4 + 3] >= 128) {
+        mpCtx.fillRect(x, y, 2, 2);
+      }
+    }
+  }
+
+  var rp = document.getElementById('resultPreview');
+  rp.width = w; rp.height = h;
+  rp.getContext('2d').drawImage(baseCv, 0, 0);
+
+  // Save result at full resolution
+  createResultCanvas();
+
+  setProgress(100);
+  switchMode('compare');
+  document.getElementById('resultArea').style.display = '';
+  showToast('去水印完成！');
+}
+
+// Helper: box blur for watermark detection
+function createBoxBlur(data, w, h, size) {
+  var result = new Uint8ClampedArray(data.length);
+  var half = Math.floor(size / 2);
+  for (var y = 0; y < h; y++) {
+    for (var x = 0; x < w; x++) {
+      var rS = 0, gS = 0, bS = 0, aS = 0, cnt = 0;
+      for (var dy = -half; dy <= half; dy++) {
+        for (var dx = -half; dx <= half; dx++) {
+          var nx = x + dx, ny = y + dy;
+          if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+          var ni = (ny * w + nx) * 4;
+          rS += data[ni]; gS += data[ni + 1]; bS += data[ni + 2];
+          cnt++;
+        }
+      }
+      var i = (y * w + x) * 4;
+      result[i] = rS / cnt; result[i + 1] = gS / cnt; result[i + 2] = bS / cnt; result[i + 3] = 255;
+    }
+  }
+  return result;
+}
+
+// Helper: clean small noise from mask
+function cleanMask(mask, w, h, minSize) {
+  var visited = new Uint8Array(w * h);
+  var cleaned = new Uint8Array(w * h);
+  var stack = [];
+
+  for (var i = 0; i < w * h; i++) {
+    if (mask[i] && !visited[i]) {
+      // BFS to find connected component
+      var size = 0;
+      var members = [];
+      var qi = 0;
+      stack.push(i);
+      visited[i] = 1;
+      while (qi < stack.length) {
+        var idx = stack[qi++];
+        members.push(idx);
+        size++;
+        var py = Math.floor(idx / w), px = idx % w;
+        // 4-connected neighbors
+        var neighbors = [[px-1,py],[px+1,py],[px,py-1],[px,py+1]];
+        for (var k = 0; k < 4; k++) {
+          var npx = neighbors[k][0], npy = neighbors[k][1];
+          if (npx < 0 || npy < 0 || npx >= w || npy >= h) continue;
+          var nidx = npy * w + npx;
+          if (mask[nidx] && !visited[nidx]) {
+            visited[nidx] = 1;
+            stack.push(nidx);
+          }
+        }
+      }
+      if (size >= minSize) {
+        for (var j = 0; j < members.length; j++) {
+          cleaned[members[j]] = 255;
+        }
+      }
+    }
+  }
+  return cleaned;
+}
+
+// Preview mask detection
+function previewMask() {
+  if (!origImg) return;
+  showToast('预览检测...');
+  switch(currentMethod) {
+    case 'bright': autoRemoveBright(); break;
+    case 'color': autoRemoveColor(); break;
+    case 'corner': autoRemoveCorner(); break;
+  }
+  // Only show preview, don't remove
+  document.getElementById('previewRow').style.display = '';
+  document.getElementById('maskPreview').style.display = '';
+  showToast('预览完成，确认无误后点击"自动去除"');
+}
+
+function createResultCanvas() {
+  if (!origImg) return;
+  resultCanvas = document.createElement('canvas');
+  resultCanvas.width = origImg.naturalWidth;
+  resultCanvas.height = origImg.naturalHeight;
+  resultCtx = resultCanvas.getContext('2d');
+
+  // Draw original at full resolution
+  resultCtx.drawImage(origImg, 0, 0);
+  var fullData = resultCtx.getImageData(0, 0, resultCanvas.width, resultCanvas.height);
+  var fo = fullData.data;
+
+  var w = maskCv.width, h = maskCv.height;
+  var maskData = maskCtx.getImageData(0, 0, w, h);
+  var baseData = baseCtx.getImageData(0, 0, w, h);
+  var scaleX = origImg.naturalWidth / w;
+  var scaleY = origImg.naturalHeight / h;
+
+  for (var y = 0; y < h; y++) {
+    for (var x = 0; x < w; x++) {
+      if (maskData.data[(y * w + x) * 4 + 3] < 128) continue;
+      var fx = Math.floor(x * scaleX), fy = Math.floor(y * scaleY);
+      var bw = Math.ceil(scaleX), bh = Math.ceil(scaleY);
+      var rS = 0, gS = 0, bS = 0, cS = 0;
+      for (var dy = 0; dy < bh && fy + dy < origImg.naturalHeight; dy++) {
+        for (var dx = 0; dx < bw && fx + dx < origImg.naturalWidth; dx++) {
+          var bx = Math.min(w - 1, Math.floor((fx + dx) / scaleX));
+          var by = Math.min(h - 1, Math.floor((fy + dy) / scaleY));
+          var bi = (by * w + bx) * 4;
+          rS += baseData.data[bi]; gS += baseData.data[bi + 1]; bS += baseData.data[bi + 2];
+          cS++;
+        }
+      }
+      if (cS > 0) {
+        for (var dy = 0; dy < bh && fy + dy < origImg.naturalHeight; dy++) {
+          for (var dx = 0; dx < bw && fx + dx < origImg.naturalWidth; dx++) {
+            var fi = ((fy + dy) * origImg.naturalWidth + (fx + dx)) * 4;
+            fo[fi] = rS / cS; fo[fi + 1] = gS / cS; fo[fi + 2] = bS / cS;
+          }
+        }
+      }
+    }
+  }
+  resultCtx.putImageData(fullData, 0, 0);
+}
+
+// Download
+function downloadWm() {
+  if (!resultCanvas) { showToast('请先处理图片'); return; }
+  var a = document.createElement('a');
+  a.href = resultCanvas.toDataURL('image/png');
+  a.download = 'watermark_removed.png';
+  a.click();
+}
+
+// Reset
+function resetAll() {
+  origImg = null; resultCanvas = null; maskHistory = [];
+  document.getElementById('wsPanel').style.display = 'none';
+  document.getElementById('uploadArea').style.display = '';
+  document.getElementById('resultArea').style.display = 'none';
+  document.getElementById('previewRow').style.display = 'none';
+  document.getElementById('wmFile').value = '';
+  document.getElementById('progressFill').style.width = '0';
+  maskCtx.clearRect(0, 0, maskCv.width, maskCv.height);
+}
+
+// Progress
+function setProgress(p) {
+  document.getElementById('progressFill').style.width = p + '%';
+}
+
+// Brush preview
+function updateBrushPrev() {
+  var d = document.getElementById('brushDot');
+  var s = Math.max(4, brushSize * 0.4);
+  d.style.width = s + 'px';
+  d.style.height = s + 'px';
+}
+
+init();
+// Fallback: re-init on DOMContentLoaded in case script ran before elements were parsed
+if (!baseCv) {
+  window.addEventListener('DOMContentLoaded', function() { if (!baseCv) init(); });
+}
+</script>
   </div>
 </div>
-
 <script>
 function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
 (function(){const s=localStorage.getItem('tool-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
 function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
-
-let img = null, scale = 1;
-let mode = 'paint';
-let isDrawing = false;
-let maskCanvas, maskCtx; // mask layer for marking watermark areas
-let history = [];
-
-const canvas = document.getElementById('mainCanvas');
-const ctx = canvas.getContext('2d');
-
-const dropZone = document.getElementById('dropZone');
-const fileInput = document.getElementById('fileInput');
-
-dropZone.addEventListener('click', () => fileInput.click());
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
-fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
-
-function loadFile(f) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    img = new Image();
-    img.onload = () => {
-      const maxW = Math.min(900, window.innerWidth - 60);
-      scale = img.width > maxW ? maxW / img.width : 1;
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-      // Create mask canvas
-      maskCanvas = document.createElement('canvas');
-      maskCanvas.width = canvas.width;
-      maskCanvas.height = canvas.height;
-      maskCtx = maskCanvas.getContext('2d');
-
-      history = [];
-      saveHistory();
-
-      document.getElementById('editArea').style.display = 'block';
-      document.getElementById('resultArea').style.display = 'none';
-      document.getElementById('origPreview').src = canvas.toDataURL();
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(f);
-}
-
-function setMode(m) {
-  mode = m;
-  document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
-}
-
-function saveHistory() {
-  history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-  if (history.length > 30) history.shift();
-}
-
-function undo() {
-  if (history.length > 1) {
-    history.pop();
-    ctx.putImageData(history[history.length - 1], 0, 0);
-    maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
-  }
-}
-
-function resetCanvas() {
-  if (!img) return;
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
-  history = [];
-  saveHistory();
-}
-
-function getCanvasPos(e) {
-  const rect = canvas.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-  return {
-    x: (clientX - rect.left) * (canvas.width / rect.width),
-    y: (clientY - rect.top) * (canvas.height / rect.height)
-  };
-}
-
-canvas.addEventListener('mousedown', e => { isDrawing = true; draw(e); });
-canvas.addEventListener('mousemove', e => { if (isDrawing) draw(e); });
-canvas.addEventListener('mouseup', () => { isDrawing = false; });
-canvas.addEventListener('mouseleave', () => { isDrawing = false; });
-canvas.addEventListener('touchstart', e => { e.preventDefault(); isDrawing = true; draw(e); }, {passive:false});
-canvas.addEventListener('touchmove', e => { e.preventDefault(); if (isDrawing) draw(e); }, {passive:false});
-canvas.addEventListener('touchend', () => { isDrawing = false; });
-
-function draw(e) {
-  const pos = getCanvasPos(e);
-  const brushR = parseInt(document.getElementById('brushSize').value) / 2;
-
-  // Draw on mask
-  maskCtx.fillStyle = 'rgba(255,0,0,0.4)';
-  maskCtx.beginPath();
-  maskCtx.arc(pos.x, pos.y, brushR, 0, Math.PI * 2);
-  maskCtx.fill();
-
-  // Redraw: original image + mask overlay
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  ctx.drawImage(maskCanvas, 0, 0);
-}
-
-function doProcess() {
-  if (!img) return;
-
-  // Get mask data
-  const maskData = maskCtx.getImageData(0, 0, maskCanvas.width, maskCanvas.height);
-  const maskPixels = maskData.data;
-
-  // Get original image data from a fresh draw
-  const tempCanvas = document.createElement('canvas');
-  tempCanvas.width = canvas.width;
-  tempCanvas.height = canvas.height;
-  const tempCtx = tempCanvas.getContext('2d');
-  tempCtx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  const imgData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
-  const pixels = imgData.data;
-
-  const w = canvas.width, h = canvas.height;
-
-  // Build mask array (true = watermark area)
-  const isMask = new Uint8Array(w * h);
-  for (let i = 0; i < w * h; i++) {
-    if (maskPixels[i * 4 + 3] > 50) isMask[i] = 1;
-  }
-
-  if (mode === 'blur') {
-    // Gaussian-like blur on masked areas
-    const radius = parseInt(document.getElementById('brushSize').value);
-    const src = new Uint8ClampedArray(pixels);
-
-    for (let y = 0; y < h; y++) {
-      for (let x = 0; x < w; x++) {
-        if (!isMask[y * w + x]) continue;
-        let r = 0, g = 0, b = 0, count = 0;
-        for (let dy = -radius; dy <= radius; dy++) {
-          for (let dx = -radius; dx <= radius; dx++) {
-            const nx = x + dx, ny = y + dy;
-            if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
-              const idx = (ny * w + nx) * 4;
-              r += src[idx]; g += src[idx+1]; b += src[idx+2];
-              count++;
-            }
-          }
-        }
-        const idx = (y * w + x) * 4;
-        pixels[idx] = r / count;
-        pixels[idx+1] = g / count;
-        pixels[idx+2] = b / count;
-      }
-    }
-  } else {
-    // Inpainting: sample from nearby non-masked pixels
-    // Multi-pass approach: fill mask edges first, then inward
-    const filled = new Uint8Array(w * h);
-    const src = new Uint8ClampedArray(pixels);
-
-    // Mark non-mask as already filled
-    for (let i = 0; i < w * h; i++) {
-      if (!isMask[i]) filled[i] = 1;
-    }
-
-    // Iterative fill - each pass fills pixels adjacent to filled ones
-    const maxIter = Math.max(w, h);
-    for (let iter = 0; iter < maxIter; iter++) {
-      let changed = false;
-      for (let y = 0; y < h; y++) {
-        for (let x = 0; x < w; x++) {
-          const idx = y * w + x;
-          if (!isMask[idx] || filled[idx]) continue;
-
-          // Sample from nearby filled pixels
-          let r = 0, g = 0, b = 0, count = 0;
-          const sampleR = 3 + Math.floor(iter / 3);
-          for (let dy = -sampleR; dy <= sampleR; dy++) {
-            for (let dx = -sampleR; dx <= sampleR; dx++) {
-              const nx = x + dx, ny = y + dy;
-              if (nx >= 0 && nx < w && ny >= 0 && ny < h && filled[ny * w + nx]) {
-                const si = (ny * w + nx) * 4;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                const weight = 1 / (dist + 1);
-                r += src[si] * weight;
-                g += src[si+1] * weight;
-                b += src[si+2] * weight;
-                count += weight;
-              }
-            }
-          }
-
-          if (count > 0) {
-            const pi = idx * 4;
-            pixels[pi] = r / count;
-            pixels[pi+1] = g / count;
-            pixels[pi+2] = b / count;
-            filled[idx] = 1;
-            changed = true;
-          }
-        }
-      }
-      if (!changed) break;
-    }
-  }
-
-  // Apply result
-  ctx.putImageData(imgData, 0, 0);
-  maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
-  saveHistory();
-
-  // Show result
-  document.getElementById('resultPreview').src = canvas.toDataURL();
-  document.getElementById('resultArea').style.display = 'block';
-  showToast('处理完成');
-}
-
-function backToEdit() {
-  document.getElementById('resultArea').style.display = 'none';
-}
-
-function download(fmt) {
-  const mime = fmt === 'jpg' ? 'image/jpeg' : 'image/png';
-  canvas.toBlob(blob => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'watermark-removed.' + fmt;
-    a.click();
-    showToast('下载成功');
-  }, mime, 0.92);
-}
 </script>
 <script src="track.js"></script>
 </body>

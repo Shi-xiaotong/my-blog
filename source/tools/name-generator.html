@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>姓名生成器 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+
+textarea { min-height: 120px; resize: vertical; font-size: 14px; line-height: 1.6; }
+textarea.mono { font-family: 'SF Mono', 'Fira Code', Consolas, monospace; font-size: 13px; }
+.output-wrap { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; min-height: 60px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; margin-top: 8px; }
+.output-wrap.mono { font-family: monospace; font-size: 13px; }
+.section + .section { margin-top: 20px; }
+.label-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; display: block; font-weight: 500; }
+.result-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; min-height: 80px; font-size: 14px; line-height: 1.8; text-align: center; margin-top: 8px; }
+canvas { max-width: 100%; border-radius: 8px; }
+
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link" onclick="history.back();return false;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>姓名生成器 <span style="font-size:14px;color:var(--text-secondary);font-weight:400">· 纯前端工具</span></h1>
+  </div>
+  <div class="tool-area">
+<div class="row"><div><label>性别</label><select id="gender"><option value="all">不限</option><option value="male">男</option><option value="female">女</option></select></div>
+<div><label>数量</label><input type="number" id="count" value="10" min="1" max="100"></div></div>
+<button class="btn btn-primary" onclick="genName()">生成</button>
+<textarea id="out" style="width:100%;min-height:150px;font-size:14px;margin-top:12px" readonly></textarea>
+<script>
+var SURNAMES=['赵','钱','孙','李','周','吴','郑','王','冯','陈','褚','卫','蒋','沈','韩','杨','朱','秦','尤','许','何','吕','施','张','孔','曹','严','华','金','魏','陶','姜','戚','谢','邹','喻','柏','水','窦','章','云','苏','潘','葛','奚','范','彭','鲁','韦','昌','马','苗','凤','花','方','俞','任','袁','柳','酆','鲍','史','唐','费','廉','岑','薛','雷','贺','倪','汤','滕','殷','罗','毕','郝','邬','安','常','乐','于','时','傅','皮','卞','齐','康','伍','余','元','卜','顾','孟','平','黄','萧','程','嵇','邢','滑','裴','陆','荣','翁','荀','羊','於','惠','甄','曲','家','封','芮','羿','储','靳','汲','邴','糜','松','井','段','富','巫','乌','焦','巴','弓','牧','隗','山','谷','车','侯','宓','蓬','全','郗','班','仰','秋','仲','伊','宫','宁','仇','栾','暴','甘','钭','历','戎','祖','武','符','刘','景','詹','束','龙','叶','幸','司','韶','郜','黎','蓟','薄','印','宿','白','怀','蒲','邰','从','鄂','索','咸','籍','赖','卓','蔺','屠','蒙','池','乔','阴','郁','胥','能','苍','双','闻','莘','党','翟','谭','贡','劳','逄','姬','申','扶','堵','冉','宰','郦','雍','郤','璩','桑','桂','濮','牛','寿','通','边','扈','燕','冀','郏','浦','尚','农','温','别','庄','晏','柴','瞿','阎','充','慕','连','茹','习','宦','艾','鱼','容','向','古','易','慎','戈','廖','庾','终','暨','居','衡','步','都','耿','满','弘','匡','国','文','寇','广','禄','阙','东','殴','殳','沃','利','蔚','越','夔','隆','师','巩','厍','聂','晁','勾','敖','融','冷','訾','辛','阚','那','简','饶','空','曾','母','沙','乜','养','鞠','须','丰','巢','关','蒯','相','查','后','荆','红','游','竺','权','逑','桓'];
+var MALE=['伟','强','磊','勇','军','杰','涛','斌','超','鹏','飞','宇','浩','洋','海','龙','华','明','志','文','旭','建','国','平','峰','辉','波','成','康','健','荣','富','贵','刚','毅','威','武','豪','杰'];
+var FEMALE=['芳','娟','敏','静','丽','艳','萍','玲','芬','红','玉','香','霞','莉','英','华','兰','梅','雪','春','慧','洁','婷','佳','琳','瑶','璐','莹','倩','燕','丹','娜','萌','琪','瑶','蕊','薇','馨'];
+function genName(){var g=document.getElementById('gender').value;var n=parseInt(document.getElementById('count').value)||10;var r=[];for(var i=0;i<n;i++){var sur=SURNAMES[Math.floor(Math.random()*SURNAMES.length)];var pool;if(g==='male')pool=MALE;else if(g==='female')pool=FEMALE;else pool=Math.random()<0.5?MALE:FEMALE;var given=pool[Math.floor(Math.random()*pool.length)];if(Math.random()<0.3)given+=pool[Math.floor(Math.random()*pool.length)];r.push(sur+given)}document.getElementById('out').value=r.join('\n')}
+</script>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('tool-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+</script>
+<script src="track.js"></script>
+</body>
+</html>

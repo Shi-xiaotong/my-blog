@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汉字转拼音 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+
+textarea { min-height: 120px; resize: vertical; font-size: 14px; line-height: 1.6; }
+textarea.mono { font-family: 'SF Mono', 'Fira Code', Consolas, monospace; font-size: 13px; }
+.output-wrap { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; min-height: 60px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; margin-top: 8px; }
+.output-wrap.mono { font-family: monospace; font-size: 13px; }
+.section + .section { margin-top: 20px; }
+.label-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; display: block; font-weight: 500; }
+.result-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; min-height: 80px; font-size: 14px; line-height: 1.8; text-align: center; margin-top: 8px; }
+canvas { max-width: 100%; border-radius: 8px; }
+
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link" onclick="history.back();return false;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>汉字转拼音 <span style="font-size:14px;color:var(--text-secondary);font-weight:400">· 纯前端工具</span></h1>
+  </div>
+  <div class="tool-area">
+<textarea id="input" style="width:100%;min-height:60px;font-size:14px" placeholder="输入汉字"></textarea>
+<button class="btn btn-primary" onclick="toPy()" style="margin:8px 0">转拼音</button>
+<textarea id="output" style="width:100%;min-height:60px;font-size:14px" readonly></textarea>
+<script>
+var PY={'我':'wǒ','你':'nǐ','他':'tā','她':'tā','的':'de','了':'le','是':'shì','不':'bù','人':'rén','在':'zài','有':'yǒu','这':'zhè','那':'nà','大':'dà','小':'xiǎo','上':'shàng','下':'xià','中':'zhōng','国':'guó','好':'hǎo','很':'hěn','吗':'ma','吧':'ba','么':'me','什':'shén','么':'me','怎':'zěn','样':'yàng','一':'yī','二':'èr','三':'sān','四':'sì','五':'wǔ','六':'liù','七':'qī','八':'bā','九':'jiǔ','十':'shí','百':'bǎi','千':'qiān','万':'wàn','亿':'yì','和':'hé','与':'yǔ','也':'yě','就':'jiù','都':'dōu','要':'yào','会':'huì','可':'kě','以':'yǐ','能':'néng','去':'qù','来':'lái','到':'dào','说':'shuō','话':'huà','看':'kàn','见':'jiàn','听':'tīng','吃':'chī','喝':'hē','走':'zǒu','跑':'pǎo','爱':'ài','想':'xiǎng','知':'zhī','道':'dào','为':'wèi','因':'yīn','为':'wèi','所':'suǒ','以':'yǐ','但':'dàn','是':'shì','如':'rú','果':'guǒ','天':'tiān','地':'dì','日':'rì','月':'yuè','星':'xīng','春':'chūn','夏':'xià','秋':'qiū','冬':'dōng','风':'fēng','雨':'yǔ','雪':'xuě','山':'shān','水':'shuǐ','火':'huǒ','花':'huā','草':'cǎo','木':'mù','金':'jīn','土':'tǔ','石':'shí','云':'yún','海':'hǎi','湖':'hú','河':'hé','江':'jiāng','城':'chéng','市':'shì','门':'mén','开':'kāi','关':'guān','出':'chū','入':'rù','前':'qián','后':'hòu','左':'zuǒ','右':'yòu','东':'dōng','南':'nán','西':'xī','北':'běi','里':'lǐ','外':'wài','年':'nián','月':'yuè','日':'rì','时':'shí','分':'fēn','秒':'miǎo','今':'jīn','天':'tiān','明':'míng','天':'tiān','昨':'zuó','天':'tiān','早':'zǎo','上':'shàng','中':'zhōng','午':'wǔ','晚':'wǎn','上':'shàng','新':'xīn','旧':'jiù','老':'lǎo','少':'shào','多':'duō','少':'shǎo','长':'cháng','短':'duǎn','高':'gāo','低':'dī','远':'yuǎn','近':'jìn','快':'kuài','慢':'màn','轻':'qīng','重':'zhòng','真':'zhēn','假':'jiǎ','对':'duì','错':'cuò','好':'hǎo','坏':'huài','美':'měi','丑':'chǒu','善':'shàn','恶':'è','喜':'xǐ','怒':'nù','哀':'āi','乐':'lè','欢':'huān','笑':'xiào','哭':'kū','歌':'gē','舞':'wǔ','诗':'shī','词':'cí','书':'shū','画':'huà','文':'wén','字':'zì','学':'xué','习':'xí','问':'wèn','题':'tí','答':'dá','案':'àn'};
+function toPy(){var s=document.getElementById('input').value;var r=[];for(var i=0;i<s.length;i++)r.push(PY[s[i]]||s[i]);document.getElementById('output').value=r.join(' ')}</script>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('tool-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+</script>
+<script src="track.js"></script>
+</body>
+</html>

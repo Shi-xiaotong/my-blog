@@ -7,9 +7,6 @@
   var title = document.title || '';
   var url = location.href;
   var payload = JSON.stringify({ postSlug: slug, postTitle: title, postUrl: url, siteId: SITE_ID });
-  if (navigator.sendBeacon) {
-    navigator.sendBeacon(API + '/api/analytics/visit', new Blob([payload], { type: 'application/json' }));
-  } else {
-    fetch(API + '/api/analytics/visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload, keepalive: true }).catch(function(){});
-  }
+  // sendBeacon with text/plain to avoid CORS preflight
+  navigator.sendBeacon(API + '/api/analytics/visit', new Blob([payload], { type: 'text/plain' }));
 })();

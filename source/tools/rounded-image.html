@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>透明圆角图片 - 在线工具</title>
+<link rel="stylesheet" href="common.css">
+<style>
+
+textarea { min-height: 120px; resize: vertical; font-size: 14px; line-height: 1.6; }
+textarea.mono { font-family: 'SF Mono', 'Fira Code', Consolas, monospace; font-size: 13px; }
+.output-wrap { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; min-height: 60px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; margin-top: 8px; }
+.output-wrap.mono { font-family: monospace; font-size: 13px; }
+.section + .section { margin-top: 20px; }
+.label-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; display: block; font-weight: 500; }
+.result-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; min-height: 80px; font-size: 14px; line-height: 1.8; text-align: center; margin-top: 8px; }
+canvas { max-width: 100%; border-radius: 8px; }
+
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<div class="container">
+  <div class="header">
+    <a href="/tools/" class="back-link" onclick="history.back();return false;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 返回工具箱</a>
+    <h1>透明圆角图片 <span style="font-size:14px;color:var(--text-secondary);font-weight:400">· 纯前端工具</span></h1>
+  </div>
+  <div class="tool-area">
+<input type="file" id="rdFile" accept="image/*" onchange="loadRd()" style="margin-bottom:12px">
+<div class="row"><div><label>圆角</label><input type="range" id="rdRadius" min="0" max="100" value="20" oninput="applyRd()"></div></div>
+<canvas id="rdCanvas" style="max-width:100%;border-radius:8px;display:none"></canvas>
+<div id="rdPlaceholder" style="text-align:center;padding:40px;color:var(--text-secondary)">上传图片</div>
+<script>
+var rdImg=null;
+function loadRd(){var f=document.getElementById('rdFile').files[0];if(!f)return;var r=new FileReader();r.onload=function(e){var img=new Image();img.onload=function(){rdImg=img;applyRd()};img.src=e.target.result};r.readAsDataURL(f)}
+function applyRd(){if(!rdImg)return;var r=parseInt(document.getElementById('rdRadius').value);var c=document.getElementById('rdCanvas');c.width=rdImg.naturalWidth;c.height=rdImg.naturalHeight;var ctx=c.getContext('2d');ctx.beginPath();ctx.roundRect(0,0,c.width,c.height,r/100*Math.min(c.width,c.height)/2);ctx.clip();ctx.drawImage(rdImg,0,0);c.style.display='block';document.getElementById('rdPlaceholder').style.display='none'}
+</script>
+  </div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'':'dark');localStorage.setItem('tool-theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.innerHTML=d?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}
+(function(){const s=localStorage.getItem('tool-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('.theme-toggle').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'}})()
+function showToast(msg){const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
+</script>
+<script src="track.js"></script>
+</body>
+</html>
