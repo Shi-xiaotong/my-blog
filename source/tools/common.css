@@ -1,12 +1,14 @@
-/* ===== Tools Common Styles — UI/UX Pro Max Refactored ===== */
+/* ===== 🌌 Mercury Glassmorphism Design System ===== */
+/* UI/UX Pro Max — Glassmorphism + Cosmic Theme       */
+/* Zero image dependencies — all CSS/JS gradients      */
 
-/* ─── 1. Design Tokens (Primitive → Semantic → Component) ─── */
+/* ─── 1. Design Tokens ─── */
 :root {
   /* Font */
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
-  --font-mono: 'SF Mono', 'Fira Code', Consolas, monospace;
+  --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
 
-  /* Typography scale */
+  /* Typography */
   --text-xs: 0.75rem;   /* 12px */
   --text-sm: 0.875rem;  /* 14px */
   --text-base: 1rem;    /* 16px */
@@ -15,43 +17,62 @@
   --text-2xl: 1.5rem;   /* 24px */
   --text-3xl: 2rem;     /* 32px */
   --text-4xl: 2.5rem;   /* 40px */
+  --text-5xl: 3rem;     /* 48px */
+  --text-6xl: 4rem;     /* 64px */
 
-  /* Line-height */
   --leading-tight: 1.25;
   --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
+  --leading-relaxed: 1.75;
 
-  /* Semantic colors (light) */
-  --primary: #3b82f6;
-  --primary-light: #eff6ff;
-  --bg: rgba(248,250,252,0.75);
-  --card-bg: rgba(255,255,255,0.78);
-  --text: #1e293b;
-  --text-secondary: #64748b;
-  --border: rgba(226,232,240,0.6);
-  --success: #22c55e;
-  --error: #ef4444;
-  --warning: #f59e0b;
+  /* Glassmorphism colors (light) */
+  --primary: #2563EB;
+  --primary-light: #DBEAFE;
+  --primary-dark: #1D4ED8;
+  --secondary: #3B82F6;
+  --accent: #F97316;
+  --accent-light: #FED7AA;
+
+  --bg: rgba(248,250,252,0.65);
+  --card-bg: rgba(255,255,255,0.72);
+  --card-bg-hover: rgba(255,255,255,0.85);
+  --text: #1E293B;
+  --text-secondary: #64748B;
+  --text-tertiary: #94A3B8;
+  --border: rgba(226,232,240,0.5);
+  --border-hover: rgba(148,163,184,0.5);
+
+  --success: #22C55E;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --info: #3B82F6;
+
+  /* Glassmorphism effects */
+  --glass-blur: 12px;
+  --glass-border: 1px solid var(--border);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  --glass-shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
 
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-xl: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.12);
 
   /* Border radius */
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
+  --radius-2xl: 20px;
   --radius-full: 50%;
 
-  /* Spacing scale (4pt/8dp) */
+  /* Spacing (4pt/8dp) */
   --space-1: 4px;   --space-2: 8px;   --space-3: 12px;
   --space-4: 16px;  --space-5: 20px;  --space-6: 24px;
   --space-8: 32px;  --space-10: 40px; --space-12: 48px;
+  --space-16: 64px; --space-20: 80px;
 
-  /* Animation easing */
+  /* Easing */
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
@@ -59,7 +80,7 @@
   --duration-normal: 250ms;
   --duration-slow: 400ms;
 
-  /* Z-index scale */
+  /* Z-index */
   --z-base: 1;
   --z-dropdown: 10;
   --z-sticky: 20;
@@ -67,22 +88,54 @@
   --z-modal: 100;
   --z-toast: 999;
   --z-max: 9999;
+
+  /* CSS-only image placeholders */
+  --img-placeholder-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A78BFA 100%);
+  --img-placeholder-error: linear-gradient(135deg, #F43F5E 0%, #FB7185 100%);
+  --img-placeholder-article: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
 }
 
+/* Dark mode */
 [data-theme="dark"] {
-  --bg: rgba(15,23,42,0.75);
-  --card-bg: rgba(30,41,59,0.78);
-  --text: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --border: rgba(51,65,85,0.6);
-  --primary-light: #1e3a5f;
-  --primary: #9D7CD8;
+  --primary: #818CF8;
+  --primary-light: rgba(129,140,248,0.15);
+  --primary-dark: #6366F1;
+  --secondary: #93C5FD;
+  --accent: #FB923C;
+  --accent-light: rgba(251,146,60,0.15);
+
+  --bg: rgba(15,23,42,0.65);
+  --card-bg: rgba(30,41,59,0.72);
+  --card-bg-hover: rgba(30,41,59,0.88);
+  --text: #E2E8F0;
+  --text-secondary: #94A3B8;
+  --text-tertiary: #64748B;
+  --border: rgba(51,65,85,0.5);
+  --border-hover: rgba(71,85,105,0.5);
+
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  --glass-shadow-hover: 0 12px 40px rgba(0,0,0,0.3);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.25);
+
+  --img-placeholder-gradient: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #A78BFA 100%);
+  --img-placeholder-error: linear-gradient(135deg, #BE123C 0%, #E11D48 100%);
+  --img-placeholder-article: linear-gradient(135deg, #3730A3 0%, #6D28D9 100%);
 }
 
 /* ─── 2. Reset ─── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
 
 /* ─── 3. Base ─── */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-sans);
   background: transparent;
@@ -93,102 +146,159 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Container */
+/* ─── 4. Glassmorphism Card ─── */
+.glass {
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+.glass:hover {
+  background: var(--card-bg-hover);
+  box-shadow: var(--glass-shadow-hover);
+  border-color: var(--border-hover);
+}
+
+/* ─── 5. Container ─── */
 .container { max-width: 900px; margin: 0 auto; padding: var(--space-5); }
 .container-wide { max-width: 1200px; margin: 0 auto; padding: var(--space-5); }
+.container-narrow { max-width: 680px; margin: 0 auto; padding: var(--space-5); }
 
-/* ─── 4. Focus Rings (Accessibility — CRITICAL) ─── */
+/* ─── 6. Focus (Accessibility) ─── */
 :focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
-}
-button:focus-visible, a:focus-visible, input:focus-visible,
-textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
-/* ─── 5. Reduced Motion (Accessibility) ─── */
+/* ─── 7. Reduced Motion ─── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  html { scroll-behavior: auto; }
 }
 
-/* ─── 6. Keyframe Animations ─── */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
+/* ─── 8. Keyframes ─── */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 @keyframes fadeInOut {
   0% { opacity: 0; transform: translateY(-10px); }
   10% { opacity: 1; transform: translateY(0); }
   80% { opacity: 1; }
   100% { opacity: 0; }
 }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; filter: blur(4px); }
+  50% { opacity: 1; filter: blur(8px); }
+}
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
 
-/* ─── 7. Typography ─── */
-h1, h2, h3 { line-height: var(--leading-tight); font-weight: 700; }
+/* ─── 9. Typography ─── */
+h1, h2, h3, h4 { line-height: var(--leading-tight); font-weight: 700; color: var(--text); }
 h1 { font-size: var(--text-3xl); }
 h2 { font-size: var(--text-2xl); }
 h3 { font-size: var(--text-xl); }
+h4 { font-size: var(--text-lg); }
 p { line-height: var(--leading-relaxed); }
+a { color: var(--primary); text-decoration: none; transition: color var(--duration-fast) var(--ease-out); }
+a:hover { color: var(--primary-dark); }
 
-/* ─── 8. Header ─── */
-.header { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6); flex-wrap: wrap; }
+/* ─── 10. Header ─── */
+.header {
+  display: flex; align-items: center; gap: var(--space-3);
+  margin-bottom: var(--space-6); flex-wrap: wrap;
+}
 .header h1 { font-size: var(--text-2xl); font-weight: 700; }
-.header-center { text-align: center; padding: var(--space-10) 0 var(--space-8); }
+.header-center {
+  text-align: center; padding: var(--space-10) 0 var(--space-8);
+}
 .header-center h1 { font-size: var(--text-4xl); margin-bottom: var(--space-2); }
 .header-center p { color: var(--text-secondary); font-size: var(--text-lg); }
-
-/* ─── 9. Links ─── */
-.back-link { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--primary); text-decoration: none; font-size: var(--text-sm); transition: color var(--duration-fast) var(--ease-out); }
-.back-link:hover { text-decoration: underline; }
-
-/* ─── 10. Card / Tool Area ─── */
-.tool-area {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 28px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+.header-sub {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-8);
 }
 
-/* ─── 11. Buttons ─── */
+/* ─── 11. Link/Back ─── */
+.back-link {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  color: var(--primary); text-decoration: none;
+  font-size: var(--text-sm);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.back-link:hover { text-decoration: underline; }
+
+/* ─── 12. Tool Area ─── */
+.tool-area {
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--glass-shadow);
+}
+
+/* ─── 13. Buttons ─── */
 .btn {
   padding: 12px 22px; min-height: 44px;
   border: none; border-radius: var(--radius-md);
   cursor: pointer; font-size: var(--text-sm); font-weight: 500;
   transition: all var(--duration-fast) var(--ease-out);
-  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1);
-  text-decoration: none; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--space-1); text-decoration: none; line-height: 1;
+  font-family: inherit;
 }
-.btn-primary { background: var(--primary); color: #fff; }
-.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-primary {
+  background: var(--primary); color: #fff;
+}
+.btn-primary:hover {
+  filter: brightness(1.1); transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+}
 .btn-primary:active { transform: translateY(0); }
-.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-outline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+.btn-accent {
+  background: var(--accent); color: #fff;
+}
+.btn-accent:hover {
+  filter: brightness(1.1); transform: translateY(-1px);
+}
 .btn-sm { padding: 6px 14px; min-height: 36px; font-size: var(--text-xs); }
 .btn-lg { padding: 14px 32px; min-height: 48px; font-size: var(--text-base); }
 .btn:disabled, .btn[disabled] { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
 .btn-group { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4); }
 
-/* ─── 12. Form Elements ─── */
+/* ─── 14. Form Elements ─── */
 textarea, input[type="text"], input[type="number"], input[type="url"],
 input[type="email"], input[type="date"], input[type="time"],
 input[type="datetime-local"], input[type="password"], select {
@@ -197,6 +307,8 @@ input[type="datetime-local"], input[type="password"], select {
   font-size: var(--text-sm); background: var(--bg); color: var(--text);
   outline: none; font-family: inherit;
   transition: border-color var(--duration-fast) var(--ease-out);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 textarea:focus, input:focus, select:focus {
   border-color: var(--primary);
@@ -205,7 +317,7 @@ textarea:focus, input:focus, select:focus {
 textarea { min-height: 120px; resize: vertical; line-height: var(--leading-normal); }
 input:disabled, textarea:disabled, select:disabled { opacity: 0.38; cursor: not-allowed; }
 
-/* Date/time picker */
+/* Date picker */
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   filter: invert(0.5); cursor: pointer; opacity: 0.6;
@@ -216,22 +328,32 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 }
 
 /* Labels */
-label { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1); display: block; font-weight: 500; cursor: pointer; }
+label {
+  font-size: var(--text-sm); color: var(--text-secondary);
+  margin-bottom: var(--space-1); display: block; font-weight: 500; cursor: pointer;
+}
 
-/* ─── 13. Layout Helpers ─── */
+/* ─── 15. Layout Helpers ─── */
 .row { display: flex; gap: var(--space-3); margin-bottom: var(--space-4); }
 .row > * { flex: 1; }
 .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4); }
-
-/* Section */
 .section { margin-bottom: var(--space-6); }
-.section-title { font-size: var(--text-sm); font-weight: 600; color: var(--text); margin-bottom: var(--space-2); display: flex; align-items: center; gap: var(--space-1); }
+.section-title {
+  font-size: var(--text-sm); font-weight: 600; color: var(--text);
+  margin-bottom: var(--space-2); display: flex; align-items: center; gap: var(--space-1);
+}
 
-/* ─── 14. Output Area ─── */
-.output-area { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); min-height: 120px; font-size: var(--text-sm); line-height: var(--leading-normal); white-space: pre-wrap; word-break: break-word; font-family: inherit; margin-top: var(--space-2); }
+/* ─── 16. Output Area ─── */
+.output-area {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-4);
+  min-height: 120px; font-size: var(--text-sm);
+  line-height: var(--leading-normal); white-space: pre-wrap;
+  word-break: break-word; font-family: inherit; margin-top: var(--space-2);
+}
 .output-area.mono { font-family: var(--font-mono); font-size: var(--text-xs); }
 
-/* ─── 15. Toast Notification ─── */
+/* ─── 17. Toast ─── */
 .toast {
   position: fixed; top: 20px; right: 20px;
   padding: 14px 24px; min-height: 44px;
@@ -246,37 +368,51 @@ label { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: 
 }
 .toast.error { background: var(--error); }
 .toast.warning { background: var(--warning); }
+.toast.info { background: var(--info); }
 
-/* ─── 16. Theme Toggle ─── */
+/* ─── 18. Theme Toggle ─── */
 .theme-toggle {
   position: fixed; top: 20px; right: 20px;
   width: 40px; height: 40px;
   border-radius: var(--radius-full);
-  border: 1px solid var(--border);
-  background: var(--card-bg); color: var(--text);
+  border: var(--glass-border);
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text);
   cursor: pointer; display: flex; align-items: center;
   justify-content: center; z-index: var(--z-sticky);
   transition: all var(--duration-fast) var(--ease-out);
+  box-shadow: var(--glass-shadow);
 }
-.theme-toggle:hover { border-color: var(--primary); }
+.theme-toggle:hover {
+  border-color: var(--primary);
+  box-shadow: var(--glass-shadow-hover);
+}
 .theme-toggle svg { width: 18px; height: 18px; }
 
-/* ─── 17. Status Text ─── */
+/* ─── 19. Status Text ─── */
 .text-error { color: var(--error); }
 .text-success { color: var(--success); }
 .text-warning { color: var(--warning); }
+.text-info { color: var(--info); }
+.text-muted { color: var(--text-secondary); font-size: var(--text-sm); }
 
-/* ─── 18. SVG Icon Helper ─── */
+/* ─── 20. SVG Icon ─── */
 .icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .icon svg { width: 1em; height: 1em; fill: currentColor; }
 .icon-sm svg { width: 16px; height: 16px; }
 .icon-lg svg { width: 24px; height: 24px; }
+.icon-xl svg { width: 32px; height: 32px; }
 
-/* ─── 19. Footer ─── */
-.footer { text-align: center; padding: var(--space-10) 0; color: var(--text-secondary); font-size: var(--text-xs); }
+/* ─── 21. Footer ─── */
+.footer {
+  text-align: center; padding: var(--space-10) 0;
+  color: var(--text-secondary); font-size: var(--text-xs);
+}
 .footer a { color: var(--primary); text-decoration: none; }
 
-/* ─── 20. Checkbox / Radio Group ─── */
+/* ─── 22. Checkbox / Radio ─── */
 .check-group { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3); }
 .check-item {
   display: flex; align-items: center; gap: var(--space-1);
@@ -284,27 +420,53 @@ label { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: 
   border: 1px solid var(--border); border-radius: var(--radius-md);
   cursor: pointer; font-size: var(--text-xs);
   transition: all var(--duration-fast) var(--ease-out);
+  background: var(--card-bg);
+  backdrop-filter: blur(4px);
 }
 .check-item:hover { border-color: var(--primary); }
-.check-item.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+.check-item.active {
+  background: var(--primary-light); border-color: var(--primary); color: var(--primary);
+}
 
-/* ─── 21. Input Group ─── */
+/* ─── 23. Input Group ─── */
 .input-group { display: flex; gap: 0; margin-bottom: var(--space-3); }
 .input-group input { border-radius: var(--radius-md) 0 0 var(--radius-md); }
 .input-group .btn { border-radius: 0 var(--radius-md) var(--radius-md) 0; white-space: nowrap; }
 
-/* ─── 22. Preview Box ─── */
-.preview-box { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); margin-top: var(--space-3); text-align: center; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+/* ─── 24. Preview Box ─── */
+.preview-box {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-4);
+  margin-top: var(--space-3); text-align: center;
+  min-height: 60px; display: flex; align-items: center; justify-content: center;
+}
 
-/* ─── 23. Range Slider ─── */
-input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; background: var(--border); border-radius: 3px; outline: none; padding: 0; border: none; }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: var(--radius-full); background: var(--primary); cursor: pointer; border: 2px solid var(--card-bg); box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
-input[type="color"] { width: 40px; height: 40px; padding: 2px; border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; background: var(--card-bg); }
+/* ─── 25. Range Slider ─── */
+input[type="range"] {
+  width: 100%; height: 6px; -webkit-appearance: none;
+  background: var(--border); border-radius: 3px; outline: none; padding: 0; border: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 20px; height: 20px;
+  border-radius: var(--radius-full); background: var(--primary);
+  cursor: pointer; border: 2px solid var(--card-bg); box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+input[type="color"] {
+  width: 40px; height: 40px; padding: 2px;
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  cursor: pointer; background: var(--card-bg);
+}
 
-/* ─── 24. Code Block ─── */
-.code-block { background: #1e1e2e; color: #cdd6f4; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-xs); line-height: var(--leading-normal); margin: var(--space-2) 0; }
+/* ─── 26. Code Block ─── */
+.code-block {
+  background: #1E1E2E; color: #CDD6F4;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md); overflow-x: auto;
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  line-height: var(--leading-normal); margin: var(--space-2) 0;
+}
 
-/* ─── 25. Skeleton / Loading ─── */
+/* ─── 27. Skeleton Loading ─── */
 .skeleton {
   background: linear-gradient(90deg, var(--border) 25%, var(--card-bg) 50%, var(--border) 75%);
   background-size: 200% 100%;
@@ -312,26 +474,212 @@ input[type="color"] { width: 40px; height: 40px; padding: 2px; border: 1px solid
   border-radius: var(--radius-sm);
 }
 
-/* ─── 26. Empty State ─── */
-.empty-state { text-align: center; padding: var(--space-12) var(--space-4); color: var(--text-secondary); }
-.empty-state .icon { font-size: 48px; margin-bottom: var(--space-4); opacity: 0.5; }
+/* ─── 28. Empty State ─── */
+.empty-state {
+  text-align: center; padding: var(--space-12) var(--space-4);
+  color: var(--text-secondary);
+}
+.empty-state .icon-xl { margin-bottom: var(--space-4); opacity: 0.5; }
 .empty-state p { font-size: var(--text-sm); }
 
-/* ─── 27. Tab / Mode Button ─── */
-.mode-btn { padding: 10px 18px; min-height: 44px; border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; font-size: var(--text-sm); color: var(--text-secondary); background: transparent; transition: all var(--duration-fast) var(--ease-out); }
+/* ─── 29. Tab / Mode Button ─── */
+.mode-btn {
+  padding: 10px 18px; min-height: 44px;
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  cursor: pointer; font-size: var(--text-sm); color: var(--text-secondary);
+  background: transparent; transition: all var(--duration-fast) var(--ease-out);
+}
 .mode-btn:hover { border-color: var(--primary); color: var(--primary); }
 .mode-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-/* ─── 28. Progress Bar ─── */
+/* ─── 30. Progress Bar ─── */
 .progress { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin: var(--space-2) 0; }
 .progress-fill { height: 100%; background: var(--primary); width: 0; transition: width 0.3s var(--ease-out); border-radius: 2px; }
 
-/* ─── 29. Hint ─── */
+/* ─── 31. Hint ─── */
 .hint { font-size: var(--text-xs); color: var(--text-secondary); margin-top: var(--space-1); margin-bottom: var(--space-2); }
 
-/* ─── 30. Responsive ─── */
+/* ─── 32. ⭐ CSS-Only Image Placeholders ─── */
+/* Replaces: 404.png, error-page.png, article_def.png, picture.png, friend_404.gif */
+
+/* Default article cover placeholder */
+.article-cover-placeholder {
+  width: 100%; height: 200px;
+  background: var(--img-placeholder-article);
+  border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.article-cover-placeholder::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.15) 0%, transparent 60%);
+}
+.article-cover-placeholder::after {
+  content: '📝';
+  font-size: 48px;
+  opacity: 0.3;
+}
+
+/* Picture/avatar placeholder */
+.picture-placeholder {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--img-placeholder-gradient);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  flex-shrink: 0;
+}
+.picture-placeholder::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 50%);
+}
+.picture-placeholder::after {
+  content: '👤';
+  font-size: 20px;
+  opacity: 0.35;
+}
+
+/* Error placeholder (for broken images) */
+.error-placeholder {
+  width: 100%; height: 200px;
+  background: var(--img-placeholder-error);
+  border-radius: var(--radius-lg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: var(--space-2);
+  position: relative; overflow: hidden;
+  color: rgba(255,255,255,0.8);
+  font-size: var(--text-sm);
+}
+.error-placeholder::before {
+  content: '⚠️';
+  font-size: 36px;
+  margin-bottom: var(--space-1);
+}
+.error-placeholder p { color: rgba(255,255,255,0.7); font-size: var(--text-sm); }
+
+/* Friend link broken image fallback */
+.friend-link-fallback {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--img-placeholder-gradient);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* Img onerror handling — CSS-only fallback for broken images */
+img[alt] {
+  position: relative;
+}
+img:not([src]), img[src=""], img[src*="404"] {
+  visibility: hidden;
+}
+img:not([src])::after, img[src=""]::after {
+  content: attr(alt);
+  visibility: visible;
+  display: flex;
+  align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  background: var(--img-placeholder-gradient);
+  border-radius: inherit;
+  color: #fff;
+  font-size: var(--text-xs);
+  text-align: center;
+  padding: var(--space-2);
+}
+
+/* ─── 33. ⭐ CSS-Only 404 Page ─── */
+/* Replaces: 404.png, error-page.png */
+.error-page {
+  min-height: 70vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: var(--space-8);
+  position: relative;
+  overflow: hidden;
+}
+.error-page::before {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  opacity: 0.08;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+.error-page h1 {
+  font-size: var(--text-6xl);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-2);
+  position: relative;
+  z-index: 1;
+}
+.error-page .error-subtitle {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-8);
+  position: relative;
+  z-index: 1;
+}
+.error-page .error-astronaut {
+  position: relative;
+  width: 120px; height: 120px;
+  margin-bottom: var(--space-6);
+  z-index: 1;
+  animation: float 3s ease-in-out infinite;
+}
+.error-page .error-astronaut svg {
+  width: 100%; height: 100%;
+}
+.error-page .error-btn {
+  display: inline-flex;
+  align-items: center; gap: var(--space-2);
+  padding: 14px 32px; min-height: 48px;
+  background: var(--primary); color: #fff;
+  border: none; border-radius: var(--radius-md);
+  font-size: var(--text-base); font-weight: 500;
+  cursor: pointer; text-decoration: none;
+  transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+  z-index: 1;
+}
+.error-page .error-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37,99,235,0.3);
+}
+
+/* ─── 34. ⭐ CSS Stars Decoration ─── */
+/* CSS-only starfield for non-canvas pages */
+.css-stars {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+.css-star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  animation: twinkle 3s ease-in-out infinite;
+}
+.css-star:nth-child(odd) { animation-delay: 0.5s; }
+.css-star:nth-child(3n) { animation-delay: 1s; width: 1px; }
+.css-star:nth-child(5n) { animation-delay: 2s; width: 3px; height: 3px; }
+
+/* ─── 35. Responsive ─── */
 @media (max-width: 640px) {
-  .container, .container-wide { padding: var(--space-3); }
+  .container, .container-wide, .container-narrow { padding: var(--space-3); }
   .row { flex-direction: column; gap: var(--space-2); }
   .row-3 { grid-template-columns: 1fr; }
   .header-center h1 { font-size: var(--text-2xl); }
@@ -340,4 +688,6 @@ input[type="color"] { width: 40px; height: 40px; padding: 2px; border: 1px solid
   .btn-group { flex-direction: column; }
   .btn-group .btn { width: 100%; }
   .theme-toggle { top: 12px; right: 12px; width: 36px; height: 36px; }
+  .error-page h1 { font-size: var(--text-5xl); }
+  .error-page .error-astronaut { width: 80px; height: 80px; }
 }

@@ -1,11 +1,23 @@
-/* ===== Site Override — Bridge Butterfly Theme to common.css Tokens ===== */
+/* ===== 🌌 site-override.css — Butterfly → Glassmorphism Bridge ===== */
+/* No image dependencies — uses CSS gradients + backdrop-filter      */
 
-/* ─── 1. Body: transparent to show space canvas background ─── */
+/* ─── 1. Body: transparent for cosmic canvas bg ─── */
 body {
   background: transparent !important;
 }
 
-/* ─── 2. Card backgrounds: glassmorphism matching tools ─── */
+/* ─── 2. Cosmic animated background on <html> via CSS ─── */
+/* Only if bg.js hasn't loaded */
+html::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F172A 100%);
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* ─── 3. Glassmorphism Cards ─── */
+/* All Butterfly content cards get frosted glass effect */
 #recent-posts > .recent-post-item,
 #aside-content .card-widget,
 #page .category-lists,
@@ -14,13 +26,36 @@ body {
 .layout > .recent-posts .pagination,
 #archive,
 #tag,
-#category {
-  background: rgba(255,255,255,0.78);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(226,232,240,0.6);
-  border-radius: 12px;
+#category,
+#post .prev-next,
+#post .post-copyright,
+#post .post-reward,
+#post .relatedPosts,
+#post .post-prevnext,
+#post #post-comment .comment-head,
+.post-expand .post-card,
+#page .category-lists .category-list,
+.random-post-item {
+  background: rgba(255,255,255,0.72) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(226,232,240,0.5) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06) !important;
+  transition: all 0.25s cubic-bezier(0,0,0.2,1) !important;
 }
+
+/* Hover lift */
+#recent-posts > .recent-post-item:hover,
+#aside-content .card-widget:hover,
+.post-expand .post-card:hover,
+.random-post-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1) !important;
+  border-color: rgba(148,163,184,0.5) !important;
+}
+
+/* Dark mode glass */
 [data-theme="dark"] #recent-posts > .recent-post-item,
 [data-theme="dark"] #aside-content .card-widget,
 [data-theme="dark"] #page .category-lists,
@@ -29,74 +64,227 @@ body {
 [data-theme="dark"] .layout > .recent-posts .pagination,
 [data-theme="dark"] #archive,
 [data-theme="dark"] #tag,
-[data-theme="dark"] #category {
-  background: rgba(30,41,59,0.78);
-  border-color: rgba(51,65,85,0.6);
+[data-theme="dark"] #category,
+[data-theme="dark"] #post .prev-next,
+[data-theme="dark"] #post .post-copyright,
+[data-theme="dark"] #post .post-reward,
+[data-theme="dark"] #post .relatedPosts,
+[data-theme="dark"] #post .post-prevnext,
+[data-theme="dark"] #post #post-comment .comment-head,
+[data-theme="dark"] .post-expand .post-card,
+[data-theme="dark"] #page .category-lists .category-list,
+[data-theme="dark"] .random-post-item {
+  background: rgba(30,41,59,0.72) !important;
+  border-color: rgba(51,65,85,0.5) !important;
+}
+[data-theme="dark"] #recent-posts > .recent-post-item:hover,
+[data-theme="dark"] #aside-content .card-widget:hover,
+[data-theme="dark"] .post-expand .post-card:hover,
+[data-theme="dark"] .random-post-item:hover {
+  border-color: rgba(71,85,105,0.5) !important;
 }
 
-/* ─── 3. Font size: common.css base 16px ─── */
-:root {
-  --global-font-size: 16px;
-  --global-font-color: #1e293b;
+/* ─── 4. Navigation ─── */
+#nav {
+  background: rgba(15,23,42,0.65) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid rgba(226,232,240,0.1) !important;
 }
-body {
-  font-size: 16px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
-  color: #1e293b;
+[data-theme="dark"] #nav {
+  background: rgba(15,23,42,0.75) !important;
 }
-[data-theme="dark"] body {
-  color: #e2e8f0;
+#nav a,
+#nav .site-name,
+#nav .menus_item a {
+  color: #E2E8F0 !important;
 }
 
-/* ─── 4. Article content text ─── */
+/* ─── 5. Page Header (cosmic style, no images) ─── */
+#page-header {
+  background: transparent !important;
+}
+#page-header::before {
+  background: transparent !important;
+}
+#page-header #site-info {
+  position: relative;
+  z-index: 1;
+}
+#page-header #site-title {
+  text-shadow: 0 0 40px rgba(129,140,248,0.3);
+  background: linear-gradient(135deg, #818CF8 0%, #A78BFA 50%, #F9A8D4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+#page-header #site-subtitle {
+  color: rgba(226,232,240,0.8);
+  text-shadow: none;
+}
+
+/* ─── 6. Post block adjustments ─── */
+#post .post-block {
+  padding: 24px;
+}
 #post .post-content p,
 #post .post-content li {
   font-size: 16px;
   line-height: 1.75;
 }
-
-/* ─── 5. Headings consistency ─── */
 #post .post-content h1 { font-size: 2rem; }
 #post .post-content h2 { font-size: 1.5rem; }
 #post .post-content h3 { font-size: 1.25rem; }
 #post .post-content h4 { font-size: 1.125rem; }
 
-/* ─── 6. Code block: match tools' code-block ─── */
+/* ─── 7. Code blocks ─── */
 #post .post-content .highlight,
 #post .post-content code {
   border-radius: 8px;
 }
 
-/* ─── 7. Focus-visible rings (add to Butterfly elements) ─── */
-#post a:focus-visible,
-.page a:focus-visible,
-#aside-content a:focus-visible {
-  outline: 2px solid var(--primary, #9D7CD8);
-  outline-offset: 2px;
-}
-
-/* ─── 8. Background color for dark/light consistency ─── */
-[data-theme="dark"] #page-header,
-[data-theme="dark"] #footer {
-  background: transparent !important;
-}
-
-/* ─── 9. Page header and footer backgrounds ─── */
-#page-header::before,
-#footer::before,
-#page-header,
+/* ─── 8. Footer ─── */
 #footer {
   background: transparent !important;
 }
-
-/* ─── 10. Button hover consistent with tools ─── */
-#post .post-content a:not(.btn):hover {
-  text-decoration: underline;
+#footer::before {
+  background: transparent !important;
+}
+#footer-wrap {
+  color: var(--text-secondary, #94A3B8);
 }
 
-/* ─── 11. Responsive ─── */
+/* ─── 9. Sidebar ─── */
+#aside-content .aside-list-item {
+  padding: 8px 12px;
+}
+
+/* ─── 10. Tags & Categories ─── */
+#post .tag_share .post-meta__tags .tag-cloud-tag,
+.category-lists .category-list-item a {
+  background: rgba(255,255,255,0.5) !important;
+  backdrop-filter: blur(4px);
+  border-radius: 6px;
+  padding: 4px 12px;
+  transition: all 0.15s ease-out;
+}
+[data-theme="dark"] #post .tag_share .post-meta__tags .tag-cloud-tag,
+[data-theme="dark"] .category-lists .category-list-item a {
+  background: rgba(30,41,59,0.5) !important;
+}
+
+/* ─── 11. ⭐ Butterfly Error Images → CSS Replacements ─── */
+/* Replace 404 page image with CSS illustration */
+.type-404 .error-content .error-img img {
+  display: none !important;
+}
+.type-404 .error-content .error-img {
+  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 50%, #F97316 100%) !important;
+  border-radius: 12px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+}
+.type-404 .error-content .error-img::before {
+  content: '🌌 404';
+  font-size: 48px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 8px;
+  z-index: 1;
+}
+.type-404 .error-content .error-img::after {
+  content: '';
+  position: absolute;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  top: -50px; right: -50px;
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+[data-theme="dark"] .type-404 .error-content .error-img {
+  background: linear-gradient(135deg, #3730A3 0%, #6D28D9 50%, #BE123C 100%) !important;
+}
+
+/* 404 page overall */
+.type-404 .error-content {
+  height: auto !important;
+  min-height: 360px;
+}
+.type-404 .error-content .error-info .error_title {
+  font-size: 7em;
+  background: linear-gradient(135deg, var(--primary, #818CF8) 0%, var(--accent, #FB923C) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Replace friend link error image */
+.error_img.flink {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%) !important;
+  border-radius: 50%;
+  width: 48px; height: 48px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* ─── 12. Focus States ─── */
+#post a:focus-visible,
+.page a:focus-visible,
+#aside-content a:focus-visible {
+  outline: 2px solid var(--primary, #818CF8);
+  outline-offset: 2px;
+}
+
+/* ─── 13. Srollbar styling ─── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148,163,184,0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148,163,184,0.5);
+}
+
+/* ─── 14. Selection ─── */
+::selection {
+  background: var(--primary-light, rgba(129,140,248,0.3));
+  color: var(--text, #E2E8F0);
+}
+
+/* ─── 15. Replaced images fallback ─── */
+/* When img has src that fails, show CSS gradient */
+img.error-img-fallback,
+.friend-link-avatar img[src*="friend_404"] {
+  display: none !important;
+}
+.friend-link-avatar:has(img[src*="friend_404"]) {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%) !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── 16. Responsive ─── */
 @media (max-width: 768px) {
   body { font-size: 15px; }
   #post .post-content p,
   #post .post-content li { font-size: 15px; }
+  #post .post-block { padding: 16px; }
+  .type-404 .error-content { min-height: 300px; flex-direction: column; }
+  .type-404 .error-content .error-img { width: 100%; min-height: 160px; }
+  .type-404 .error-content .error-info { width: 100%; }
 }

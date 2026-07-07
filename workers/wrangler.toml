@@ -3,6 +3,10 @@ main = "src/index.js"
 compatibility_date = "2025-04-01"
 workers_dev = true
 
+[vars]
+WORKER_URL = "https://auth.233002.xyz"
+SITE_URL = "https://www.233002.xyz"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "my-blog-auth"
