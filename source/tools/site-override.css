@@ -1,0 +1,102 @@
+/* ===== Site Override — Bridge Butterfly Theme to common.css Tokens ===== */
+
+/* ─── 1. Body: transparent to show space canvas background ─── */
+body {
+  background: transparent !important;
+}
+
+/* ─── 2. Card backgrounds: glassmorphism matching tools ─── */
+#recent-posts > .recent-post-item,
+#aside-content .card-widget,
+#page .category-lists,
+#page .tag-cloud,
+#post .post-block,
+.layout > .recent-posts .pagination,
+#archive,
+#tag,
+#category {
+  background: rgba(255,255,255,0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(226,232,240,0.6);
+  border-radius: 12px;
+}
+[data-theme="dark"] #recent-posts > .recent-post-item,
+[data-theme="dark"] #aside-content .card-widget,
+[data-theme="dark"] #page .category-lists,
+[data-theme="dark"] #page .tag-cloud,
+[data-theme="dark"] #post .post-block,
+[data-theme="dark"] .layout > .recent-posts .pagination,
+[data-theme="dark"] #archive,
+[data-theme="dark"] #tag,
+[data-theme="dark"] #category {
+  background: rgba(30,41,59,0.78);
+  border-color: rgba(51,65,85,0.6);
+}
+
+/* ─── 3. Font size: common.css base 16px ─── */
+:root {
+  --global-font-size: 16px;
+  --global-font-color: #1e293b;
+}
+body {
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+  color: #1e293b;
+}
+[data-theme="dark"] body {
+  color: #e2e8f0;
+}
+
+/* ─── 4. Article content text ─── */
+#post .post-content p,
+#post .post-content li {
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+/* ─── 5. Headings consistency ─── */
+#post .post-content h1 { font-size: 2rem; }
+#post .post-content h2 { font-size: 1.5rem; }
+#post .post-content h3 { font-size: 1.25rem; }
+#post .post-content h4 { font-size: 1.125rem; }
+
+/* ─── 6. Code block: match tools' code-block ─── */
+#post .post-content .highlight,
+#post .post-content code {
+  border-radius: 8px;
+}
+
+/* ─── 7. Focus-visible rings (add to Butterfly elements) ─── */
+#post a:focus-visible,
+.page a:focus-visible,
+#aside-content a:focus-visible {
+  outline: 2px solid var(--primary, #9D7CD8);
+  outline-offset: 2px;
+}
+
+/* ─── 8. Background color for dark/light consistency ─── */
+[data-theme="dark"] #page-header,
+[data-theme="dark"] #footer {
+  background: transparent !important;
+}
+
+/* ─── 9. Page header and footer backgrounds ─── */
+#page-header::before,
+#footer::before,
+#page-header,
+#footer {
+  background: transparent !important;
+}
+
+/* ─── 10. Button hover consistent with tools ─── */
+#post .post-content a:not(.btn):hover {
+  text-decoration: underline;
+}
+
+/* ─── 11. Responsive ─── */
+@media (max-width: 768px) {
+  body { font-size: 15px; }
+  #post .post-content p,
+  #post .post-content li { font-size: 15px; }
+}

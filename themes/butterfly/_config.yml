@@ -9,19 +9,19 @@
 # 主题颜色
 theme_color:
   enable: true
-  main: "#9D7CD8"
-  paginator: "#9D7CD8"
-  button_hover: "#7C4DFF"
-  text_selection: "#9D7CD8"
-  link_color: "#8B5CF6"
-  meta_color: "#A78BFA"
-  hr_color: "#9D7CD8"
-  code_foreground: "#9D7CD8"
+  main: "#3b82f6"
+  paginator: "#3b82f6"
+  button_hover: "#2563eb"
+  text_selection: "#3b82f6"
+  link_color: "#3b82f6"
+  meta_color: "#64748b"
+  hr_color: "#3b82f6"
+  code_foreground: "#ef4444"
   code_background: "rgba(27, 31, 35, .05)"
-  toc_color: "#9D7CD8"
-  blockquote_padding_color: "#9D7CD8"
-  blockquote_background_color: "rgba(157, 124, 216, 0.15)"
-  scrollbar_color: "#9D7CD8"
+  toc_color: "#3b82f6"
+  blockquote_padding_color: "#3b82f6"
+  blockquote_background_color: "rgba(59, 130, 246, 0.15)"
+  scrollbar_color: "#3b82f6"
   meta_theme_color_light: "ffffff"
   meta_theme_color_dark: "#0d0d0d"
 
@@ -1131,8 +1131,10 @@ css_prefix: true
 # 在 head 之前（'</head>' 标签之前）和 bottom 之前（'</body>' 标签之前）插入代码
 inject:
   head:
-    # 隐藏页面头部和页脚
-    - <style>#page-header,#page-header::before,#footer,#footer::before{background:transparent!important}</style>
+    # 注入 common.css 全站统一设计Token
+    - <link rel="stylesheet" href="/tools/common.css">
+    # 注入 site-override.css 桥接Butterfly→common.css
+    - <link rel="stylesheet" href="/tools/site-override.css">
   bottom:
     #天气
     - <script src="/js/weather-store.js"></script>
