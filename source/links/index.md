@@ -32,6 +32,17 @@ top_img: false
         <span class="friend-link-desc">梁栋烨的博客网站</span>
       </div>
     </div>
+    <div class="friend-link-item">
+      <div class="friend-link-avatar" data-name="夏雨">
+        <img src="https://xiayuze.fun/favicon.ico" alt="夏雨阁" onerror="this.parentElement.classList.add('no-icon');this.remove();">
+      </div>
+      <div class="friend-link-info">
+        <a href="https://xiayuze.fun/" target="_blank" rel="noopener noreferrer">
+          <span class="friend-link-name">夏雨阁</span>
+        </a>
+        <span class="friend-link-desc">https://xiayuze.fun/</span>
+      </div>
+    </div>
   </div>
   <div class="links-notice">
     <p>🤝 如需交换友链，请联系 <a href="mailto:505350617@qq.com">505350617@qq.com</a></p>
