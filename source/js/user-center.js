@@ -1,6 +1,6 @@
 (function(){
 var AUTH_API='https://auth.233002.xyz';
-var DATA_API='https://ffzy.233002.xyz';
+var DATA_API='https://auth.233002.xyz';
 var $=function(id){return document.getElementById(id);};
 
 function init(){

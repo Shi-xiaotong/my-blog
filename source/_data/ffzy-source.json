@@ -1,5 +1,5 @@
 {
-  "api_proxy": "https://ffzy.233002.xyz",
+  "api_proxy": "https://auth.233002.xyz",
   "endpoints": {
     "ffzy_search": "GET /api/ffzy?ac=videolist&wd=关键词&pg=页码",
     "ffzy_list": "GET /api/ffzy?ac=videolist&t=分类ID&pg=页码&pagesize=24",
@@ -17,8 +17,8 @@
     "tables": ["anime_history", "anime_danmaku"]
   },
   "worker": {
-    "name": "ffzy-proxy",
-    "domain": "ffzy.233002.xyz"
+    "name": "my-blog-auth",
+    "domain": "auth.233002.xyz"
   },
   "player": {
     "hls_cdn": "https://cdn.jsdelivr.net/npm/hls.js@latest",
