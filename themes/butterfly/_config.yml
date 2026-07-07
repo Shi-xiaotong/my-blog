@@ -1164,7 +1164,7 @@ CDN:
   custom_format:
 
   option:
-  # abcjs_basic_js:
+  fontawesome: https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/7.1.0/css/all.min.css
   # activate_power_mode:
   # algolia_js:
   # algolia_search:
