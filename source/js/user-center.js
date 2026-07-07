@@ -39,7 +39,7 @@ function render(data){
 
   var linked=data.linked||[];
   var types={};
-  linked.forEach(function(a){types[a.provider]=a.provider_id;});
+  linked.forEach(function(a){types[a.auth_type]=a.auth_id;});
   setStatus('github',types.github||null);
   setStatus('google',types.google||null);
   setStatus('email',u.email||null);
