@@ -39,6 +39,8 @@ nav:
 
 menu:
   首页: / || fas fa-home
+  友链: /links/ || fas fa-link
+  关于: /about/ || fas fa-heart
   更多:
     导航: /bookmarks/ || fas fa-compass
     万年历: /calendar/ || fas fa-calendar-alt
@@ -46,8 +48,6 @@ menu:
     影视屋: /anime/ || fas fa-film
     工具箱: /tools/ || fas fa-toolbox
     小游戏: /games/ || fas fa-gamepad
-  友链: /links/ || fas fa-link
-  关于: /about/ || fas fa-heart
 
 # --------------------------------------
 # 代码块设置
@@ -122,7 +122,7 @@ footer_img: false
 # 网站背景
 # 可以设置为颜色、图片 URL 或包含颜色和/或图片 URL 的数组
 # 如果提供了数组，每次加载时会从数组中随机选择背景
-# background: /img/background.png
+# background: null
 background: "#0f172a"
 
 cover:
@@ -132,7 +132,7 @@ cover:
   archives_enable: true
   # 当没有设置封面时，显示默认封面
   default_cover:
-    - /img/article_def.png
+    - /img/avatar.png
 
 # 替换失效图片
 error_img:
