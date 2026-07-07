@@ -13,10 +13,16 @@ document.body.insertBefore(c, document.body.firstChild);
 
 var ctx = c.getContext('2d');
 var W, H;
+var DPR = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2x to limit memory
 
 function resize() {
-  W = c.width = window.innerWidth;
-  H = c.height = window.innerHeight;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  c.width = W * DPR;
+  c.height = H * DPR;
+  c.style.width = W + 'px';
+  c.style.height = H + 'px';
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   planet.x = W * 0.45;
   planet.y = H * 0.58;
   planet.r = Math.max(80, Math.min(W, H) * 0.11);
@@ -26,7 +32,7 @@ window.addEventListener('resize', resize);
 
 // ─── Stars ───
 var stars = [];
-for (var i = 0; i < 350; i++) {
+for (var i = 0; i < 200; i++) {
   var colorRand = Math.random();
   stars.push({
     x: Math.random(), y: Math.random(),
@@ -354,11 +360,21 @@ function drawAstronaut(time) {
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  // Backpack
+  // Backpack (manual rounded rect)
   ctx.fillStyle = 'rgba(255,255,255,0.12)';
   var bp = sc * 0.9;
+  var br = 2;
   ctx.beginPath();
-  ctx.roundRect(-bp, -sc * 0.8, bp * 2, sc * 2, 2);
+  ctx.moveTo(-bp + br, -sc * 0.8);
+  ctx.lineTo(bp - br, -sc * 0.8);
+  ctx.quadraticCurveTo(bp, -sc * 0.8, bp, -sc * 0.8 + br);
+  ctx.lineTo(bp, -sc * 0.8 + sc * 2 - br);
+  ctx.quadraticCurveTo(bp, -sc * 0.8 + sc * 2, bp - br, -sc * 0.8 + sc * 2);
+  ctx.lineTo(-bp + br, -sc * 0.8 + sc * 2);
+  ctx.quadraticCurveTo(-bp, -sc * 0.8 + sc * 2, -bp, -sc * 0.8 + sc * 2 - br);
+  ctx.lineTo(-bp, -sc * 0.8 + br);
+  ctx.quadraticCurveTo(-bp, -sc * 0.8, -bp + br, -sc * 0.8);
+  ctx.closePath();
   ctx.fill();
 
   // Body line
@@ -490,7 +506,7 @@ function draw(time) {
     ss.y += ss.dy * ss.speed;
     ss.life -= 0.007;
     ss.trail.push({ x: ss.x, y: ss.y });
-    if (ss.trail.length > 30) ss.trail.shift();
+    if (ss.trail.length > 15) ss.trail.shift();
 
     // Trail
     for (var j = 1; j < ss.trail.length; j++) {
