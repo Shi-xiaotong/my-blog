@@ -91,12 +91,20 @@ html::before {
   -webkit-backdrop-filter: blur(12px) !important;
   border-bottom: 1px solid rgba(226,232,240,0.1) !important;
 }
-[data-theme="dark"] #nav {
+/* Override Butterfly's white background on not-top-img pages */
+#page-header.not-top-img #nav {
+  background: rgba(15,23,42,0.65) !important;
+  box-shadow: none !important;
+}
+[data-theme="dark"] #nav,
+[data-theme="dark"] #page-header.not-top-img #nav {
   background: rgba(15,23,42,0.75) !important;
 }
 #nav a,
 #nav .site-name,
-#nav .menus_item a {
+#nav .menus_item a,
+#nav .menus_item span,
+#nav .menus_item_child li a {
   color: #E2E8F0 !important;
 }
 
