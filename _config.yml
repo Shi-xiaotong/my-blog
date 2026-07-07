@@ -40,10 +40,6 @@ skip_render:
   - 'games/common.css'
   - 'games/track.js'
   - 'games/js/*.js'
-  - 'bookmarks/*.html'
-  - 'bookmarks/*.js'
-  - 'bookmarks/common.css'
-  - 'bookmarks/track.js'
   - '**/*.json'
 
 # 写作
