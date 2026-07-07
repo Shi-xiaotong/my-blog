@@ -1,7 +1,8 @@
 /**
- * Cosmic Background — Black & White Space Scene
- * Pure Canvas, zero images. Renders stars, planet with craters,
- * orbiting bodies, falling astronaut, and shooting stars.
+ * Cosmic Background v2 — Enhanced Planet + Atmospheric Effects
+ * Pure Canvas, zero images. Renders an earth-like planet with continents,
+ * cloud layers, glowing atmosphere, orbiting moon, stars, shooting stars,
+ * and a falling astronaut.
  */
 (function(){
 'use strict';
@@ -18,64 +19,88 @@ function resize() {
   H = c.height = window.innerHeight;
   planet.x = W * 0.45;
   planet.y = H * 0.58;
-  planet.r = Math.max(60, Math.min(W, H) * 0.1);
+  planet.r = Math.max(80, Math.min(W, H) * 0.11);
   initOrbits();
 }
 window.addEventListener('resize', resize);
 
 // ─── Stars ───
 var stars = [];
-for (var i = 0; i < 220; i++) {
+for (var i = 0; i < 350; i++) {
+  var colorRand = Math.random();
   stars.push({
     x: Math.random(), y: Math.random(),
-    r: Math.random() * 1.5 + 0.3,
+    r: Math.random() * 1.8 + 0.2,
     phase: Math.random() * 6.28,
-    speed: 0.5 + Math.random()
+    speed: 0.3 + Math.random() * 1.2,
+    // Color variety: mostly white, some blue/warm tint
+    color: colorRand < 0.7 ? '#fff' : colorRand < 0.85 ? '#a8d8ff' : '#ffd8a8'
   });
 }
 
 // ─── Planet ───
-var planet = { x: 0, y: 0, r: 100 };
+var planet = { x: 0, y: 0, r: 120 };
 
+// Continent shapes (random blobs)
+var continents = [];
+for (var i = 0; i < 8; i++) {
+  var pts = [];
+  var n = 6 + Math.floor(Math.random() * 8);
+  var cx = (Math.random() - 0.5) * 0.8;
+  var cy = (Math.random() - 0.5) * 0.8;
+  for (var j = 0; j < n; j++) {
+    var a = (j / n) * 6.283;
+    var dist = 0.08 + Math.random() * 0.18;
+    pts.push({ x: cx + Math.cos(a) * dist, y: cy + Math.sin(a) * dist });
+  }
+  continents.push(pts);
+}
+
+// Craters (moon-like, fewer but more prominent)
 var craters = [];
-for (var i = 0; i < 14; i++) {
+for (var i = 0; i < 10; i++) {
   craters.push({
-    dx: (Math.random() - 0.5) * 0.7,
-    dy: (Math.random() - 0.5) * 0.7,
-    r: 3 + Math.random() * 14,
-    depth: 0.15 + Math.random() * 0.45
+    dx: (Math.random() - 0.5) * 0.65,
+    dy: (Math.random() - 0.5) * 0.65,
+    r: 4 + Math.random() * 12,
+    depth: 0.15 + Math.random() * 0.4
   });
 }
+
+// ─── Moon ───
+var moon = { angle: 0, speed: 0.0004, dist: 0, r: 12 };
 
 // ─── Orbits ───
 var orbitDefs = [];
 function initOrbits() {
   orbitDefs.length = 0;
-  var arr = [1.8, 2.6, 3.5];
+  var arr = [1.9, 2.8, 3.7];
   for (var i = 0; i < 3; i++) {
     var or = planet.r * arr[i];
-    var n = 3 + Math.floor(Math.random() * 4);
+    var n = 4 + Math.floor(Math.random() * 4);
     var bodies = [];
     for (var j = 0; j < n; j++) {
       bodies.push({
         angle: (j / n) * 6.283,
-        speed: (0.12 + Math.random() * 0.1) * (i % 2 ? -1 : 1),
-        size: 1.5 + Math.random() * 3
+        speed: (0.1 + Math.random() * 0.12) * (i % 2 ? -1 : 1),
+        size: 1.5 + Math.random() * 3,
+        phase: Math.random() * 6.283
       });
     }
-    orbitDefs.push({ r: or, tilt: (Math.random() - 0.5) * 0.4, bodies: bodies });
+    orbitDefs.push({ r: or, tilt: (Math.random() - 0.5) * 0.35, bodies: bodies });
   }
+  moon.dist = planet.r * 2.2;
 }
 
 // ─── Astronaut ───
-var astro = { x: 0, y: 0, angle: 0, vy: 0, vx: 0 };
+var astro = { x: 0, y: 0, angle: 0, vy: 0, vx: 0, tumble: 0 };
 
 function resetAstro() {
   astro.x = W * (0.6 + Math.random() * 0.3);
-  astro.y = -60 - Math.random() * 100;
-  astro.vx = (Math.random() - 0.5) * 0.3;
-  astro.vy = 0.3 + Math.random() * 0.2;
-  astro.angle = Math.random() * 0.5 - 0.25;
+  astro.y = -80 - Math.random() * 150;
+  astro.vx = (Math.random() - 0.5) * 0.35;
+  astro.vy = 0.25 + Math.random() * 0.25;
+  astro.tumble = Math.random() * 6.283;
 }
 
 // ─── Shooting stars ───
@@ -86,85 +111,217 @@ var shotTimer = 0;
 resize();
 resetAstro();
 
-// ─── Draw planet ───
-function drawPlanet() {
+// ─── Draw planet (enhanced) ───
+function drawPlanet(time) {
   var x = planet.x, y = planet.y, r = planet.r;
+  var t = time * 0.001;
 
-  // Atmospheric glow
-  var glow = ctx.createRadialGradient(x, y, r * 0.95, x, y, r * 1.8);
-  glow.addColorStop(0, 'rgba(255,255,255,0.025)');
-  glow.addColorStop(0.5, 'rgba(255,255,255,0.015)');
-  glow.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx.fillStyle = glow;
+  // Outer atmospheric glow (wide, soft)
+  var outerGlow = ctx.createRadialGradient(x, y, r * 0.9, x, y, r * 2.5);
+  outerGlow.addColorStop(0, 'rgba(100,180,255,0.04)');
+  outerGlow.addColorStop(0.4, 'rgba(100,180,255,0.025)');
+  outerGlow.addColorStop(1, 'rgba(100,180,255,0)');
+  ctx.fillStyle = outerGlow;
   ctx.beginPath();
-  ctx.arc(x, y, r * 1.8, 0, 6.283);
+  ctx.arc(x, y, r * 2.5, 0, 6.283);
   ctx.fill();
 
-  // Planet body
-  var g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r);
-  g.addColorStop(0, '#555');
-  g.addColorStop(0.5, '#2a2a2a');
-  g.addColorStop(1, '#0d0d0d');
-  ctx.fillStyle = g;
+  // Atmosphere ring (limb glow)
+  var atmoGlow = ctx.createRadialGradient(x, y, r * 0.88, x, y, r);
+  atmoGlow.addColorStop(0, 'rgba(100,180,255,0)');
+  atmoGlow.addColorStop(0.7, 'rgba(100,180,255,0.05)');
+  atmoGlow.addColorStop(0.9, 'rgba(100,200,255,0.12)');
+  atmoGlow.addColorStop(1, 'rgba(100,200,255,0.2)');
+  ctx.fillStyle = atmoGlow;
   ctx.beginPath();
   ctx.arc(x, y, r, 0, 6.283);
   ctx.fill();
 
-  // Craters (clip to planet)
+  // Planet body (ocean base)
+  var bodyGrad = ctx.createRadialGradient(x - r * 0.25, y - r * 0.3, r * 0.05, x, y, r);
+  bodyGrad.addColorStop(0, '#4a90d9');
+  bodyGrad.addColorStop(0.3, '#2d6bb4');
+  bodyGrad.addColorStop(0.6, '#1a4f8a');
+  bodyGrad.addColorStop(1, '#0f2d4f');
+  ctx.fillStyle = bodyGrad;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, 6.283);
+  ctx.fill();
+
+  // Continents (clipped to planet)
   ctx.save();
   ctx.beginPath();
   ctx.arc(x, y, r, 0, 6.283);
   ctx.clip();
+
+  for (var i = 0; i < continents.length; i++) {
+    var pts = continents[i];
+    // Perlin-noise-like green gradient for each continent
+    var shade = 0.2 + Math.random() * 0.15;
+    ctx.beginPath();
+    ctx.moveTo(x + pts[0].x * r, y + pts[0].y * r);
+    for (var j = 1; j < pts.length; j++) {
+      var cx1 = x + pts[j].x * r;
+      var cy1 = y + pts[j].y * r;
+      ctx.lineTo(cx1, cy1);
+    }
+    ctx.closePath();
+    var cg = ctx.createRadialGradient(x + pts[0].x * r, y + pts[0].y * r, 2, x + pts[0].x * r, y + pts[0].y * r, r * 0.25);
+    cg.addColorStop(0, '#4a8c5c');
+    cg.addColorStop(0.5, '#3a7a4a');
+    cg.addColorStop(1, '#2a5a3a');
+    ctx.fillStyle = cg;
+    ctx.fill();
+  }
+
+  // Add some random "city lights" on dark side (small dots)
+  for (var i = 0; i < 30; i++) {
+    var lx = (Math.random() - 0.5) * 1.7;
+    var ly = (Math.random() - 0.5) * 1.7;
+    var dist = Math.sqrt(lx * lx + ly * ly);
+    if (dist > 0.95) continue;
+    // Only on the "right" side (simulating night side)
+    if (lx < 0.1) continue;
+    ctx.beginPath();
+    ctx.arc(x + lx * r * 0.85, y + ly * r * 0.85, 0.8 + Math.random() * 0.8, 0, 6.283);
+    ctx.fillStyle = 'rgba(255,220,150,' + (0.15 + Math.random() * 0.3) + ')';
+    ctx.fill();
+  }
+
+  // Craters (for the "moon-like" parts)
   for (var i = 0; i < craters.length; i++) {
     var cr = craters[i];
     var cx = x + cr.dx * r;
     var cy = y + cr.dy * r;
-    // Rim
+    // Crater rim
     ctx.beginPath();
     ctx.arc(cx, cy, cr.r, 0, 6.283);
-    ctx.strokeStyle = 'rgba(255,255,255,' + (0.08 + cr.depth * 0.12) + ')';
+    ctx.strokeStyle = 'rgba(255,255,255,' + (0.06 + cr.depth * 0.1) + ')';
     ctx.lineWidth = 0.5;
     ctx.stroke();
-    // Shadow
+    // Crater shadow
     ctx.beginPath();
-    ctx.arc(cx - 1, cy - 1, cr.r * 0.6, 0, 6.283);
-    ctx.fillStyle = 'rgba(0,0,0,' + (0.15 + cr.depth * 0.25) + ')';
+    ctx.arc(cx - 1.5, cy - 1.5, cr.r * 0.5, 0, 6.283);
+    ctx.fillStyle = 'rgba(0,0,0,' + (0.1 + cr.depth * 0.2) + ')';
     ctx.fill();
   }
+
   ctx.restore();
 
-  // Edge glow
-  var eg = ctx.createRadialGradient(x, y, r * 0.97, x, y, r * 1.02);
-  eg.addColorStop(0, 'rgba(255,255,255,0.08)');
-  eg.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx.fillStyle = eg;
+  // Thin edge bright rim (light catching)
+  var edgeGlow = ctx.createRadialGradient(x, y, r * 0.96, x, y, r * 1.02);
+  edgeGlow.addColorStop(0, 'rgba(180,220,255,0)');
+  edgeGlow.addColorStop(0.6, 'rgba(180,220,255,0.05)');
+  edgeGlow.addColorStop(1, 'rgba(180,220,255,0.15)');
+  ctx.fillStyle = edgeGlow;
   ctx.beginPath();
   ctx.arc(x, y, r * 1.02, 0, 6.283);
   ctx.fill();
+
+  // Specular highlight (sun reflection)
+  var specGrad = ctx.createRadialGradient(x - r * 0.4, y - r * 0.35, 0, x - r * 0.4, y - r * 0.35, r * 0.2);
+  specGrad.addColorStop(0, 'rgba(255,255,255,0.08)');
+  specGrad.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = specGrad;
+  ctx.beginPath();
+  ctx.arc(x - r * 0.4, y - r * 0.35, r * 0.2, 0, 6.283);
+  ctx.fill();
+}
+
+// ─── Draw cloud layer ───
+function drawClouds(time) {
+  var x = planet.x, y = planet.y, r = planet.r;
+  var t = time * 0.001;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x, y, r * 0.97, 0, 6.283);
+  ctx.clip();
+
+  // Cloud wisps
+  for (var i = 0; i < 12; i++) {
+    var cx = x + (Math.sin(i * 2.1 + t * 0.02) * 0.7) * r;
+    var cy = y + (Math.cos(i * 1.7 + t * 0.015) * 0.6) * r;
+    var cw = 15 + Math.sin(i * 3.3) * 8;
+    var ch = 4 + Math.sin(i * 2.5) * 2;
+
+    for (var k = -3; k <= 3; k++) {
+      var px = cx + k * cw * 0.3;
+      var py = cy + Math.sin(k * 0.8 + t * 0.01) * ch;
+      var alpha = 0.04 + 0.06 * (1 - Math.abs(k) / 4);
+      ctx.beginPath();
+      ctx.ellipse(px, py, cw * 0.5, ch * 0.3, 0, 0, 6.283);
+      ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+
+// ─── Draw Moon ───
+function drawMoon(time) {
+  var t = time * 0.001;
+  var px = planet.x + Math.cos(moon.angle) * moon.dist;
+  var py = planet.y + Math.sin(moon.angle) * moon.dist * 0.55;
+  var mr = moon.r;
+
+  // Moon glow
+  var mg = ctx.createRadialGradient(px, py, mr * 0.5, px, py, mr * 2);
+  mg.addColorStop(0, 'rgba(200,200,220,0.03)');
+  mg.addColorStop(1, 'rgba(200,200,220,0)');
+  ctx.fillStyle = mg;
+  ctx.beginPath();
+  ctx.arc(px, py, mr * 2, 0, 6.283);
+  ctx.fill();
+
+  // Moon body
+  var moonGrad = ctx.createRadialGradient(px - mr * 0.2, py - mr * 0.2, mr * 0.05, px, py, mr);
+  moonGrad.addColorStop(0, '#aaa');
+  moonGrad.addColorStop(0.5, '#777');
+  moonGrad.addColorStop(1, '#444');
+  ctx.fillStyle = moonGrad;
+  ctx.beginPath();
+  ctx.arc(px, py, mr, 0, 6.283);
+  ctx.fill();
+
+  // Moon craters
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(px, py, mr, 0, 6.283);
+  ctx.clip();
+  for (var i = 0; i < 5; i++) {
+    var cx = px + (Math.random() - 0.5) * mr * 1.2;
+    var cy = py + (Math.random() - 0.5) * mr * 1.2;
+    var cr = 1 + Math.random() * 2.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, cr, 0, 6.283);
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    ctx.fill();
+  }
+  ctx.restore();
 }
 
 // ─── Draw astronaut ───
-function drawAstronaut() {
+function drawAstronaut(time) {
   var px = planet.x, py = planet.y;
   var dx = px - astro.x, dy = py - astro.y;
   var dist = Math.sqrt(dx * dx + dy * dy);
 
   // Gravity pull
   if (dist > 1) {
-    var grav = 0.0003;
+    var grav = 0.00035;
     astro.vx += (dx / dist) * grav;
     astro.vy += (dy / dist) * grav;
   }
-  // Downward constant drift
-  astro.vy += 0.01;
+  astro.vy += 0.012;
   astro.x += astro.vx;
   astro.y += astro.vy;
 
-  // Tumble toward planet
-  astro.angle = Math.atan2(dy, dx) + 1.57 + Math.sin(astro.y * 0.01) * 0.15;
+  // Tumble rotation
+  astro.tumble += 0.008;
+  astro.angle = Math.atan2(dy, dx) + 1.57 + Math.sin(astro.tumble) * 0.3;
 
-  // Reset if out of bounds
-  if (astro.y > H + 100 || astro.x < -100 || astro.x > W + 100) {
+  if (astro.y > H + 120 || astro.x < -120 || astro.x > W + 120) {
     resetAstro();
     return;
   }
@@ -173,61 +330,72 @@ function drawAstronaut() {
   ctx.translate(astro.x, astro.y);
   ctx.rotate(astro.angle);
 
-  var sc = Math.min(W, H) * 0.012;
-  ctx.strokeStyle = '#fff';
+  var sc = Math.min(W, H) * 0.013;
+  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
   ctx.lineWidth = 1.2;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
-  // Helmet
+  // Helmet (sphere)
   ctx.beginPath();
-  ctx.arc(0, -sc * 2.5, sc * 1.1, 0, 6.283);
+  ctx.arc(0, -sc * 2.5, sc * 1.2, 0, 6.283);
   ctx.stroke();
+  // Helmet fill
+  ctx.beginPath();
+  ctx.arc(0, -sc * 2.5, sc * 0.9, 0, 6.283);
+  ctx.fillStyle = 'rgba(150,200,255,0.08)';
+  ctx.fill();
 
-  // Helmet visor line
+  // Visor reflection
   ctx.beginPath();
-  ctx.arc(0, -sc * 2.5, sc * 0.7, -0.8, 0.8);
-  ctx.globalAlpha = 0.6;
+  ctx.arc(0, -sc * 2.5, sc * 0.7, -0.6, 0.6);
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+  ctx.lineWidth = 1;
   ctx.stroke();
-  ctx.globalAlpha = 1;
 
   // Backpack
-  ctx.fillStyle = 'rgba(255,255,255,0.2)';
-  ctx.fillRect(-sc * 0.8, -sc * 0.8, sc * 1.6, sc * 1.8);
-
-  // Body
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+  var bp = sc * 0.9;
   ctx.beginPath();
-  ctx.moveTo(0, -sc * 1.3);
+  ctx.roundRect(-bp, -sc * 0.8, bp * 2, sc * 2, 2);
+  ctx.fill();
+
+  // Body line
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(0, -sc * 1.2);
   ctx.lineTo(0, sc * 1.5);
   ctx.stroke();
 
-  // Arms (splayed)
+  // Arms
   ctx.beginPath();
   ctx.moveTo(0, -sc * 0.2);
-  ctx.lineTo(-sc * 2.2, sc * 0.6);
+  ctx.lineTo(-sc * 2.5, sc * 0.8);
   ctx.stroke();
   ctx.beginPath();
   ctx.moveTo(0, -sc * 0.2);
-  ctx.lineTo(sc * 2.2, sc * 0.6);
+  ctx.lineTo(sc * 2.5, sc * 0.8);
   ctx.stroke();
 
   // Legs
   ctx.beginPath();
   ctx.moveTo(0, sc * 1.5);
-  ctx.lineTo(-sc * 1.2, sc * 3);
+  ctx.lineTo(-sc * 1.3, sc * 3.2);
   ctx.stroke();
   ctx.beginPath();
   ctx.moveTo(0, sc * 1.5);
-  ctx.lineTo(sc * 1.2, sc * 3);
+  ctx.lineTo(sc * 1.3, sc * 3.2);
   ctx.stroke();
 
-  // Tether (dashed line toward planet)
-  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  // Tether
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
   ctx.lineWidth = 0.5;
-  ctx.setLineDash([2, 4]);
+  ctx.setLineDash([3, 5]);
   ctx.beginPath();
-  ctx.moveTo(0, -sc * 0.5);
-  ctx.lineTo(-sc * 6, -sc * 12);
+  ctx.moveTo(0, -sc * 0.3);
+  ctx.lineTo(-sc * 7, -sc * 14);
   ctx.stroke();
   ctx.setLineDash([]);
 
@@ -243,7 +411,7 @@ function draw(time) {
   var t = time * 0.001;
 
   // Background
-  ctx.fillStyle = '#070708';
+  ctx.fillStyle = '#07080c';
   ctx.fillRect(0, 0, W, H);
 
   // Stars
@@ -253,8 +421,10 @@ function draw(time) {
     var alpha = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
     ctx.beginPath();
     ctx.arc(sx, sy, s.r, 0, 6.283);
-    ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
+    ctx.fillStyle = s.color;
+    ctx.globalAlpha = alpha;
     ctx.fill();
+    ctx.globalAlpha = 1;
   }
 
   // Orbits (behind planet)
@@ -262,50 +432,54 @@ function draw(time) {
     var o = orbitDefs[i];
     ctx.save();
     ctx.translate(planet.x, planet.y);
-    ctx.scale(1, 0.55);
+    ctx.scale(1, 0.5);
     ctx.rotate(o.tilt * 0.3);
     ctx.beginPath();
     ctx.arc(0, 0, o.r, 0, 6.283);
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-    ctx.lineWidth = 0.5;
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 0.4;
     ctx.stroke();
     ctx.restore();
 
-    // Orbiting bodies
     for (var j = 0; j < o.bodies.length; j++) {
       var b = o.bodies[j];
       b.angle += b.speed * dt * 0.001;
       var bx = planet.x + o.r * Math.cos(b.angle);
-      var by = planet.y + o.r * 0.55 * Math.sin(b.angle) + o.r * o.tilt * 0.2;
+      var by = planet.y + o.r * 0.5 * Math.sin(b.angle) + o.r * o.tilt * 0.15;
       ctx.beginPath();
       ctx.arc(bx, by, b.size, 0, 6.283);
-      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
       ctx.fill();
-      // Tiny glow on body
       ctx.beginPath();
-      ctx.arc(bx - b.size * 0.3, by - b.size * 0.3, b.size * 0.6, 0, 6.283);
-      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.arc(bx - b.size * 0.3, by - b.size * 0.3, b.size * 0.5, 0, 6.283);
+      ctx.fillStyle = 'rgba(255,255,255,0.1)';
       ctx.fill();
     }
   }
 
-  // Planet
-  drawPlanet();
+  // Moon orbit
+  moon.angle += moon.speed * dt;
+  drawMoon(time);
 
-  // Astronaut (in front of planet - orbital path)
-  drawAstronaut();
+  // Planet
+  drawPlanet(time);
+  drawClouds(time);
+
+  // Astronaut
+  drawAstronaut(time);
 
   // Shooting stars
   shotTimer += dt;
-  if (shotTimer > 5000 + Math.random() * 8000) {
+  if (shotTimer > 4000 + Math.random() * 10000) {
     shooting.push({
       x: Math.random() * W * 0.7 + W * 0.1,
-      y: Math.random() * H * 0.25,
-      dx: -3 - Math.random() * 4,
-      dy: 0.5 + Math.random() * 2.5,
+      y: Math.random() * H * 0.2,
+      dx: -2.5 - Math.random() * 5,
+      dy: 0.5 + Math.random() * 3,
       life: 1,
       speed: 0.4 + Math.random() * 0.4,
-      trail: []
+      trail: [],
+      hue: 200 + Math.random() * 40
     });
     shotTimer = 0;
   }
@@ -314,9 +488,9 @@ function draw(time) {
     var ss = shooting[i];
     ss.x += ss.dx * ss.speed;
     ss.y += ss.dy * ss.speed;
-    ss.life -= 0.008;
+    ss.life -= 0.007;
     ss.trail.push({ x: ss.x, y: ss.y });
-    if (ss.trail.length > 25) ss.trail.shift();
+    if (ss.trail.length > 30) ss.trail.shift();
 
     // Trail
     for (var j = 1; j < ss.trail.length; j++) {
@@ -324,15 +498,21 @@ function draw(time) {
       ctx.beginPath();
       ctx.moveTo(ss.trail[j - 1].x, ss.trail[j - 1].y);
       ctx.lineTo(ss.trail[j].x, ss.trail[j].y);
-      ctx.strokeStyle = 'rgba(255,255,255,' + (a * 0.7) + ')';
-      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = 'hsla(' + ss.hue + ',80%,70%,' + (a * 0.6) + ')';
+      ctx.lineWidth = 1.5;
       ctx.stroke();
     }
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(ss.x, ss.y, 3, 0, 6.283);
+    ctx.fillStyle = 'hsla(' + ss.hue + ',80%,70%,' + (ss.life * 0.3) + ')';
+    ctx.fill();
 
     // Head
     ctx.beginPath();
     ctx.arc(ss.x, ss.y, 1.5, 0, 6.283);
-    ctx.fillStyle = 'rgba(255,255,255,' + ss.life + ')';
+    ctx.fillStyle = 'hsla(' + ss.hue + ',100%,90%,' + ss.life + ')';
     ctx.fill();
 
     if (ss.life <= 0 || ss.x < -50 || ss.y > H + 50) {
