@@ -525,6 +525,7 @@ async function handleGithubLogin(env, url) {
   const stateData = linkToken ? `${state}:${linkToken}` : state;
   const params = new URLSearchParams({
     client_id: env.GITHUB_CLIENT_ID,
+    redirect_uri: `${env.WORKER_URL}/api/auth/github/callback`,
     scope: "read:user user:email",
     state: stateData
   });
