@@ -1061,6 +1061,7 @@ pjax:
   # 从 pjax 中排除指定的页面，例如 '/music/'
   exclude:
     - /games/
+    - /bookmarks/
   # - /xxxxxx/
 
 # 注入 css 和脚本 (aplayer/meting)
