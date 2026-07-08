@@ -387,7 +387,7 @@ aside:
     enable: true
     # 设置为 0 将显示全部
     limit: 40
-    color: false
+    color: true
     custom_colors:
     # 标签排序方式，random/name/length
     orderby: random

@@ -4,12 +4,8 @@
 
   // 日期卡片
   .date-card
-    background: var(--card-bg)
-    border: 1px solid var(--border-color)
-    border-radius: 12px
-    padding: 1rem
-    margin-bottom: 1rem
     text-align: center
+    padding: 0.5rem 0
 
   .date-weekday-large
     display: none
@@ -61,20 +57,21 @@
   .holiday-list
     display: flex
     flex-direction: column
-    gap: 0.5rem
+    margin-top: 0.5rem
 
   .holiday-item
     display: flex
     justify-content: space-between
     align-items: center
-    padding: 0.6rem 0.8rem
-    background: var(--card-bg)
-    border: 1px solid var(--border-color)
-    border-radius: 8px
+    padding: 0.4rem 0.3rem
+    border-bottom: 1px solid var(--border-color)
     transition: all 0.3s ease
 
+    &:last-child
+      border-bottom: none
+
     &:hover
-      transform: translateX(4px)
+      padding-left: 0.6rem
 
   .holiday-name
     font-size: 0.9rem
