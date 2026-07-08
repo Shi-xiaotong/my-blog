@@ -537,29 +537,41 @@ img.error-img-fallback,
   background: rgba(255,255,255,0.15) !important;
 }
 
-/* ─── 20. 文章封面占位图统一蒙版 ─── */
+/* ─── 20. 封面色条 — 替换图片为窄色条 ─── */
 #recent-posts .post_cover {
-  display: flex !important;
+  width: 8px !important;
+  min-width: 8px !important;
   border-radius: 12px 0 0 12px !important;
   overflow: hidden !important;
+  position: relative !important;
 }
-#recent-posts .post_cover a {
-  display: flex !important;
-  width: 100%;
-  height: 100%;
-}
-#recent-posts .post_cover img {
+#recent-posts .post_cover a,
+#recent-posts .post_cover .post-bg {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important;
+  display: block !important;
 }
-#recent-posts .post_cover::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.08));
-  pointer-events: none;
-  z-index: 1;
+#recent-posts .post_cover img,
+#recent-posts .post_cover .gd-dots {
+  display: none !important;
+}
+#recent-posts .recent-post-item .recent-post-info {
+  width: auto !important;
+  flex: 1 !important;
+}
+#recent-posts .recent-post-item .post_cover.left,
+#recent-posts .recent-post-item .post_cover.right {
+  order: 0;
+}
+/* 6色轮换 */
+#recent-posts .recent-post-item:nth-child(6n+1) .post_cover { background: #3b82f6 !important; }
+#recent-posts .recent-post-item:nth-child(6n+2) .post_cover { background: #22c55e !important; }
+#recent-posts .recent-post-item:nth-child(6n+3) .post_cover { background: #a855f7 !important; }
+#recent-posts .recent-post-item:nth-child(6n+4) .post_cover { background: #ec4899 !important; }
+#recent-posts .recent-post-item:nth-child(6n+5) .post_cover { background: #f59e0b !important; }
+#recent-posts .recent-post-item:nth-child(6n+6) .post_cover { background: #06b6d4 !important; }
+[data-theme="dark"] #recent-posts .recent-post-item .post_cover {
+  opacity: 0.85;
 }
 
 /* ─── 21. 卡片灰色字体增强对比度 ─── */
