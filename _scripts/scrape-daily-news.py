@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 """
 Scrape real news from TechCrunch via Scrapling + Agnes AI → Generate daily-news articles.
-Usage:
+(with retry) Usage:
   python3 _scripts/scrape-daily-news.py              # Generate missing recent dates
   python3 _scripts/scrape-daily-news.py --all         # Regenerate all 38 dates
   python3 _scripts/scrape-daily-news.py 2026-07-08   # Specific date
 """
-import os, re, ssl, sys, json, urllib.request
+import os, re, ssl, sys, json, urllib.request, time
 from datetime import datetime, timedelta
 from scrapling.parser import Selector
 
 BLOG_DIR = os.environ.get("BLOG_DIR", ".")
 AGNES_KEY = os.environ.get("AGNES_API_KEY", "")
-# Also try to read from .env
 if not AGNES_KEY:
     env_path = os.path.join(BLOG_DIR, ".env")
     if os.path.exists(env_path):
@@ -30,36 +29,47 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 }
 AI_API = "https://apihub.agnes-ai.com/v1/chat/completions"
+MAX_RETRIES = 3
 
-# ── Helper functions ──────────────────────────────────────────
 
-def fetch_html(url):
+def retry(fn, label="", max_retries=MAX_RETRIES):
+    last_err = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            return fn()
+        except Exception as e:
+            last_err = e
+            if attempt < max_retries:
+                wait = min(2 ** attempt * 2, 30)
+                print(f"    [RETRY {attempt}/{max_retries}] {label}: {str(e)[:60]} (wait {wait}s)", flush=True)
+                time.sleep(wait)
+    print(f"    [FAIL] {label}: {last_err}", flush=True)
+    return None
+
+
+def fetch_html(url, timeout=25):
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=20, context=ctx) as r:
+    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as r:
         return r.read().decode('utf-8', errors='replace')
 
-def fetch_html_with_encoding(url):
+
+def fetch_html_with_encoding(url, timeout=20):
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=20, context=ctx) as r:
+    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as r:
         raw = r.read()
-        # Detect encoding from Content-Type or meta
         charset = 'utf-8'
         ct = r.headers.get('Content-Type', '')
         if 'charset=' in ct:
             charset = ct.split('charset=')[-1].split(';')[0].strip()
         return raw.decode(charset, errors='replace')
 
+
 def scrape_date_archive(date_str):
-    """Scrape TechCrunch date archive → list of {title, url}"""
-    date_path = date_str.replace('-', '/')
-    url = f'https://techcrunch.com/{date_path}/'
-    try:
-        html = fetch_html(url)
-    except Exception as e:
-        print(f"    [WARN] Fetch failed: {str(e)[:60]}")
+    url = f'https://techcrunch.com/{date_str.replace("-", "/")}/'
+    result = retry(lambda: fetch_html(url), label=f"archive {date_str}")
+    if not result:
         return []
-    
-    page = Selector(html)
+    page = Selector(result)
     links = page.css('a[href*="/2026/"]')
     articles = []
     seen = set()
@@ -73,30 +83,28 @@ def scrape_date_archive(date_str):
                 articles.append({'title': title, 'url': href})
     return articles[:6]
 
+
 def scrape_article_content(url):
-    """Scrape article first paragraphs"""
-    try:
+    def _fetch():
         html = fetch_html_with_encoding(url)
-    except:
+        page = Selector(html)
+        for sel in ['.entry-content p', 'article p', '.article-content p']:
+            paras = page.css(sel)
+            texts = [p.css('::text').get() for p in paras]
+            texts = [t.strip() for t in texts if t and t.strip()]
+            if len(texts) >= 2:
+                return '\n'.join(texts[:5])
         return ""
-    page = Selector(html)
-    for sel in ['.entry-content p', 'article p', '.article-content p']:
-        paras = page.css(sel)
-        texts = [p.css('::text').get() for p in paras]
-        texts = [t.strip() for t in texts if t and t.strip()]
-        if len(texts) >= 2:
-            return '\n'.join(texts[:5])
-    return ""
+    return retry(_fetch, label=f"content {url.rsplit('/', 1)[-1][:30]}") or ""
+
 
 def llm_summarize(date_str, articles_data):
-    """Send scraped articles to Agnes AI → get Chinese blog post"""
-    # Build the prompt
     news_block = ""
     for i, art in enumerate(articles_data, 1):
         news_block += f"\n{i}. 标题: {art['title']}\n   链接: {art['url']}\n"
         if art.get('content'):
             news_block += f"   内容摘要: {art['content'][:500]}\n"
-    
+
     prompt = f"""你是「水星引力m」科技博客的中文编辑。请根据以下从 TechCrunch 爬取的真实新闻，撰写一篇中文每日热点文章。
 
 日期: {date_str}
@@ -144,25 +152,24 @@ def llm_summarize(date_str, articles_data):
         "max_tokens": 2000,
         "temperature": 0.7
     }).encode()
-    
-    req = urllib.request.Request(
-        AI_API, data=payload,
-        headers={"Authorization": f"Bearer {AGNES_KEY}", "Content-Type": "application/json"}
-    )
-    try:
+
+    def _call():
+        req = urllib.request.Request(
+            AI_API, data=payload,
+            headers={"Authorization": f"Bearer {AGNES_KEY}", "Content-Type": "application/json"}
+        )
         with urllib.request.urlopen(req, timeout=120, context=ctx) as r:
-            data = json.loads(r.read())
-            return data["choices"][0]["message"]["content"]
-    except Exception as e:
-        print(f"    [WARN] Agnes API failed: {str(e)[:80]}")
-        return None
+            return json.loads(r.read())["choices"][0]["message"]["content"]
+
+    return retry(_call, label="Agnes API")
+
 
 def extract_title(article_text):
     m = re.search(r'^#\s+(.+)', article_text, re.MULTILINE)
     return m.group(1).strip() if m else "科技资讯精选"
 
+
 def extract_description(article_text):
-    # Get first sentence after the title
     lines = article_text.split('\n')
     for line in lines:
         line = line.strip()
@@ -170,21 +177,21 @@ def extract_description(article_text):
             return line[:120]
     return ""
 
+
 def generate_article(date_str, force=False):
     date_obj = datetime.strptime(date_str, "%Y-%m-%d")
     date_display = date_obj.strftime("%Y年%m月%d日")
-    
+
     post_path = os.path.join(BLOG_DIR, "source", "_posts", "daily-news", f"{date_str}-daily-hotspot.md")
     if os.path.exists(post_path) and not force:
         print(f"  [SKIP] File exists")
         return
-    
+
     print(f"\n[{date_str}] Scraping TechCrunch archive...")
     articles = scrape_date_archive(date_str)
-    
+
     if not articles:
         print(f"  [FAIL] No articles found")
-        # Create placeholder
         placeholder = f"""---
 title: "{date_display} 科技资讯"
 date: {date_str} 12:00:00
@@ -200,17 +207,16 @@ description: "{date_display} 科技资讯。"
         with open(post_path, "w", encoding="utf-8") as f:
             f.write(placeholder)
         return
-    
+
     print(f"  Found {len(articles)} articles, fetching content...")
     for art in articles:
         print(f"    Fetching: {art['title'][:50]}...")
         art['content'] = scrape_article_content(art['url'])
-    
+
     print(f"  Feeding to Agnes AI for summarization...")
     result = llm_summarize(date_display, articles)
-    
+
     if not result:
-        # Fallback: generate a simple version without AI
         body_parts = [f"今天的科技圈发生了这些事。\n", "<!-- more -->\n"]
         for art in articles[:4]:
             body_parts.append(f"## {art['title']}\n")
@@ -232,13 +238,12 @@ description: "{date_display} 科技资讯。"
         if '#' in main_title:
             body = re.sub(r'^#\s+.*\n', '', body, count=1).strip()
         desc = extract_description(result)
-    
-    # Fix <!-- more --> position
+
     if '<!-- more -->' not in body:
         paras = body.split('\n\n')
         if len(paras) > 2:
             body = paras[0] + '\n\n<!-- more -->\n\n' + '\n\n'.join(paras[1:])
-    
+
     frontmatter = [
         "---",
         f"title: \"{main_title}\"",
@@ -250,12 +255,13 @@ description: "{date_display} 科技资讯。"
         f"description: \"{desc}\"",
         "---",
     ]
-    
+
     md = "\n".join(frontmatter) + "\n\n" + body + "\n"
     os.makedirs(os.path.dirname(post_path), exist_ok=True)
     with open(post_path, "w", encoding="utf-8") as f:
         f.write(md)
     print(f"  [OK] {post_path}")
+
 
 def main():
     force = '--all' in sys.argv or '--force' in sys.argv
@@ -263,26 +269,26 @@ def main():
     for arg in sys.argv[1:]:
         if re.match(r'^\d{4}-\d{2}-\d{2}$', arg):
             specific_date = arg
-    
+
     if specific_date:
         generate_article(specific_date, force=True)
         return
-    
+
     if '--all' in sys.argv:
         start = datetime(2026, 6, 1)
         end = datetime(2026, 7, 8)
     else:
-        # Generate last 3 days
         end = datetime.now()
         start = end - timedelta(days=3)
-    
+
     current = start
     while current <= end:
         date_str = current.strftime("%Y-%m-%d")
         generate_article(date_str, force=force)
         current += timedelta(days=1)
-    
+
     print(f"\nDone.")
+
 
 if __name__ == "__main__":
     main()

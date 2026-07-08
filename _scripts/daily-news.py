@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Daily news generator: Scrapling scrape + Agnes AI summary"""
-import os, re, ssl, sys, json, urllib.request
+"""Daily news generator: Scrapling scrape + Agnes AI summary (with retry)"""
+import os, re, ssl, sys, json, urllib.request, time
 from datetime import datetime, timedelta
 from scrapling.parser import Selector
 
@@ -20,31 +20,55 @@ ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
 AI_API = "https://apihub.agnes-ai.com/v1/chat/completions"
+MAX_RETRIES = 3
 
 
-def fetch_html(url):
+def retry(fn, label="", max_retries=MAX_RETRIES):
+    last_err = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            return fn()
+        except Exception as e:
+            last_err = e
+            if attempt < max_retries:
+                wait = min(2 ** attempt * 2, 30)
+                print(f"    [RETRY {attempt}/{max_retries}] {label}: {str(e)[:60]} (wait {wait}s)", flush=True)
+                time.sleep(wait)
+    print(f"    [FAIL] {label}: {last_err}", flush=True)
+    return None
+
+
+def fetch_html(url, timeout=25):
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=20, context=ctx) as r:
+    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as r:
         return r.read().decode('utf-8', errors='replace')
 
 
 def scrape_articles(date_str):
     date_path = date_str.replace('-', '/')
-    url = f'https://techcrunch.com/{date_path}/'
-    try:
-        html = fetch_html(url)
-    except:
-        # Try without trailing slash
-        try:
-            url = f'https://techcrunch.com/{date_path}'
-            html = fetch_html(url)
-        except:
-            # Fallback: parse front page for latest articles
-            try:
-                html = fetch_html('https://techcrunch.com/')
-            except Exception as e:
-                print(f"    [FAIL] Cannot fetch: {e}")
-                return []
+    urls_to_try = [
+        f'https://techcrunch.com/{date_path}/',
+        f'https://techcrunch.com/{date_path}',
+    ]
+
+    html = None
+    for url in urls_to_try:
+        result = retry(lambda u=url: fetch_html(u), label=f"fetch {url.rsplit('/', 1)[-1]}", max_retries=2)
+        if result:
+            html = result
+            break
+
+    if not html:
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+        if date_obj > datetime.now():
+            print(f"    [SKIP] Future date, no archive yet")
+            return []
+        print(f"    Fallback: scraping front page...", flush=True)
+        result = retry(lambda: fetch_html('https://techcrunch.com/', timeout=30), label="fetch front page")
+        if not result:
+            return []
+        html = result
+
     page = Selector(html)
     links = page.css('a[href*="techcrunch.com/2026/"]')
     articles = []
@@ -61,7 +85,7 @@ def scrape_articles(date_str):
 
 
 def scrape_content(url):
-    try:
+    def _fetch():
         req = urllib.request.Request(url, headers=HEADERS)
         with urllib.request.urlopen(req, timeout=15, context=ctx) as r:
             raw = r.read()
@@ -70,16 +94,16 @@ def scrape_content(url):
             if 'charset=' in ct:
                 charset = ct.split('charset=')[-1].split(';')[0].strip()
             html = raw.decode(charset, errors='replace')
-    except:
+        page = Selector(html)
+        for sel in ['.entry-content p', 'article p']:
+            paras = page.css(sel)
+            texts = [p.css('::text').get() for p in paras]
+            texts = [t.strip() for t in texts if t and t.strip()]
+            if len(texts) >= 2:
+                return '\n'.join(texts[:5])
         return ""
-    page = Selector(html)
-    for sel in ['.entry-content p', 'article p']:
-        paras = page.css(sel)
-        texts = [p.css('::text').get() for p in paras]
-        texts = [t.strip() for t in texts if t and t.strip()]
-        if len(texts) >= 2:
-            return '\n'.join(texts[:5])
-    return ""
+    result = retry(_fetch, label=f"content {url.rsplit('/', 1)[-1][:30]}")
+    return result or ""
 
 
 def llm_summarize(date_display, articles):
@@ -112,16 +136,16 @@ def llm_summarize(date_display, articles):
         "max_tokens": 2000,
         "temperature": 0.7
     }).encode()
-    req = urllib.request.Request(
-        AI_API, data=payload,
-        headers={"Authorization": f"Bearer {AGNES_KEY}", "Content-Type": "application/json"}
-    )
-    try:
+
+    def _call():
+        req = urllib.request.Request(
+            AI_API, data=payload,
+            headers={"Authorization": f"Bearer {AGNES_KEY}", "Content-Type": "application/json"}
+        )
         with urllib.request.urlopen(req, timeout=120, context=ctx) as r:
             return json.loads(r.read())["choices"][0]["message"]["content"]
-    except Exception as e:
-        print(f"    [WARN] API failed: {e}")
-        return None
+
+    return retry(_call, label="Agnes API")
 
 
 def generate(date_str):

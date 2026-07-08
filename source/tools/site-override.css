@@ -519,8 +519,8 @@ img.error-img-fallback,
   justify-content: center;
 }
 #aside-content {
-  width: 285px !important;
-  min-width: 285px !important;
+  width: 320px !important;
+  min-width: 320px !important;
 }
 
 /* ─── 19. 登录按钮 — 去金色，透明毛玻璃样式 ─── */
@@ -631,4 +631,61 @@ img.error-img-fallback,
 [data-theme="dark"] .tool-card {
   background: rgba(30,41,59,0.72) !important;
   border-color: rgba(51,65,85,0.5) !important;
+}
+
+/* ─── 24. 社交图标 — 5个一排，不换行 ─── */
+.card-info-social-icons {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 8px 4px !important;
+}
+.card-info-social-icons .social-icon {
+  flex: 0 0 auto !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px !important;
+}
+
+/* ─── 25. 登录按钮 — 导航栏最后方 ─── */
+#nav {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+#nav #blog-info {
+  flex: 0 0 auto !important;
+}
+#nav #menus {
+  display: flex !important;
+  align-items: center !important;
+}
+#nav .menus_items {
+  display: flex !important;
+  align-items: center !important;
+}
+#nav .menus_items .menus_item {
+  flex: 0 0 auto !important;
+  list-style: none !important;
+}
+#nav #menus {
+  flex: 1 !important;
+}
+#nav #site-auth-bar {
+  margin-left: auto !important;
+}
+#nav #site-auth-bar a,
+#nav #site-auth-bar .auth-login-btn {
+  background: rgba(255,255,255,0.08) !important;
+  border-radius: 8px !important;
+  padding: 4px 12px !important;
+  color: #E2E8F0 !important;
+  white-space: nowrap !important;
+}
+#nav #site-auth-bar a:hover {
+  background: rgba(255,255,255,0.15) !important;
 }
