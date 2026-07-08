@@ -1,7 +1,6 @@
 ---
 title: Hermes Agent - 让 AI 成为你的全能助手
 date: 2026-05-31 12:00:00
-cover: https://img.233002.xyz/blog/hermes-cover.jpg
 tags:
   - AI
   - Hermes

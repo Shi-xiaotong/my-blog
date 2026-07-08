@@ -1,4 +1,39 @@
 mixin indexPostUI()
+  style.
+    .post-bg-gradient {
+      position: relative;
+      overflow: hidden;
+    }
+    .post-bg-gradient::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -20%;
+      width: 70%;
+      height: 140%;
+      border-radius: 40%;
+      background: rgba(255,255,255,0.06);
+      transform: rotate(15deg);
+      pointer-events: none;
+    }
+    .post-bg-gradient::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -10%;
+      width: 50%;
+      height: 80%;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      pointer-events: none;
+    }
+    .post-bg-gradient .gd-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+    }
   - const indexLayout = theme.index_layout
   - const masonryLayoutClass = [6, 7].includes(indexLayout) ? 'masonry' : ''
   #recent-posts.recent-posts.nc(class=masonryLayoutClass)
@@ -17,7 +52,8 @@ mixin indexPostUI()
                 if article.cover_type === 'img'
                   img.post-bg(src=url_for(postCover) onerror=`this.onerror=null;this.src='${url_for(theme.error_img.post_page)}'` alt=title)
                 else
-                  div.post-bg(style=`background: ${postCover}`)
+                  div.post-bg.post-bg-gradient(style=`background: ${postCover}`)
+                    span.gd-dots
           .recent-post-info(class=noCover)
             a.article-title(href=url_for(link) title=title)
               if globalPageType === 'home' && (article.top || article.sticky > 0)

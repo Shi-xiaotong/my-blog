@@ -9,7 +9,6 @@ tags:
   - 程序员
   - 抖音
   - 副业
-cover: https://img.233002.xyz/blog/ai-novel-douyin-cover.png
 ---
 
 # 我花了一周用AI写小说发抖音，播放量个位数

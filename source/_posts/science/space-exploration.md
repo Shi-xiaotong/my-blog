@@ -1,7 +1,6 @@
 ---
 title: 从登月到火星：人类太空探索简史
 date: 2026-01-26 15:00:00
-cover: https://img.233002.xyz/space-exploration.png
 tags:
   - 太空
   - science

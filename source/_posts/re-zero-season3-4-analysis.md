@@ -8,7 +8,6 @@ tags:
   - 异世界
   - 黑暗奇幻
   - 深度解析
-cover: https://img.233002.xyz/blog/rezero/main-tv4a.webp
 ---
 
 # Re:从零开始的异世界生活——第三季与第四季深度解析：从水门都市到监视塔的绝望与希望

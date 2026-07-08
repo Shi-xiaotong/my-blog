@@ -1,7 +1,6 @@
 ---
 title: Docker常用命令总结
 date: 2025-12-10 10:00:00
-cover: https://img.233002.xyz/docker-commands.png
 tags:
   - Docker
   - 运维

@@ -1,7 +1,6 @@
 ---
 title: 穿越火线：那些年我们一起枪战的青春
 date: 2026-03-10 20:00:00
-cover: https://img.233002.xyz/crossfire.png
 tags:
   - 游戏
   - 穿越火线

@@ -1,7 +1,6 @@
 ---
 title: Linux常用命令总结
 date: 2025-12-05 14:30:00
-cover: https://img.233002.xyz/linux-commands.png
 tags:
   - Linux
   - 运维

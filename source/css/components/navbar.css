@@ -53,6 +53,63 @@
     }
 }
 
+
+
+/* 登录按钮 → 菜单项样式 */
+#site-auth-bar {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+#site-auth-bar .auth-login-btn.site-page {
+    color: var(--white, #fff);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+#site-auth-bar .auth-user-info {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+}
+#site-auth-bar .auth-user-info .site-page.child {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+}
+#site-auth-bar .auth-user-info .site-page.child img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+}
+#site-auth-bar .auth-user-info .auth-logout {
+    background: none;
+    border: none;
+    color: var(--white, #fff);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    padding: 2px 6px;
+    font-size: clamp(14px, 1.8vw, 16px);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+#site-auth-bar .auth-user-info .auth-logout:hover {
+    opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+    #nav #site-auth-bar .auth-login-btn.site-page,
+    #nav #site-auth-bar .auth-user-info .auth-logout {
+        color: var(--font-color);
+        text-shadow: none;
+    }
+    #nav #site-auth-bar .auth-user-info .site-page.child {
+        color: var(--font-color);
+    }
+}
+
 /* 手机适配 - 暗色背景导航 */
 @media screen and (max-width: 768px) {
     #nav .menus_item a,

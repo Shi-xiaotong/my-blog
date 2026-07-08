@@ -14,13 +14,15 @@ function render(){
   if(isLoggedIn()){
     var avatarHtml=user&&user.avatar_url?'<img src="'+user.avatar_url+'" alt="">':'<i class="fas fa-user" style="font-size:10px"></i>';
     var name=user?(user.display_name||user.email.split('@')[0]):'';
-    bar.innerHTML='<div class="auth-user-info">'
-      +'<div class="auth-avatar-sm" onclick="window.location.href=\'/user/\'" title="个人中心">'+avatarHtml+'</div>'
-      +'<span class="auth-name" onclick="window.location.href=\'/user/\'" title="个人中心">'+name+'</span>'
+    bar.innerHTML='<div class="menus_item auth-user-info">'
+      +'<span class="site-page child" onclick="window.location.href=\'/user/\'" title="个人中心">'
+      +  avatarHtml
+      +  '<span> '+name+'</span>'
+      +'</span>'
       +'<button class="auth-logout" onclick="siteAuthLogout()" title="退出"><i class="fas fa-sign-out-alt"></i></button>'
       +'</div>';
   }else{
-    bar.innerHTML='<button class="auth-login-btn" onclick="showSiteLoginModal()"><i class="fas fa-user"></i> 登录</button>';
+    bar.innerHTML='<a class="site-page auth-login-btn" style="cursor:pointer" onclick="showSiteLoginModal()"><i class="fas fa-fw fa-user"></i><span> 登录</span></a>';
   }
 }
 

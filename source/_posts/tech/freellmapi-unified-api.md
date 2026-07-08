@@ -9,7 +9,6 @@ tags:
   - OpenAI兼容
   - FreeLLMAPI
   - 效率
-cover: https://img.233002.xyz/blog/freellmapi-cover.png
 ---
 
 你有没有算过，每个月各大 AI 平台给的免费额度加起来有多少？

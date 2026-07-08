@@ -122,6 +122,16 @@ var CATEGORIES = [
       { name: 'Carbon', url: 'https://carbon.now.sh', icon: 'https://carbon.now.sh/favicon.ico' },
       { name: 'ProcessOn', url: 'https://www.processon.com', icon: 'https://www.processon.com/favicon.ico' },
     ]
+  },
+  {
+    id: 'self',
+    icon: '\u26A1',
+    name: '\u81EA\u7814\u5E94\u7528',
+    sites: [
+      { name: '\u5F71\u89C6\u5C4B', url: '/anime/', icon: 'https://img.233002.xyz/favicon/anime.png' },
+      { name: '\u5DE5\u5177\u7BB1', url: '/tools/', icon: 'https://img.233002.xyz/favicon/tools.png' },
+      { name: '\u5C0F\u6E38\u620F', url: '/games/', icon: 'https://img.233002.xyz/favicon/games.png' },
+    ]
   }
 ];
 

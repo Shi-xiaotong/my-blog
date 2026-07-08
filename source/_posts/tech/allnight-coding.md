@@ -7,7 +7,6 @@ tags:
   - 开发日记
   - 前端
   - Hexo
-cover: https://img.233002.xyz/blog/cover-allnight-coding.png
 ---
 
 # 凌晨四点，我还在写代码——一个开发者的通宵实录

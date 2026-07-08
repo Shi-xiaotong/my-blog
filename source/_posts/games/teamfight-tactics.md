@@ -1,7 +1,6 @@
 ---
 title: 金铲铲之战：下棋也能上瘾的自走棋
 date: 2026-03-28 20:00:00
-cover: https://img.233002.xyz/teamfight-tactics.png
 tags:
   - 游戏
   - 金铲铲之战

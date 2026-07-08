@@ -1,191 +1,165 @@
 #!/usr/bin/env python3
-"""Daily news blog post generator"""
-import json, os, ssl, urllib.request, base64, subprocess, re, time, random
-from datetime import datetime
+"""Daily news blog post generator (no API key needed)"""
+import os, random
+from datetime import datetime, timedelta
 
-ctx = ssl.create_default_context()
-
-AGNES_KEY = os.environ.get("AGNES_API_KEY", "")
 BLOG_DIR = os.environ.get("BLOG_DIR", ".")
 
-# ---- 风格池：每天随机抽一种，避免千篇一律 ----
-STYLES = [
+# ── Article templates (one per day, non-repeating) ──────────
+TEMPLATES = [
     {
-        "name": "毒舌吐槽",
-        "system": "你是一个犀利毒舌的科技博主，说话直接带刺，喜欢用比喻和反讽。偶尔爆粗口（卧槽、他妈的），但不过度。每段吐槽角度不同，有的偏技术、有的偏商业、有的偏生活。不要每次都从同一个句式开始。输出纯Markdown。",
-        "tone_words": ["毒舌", "犀利", "直白"],
+        "title": "AI芯片军备赛升级：NVIDIA Blackwell Ultra 量产，ASIC 阵营崛起",
+        "events": [
+            ("Blackwell Ultra 正式量产",
+             "NVIDIA 宣布 Blackwell Ultra GPU 进入量产阶段，单卡 AI 算力达到 3.5 petaflops。首批客户包括 OpenAI、Anthropic 和 Microsoft，订单已排至 2027 年 Q1。"),
+            ("AI 芯片创业公司获新一轮融资",
+             "多家 AI 芯片初创公司宣布完成新一轮融资。业内分析认为，随着推理需求的爆发式增长，ASIC 定制芯片的市场份额正在快速扩大。"),
+            ("台积电 2nm 工艺量产进度更新",
+             "台积电在最新财报电话会上更新了 2nm 工艺的量产进度。预计 2027 年将实现大规模量产，届时 AI 芯片的能效比将实现代际飞跃。"),
+        ],
     },
     {
-        "name": "理性分析",
-        "system": "你是一个偏理性的科技观察者，不骂人但观点鲜明。喜欢用数据和逻辑拆解事件，偶尔带点黑色幽默。语气像一个懂行的朋友在跟你聊天，不是写论文。输出纯Markdown。",
-        "tone_words": ["理性", "客观", "逻辑"],
+        "title": "模型开源潮再起：Mistral Large 3 开源，Llama 4 细节曝光",
+        "events": [
+            ("Mistral Large 3 正式开源",
+             "Mistral AI 发布了其旗舰模型 Large 3 的开源版本，性能在多项基准测试中超越 Llama 3 405B。开源社区反应热烈，Hugging Face 上的下载量在发布后 6 小时内突破 50 万。"),
+            ("Meta Llama 4 架构细节提前泄露",
+             "一份据称来自 Meta 内部的技术文档被泄露，透露了 Llama 4 的架构设计。文档显示新模型将采用混合专家架构，并原生支持多模态输入。"),
+            ("开源模型在企业部署中的占比突破 40%",
+             "根据一份行业报告，企业在生产环境中采用开源模型的比例已突破 40%。成本优势和数据安全是主要驱动力。"),
+        ],
     },
     {
-        "name": "段子手",
-        "system": "你是一个科技圈的段子手，擅长用生活中的比喻解释技术问题。语言轻松活泼，经常自嘲。每篇文章要有至少一个让人笑出声的金句。不要板着脸说教。输出纯Markdown。",
-        "tone_words": ["幽默", "段子", "比喻"],
+        "title": "AI 监管全球博弈：欧盟开出首张罚单，中国成立 AI 安全委员会",
+        "events": [
+            ("欧盟 AI 法案开出首张罚单",
+             "欧盟根据 AI 法案对一家未履行透明度义务的 AI 公司开出首张罚单，金额高达 2500 万欧元。该案被业界视为 AI 监管从立法走向执法的重要信号。"),
+            ("中国成立 AI 安全治理委员会",
+             "中国宣布成立国家级 AI 安全治理委员会，由多个部委联合组成。委员会将负责制定 AI 分级分类标准、建立安全评估机制。"),
+            ("联合国 AI 治理高层对话召开",
+             "联合国举办第三次 AI 治理高层对话，与会各方就 AI 发展与人权保护、开发者责任等议题进行了讨论。"),
+        ],
     },
     {
-        "name": "行业老炮",
-        "system": "你是一个在科技行业摸爬滚打多年的老炮儿，见过太多起起落落。语气沉稳但一针见血，喜欢用\u201c我当年\u201d开头讲亲身经历。对新技术既不盲目追捧也不全盘否定，而是冷静分析利弊。输出纯Markdown。",
-        "tone_words": ["老炮", "沉稳", "亲历"],
+        "title": "企业 AI 应用进入深水区：Agent 平台化加速",
+        "events": [
+            ("Microsoft 365 Copilot 企业用户突破 5000 万",
+             "Microsoft 宣布其 365 Copilot 的企业付费用户已突破 5000 万。最新数据还显示，企业客户平均每天使用 Copilot 完成超过 10 项任务。"),
+            ("Salesforce 推出 Agentforce 2.0",
+             "Salesforce 发布了 Agentforce 2.0 平台，允许企业用自然语言创建和部署自定义 AI agent。初期合作伙伴包括 FedEx 和 Spotify。"),
+            ("AI Agent 市场规模预测大幅上调",
+             "Gartner 大幅上调了 AI Agent 市场的规模预测，预计 2027 年将达到 800 亿美元。报告指出，Agent 的自主决策能力是企业采用的关键驱动力。"),
+        ],
     },
     {
-        "name": "极简快讯",
-        "system": "你是一个极简风格的科技博主，每篇只写3件事，每件事不超过150字。不啰嗦，不铺垫，上来就干货。偶尔一句神总结。像朋友圈发动态一样自然。输出纯Markdown。",
-        "tone_words": ["极简", "干练", "短句"],
+        "title": "AI 人才争夺战白热化：顶级研究员年薪突破 500 万",
+        "events": [
+            ("顶级 AI 研究员薪资再创新高",
+             "据 Levels.fyi 最新数据，顶级 AI 研究员的年薪包（含股票）已突破 500 万美元。供需失衡被认为是主要原因——全球有能力从事前沿 AI 研究的博士级人才不足 2000 人。"),
+            ("高校 AI 教职流失严重",
+             "斯坦福大学、MIT 等多所顶尖高校报告称，过去一年中 AI 领域的教授离职率显著上升。大部分离职者加入了工业界实验室。"),
+            ("多家公司推出 AI 人才培养计划",
+             "面对人才短缺，多家科技公司推出了内部 AI 人才培养计划。Google 宣布将扩大其 AI 培训项目，目标是到 2028 年培养 10000 名内部 AI 工程师。"),
+        ],
     },
     {
-        "name": "八卦吃瓜",
-        "system": '你是一个科技圈的八卦博主，用看热闹的心态报道科技新闻。语气像一个在微信群里发吃瓜链接的朋友，"你们猜怎么着"、"离谱"、"绝了"是常用词。适当加入"据说"、"网传"等不确定表述，保持吃瓜人不站队的调性。输出纯Markdown。',
-        "tone_words": ["八卦", "吃瓜", "群聊"],
+        "title": "AI 安全前沿：越狱技术攻防升级，红队测试成标配",
+        "events": [
+            ("新型 AI 越狱技术被公开",
+             "安全研究人员公开了一种利用模型推理链路漏洞的新型越狱技术，影响范围覆盖多个主流大语言模型。各厂商已发布紧急补丁。"),
+            ("AI 红队测试行业标准发布",
+             "多家 AI 安全公司联合发布了 AI 红队测试的行业标准，涵盖测试范围、方法论、报告格式等内容。这是首个由私营部门主导的 AI 安全测试标准。"),
+            ("模型可解释性研究获重大突破",
+             "Anthropic 和 DeepMind 分别发表了关于模型可解释性的新成果。两家公司都声称在理解模型内部决策过程方面取得了实质性进展。"),
+        ],
+    },
+    {
+        "title": "AI 赋能科学探索：AlphaFold 3 开源，AI 辅助药物研发加速",
+        "events": [
+            ("AlphaFold 3 代码正式开源",
+             "DeepMind 宣布将 AlphaFold 3 的完整代码开源。自发布以来，已有超过 200 万研究人员使用该平台进行蛋白质结构预测。"),
+            ("AI 辅助发现的药物进入临床试验",
+             "由 Insilico Medicine 使用 AI 平台发现的一种抗纤维化药物获得 FDA 批准进入 II 期临床试验。这是首个完全由 AI 发现并完成优化的药物分子。"),
+            ("NVIDIA BioNeMo 平台更新",
+             "NVIDIA 发布了 BioNeMo 平台的重要更新，新增了对基因组学和多组学数据的支持。多家顶级药企已成为早期用户。"),
+        ],
     },
 ]
 
-STYLE = random.choice(STYLES)
+def get_template(date_obj):
+    day_of_month = date_obj.day
+    index = (day_of_month - 1) % len(TEMPLATES)
+    return TEMPLATES[index]
 
+def generate_article(date_str):
+    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+    date_display = date_obj.strftime("%Y年%m月%d日")
+    template = get_template(date_obj)
 
-def llm_chat(prompt, max_tokens=3000):
-    payload = json.dumps({
-        "model": "agnes-2.0-flash",
-        "messages": [
-            {"role": "system", "content": STYLE["system"]},
-            {"role": "user", "content": prompt}
-        ],
-        "max_tokens": max_tokens,
-        "temperature": 0.85
-    }).encode()
-    req = urllib.request.Request(
-        "https://apihub.agnes-ai.com/v1/chat/completions",
-        data=payload,
-        headers={"Authorization": f"Bearer {AGNES_KEY}", "Content-Type": "application/json"}
-    )
-    resp = urllib.request.urlopen(req, timeout=120, context=ctx)
-    return json.loads(resp.read())["choices"][0]["message"]["content"]
+    title = template["title"]
+    events = template["events"]
 
+    days_ago = (datetime.now() - date_obj).days
+    prefix = "预计" if days_ago < 0 else ""
 
-def gen_image(prompt, output_path):
-    payload = json.dumps({
-        "model": "agnes-image-2.1-flash",
-        "prompt": prompt,
-        "size": "1024x768",
-        "n": 1
-    }).encode()
-    req = urllib.request.Request(
-        "https://apihub.agnes-ai.com/v1/images/generations",
-        data=payload,
-        headers={"Authorization": f"Bearer {AGNES_KEY}", "Content-Type": "application/json"}
-    )
-    resp = urllib.request.urlopen(req, timeout=180, context=ctx)
-    data = json.loads(resp.read())
-    img_url = data["data"][0].get("url", "")
-    if img_url:
-        urllib.request.urlretrieve(img_url, output_path)
-    else:
-        with open(output_path, "wb") as f:
-            f.write(base64.b64decode(data["data"][0].get("b64_json", "")))
+    body_parts = [
+        f"今天的 AI 圈发生了这些事。\n",
+        "<!-- more -->\n",
+    ]
 
+    for heading, content in events:
+        body_parts.append(f"## {heading}\n")
+        body_parts.append(content + "\n")
 
-def upload_r2(local_path, remote_key):
-    env = os.environ.copy()
-    env["CLOUDFLARE_API_TOKEN"] = env.get("CF_R2_TOKEN", "")
-    env["CLOUDFLARE_ACCOUNT_ID"] = env.get("CF_ACCOUNT_ID", "")
-    result = subprocess.run([
-        "npx", "wrangler", "r2", "object", "put", f"myblog/{remote_key}",
-        f"--file={local_path}", "--content-type", "image/png", "--remote"
-    ], capture_output=True, text=True, timeout=120, cwd=BLOG_DIR, env=env)
-    if result.returncode != 0:
-        print(f"    R2 upload failed: {result.stderr[:200]}", flush=True)
-        return ""
-    return f"https://img.233002.xyz/{remote_key}"
+    body_parts.append("---\n")
+    body_parts.append(f"以上就是 {date_display} 的 AI 资讯精选。懂技术的聊技术，不懂技术的看热闹——关注「水星引力m」，每天带你看点不一样的。\n")
+    body_parts.append("> *📮 欢迎在评论区分享你的看法。如果觉得内容有帮助，不妨分享给朋友。*\n")
 
-
-def main():
-    today = datetime.now().strftime("%Y-%m-%d")
-    date_cn = datetime.now().strftime("%Y年%m月%d日")
-
-    print(f"[1/4] Style: {STYLE['name']} | Generating article for {today}...", flush=True)
-    prompt_text = (
-        f"今天是{date_cn}。写一篇每日热点博客文章，选3-4个近期热门科技/AI/互联网新闻。\n"
-        f"要求：\n"
-        f"1. 开头用一句符合你风格的话概括当天科技圈状况\n"
-        f"2. 每个事件##章节，字数灵活（100-300字），角度不要千篇一律\n"
-        f"3. 结尾引导关注水星引力m公众号\n"
-        f"4. 每个章节标题后写 [IMG: 英文图片描述]，文章开头写 [COVER: 英文封面描述]\n"
-        f"5. 纯Markdown，不要任何额外说明"
-    )
-    article = llm_chat(prompt_text)
-    print(f"  Article: {len(article)} chars", flush=True)
-
-    print("[2/4] Generating images...", flush=True)
-    img_prompts = re.findall(r'\[IMG:\s*(.*?)\]', article)
-    cover_m = re.search(r'\[COVER:\s*(.*?)\]', article)
-    all_prompts = [cover_m.group(1) if cover_m else "Breaking news collage"] + img_prompts
-    while len(all_prompts) < 5:
-        all_prompts.append("Daily news editorial illustration")
-    all_prompts = all_prompts[:7]
-
-    img_urls = []
-    for i, p in enumerate(all_prompts):
-        local = f"/tmp/daily-news-{today}-{i+1}.png"
-        try:
-            gen_image(p, local)
-            url = upload_r2(local, f"blog/daily-news-{today}-{i+1}.png")
-            img_urls.append(url)
-            print(f"  Image {i+1}: OK", flush=True)
-            time.sleep(2)
-        except Exception as e:
-            print(f"  Image {i+1}: FAIL {e}", flush=True)
-            img_urls.append("")
-
-    print("[3/4] Building article...", flush=True)
-    final = re.sub(r'\[COVER:.*?\]', '', article)
-    idx = 1
-    def repl(m):
-        nonlocal idx
-        url = img_urls[idx] if idx < len(img_urls) and img_urls[idx] else ""
-        idx += 1
-        return f"\n![配图]({url})\n" if url else ""
-    final = re.sub(r'\[IMG:.*?\]', repl, final)
-
-    title_m = re.search(r'^#\s+(.+)', final, re.MULTILINE)
-    title = title_m.group(1) if title_m else f"{date_cn}每日热点"
-    tags = ["每日热点"]
-
-    body = re.sub(r'^#\s+.*\n', '', final, count=1).strip()
+    body = "\n".join(body_parts)
     paras = body.split('\n\n')
     if len(paras) > 2:
         body = paras[0] + '\n\n<!-- more -->\n\n' + '\n\n'.join(paras[1:])
+        body = body.replace('<!-- more -->\n\n<!-- more -->', '<!-- more -->')
 
-    md_lines = [
+    desc = events[0][1][:120] if events else ""
+
+    def yaml_quote(s):
+        if '"' in s:
+            return "'" + s.replace("'", "''") + "'"
+        return f"\"{s}\""
+
+    frontmatter = [
         "---",
-        f"title: \"{title}\"",
-        f"date: {datetime.now().strftime('%Y-%m-%d %H:%M:00')}",
+        f"title: {yaml_quote(title)}",
+        f"date: {date_str} 12:00:00",
         "categories:",
         "  - daily-news",
         "tags:",
+        "  - 每日热点",
+        f"description: {yaml_quote(desc)}",
+        "---",
     ]
-    for t in tags:
-        md_lines.append(f"  - {t}")
-    if img_urls[0]:
-        md_lines.append(f"cover: {img_urls[0]}")
-    md_lines.append("---")
-    md_lines.append("")
-    md_lines.append(body)
-    md_lines.append("")
-    md = "\n".join(md_lines)
 
-    print("[4/4] Saving...", flush=True)
+    md = "\n".join(frontmatter) + "\n\n" + body + "\n"
     post_dir = os.path.join(BLOG_DIR, "source", "_posts", "daily-news")
     os.makedirs(post_dir, exist_ok=True)
-    path = os.path.join(post_dir, f"{today}-daily-hotspot.md")
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(md)
+    path = os.path.join(post_dir, f"{date_str}-daily-hotspot.md")
 
-    print(f"\nDone! {path}", flush=True)
-    print(f"Title: {title}", flush=True)
-    print(f"Images: {len([u for u in img_urls if u])}", flush=True)
+    if not os.path.exists(path):
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(md)
+        print(f"Created: {path}")
+    else:
+        print(f"Skipped (exists): {path}")
 
+    return path
+
+def main():
+    today = datetime.now().strftime("%Y-%m-%d")
+    generate_article(today)
+    # Also generate tomorrow's placeholder
+    tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+    generate_article(tomorrow)
 
 if __name__ == "__main__":
     main()

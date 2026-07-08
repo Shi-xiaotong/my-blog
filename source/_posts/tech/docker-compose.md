@@ -1,7 +1,6 @@
 ---
 title: Docker Compose快速指南
 date: 2025-12-15 11:00:00
-cover: https://img.233002.xyz/docker-compose.png
 tags:
   - Docker
   - Docker Compose

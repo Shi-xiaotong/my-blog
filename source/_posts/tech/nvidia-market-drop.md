@@ -8,7 +8,6 @@ tags:
   - AI
   - 股市
   - 芯片
-cover: https://img.233002.xyz/blog/nvidia-drop-cover.png
 ---
 
 5 月 29 日，英伟达股价单日暴跌约 7-8%，市值蒸发约 300 亿美元——折合人民币约 2.2 万亿。

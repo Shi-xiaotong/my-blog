@@ -7,7 +7,6 @@ tags:
   - AI工具
   - 文件管理
   - 效率
-cover: https://img.233002.xyz/blog/file-organizer-cover.png
 ---
 
 你的下载文件夹有多少个文件？我猜至少 200 个。

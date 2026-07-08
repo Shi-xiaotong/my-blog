@@ -1,7 +1,6 @@
 ---
 title: RSA + AES 接口加密原理与 Java 实践
 date: 2026-05-11
-cover: https://img.233002.xyz/rsa-ase-java.png
 tags:
   - Java
   - RSA

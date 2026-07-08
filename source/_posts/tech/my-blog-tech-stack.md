@@ -1,7 +1,6 @@
 ---
 title: 我的博客搭建全记录：从零到AI自动化部署
 date: 2026-05-23 01:30:00
-cover: https://img.233002.xyz/blog/myblog-cover.png
 tags:
   - Hexo
   - Cloudflare

@@ -1,7 +1,6 @@
 ---
 title: 康熙皇帝：千古一帝的传奇人生
 date: 2026-03-15 20:00:00
-cover: https://img.233002.xyz/kangxi-emperor.png
 tags:
   - history
   - 清朝

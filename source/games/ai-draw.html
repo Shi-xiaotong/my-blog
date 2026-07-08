@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 绘画猜谜 - 小游戏</title>
+<link rel="stylesheet" href="/games/common.css">
+<style>
+.game-container { max-width: 600px; margin: 0 auto; }
+.canvas-wrap { display: flex; justify-content: center; margin: 12px 0; }
+.canvas-wrap canvas { border: 2px solid var(--border); border-radius: 8px; cursor: crosshair; touch-action: none; background: #fff; }
+.draw-tools { display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+.draw-tools .color-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+.draw-tools .color-btn.active { border-color: var(--text); box-shadow: 0 0 0 2px var(--bg); }
+.draw-tools .size-btn { padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 12px; cursor: pointer; }
+.draw-tools .size-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.word-display { text-align: center; font-size: 24px; font-weight: 700; color: var(--primary); margin: 12px 0; padding: 12px; background: var(--primary-light); border-radius: 8px; }
+.ai-guess-area { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 12px 0; min-height: 80px; }
+.ai-guess-area .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+.ai-guess-area .guess-text { font-size: 16px; font-weight: 600; min-height: 24px; }
+.ai-guess-area .guess-text.correct { color: var(--accent); }
+.ai-guess-area .guess-text.wrong { color: var(--danger); }
+.timer-bar { height: 6px; background: var(--border); border-radius: 3px; margin: 8px 0; overflow: hidden; }
+.timer-bar .fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width 1s linear; }
+.timer-bar .fill.warning { background: var(--warning); }
+.timer-bar .fill.danger { background: var(--danger); }
+.loading { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); }
+.loading .spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.win-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; max-width: 360px; }
+.win-box h2 { margin-bottom: 8px; }
+.win-box p { color: var(--text-secondary); margin-bottom: 16px; }
+@media (max-width: 500px) { .canvas-wrap canvas { width: 100%; height: auto; } }
+</style>
+</head>
+<body>
+<div id="page">
+<header class="game-page-header">
+  <a href="/games/" class="back-link">&larr; 返回游戏列表</a>
+  <h1>AI 绘画猜谜</h1>
+</header>
+<main class="game-main">
+<div class="container">
+  <div class="header">
+    
+    <h1>AI 绘画猜谜</h1>
+  </div>
+  <div class="game-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div>得分: <strong id="score">0</strong></div>
+      <div>轮次: <strong id="round">0</strong></div>
+    </div>
+    <div class="timer-bar"><div class="fill" id="timerFill" style="width:100%"></div></div>
+
+    <div class="word-display" id="wordDisplay">点击「新的一轮」开始</div>
+
+    <div class="draw-tools" id="drawTools">
+      <div class="color-btn active" style="background:#000" onclick="setColor('#000')"></div>
+      <div class="color-btn" style="background:#ef4444" onclick="setColor('#ef4444')"></div>
+      <div class="color-btn" style="background:#3b82f6" onclick="setColor('#3b82f6')"></div>
+      <div class="color-btn" style="background:#22c55e" onclick="setColor('#22c55e')"></div>
+      <div class="color-btn" style="background:#f59e0b" onclick="setColor('#f59e0b')"></div>
+      <div class="color-btn" style="background:#a855f7" onclick="setColor('#a855f7')"></div>
+      <div style="width:1px;height:20px;background:var(--border)"></div>
+      <button class="size-btn active" onclick="setSize(3)">细</button>
+      <button class="size-btn" onclick="setSize(6)">中</button>
+      <button class="size-btn" onclick="setSize(12)">粗</button>
+      <div style="width:1px;height:20px;background:var(--border)"></div>
+      <button class="size-btn" onclick="clearCanvas()">清空</button>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas" width="400" height="400"></canvas>
+    </div>
+
+    <div class="ai-guess-area">
+      <div class="label">AI 猜测</div>
+      <div class="guess-text" id="aiGuess">等待你开始画...</div>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button class="btn btn-primary" onclick="newRound()">新的一轮</button>
+      <button class="btn btn-outline" onclick="askAI()">让 AI 猜</button>
+      <button class="btn btn-outline" onclick="skipRound()">跳过</button>
+    </div>
+    <p class="tip">画出提示词，让 AI 来猜！限时 60 秒</p>
+  </div>
+</div>
+
+<div class="win-overlay" id="overlay" style="display:none">
+  <div class="win-box">
+    <h2 id="winTitle"></h2>
+    <p id="winMsg"></p>
+    <button class="btn btn-primary" onclick="closeOverlay();newRound()">再来一轮</button>
+  </div>
+</div>
+
+
+
+<script src="/games/js/ai-draw.js"></script>
+</main>
+<footer class="game-page-footer">233002.xyz</footer>
+</div>
+<script src="/games/js/ai-draw.js"></script>
+</body>
+</html>

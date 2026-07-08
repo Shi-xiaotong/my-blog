@@ -39,15 +39,11 @@ nav:
 
 menu:
   首页: / || fas fa-home
+  导航: /bookmarks/ || fas fa-compass
+  万年历: /calendar/ || fas fa-calendar-alt
+  天气: /weather/ || fas fa-cloud-sun
   友链: /links/ || fas fa-link
   关于: /about/ || fas fa-heart
-  更多:
-    导航: /bookmarks/ || fas fa-compass
-    万年历: /calendar/ || fas fa-calendar-alt
-    天气: /weather/ || fas fa-cloud-sun
-    影视屋: /anime/ || fas fa-film
-    工具箱: /tools/ || fas fa-toolbox
-    小游戏: /games/ || fas fa-gamepad
 
 # --------------------------------------
 # 代码块设置
@@ -128,11 +124,20 @@ background: "#0f172a"
 cover:
   # 是否禁用封面
   index_enable: true
-  aside_enable: true
-  archives_enable: true
-  # 当没有设置封面时，显示默认封面
+  aside_enable: false
+  archives_enable: false
+  # 当没有设置封面时，显示 CSS 渐变
   default_cover:
-    - /img/avatar.png
+    - 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    - 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+    - 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+    - 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+    - 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+    - 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'
+    - 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'
+    - 'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)'
+    - 'linear-gradient(135deg, #0c3483 0%, #a2b6df 100%)'
+    - 'linear-gradient(135deg, #f12711 0%, #f5af19 100%)'
 
 # 替换失效图片
 error_img:
@@ -236,7 +241,7 @@ index_layout: 3
 # 3: auto_excerpt（默认）
 # false: 不显示文章简介
 index_post_content:
-  method: 3
+  method: 2
   # 如果您设置 method 为 2 或 3，需要配置长度
   length: 500
 
@@ -1137,6 +1142,10 @@ inject:
     - <link rel="stylesheet" href="/tools/common.css">
     # 注入 site-override.css 桥接Butterfly→common.css
     - <link rel="stylesheet" href="/tools/site-override.css">
+    # 注入 Phase1: 文章页推荐卡片 + 上一篇/下一篇导航 玻璃化
+    - <link rel="stylesheet" href="/css/custom/phase1-post-cards-glass.css">
+    # 注入 Phase2: 侧边栏标签云 + 工具箱分类色彩标识
+    - <link rel="stylesheet" href="/css/custom/phase2-tag-cloud-and-tools.css">
   bottom:
     # 太空背景
     - <script src="/tools/bg.js"></script>

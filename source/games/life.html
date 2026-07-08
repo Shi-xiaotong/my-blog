@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生命游戏 - 小游戏</title>
+<link rel="stylesheet" href="/games/common.css">
+<style>
+.game-container { max-width: 700px; margin: 0 auto; }
+.game-area { display: flex; justify-content: center; margin: 16px 0; }
+.game-area canvas { border-radius: 4px; border: 1px solid var(--border); cursor: crosshair; touch-action: none; }
+.controls { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+.controls label { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; }
+.controls input[type="range"] { width: 80px; }
+.stats { display: flex; gap: 20px; justify-content: center; margin-bottom: 12px; font-size: 13px; color: var(--text-secondary); }
+.stats span { font-family: 'SF Mono', monospace; color: var(--primary); font-weight: 600; }
+.patterns { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+.patterns button { padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); font-size: 12px; cursor: pointer; }
+.patterns button:hover { border-color: var(--primary); color: var(--primary); }
+.tip { text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+</style>
+</head>
+<body>
+<div id="page">
+<header class="game-page-header">
+  <a href="/games/" class="back-link">&larr; 返回游戏列表</a>
+  <h1>生命游戏</h1>
+</header>
+<main class="game-main">
+<div class="container">
+  <div class="header">
+    
+    <h1>生命游戏</h1>
+  </div>
+  <div class="stats">
+    <div>世代: <span id="gen">0</span></div>
+    <div>存活: <span id="alive">0</span></div>
+    <div>密度: <span id="density">0%</span></div>
+  </div>
+  <div class="controls">
+    <button class="btn btn-primary" id="playBtn" onclick="togglePlay()">开始</button>
+    <button class="btn btn-outline" onclick="step()">单步</button>
+    <button class="btn btn-outline" onclick="randomFill()">随机</button>
+    <button class="btn btn-outline" onclick="clearGrid()">清空</button>
+    <label>速度 <input type="range" id="speed" min="1" max="30" value="10" oninput="updateSpeed()"></label>
+    <label>大小 <input type="range" id="cellSize" min="4" max="20" value="8" onchange="resizeGrid()"></label>
+  </div>
+  <div class="patterns">
+    <span style="font-size:12px;color:var(--text-secondary)">预设:</span>
+    <button onclick="loadPattern('glider')">滑翔机</button>
+    <button onclick="loadPattern('blinker')">闪烁器</button>
+    <button onclick="loadPattern('pulsar')">脉冲星</button>
+    <button onclick="loadPattern('gosper')">高斯帕枪</button>
+    <button onclick="loadPattern('lwss')">轻量飞船</button>
+    <button onclick="loadPattern('pentadecathlon')">五年周期</button>
+  </div>
+  <div class="game-area"><canvas id="canvas"></canvas></div>
+  <p class="tip">点击绘制细胞 | 拖动连续绘制 | 右键擦除</p>
+</div>
+
+
+
+<script src="/games/js/life.js"></script>
+</main>
+<footer class="game-page-footer">233002.xyz</footer>
+</div>
+<script src="/games/js/life.js"></script>
+</body>
+</html>

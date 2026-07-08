@@ -1,7 +1,6 @@
 ---
 title: 从零搭建 Markdown 编辑器：写完直接发博客，不用再复制粘贴
 date: 2026-06-06 20:00:00
-cover: https://img.233002.xyz/blog/editor-cover.png
 tags:
   - Markdown
   - 博客搭建
