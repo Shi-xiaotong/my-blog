@@ -513,3 +513,122 @@ img.error-img-fallback,
   .type-404 .error-content .error-img { width: 100%; min-height: 160px; }
   .type-404 .error-content .error-info { width: 100%; }
 }
+/* ─── 18. ⭐ 首页侧边栏宽度修复 ─── */
+.layout {
+  display: flex;
+  justify-content: center;
+}
+#aside-content {
+  width: 285px !important;
+  min-width: 285px !important;
+}
+
+/* ─── 19. 登录按钮 — 去金色，透明毛玻璃样式 ─── */
+#nav .site-page.auth-login-btn,
+#nav .login-btn {
+  background: rgba(255,255,255,0.08) !important;
+  border-radius: 8px !important;
+  padding: 4px 12px !important;
+  color: #E2E8F0 !important;
+  white-space: nowrap !important;
+}
+#nav .site-page.auth-login-btn:hover,
+#nav .login-btn:hover {
+  background: rgba(255,255,255,0.15) !important;
+}
+
+/* ─── 20. 文章封面占位图统一蒙版 ─── */
+#recent-posts .post_cover {
+  display: flex !important;
+  border-radius: 12px 0 0 12px !important;
+  overflow: hidden !important;
+}
+#recent-posts .post_cover a {
+  display: flex !important;
+  width: 100%;
+  height: 100%;
+}
+#recent-posts .post_cover img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+#recent-posts .post_cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.08));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── 21. 卡片灰色字体增强对比度 ─── */
+#recent-posts .article-meta,
+#recent-posts .article-meta a,
+#recent-posts .article-meta time,
+#recent-posts .post-meta-date,
+#recent-posts .post-meta-date a,
+#recent-posts .post-meta-date time,
+.post-meta-cat, .post-meta-tag, .post-meta-divider,
+.recent-post-item .article-meta > span,
+.recent-post-item .article-meta > a {
+  color: #475569 !important;
+}
+[data-theme="dark"] #recent-posts .article-meta,
+[data-theme="dark"] #recent-posts .article-meta a,
+[data-theme="dark"] #recent-posts .article-meta time,
+[data-theme="dark"] #recent-posts .post-meta-date,
+[data-theme="dark"] #recent-posts .post-meta-date a,
+[data-theme="dark"] #recent-posts .post-meta-date time,
+[data-theme="dark"] .post-meta-cat,
+[data-theme="dark"] .post-meta-tag,
+[data-theme="dark"] .post-meta-divider {
+  color: #94A3B8 !important;
+}
+
+/* ─── 22. 卡片日历/万年历信息文字增强 ─── */
+.calendar-detail .text,
+.calendar-detail p,
+.calendar-detail .calendar-info,
+#page .calendar-page .calendar-content span,
+#page .calendar-page .calendar-content p {
+  color: #475569 !important;
+}
+[data-theme="dark"] .calendar-detail .text,
+[data-theme="dark"] .calendar-detail p,
+[data-theme="dark"] .calendar-detail .calendar-info,
+[data-theme="dark"] #page .calendar-page .calendar-content span,
+[data-theme="dark"] #page .calendar-page .calendar-content p {
+  color: #94A3B8 !important;
+}
+
+/* ─── 23. ⭐ 导航页(工具箱)卡片 — 毛玻璃统一 ─── */
+.category {
+  background: rgba(255,255,255,0.72) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(226,232,240,0.5) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06) !important;
+}
+[data-theme="dark"] .category {
+  background: rgba(30,41,59,0.72) !important;
+  border-color: rgba(51,65,85,0.5) !important;
+}
+.tool-card {
+  background: rgba(255,255,255,0.72) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(226,232,240,0.5) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06) !important;
+  transition: all 0.25s cubic-bezier(0,0,0.2,1) !important;
+}
+.tool-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1) !important;
+}
+[data-theme="dark"] .tool-card {
+  background: rgba(30,41,59,0.72) !important;
+  border-color: rgba(51,65,85,0.5) !important;
+}

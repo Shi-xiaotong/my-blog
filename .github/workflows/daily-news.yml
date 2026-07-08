@@ -22,8 +22,12 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
 
+      - name: Install scrapling
+        run: pip install scrapling curl_cffi
+
       - name: Generate daily news
         env:
+          AGNES_API_KEY: ${{ secrets.AGNES_API_KEY }}
           BLOG_DIR: ${{ github.workspace }}
         run: python _scripts/daily-news.py
 

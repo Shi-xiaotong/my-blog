@@ -1,35 +1,43 @@
 ---
-title: "Google一日痛失两位AI巨星——Transformer之父和AlphaFold之父同时出走"
+title: "OpenAI 招募重磅人物冲刺 IPO，Baseten 估值飙升 160%"
 date: 2026-06-18 12:00:00
 categories:
   - daily-news
 tags:
   - 每日热点
-description: "今天是 Google 近期历史上最黑暗的一天。两位 AI 领域的标志性人物——Transformer 论文合著者 Noam Shazeer 和 AlphaFold 之父、诺贝尔奖得主 John Jumper——在同一天宣布离开 Google/DeepMind。消息传出后，Alphabet 市值在两天"
+description: "2026 年 6 月 18 日，全球科技圈再次被资本与人才流动的巨浪席卷。随着 OpenAI 逼近上市节点，其核心团队的“军备竞赛”进入白热化；与此同时，AI 推理基础设施领域的独角兽 Baseten 在短短半年内估值翻了近两倍，显示出市场"
 ---
 
-今天是 Google 近期历史上最黑暗的一天。两位 AI 领域的标志性人物——Transformer 论文合著者 Noam Shazeer 和 AlphaFold 之父、诺贝尔奖得主 John Jumper——在同一天宣布离开 Google/DeepMind。消息传出后，Alphabet 市值在两天内蒸发了 2690 亿美元。
-## Noam Shazeer 离开 Google，加入 OpenAI
+# OpenAI 招募重磅人物冲刺 IPO，Baseten 估值飙升 160%
 
 <!-- more -->
 
-Noam Shazeer，2017 年划时代论文《Attention Is All You Need》的合著者——这篇论文提出的 Transformer 架构奠定了今天所有大语言模型的基础——宣布从 Google 离职，加入 OpenAI 担任架构研究负责人。这个新闻对 AI 界的冲击不亚于 Fable 5 被禁。
+2026 年 6 月 18 日，全球科技圈再次被资本与人才流动的巨浪席卷。随着 OpenAI 逼近上市节点，其核心团队的“军备竞赛”进入白热化；与此同时，AI 推理基础设施领域的独角兽 Baseten 在短短半年内估值翻了近两倍，显示出市场对底层算力服务的极度渴求。而在应用层，Snapchat 因高昂成本将 AI 视频团队独立，印度用户则在 Telegram 受限后涌向 VPN 市场。以下是今日最值得关注的科技动态。
 
-Shazeer 的 Google 之旅充满了戏剧性。他曾在 Google 工作了十多年，后离开创立了 Character.AI。2024 年，Google 支付了约 27 亿美元将他和他的团队从 Character.AI 召回——这是 Google 历史上最高的人才收购案之一。然而仅仅 22 个月后，他再次离开，这次去了 Google 最直接的竞争对手。
+## OpenAI 招揽 AI 界大佬，为 IPO 铺路
 
-OpenAI 的 CEO Sam Altman 在社交媒体上发表了欢迎声明："Noam 选择加入我们来领导架构研究，这让我们感到非常荣幸。他的洞察力将帮助我们在通往 AGI 的路上走得更扎实。"技术社区普遍认为，Shazeer 的加入可能会显著提升 OpenAI 在模型架构创新方面的能力。
+在筹备首次公开募股（IPO）的关键阶段，OpenAI 正在加速吸纳行业顶尖人才，以巩固其技术护城河。据 TechCrunch 报道，Google DeepMind 的传奇人物、Gemini 项目的联合负责人 Noam Shazeer，以及前特朗普政府 AI 政策官员 Dean Ball 已加入 OpenAI 团队。Shazeer 被广泛认为是现代生成式 AI 的奠基人之一，曾参与开创性论文的撰写。这一系列高层人事变动，反映了当前 AI 巨头之间激烈的人才争夺战，也暗示 OpenAI 正试图通过强化核心研发能力来迎接公众市场的审视与挑战。
 
-## John Jumper 离开 DeepMind，加入 Anthropic
+[来源](https://techcrunch.com/2026/06/18/openai-is-bringing-on-some-big-guns-in-the-lead-up-to-its-ipo/)
 
-如果说 Shazeer 的离开是一记重拳，那同一天 John Jumper 的出走就是第二记。Jumper 是在 2024 年因 AlphaFold 获得诺贝尔化学奖的核心人物，他在蛋白质结构预测领域的贡献被广泛认为是 AI 在科学领域最重要的突破之一。
+## AI 推理初创公司 Baseten 完成 15 亿美元融资
 
-Jumper 加入了 Anthropic。他在声明中表示："Anthropic 对 AI 安全的承诺和其在科学研究方面的愿景，与我个人的价值观高度一致。我相信在这里可以推动 AI 在科学发现中的下一个重大突破。"据消息人士透露，Anthropic 为 Jumper 提供了一个专门的研究团队和数亿美元的 compute budget。
+AI 推理领域的明星公司 Baseten 据悉正在敲定一轮高达 15 亿美元的巨额融资，投后估值达到 130 亿美元。这一消息令人震惊，因为该公司在不到半年前刚刚完成上一轮大规模融资，此次估值增幅高达 160%。自 2019 年成立以来，Baseten 致力于解决大模型落地过程中的推理效率问题，随着生成式 AI 应用的爆发，对高效、低延迟推理基础设施的需求呈指数级增长。尽管《华尔街日报》指出交易细节尚待确认，但如此惊人的估值跳跃充分印证了资本市场对 AI 底层架构商未来盈利潜力的高度信心。
 
-接连失去两位传奇人物后，Sergey Brin 据报道召开了一次紧急会议。一封被泄露的内部备忘录显示，Brin 写道："我们不能让这种情况持续下去。我们需要在 agent 执行能力上紧急弥合差距。" 这份备忘录同时承认，Google 在某些 AI 能力上——特别是 agent 化的端到端任务执行——已经落后于 Anthropic 和 OpenAI。
+[来源](https://techcrunch.com/2026/06/18/ai-inference-startup-baseten-reportedly-raising-1-5b-months-after-its-last-mega-round/)
+
+## Snap 剥离 AI 视频团队至新公司 Dotmo
+
+面对高昂的研发成本压力，Snapchat 母公司 Snap 决定将其内部的生成式 AI 视频团队独立出去，成立一家名为 Dotmo 的新公司。Dotmo 将专注于开发能够创建交互式游戏体验的 AI 模型。虽然 Dotmo 在法律上成为独立实体，但它将继续与 Snapchat 保持紧密的技术合作，并获得授权使用 Snap 的相关技术。这一举措标志着大型科技公司开始重新评估内部 AI 业务的投入产出比，通过剥离非核心或高成本业务单元，来优化财务结构并探索更灵活的商业化路径。
+
+[来源](https://techcrunch.com/2026/06/18/snap-spins-off-ai-video-team-into-new-company-dotmo-due-to-costs/)
+
+## 印度 Telegram 禁令引发 VPN 下载热潮
+
+印度政府近日宣布对即时通讯应用 Telegram 实施限制措施，此举迅速引发了用户的强烈反应。应用智能数据公司 Appfigures 的数据显示，禁令宣布当天，印度地区的 VPN 应用下载量激增 49%，创下 2025 年以来的单日最高纪录。其中，Proton VPN 和 Turbo VPN 的下载量分别大幅上涨 113% 和 85%。这一现象不仅反映了数字公民对网络自由访问的迫切需求，也凸显了地缘政治监管对全球互联网基础设施使用的深远影响，促使更多用户转向加密通信工具以规避网络审查。
+
+[来源](https://techcrunch.com/2026/06/18/telegram-ban-in-india-sparks-a-rush-to-vpns-rival-apps/)
 
 ---
 
-以上就是 2026年06月18日 的 AI 资讯精选。懂技术的聊技术，不懂技术的看热闹——关注「水星引力m」，每天带你看点不一样的。
-
-> *📮 欢迎在评论区分享你的看法。如果觉得内容有帮助，不妨分享给朋友。*
-
+以上就是 2026年06月18日 的科技资讯精选。关注「水星引力m」，每天带你看点不一样的。

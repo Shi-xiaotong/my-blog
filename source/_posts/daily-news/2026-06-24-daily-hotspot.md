@@ -1,33 +1,49 @@
 ---
-title: "NVIDIA Computex炸场：六款Agent新产品，从芯片到安全全覆盖"
+title: "芯片博弈加剧、AI人才大迁徙：2026年6月24日科技圈深度观察"
 date: 2026-06-24 12:00:00
 categories:
   - daily-news
 tags:
   - 每日热点
-description: 'NVIDIA 在 Computex 上的主题演讲堪称一场"Agent 发布会"。Jensen Huang 一口气发布了六款产品，覆盖了从服务处理器到桌面设备的整个 Agent 计算栈。同一天，OpenAI 也放出重磅消息——联合 Broadcom 发布了自研 AI 推理芯片 Jalapeño。'
+description: "2026年的夏天似乎注定不太平。在人工智能重塑全球产业格局的当下，地缘政治的暗流与技术人才的流动正以前所未有的速度交织。从欧洲对美芯片管制的强硬反击，到顶级AI研究员纷纷跳槽谷歌竞争对手，再到曾经被视为“重灾区”的工程岗位展现出惊人的韧性，"
 ---
 
-NVIDIA 在 Computex 上的主题演讲堪称一场"Agent 发布会"。Jensen Huang 一口气发布了六款产品，覆盖了从服务处理器到桌面设备的整个 Agent 计算栈。同一天，OpenAI 也放出重磅消息——联合 Broadcom 发布了自研 AI 推理芯片 Jalapeño。
-## NVIDIA Computex 发布六件套 Agent 栈
+# 芯片博弈加剧、AI人才大迁徙：2026年6月24日科技圈深度观察
 
 <!-- more -->
 
-Jensen Huang 在 Computex 2026 的台北主题演讲中发布了 NVIDIA 至今最完整的 AI Agent 技术栈。六款产品覆盖了三个层次：芯片层（Vera CPU、RTX Spark）、模型层（Nemotron 3 Ultra 550B 开源模型）、中间件层（OpenShell 安全沙箱、NeMo Agent Toolkit）。
+2026年的夏天似乎注定不太平。在人工智能重塑全球产业格局的当下，地缘政治的暗流与技术人才的流动正以前所未有的速度交织。从欧洲对美芯片管制的强硬反击，到顶级AI研究员纷纷跳槽谷歌竞争对手，再到曾经被视为“重灾区”的工程岗位展现出惊人的韧性，今天的科技世界充满了变数与反转。让我们一同梳理今日最值得关注的五大科技动态。
 
-Vera CPU 被描述为"专为 Agent 和强化学习负载定制"——这意味着 NVIDIA 认为 Agent 场景的算力需求与传统的 AI 推理是不同的。Agent 需要保持状态、持续运行、调用外部工具，这对处理器提出了新的要求。Vera CPU 的能效据称是传统 x86 服务器处理器的约 2 倍。
+## 欧洲反击美国芯片战，ASML立场强硬
 
-值得注意的是，Jensen 宣布 Vera 已经获得了 OpenAI、Anthropic 和 SpaceX 作为早期采用者。这三家公司的选择——一家做 AI 模型、一家做 AI 安全、一家做航天——显示了 Vera CPU 的潜在应用广度。
+荷兰贸易大臣许尔兹马本周访问华盛顿，明确向美国政府及国会表达反对意见，旨在维护欧洲在半导体供应链中的核心利益。作为全球唯一能制造先进AI芯片光刻机（EUV/High-NA EUV）的企业，ASML是荷兰乃至欧洲最具价值的公司。尽管中国占据了ASML净系统销售额的19%，但欧洲方面认为过度的出口限制不仅损害自身商业利益，也可能削弱全球创新生态。这一举动标志着欧盟在对美科技政策上不再一味跟随，而是开始争取更大的话语权，试图在美中科技博弈中寻找平衡点。
 
-## OpenAI 联合 Broadcom 发布自研芯片 Jalapeño
+[来源](https://techcrunch.com/2026/06/24/europe-is-pushing-back-on-washingtons-chip-war/)
 
-OpenAI 今天宣布了其首款自研 AI 推理芯片 Jalapeño，由 Broadcom 代工，从概念到流片仅用了 9 个月。Jalapeño 是一颗专为推理优化的 ASIC（专用集成电路），而非训练芯片。在初步测试中，它在单核上以 2.6GHz 运行 GPT-5.3，性能功耗比据称远超现有 GPU。
+## 前Infosys CEO创立新创公司，挑战传统IT服务巨头
 
-OpenAI CEO Sam Altman 和总裁 Greg Brockman 在旧金山总部亲自接收了工程样品。Altman 表示："Jalapeño 完成了我们的全栈拼图——模型、软件、硬件。"分析师认为，自研芯片将帮助 OpenAI 降低对 NVIDIA GPU 的依赖，并在推理成本上获得更大的控制权。
+印度IT服务巨头Infosys的前CEO Vishal Sikka正式推出新创业公司Hang Ten，试图颠覆传统的IT服务模式。过去几十年，企业通过外包定制化、集成和维护软件来节省成本，而Sikka认为生成式AI已经能够自动化完成大部分此类工作，无需依赖昂贵的人力外包。Hang Ten的进入恰逢其时，因为包括Infosys在内的老牌IT服务商正在竞相与各大AI厂商合作以转型。然而，Sikka主张直接利用AI原生架构替代传统外包流程，这将迫使整个行业重新思考人力与技术的边界，加速IT服务市场的洗牌。
+
+[来源](https://techcrunch.com/2026/06/24/former-infosys-chief-has-a-new-startup-that-wants-to-challenge-the-it-services-world/)
+
+## 数据揭示：AI并未淘汰工程师，反而证明其韧性
+
+尽管外界普遍预测AI编程工具将大规模取代软件工程师，但最新数据显示，工程类岗位恰恰是目前最不易受AI冲击的职业领域。风险投资机构SignalFire的研究指出，虽然许多裁员理由冠以“AI效率提升”，但实际招聘数据表明，企业对高端工程人才的需求依然强劲。与内容生成等任务不同，复杂的系统架构设计、调试以及跨领域整合仍需人类工程师的深度参与。这一发现打破了“AI将立即导致技术失业”的恐慌论调，暗示未来人机协作而非替代，将是软件工程的主流形态。
+
+[来源](https://techcrunch.com/2026/06/24/ai-was-supposed-to-kill-engineering-jobs-but-new-data-suggests-theyre-the-most-resilient/)
+
+## Cerebras股价暴跌，AI芯片市场竞争白热化
+
+AI芯片制造商Cerebras Systems上市后的首份财报引发市场剧烈反应，股价单日暴跌近20%，几乎跌回IPO发行价。尽管营收表现优于预期，但其对未来毛利率的指导却令投资者失望：预计全年毛利率将在38%至41%之间，远低于第一季度的47%。CEO Andrew Feldman解释称市场误解了其利润率展望，强调这是为了扩大市场份额而进行的战略投入。然而，资本市场显然对高增长预期的放缓感到焦虑。Cerebras的动荡折射出AI硬件赛道日益激烈的竞争态势，投资者不再盲目相信故事，而是更看重可持续的盈利模型和成本控制能力。
+
+[来源](https://techcrunch.com/2026/06/24/cerebras-stock-plunges-after-earnings-as-ceo-says-margin-outlook-was-misunderstood/)
+
+## 谷歌AI人才持续流失，Anthropic成最大赢家
+
+谷歌正面临严峻的人才流失危机，多名顶尖AI研究人员宣布离职。继传奇研究员Noam Shazeer出走OpenAI后，另一位关键人物、DeepMind总监也传出离职消息，而近期包括Jonas Adler和Alexander Pritzel在内的多位资深科学家选择加入Anthropic。这一趋势反映出谷歌内部在AI战略方向上的不确定性，以及竞争对手如Anthropic和OpenAI在文化吸引力上的优势。对于谷歌而言，核心研究团队的动荡可能延缓其在大模型领域的进展，而对于竞争对手来说，吸纳这些“大脑”则是巩固其技术领先地位的关键一步。
+
+[来源](https://techcrunch.com/2026/06/24/ai-researchers-continue-to-leave-google-for-its-rivals/)
 
 ---
 
-以上就是 2026年06月24日 的 AI 资讯精选。懂技术的聊技术，不懂技术的看热闹——关注「水星引力m」，每天带你看点不一样的。
-
-> *📮 欢迎在评论区分享你的看法。如果觉得内容有帮助，不妨分享给朋友。*
-
+以上就是 2026年06月24日 的科技资讯精选。关注「水星引力m」，每天带你看点不一样的。

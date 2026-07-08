@@ -1,37 +1,43 @@
 ---
-title: "NVIDIA让AI agent学会做生物实验，Anthropic让Claude变成同事"
+title: "印度电商大战升级、AI代理收购潮与风投豪赌：2026年6月23日科技日报"
 date: 2026-06-23 12:00:00
 categories:
   - daily-news
 tags:
   - 每日热点
-description: "今天是重磅产品密集发布的一天。NVIDIA 在 BIO 2026 上发布了 BioNeMo Agent Toolkit——让 AI agent 可以做生物实验。Anthropic 则推出了 Claude Tag——一个集成在 Slack 中的 AI 同事。"
+description: "2026年的科技圈依旧没有给任何人喘息的机会。从印度街头极速扩张的即时配送网络，到企业级营销领域被AI Agent颠覆的底层逻辑，再到风险投资界对大模型赛道信心的重新确立，今天的新闻勾勒出一幅“竞争白热化”与“技术落地加速”并存的图景。无论"
 ---
 
-今天是重磅产品密集发布的一天。NVIDIA 在 BIO 2026 上发布了 BioNeMo Agent Toolkit——让 AI agent 可以做生物实验。Anthropic 则推出了 Claude Tag——一个集成在 Slack 中的 AI 同事。
-## NVIDIA BioNeMo Agent Toolkit：让 AI agent 做科学实验
+# 印度电商大战升级、AI代理收购潮与风投豪赌：2026年6月23日科技日报
 
 <!-- more -->
 
-NVIDIA 在 BIO 2026 国际生物技术大会上发布了 BioNeMo Agent Toolkit。这个工具包将蛋白质结构预测、分子对接、生成化学、基因组分析等生命科学工具封装成了 AI agent 可以直接调用的技能模块。对于研究人员来说，这意味着可以用自然语言指挥 AI 完成复杂的科学计算工作流。
+2026年的科技圈依旧没有给任何人喘息的机会。从印度街头极速扩张的即时配送网络，到企业级营销领域被AI Agent颠覆的底层逻辑，再到风险投资界对大模型赛道信心的重新确立，今天的新闻勾勒出一幅“竞争白热化”与“技术落地加速”并存的图景。无论是传统零售巨头的数字化转型，还是初创公司在AI安全与效率上的突围，都在告诉我们：在AI时代，速度不仅是优势，更是生存的必需品。让我们快速回顾今日值得关注的四大科技动态。
 
-NVIDIA 医疗健康和生命科学副总裁 Kimberly Powell 在主题演讲中表示："前沿模型是大脑，BioNeMo 是工具箱。加在一起，AI agent 就有了一个博士级别的研究助理的头脑和一台超级计算机的速度。"合作方名单令人印象深刻：Dassault Systèmes、Databricks、莉莉、Schrödinger、Snowflake 等 50 多家企业已经加入。
+## 沃尔玛支持的Flipkart加速印度即时零售版图，Amazon正面交锋
 
-Claude Sonnet 5.5 的发布也已经进入倒计时。
+印度即时零售市场正进入“百团大战”的最后冲刺阶段。由沃尔玛支持的Flipkart宣布了一项激进的扩张计划，目标是在2026年底前将微型履约中心（micro-fulfillment centers）网络扩展至1500个。这一举措旨在巩固其在印度激烈竞争中的领先地位，直接对标Blinkit、Zepto、Swiggy Instamart以及亚马逊（Amazon）。据分析，若按当前门店数量和扩张计划推算，Flipkart有望成为印度按微型履约中心数量计算的第二大即时零售网络。随着基础设施的迅速铺开，这场关于“最后一公里”效率的战争将更加残酷，消费者将在更短的时间内享受到更丰富的商品选择，而平台间的护城河也将由仓储密度决定。
 
-## Anthropic Claude Tag：在 Slack 里 @一下 AI 就能干活
+[来源](https://techcrunch.com/2026/06/23/walmart-backed-flipkart-expands-quick-commerce-push-as-amazon-ramps-up-in-india/)
 
-Anthropic 今天推出了 Claude Tag——一个将 Claude 集成到 Slack 中的新功能。它不是一个简单的聊天机器人，而是一个真正的"AI 同事"。你可以在频道里直接 @Claude，让它帮你分解任务、跨频道搜索信息、调用工具、并返回结果。
+## MoEngage重金收购Aampe，押注“数百万AI代理”重塑营销未来
 
-Anthropic 宣称内部 65% 的代码已经由 Claude Tag 编写。这意味着 AI 不再是"辅助工具"，而是团队的一员。这个功能的推出标志着"AI agent"正式从演示阶段进入了生产环境。与微软的 Windows Agent Framework（在 Build 2026 上宣布 GA）一起，"AI 同事"正在成为企业软件的新常态。
+印度客户互动软件巨头MoEngage近日完成了一笔价值数千万美元的全现金收购，标的为成立于2020年的Aampe。Aampe的核心创新在于为每位客户分配专属的AI代理（AI Agent），通过高度个性化的自动化交互来提升转化率。MoEngage创始人Girish Dodda表示，此次收购将帮助其在与Salesforce和Adobe等竞争对手的博弈中胜出，特别是在吸引从竞品迁移过来的客户方面具有显著优势。这一交易标志着B2B营销领域的一个重要转折点：营销不再仅仅是数据分析或广告推送，而是演变为由数百万个自主运行的AI代理驱动的实时对话体系。这种从“工具”到“代理”的转变，预示着未来客户体验将更加智能化和个性化。
 
-## NVIDIA DFlash：黑井上最高 15 倍推理加速
+[来源](https://techcrunch.com/2026/06/23/indias-moengage-bets-marketings-future-on-millions-of-ai-agents/)
 
-NVIDIA 还发布了 DFlash——一种开源的块扩散投机解码方案。在 Blackwel GPU 上，它实现了最高 15 倍的推理吞吐量提升。对于 Llama 3.1 8B 模型，它几乎使交互性能翻倍。DFlash 已经集成到 SGLang、vLLM 和 TensorRT-LLM 等主流推理框架中。
+## Menlo Ventures豪掷30亿美元新基金，Anthropic押注终获回报
+
+在2024年以超过5亿美元领投Anthropic Series D轮时，Menlo Ventures曾面临巨大的内部压力，这被视为一次“赌上公司命运”的风险投资。然而，随着Anthropic旗下Claude系列模型及Claude Code等产品的成功商业化，这笔早期投资已证明其巨大价值。近日，Menlo Ventures成功募集了30亿美元的新基金，这不仅是对其判断力的认可，也反映了资本市场对顶级AI基础设施公司信心的回归。尽管当时筹集如此大规模资金的手段颇具挑战性，但现在的胜利表明，在AI浪潮初期敢于重仓头部玩家的风投机构，正在收获丰厚的红利。这也向市场传递出一个信号：尽管AI基础设施竞争激烈，但头部效应正在加剧，头部企业的商业闭环已初步跑通。
+
+[来源](https://techcrunch.com/2026/06/23/after-betting-the-firm-on-anthropic-menlo-ventures-raises-victorious-3b-fund/)
+
+## Superhuman收购GPTZero，AI检测与安全成巨头新战场
+
+超级邮件客户端Superhuman宣布收购成立三年的AI检测初创公司GPTZero。GPTZero最初是普林斯顿大学学生Edward Tian的毕业设计项目，后发展为知名的AI生成内容检测工具，曾于2024年实现盈利并融资350万美元。此次收购虽未披露具体金额，但被视为Superhuman加强其产品安全性与可信度的重要一步。在企业级应用日益普及的背景下，如何区分人类创作与AI生成内容已成为企业和教育机构的核心痛点。Superhuman作为高端生产力工具的代表，整合GPTZero的技术能力，旨在为用户提供更纯净、更可靠的协作环境。这一动作也反映出，随着AI生成内容的泛滥，相关的检测、认证和安全验证将成为科技巨头必争的战略高地。
+
+[来源](https://techcrunch.com/2026/06/23/superhuman-acquires-ai-detection-startup-gptzero/)
 
 ---
 
-以上就是 2026年06月23日 的 AI 资讯精选。懂技术的聊技术，不懂技术的看热闹——关注「水星引力m」，每天带你看点不一样的。
-
-> *📮 欢迎在评论区分享你的看法。如果觉得内容有帮助，不妨分享给朋友。*
-
+以上就是 2026年06月23日 的科技资讯精选。关注「水星引力m」，每天带你看点不一样的。
