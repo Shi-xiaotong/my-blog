@@ -43,6 +43,17 @@ top_img: false
         <span class="friend-link-desc">https://xiayuze.fun/</span>
       </div>
     </div>
+    <div class="friend-link-item">
+      <div class="friend-link-avatar" data-name="wuliu">
+        <img src="https://mrwuliu.top/favicon.svg" alt="mrwuliu" onerror="this.parentElement.classList.add('no-icon');this.remove();">
+      </div>
+      <div class="friend-link-info">
+        <a href="https://mrwuliu.top/" target="_blank" rel="noopener noreferrer">
+          <span class="friend-link-name">mrwuliu</span>
+        </a>
+        <span class="friend-link-desc">记录技术与生活</span>
+      </div>
+    </div>
   </div>
   <div class="links-notice">
     <p>🤝 如需交换友链，请联系 <a href="mailto:505350617@qq.com">505350617@qq.com</a></p>
