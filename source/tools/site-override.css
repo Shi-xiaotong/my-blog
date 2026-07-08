@@ -33,6 +33,7 @@ html::before {
 #post .relatedPosts,
 #post .post-prevnext,
 #post #post-comment .comment-head,
+#post #post-comment .comment-wrap,
 .post-expand .post-card,
 #page .category-lists .category-list,
 .random-post-item {
@@ -71,6 +72,7 @@ html::before {
 [data-theme="dark"] #post .relatedPosts,
 [data-theme="dark"] #post .post-prevnext,
 [data-theme="dark"] #post #post-comment .comment-head,
+[data-theme="dark"] #post #post-comment .comment-wrap,
 [data-theme="dark"] .post-expand .post-card,
 [data-theme="dark"] #page .category-lists .category-list,
 [data-theme="dark"] .random-post-item {
@@ -700,4 +702,51 @@ img.error-img-fallback,
 }
 #nav #site-auth-bar a:hover {
   background: rgba(255,255,255,0.15) !important;
+}
+
+/* ─── 26. ⭐ 评论区表单 — 毛玻璃融合 ─── */
+#cwd-comments > *,
+#cwd-comments form,
+#cwd-comments .comment-form {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+#cwd-comments input,
+#cwd-comments textarea,
+#cwd-comments select {
+  background: rgba(255,255,255,0.5) !important;
+  backdrop-filter: blur(4px) !important;
+  border: 1px solid rgba(148,163,184,0.3) !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  color: #1E293B !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+}
+#cwd-comments input:focus,
+#cwd-comments textarea:focus {
+  border-color: #818CF8 !important;
+  box-shadow: 0 0 0 3px rgba(129,140,248,0.15) !important;
+  outline: none !important;
+}
+#cwd-comments button[type="submit"] {
+  background: #818CF8 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 10px 24px !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+#cwd-comments button[type="submit"]:hover {
+  filter: brightness(1.1) !important;
+  transform: translateY(-1px) !important;
+}
+[data-theme="dark"] #cwd-comments input,
+[data-theme="dark"] #cwd-comments textarea {
+  background: rgba(30,41,59,0.5) !important;
+  border-color: rgba(51,65,85,0.4) !important;
+  color: #E2E8F0 !important;
 }

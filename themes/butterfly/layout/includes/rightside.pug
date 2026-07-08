@@ -40,6 +40,8 @@ mixin rightsideItem(array)
   #rightside-config-hide
     if hideArray.length
       +rightsideItem(hideArray)
+    button#live2d-toggle(type="button" title="看板娘")
+      i.fas.fa-robot
 
   #rightside-config-show
     if needCogBtn

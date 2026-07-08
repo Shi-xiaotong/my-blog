@@ -82,7 +82,7 @@ favicon: /img/favicon.ico
 
 avatar:
   img: /img/picture.png
-  effect: false
+  effect: true
 
 # 禁用所有顶部图片
 disable_top_img: false
@@ -1142,10 +1142,9 @@ inject:
     - <link rel="stylesheet" href="/tools/common.css">
     # 注入 site-override.css 桥接Butterfly→common.css
     - <link rel="stylesheet" href="/tools/site-override.css">
-    # 注入 Phase1: 文章页推荐卡片 + 上一篇/下一篇导航 玻璃化
-    - <link rel="stylesheet" href="/css/custom/phase1-post-cards-glass.css">
-    # 注入 Phase2: 侧边栏标签云 + 工具箱分类色彩标识
-    - <link rel="stylesheet" href="/css/custom/phase2-tag-cloud-and-tools.css">
+    # 注入 custom.css 全站自定义样式
+    - <link rel="stylesheet" href="/css/custom.css">
+
   bottom:
     # 太空背景
     - <script src="/tools/bg.js"></script>
@@ -1154,6 +1153,8 @@ inject:
     #日历
     - <script src="/js/lunar.js"></script>
     - <script src="/js/calendar-widget.js"></script>
+    # 看板娘开关
+    - <script src="/js/live2d-toggle.js"></script>
 
 
 # CDN 设置
@@ -1233,7 +1234,7 @@ CDN:
 # 看板娘 (Live2D)
 # --------------------------------------
 live2d:
-  enable: true
+  enable: false
   # 是否启用拖拽功能
   drag: true
   # 控制面板显示的按钮（留空则不显示任何按钮）

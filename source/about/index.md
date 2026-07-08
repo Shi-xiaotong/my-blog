@@ -274,8 +274,9 @@ type: about
   padding: 0;
 }
 .icon-list li {
-  padding: 6px 0;
-  color: #a8b2d1;
+  padding: 8px 0;
+  color: var(--font-color, #333);
+  font-size: 1.05em;
 }
 .icon-list li i {
   margin-right: 8px;

@@ -45,7 +45,7 @@ top_img: false
     </div>
     <div class="friend-link-item">
       <div class="friend-link-avatar" data-name="wuliu">
-        <img src="https://mrwuliu.top/favicon.svg" alt="mrwuliu" onerror="this.parentElement.classList.add('no-icon');this.remove();">
+        <img src="https://mrwuliu.top/images/avatars/avatar-1775126249630.png" alt="mrwuliu" onerror="this.parentElement.classList.add('no-icon');this.remove();">
       </div>
       <div class="friend-link-info">
         <a href="https://mrwuliu.top/" target="_blank" rel="noopener noreferrer">

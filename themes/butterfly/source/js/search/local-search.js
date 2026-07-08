@@ -519,7 +519,8 @@ window.addEventListener('load', () => {
   }
 
   const searchClickFn = () => {
-    btf.addEventListenerPjax(document.querySelector('#search-button > .search'), 'click', openSearch)
+    const $searchBtn = document.querySelector('#search-button > .search')
+    if ($searchBtn) btf.addEventListenerPjax($searchBtn, 'click', openSearch)
   }
 
   const searchFnOnce = () => {
