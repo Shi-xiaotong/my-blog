@@ -513,3 +513,55 @@ img.error-img-fallback,
   .type-404 .error-content .error-img { width: 100%; min-height: 160px; }
   .type-404 .error-content .error-info { width: 100%; }
 }
+
+/* ─── 卡片上方灰色字体增强对比度 ─── */
+#recent-posts .article-meta > a,
+#recent-posts .article-meta > time,
+#recent-posts .article-meta-label,
+#recent-posts .article-meta-link,
+#recent-posts .article-meta-separator,
+#recent-posts .article-meta-cat,
+#recent-posts .article-meta-tag,
+#recent-posts .post-meta-date,
+.post-meta-cat, .post-meta-tag, .post-meta-divider,
+#page-header #site-subtitle {
+  color: #64748B !important;
+}
+[data-theme="dark"] #recent-posts .article-meta > a,
+[data-theme="dark"] #recent-posts .article-meta > time,
+[data-theme="dark"] #recent-posts .article-meta-label,
+[data-theme="dark"] #recent-posts .article-meta-link,
+[data-theme="dark"] #recent-posts .article-meta-separator,
+[data-theme="dark"] #recent-posts .article-meta-cat,
+[data-theme="dark"] #recent-posts .article-meta-tag,
+[data-theme="dark"] #recent-posts .post-meta-date,
+[data-theme="dark"] .post-meta-cat,
+[data-theme="dark"] .post-meta-tag,
+[data-theme="dark"] .post-meta-divider,
+[data-theme="dark"] #page-header #site-subtitle {
+  color: #CBD5E1 !important;
+}
+
+/* ─── 登录按钮 — 去金色，用品牌蓝 ─── */
+#nav .site-page.auth-login-btn {
+  background: rgba(255,255,255,0.1) !important;
+  color: #E2E8F0 !important;
+}
+
+/* ─── 密码/用户名输入框 — 白底黑字 ─── */
+#site-login-modal input[type="text"],
+#site-login-modal input[type="password"],
+#site-login-modal input[type="email"],
+#site-login-modal input:not([type="submit"]) {
+  background: #ffffff !important;
+  color: #1F2D3D !important;
+  border: 1px solid rgba(148,163,184,0.3) !important;
+}
+[data-theme="dark"] #site-login-modal input[type="text"],
+[data-theme="dark"] #site-login-modal input[type="password"],
+[data-theme="dark"] #site-login-modal input[type="email"],
+[data-theme="dark"] #site-login-modal input:not([type="submit"]) {
+  background: #1E293B !important;
+  color: #E2E8F0 !important;
+  border-color: rgba(148,163,184,0.2) !important;
+}

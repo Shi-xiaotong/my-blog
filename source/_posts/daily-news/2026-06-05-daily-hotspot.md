@@ -1,29 +1,49 @@
 ---
-title: "AI人才争夺白热化：DeepMind研究员成各大Lab疯抢对象"
+title: "Reid Hoffman is leaving Microsoft’s board to go ‘founder mode’ with  startup Manas"
 date: 2026-06-05 12:00:00
 categories:
   - daily-news
 tags:
   - 每日热点
-description: "AI 行业内的人才流动，从来没有像现在这样紧迫。今天的消息不是来自某个公司，而是一个趋势：Google DeepMind 的多位核心研究员正在收到来自 Anthropic 和 OpenAI 的邀约。这不是个案，而是系统性的人才争夺战。"
+description: "Reid Hoffman is leaving Microsoft’s board to go ‘founder mode’ with  startup Manas"
 ---
 
-AI 行业内的人才流动，从来没有像现在这样紧迫。今天的消息不是来自某个公司，而是一个趋势：Google DeepMind 的多位核心研究员正在收到来自 Anthropic 和 OpenAI 的邀约。这不是个案，而是系统性的人才争夺战。
-## AI 人才争夺战正式白热化
+今天的科技圈发生了这些事。
 
 <!-- more -->
 
-多位知情人士透露，过去几周内，DeepMind 的数名高级研究员收到了来自竞品 AI 实验室的邀约。虽然具体数量和名单尚未公开，但涉及的职位包括基础模型研究、强化学习、以及 AI 安全等关键方向。消息传出后，Alphabet 股价在两天内下跌了近 2%。
+## Reid Hoffman is leaving Microsoft’s board to go ‘founder mode’ with  startup Manas
 
-AI 人才争夺战的激烈程度，从薪资数据上可见一斑。据 Levels.fyi 的数据，2026 年 AI 研究员的顶级 offer（含股票）已经突破了年薪 200 万美元。一些顶尖研究员的签约奖金就高达 100 万美元。为了留住关键人才，Google 今年年中启动了一项特殊的股票加速授予计划——这通常只在收购后的关键人员保留中使用。
+After a very profitable decade on Microsoft’s board, Reid Hoffman is stepping down, the
+Hoffman was on Microsoft’s board when it invested its first $1 billion into OpenAI in 2019. Hoffman was one of O
 
-这场人才争夺战的背景是 AI 实验室之间的"军备竞赛"正在从资本和算力延伸到人才。模型架构的每一次重大突破，往往来自个位数关键研究员的贡献。一位投资人在播客中打了个比方："训练模型你可以用钱堆，但设计模型架构你得用人堆——而且不是随便什么人。"
+[来源](https://techcrunch.com/2026/06/05/reid-hoffman-is-leaving-microsofts-board-to-go-founder-mode-with-startup-manus/)
 
-值得注意的是，人才流动的方向并非单向。虽然传统的叙事是 Google/DeepMind 在"流出"，但这两家同样在从学术界和其他科技公司高薪挖角。Google 近期从 Stanford、MIT 等高校签下了多名即将毕业的 AI 博士。同时，一批在 Meta AI 工作的研究员也在权衡是否跳槽——因为 Meta 的产品化导向让一些基础研究者感到受限。
+## Founders share VC horror stories, and some are naming names
+
+Asking venture capitalists for investment is a rite of passage for tech founders. This has led to another universal experience: the VC pitching horror story. A
+Greg Isenberg
+“I was once pitching in a 
+
+[来源](https://techcrunch.com/2026/06/05/founders-share-vc-horror-stories-and-some-are-naming-names/)
+
+## Former cyber executive turned whistleblower accuses IBM of covering up several data breaches
+
+A former IBM cybersecurity executive accused the company of getting hacked three times in the previous decade by foreign governments and then covering up the breaches.
+In a lawsuit
+Barlow alleged in h
+
+[来源](https://techcrunch.com/2026/06/05/former-cyber-executive-turned-whistleblower-accuses-ibm-of-covering-up-several-data-breaches/)
+
+## Startup Battlefield 200 applications officially close in 3 days
+
+Founders, your window to enter
+Applications for Startup Battlefield 200 officially close on June 8, 11:59 p.m. PT. Do not wait any longer. Secure your shot at competing on the Disrupt Stage at
+Thousan
+
+[来源](https://techcrunch.com/2026/06/05/startup-battlefield-200-applications-officially-close-in-3-days/)
 
 ---
 
-以上就是 2026年06月05日 的 AI 资讯精选。懂技术的聊技术，不懂技术的看热闹——关注「水星引力m」，每天带你看点不一样的。
-
-> *📮 欢迎在评论区分享你的看法。如果觉得内容有帮助，不妨分享给朋友。*
+以上就是 2026年06月05日 的科技资讯精选。关注「水星引力m」，每天带你看点不一样的。
 
