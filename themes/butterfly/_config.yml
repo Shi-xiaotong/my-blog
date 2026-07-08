@@ -1140,8 +1140,12 @@ inject:
   head:
     # 注入 common.css 全站统一设计Token
     - <link rel="stylesheet" href="/tools/common.css">
-    # 注入 site-override.css 桥接Butterfly→common.css (含Phase1/2)
+    # 注入 site-override.css 桥接Butterfly→common.css
     - <link rel="stylesheet" href="/tools/site-override.css">
+    # 注入 Phase1: 文章页推荐卡片 + 上一篇/下一篇导航 玻璃化
+    - <link rel="stylesheet" href="/css/custom/phase1-post-cards-glass.css">
+    # 注入 Phase2: 侧边栏标签云 + 工具箱分类色彩标识
+    - <link rel="stylesheet" href="/css/custom/phase2-tag-cloud-and-tools.css">
   bottom:
     # 太空背景
     - <script src="/tools/bg.js"></script>
