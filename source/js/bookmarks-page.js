@@ -24,6 +24,10 @@ var CATEGORIES = [
       { name: '\u8C46\u5305', url: 'https://www.doubao.com', icon: 'https://www.doubao.com/favicon.ico' },
       { name: 'Hugging Face', url: 'https://huggingface.co', icon: 'https://huggingface.co/favicon.ico' },
       { name: 'Perplexity', url: 'https://www.perplexity.ai', icon: 'https://www.perplexity.ai/favicon.ico' },
+      { name: 'Kimi', url: 'https://kimi.moonshot.cn', icon: 'https://kimi.moonshot.cn/favicon.ico' },
+      { name: '\u6587\u5FC3\u4E00\u8A00', url: 'https://yiyan.baidu.com', icon: 'https://yiyan.baidu.com/favicon.ico' },
+      { name: '\u8FE5\u98DE\u661F\u706B', url: 'https://xinghuo.xfyun.cn', icon: 'https://xinghuo.xfyun.cn/favicon.ico' },
+      { name: 'Coze', url: 'https://www.coze.com', icon: 'https://www.coze.com/favicon.ico' },
     ]
   },
   {
@@ -39,6 +43,10 @@ var CATEGORIES = [
       { name: '\u6398\u91D1', url: 'https://juejin.cn', icon: 'https://juejin.cn/favicon.ico' },
       { name: 'V2EX', url: 'https://www.v2ex.com', icon: 'https://www.v2ex.com/favicon.ico' },
       { name: 'Product Hunt', url: 'https://www.producthunt.com', icon: 'https://www.producthunt.com/favicon.ico' },
+      { name: 'GitLab', url: 'https://gitlab.com', icon: 'https://gitlab.com/favicon.ico' },
+      { name: 'Gitee', url: 'https://gitee.com', icon: 'https://gitee.com/favicon.ico' },
+      { name: 'CodePen', url: 'https://codepen.io', icon: 'https://codepen.io/favicon.ico' },
+      { name: 'Replit', url: 'https://replit.com', icon: 'https://replit.com/favicon.ico' },
     ]
   },
   {
@@ -97,6 +105,10 @@ var CATEGORIES = [
       { name: '\u864E\u55C5', url: 'https://www.huxiu.com', icon: 'https://www.huxiu.com/favicon.ico' },
       { name: '\u6F8E\u6E43\u65B0\u95FB', url: 'https://www.thepaper.cn', icon: 'https://www.thepaper.cn/favicon.ico' },
       { name: '\u5C11\u6570\u6D3E', url: 'https://sspai.com', icon: 'https://sspai.com/favicon.ico' },
+      { name: '\u4EBA\u6C11\u65E5\u62A5', url: 'https://www.people.com.cn', icon: 'https://www.people.com.cn/favicon.ico' },
+      { name: '\u65B0\u6D6A\u65B0\u95FB', url: 'https://news.sina.com.cn', icon: 'https://news.sina.com.cn/favicon.ico' },
+      { name: 'Hacker News', url: 'https://news.ycombinator.com', icon: 'https://news.ycombinator.com/favicon.ico' },
+      { name: 'TechCrunch', url: 'https://techcrunch.com', icon: 'https://techcrunch.com/favicon.ico' },
     ]
   },
   {
@@ -109,6 +121,23 @@ var CATEGORIES = [
       { name: '\u817E\u8BAF\u4E91', url: 'https://cloud.tencent.com', icon: 'https://cloud.tencent.com/favicon.ico' },
       { name: 'Vercel', url: 'https://vercel.com', icon: 'https://vercel.com/favicon.ico' },
       { name: 'Netlify', url: 'https://app.netlify.com', icon: 'https://app.netlify.com/favicon.ico' },
+      { name: 'AWS', url: 'https://aws.amazon.com', icon: 'https://aws.amazon.com/favicon.ico' },
+      { name: 'Google Cloud', url: 'https://cloud.google.com', icon: 'https://cloud.google.com/favicon.ico' },
+      { name: 'Azure', url: 'https://portal.azure.com', icon: 'https://portal.azure.com/favicon.ico' },
+      { name: '\u534E\u4E3A\u4E91', url: 'https://www.huaweicloud.com', icon: 'https://www.huaweicloud.com/favicon.ico' },
+    ]
+  },
+  {
+    id: 'social',
+    icon: '\uD83D\uDCAC',
+    name: '\u793E\u4EA4\u5A92\u4F53',
+    sites: [
+      { name: '\u5FAE\u535A', url: 'https://weibo.com', icon: 'https://weibo.com/favicon.ico' },
+      { name: '\u5C0F\u7EA2\u4E66', url: 'https://www.xiaohongshu.com', icon: 'https://www.xiaohongshu.com/favicon.ico' },
+      { name: '\u6296\u97F3', url: 'https://www.douyin.com', icon: 'https://www.douyin.com/favicon.ico' },
+      { name: '\u5FAE\u4FE1\u516C\u4F17\u5E73\u53F0', url: 'https://mp.weixin.qq.com', icon: 'https://mp.weixin.qq.com/favicon.ico' },
+      { name: 'X (Twitter)', url: 'https://x.com', icon: 'https://x.com/favicon.ico' },
+      { name: 'Telegram', url: 'https://web.telegram.org', icon: 'https://telegram.org/favicon.ico' },
     ]
   },
   {
@@ -121,136 +150,33 @@ var CATEGORIES = [
       { name: 'Regex101', url: 'https://regex101.com', icon: 'https://regex101.com/favicon.ico' },
       { name: 'Carbon', url: 'https://carbon.now.sh', icon: 'https://carbon.now.sh/favicon.ico' },
       { name: 'ProcessOn', url: 'https://www.processon.com', icon: 'https://www.processon.com/favicon.ico' },
+      { name: 'Wikipedia', url: 'https://www.wikipedia.org', icon: 'https://www.wikipedia.org/favicon.ico' },
+      { name: 'DeepL', url: 'https://www.deepl.com', icon: 'https://www.deepl.com/favicon.ico' },
+      { name: '\u767E\u5EA6\u7F51\u76D8', url: 'https://pan.baidu.com', icon: 'https://pan.baidu.com/favicon.ico' },
+      { name: '\u963F\u91CC\u4E91\u76D8', url: 'https://www.aliyundrive.com', icon: 'https://www.aliyundrive.com/favicon.ico' },
+      { name: 'OneDrive', url: 'https://onedrive.live.com', icon: 'https://onedrive.live.com/favicon.ico' },
     ]
   }
 ];
 
-function renderCategories(filterText, filterCategory){
-  filterText = filterText || '';
-  filterCategory = filterCategory || '';
+function renderCategories(){
   var container = document.getElementById('categoriesContainer');
-  var filterSel = document.getElementById('categoryFilter');
   container.innerHTML = '';
-  filterSel.innerHTML = '<option value="">\u5168\u90E8\u5206\u7C7B</option>';
 
   CATEGORIES.forEach(function(cat){
-    filterSel.innerHTML += '<option value="' + cat.id + '">' + cat.icon + ' ' + cat.name + '</option>';
-
-    var filtered = cat.sites.filter(function(s){
-      var matchName = s.name.toLowerCase().includes(filterText.toLowerCase());
-      var matchUrl = s.url.toLowerCase().includes(filterText.toLowerCase());
-      var matchCat = !filterCategory || filterCategory === cat.id;
-      return (matchName || matchUrl) && matchCat;
-    });
-
-    if (filterCategory && filterCategory !== cat.id) return;
-
     var section = document.createElement('div');
     section.className = 'category-section';
     section.dataset.category = cat.id;
-    section.innerHTML = '<div class="category-header"><span class="category-icon">' + cat.icon + '</span><h2>' + cat.name + '</h2><span class="category-count">' + cat.sites.length + ' \u4E2A</span></div><div class="links-grid" id="grid-' + cat.id + '">' + filtered.map(function(s){
-      return '<a href="' + s.url + '" class="link-card" target="_blank" rel="noopener noreferrer" title="' + s.name + '"><span class="favicon"><img src="' + s.icon + '" onerror="this.outerHTML=\'<i class=&quot;fas fa-globe&quot;></i>\'" alt=""></span><span class="name">' + s.name + '</span></a>';
+    section.innerHTML = '<div class="category-header"><h2>' + cat.name + '</h2><span class="category-count">' + cat.sites.length + ' \u4E2A</span></div><div class="links-grid" id="grid-' + cat.id + '">' + cat.sites.map(function(s){
+      return '<a href="' + s.url + '" class="link-card" target="_blank" rel="noopener noreferrer" title="' + s.name + '"><span class="name">' + s.name + '</span></a>';
     }).join('') + '</div>';
-
-    if (filtered.length === 0) {
-      var grid = section.querySelector('.links-grid');
-      if (grid) grid.innerHTML = '<div class="empty-state">\u6CA1\u6709\u5339\u914D\u7684\u7F51\u7AD9</div>';
-    }
-
     container.appendChild(section);
   });
 }
 
-function filterLinks(){
-  var text = document.getElementById('searchInput').value;
-  var cat = document.getElementById('categoryFilter').value;
-  renderCategories(text, cat);
-}
-
-function getPrivateBookmarks(){
-  try {
-    return JSON.parse(localStorage.getItem('nav_private_bookmarks') || '[]');
-  } catch(e) { return []; }
-}
-
-function savePrivateBookmarks(data){
-  localStorage.setItem('nav_private_bookmarks', JSON.stringify(data));
-}
-
-function renderPrivateBookmarks(){
-  var grid = document.getElementById('privateGrid');
-  var bookmarks = getPrivateBookmarks();
-  var editing = document.getElementById('privateSection').classList.contains('private-editing');
-
-  if (bookmarks.length === 0) {
-    grid.innerHTML = '<div class="empty-state">\u6682\u65E0\u79C1\u6709\u4E66\u7B7E\uFF0C\u70B9\u51FB\u300C\u2795 \u6DFB\u52A0\u300D\u5F00\u59CB\u6536\u85CF</div>';
-    return;
-  }
-
-  grid.innerHTML = bookmarks.map(function(b, i){
-    return '<a href="' + b.url + '" class="link-card" target="_blank" rel="noopener noreferrer" title="' + b.name + ' \u2014 ' + (b.tag || '') + '"><span class="favicon"><img src="https://www.google.com/s2/favicons?domain=' + encodeURIComponent(new URL(b.url).hostname) + '&sz=32" onerror="this.outerHTML=\'<i class=&quot;fas fa-link&quot;></i>\'" alt=""></span><span class="name">' + b.name + '</span>' + (editing ? '<button class="delete-btn" onclick="event.preventDefault();event.stopPropagation();deletePrivateBookmark(' + i + ')">\u2715</button>' : '') + '</a>';
-  }).join('');
-}
-
-function togglePrivateEdit(){
-  var s = document.getElementById('privateSection');
-  var btn = document.getElementById('privateEditBtn');
-  s.classList.toggle('private-editing');
-  var editing = s.classList.contains('private-editing');
-  btn.textContent = editing ? '\u2705 \u5B8C\u6210' : '\u270F\uFE0F \u7F16\u8F91';
-  renderPrivateBookmarks();
-}
-
-function showAddForm(){
-  document.getElementById('addForm').classList.add('visible');
-}
-
-function hideAddForm(){
-  document.getElementById('addForm').classList.remove('visible');
-  document.getElementById('newName').value = '';
-  document.getElementById('newUrl').value = '';
-  document.getElementById('newTag').value = '';
-}
-
-function addPrivateBookmark(){
-  var name = document.getElementById('newName').value.trim();
-  var url = document.getElementById('newUrl').value.trim();
-  var tag = document.getElementById('newTag').value.trim();
-  if (!name || !url) { showToast('\u8BF7\u586B\u5199\u540D\u79F0\u548C\u7F51\u5740', 'error'); return; }
-  try { new URL(url); } catch(e) { showToast('\u8BF7\u8F93\u5165\u6709\u6548\u7F51\u5740', 'error'); return; }
-
-  var bookmarks = getPrivateBookmarks();
-  bookmarks.push({ name: name, url: url, tag: tag || '\u672A\u5206\u7C7B' });
-  savePrivateBookmarks(bookmarks);
-  hideAddForm();
-  renderPrivateBookmarks();
-  showToast('\u5DF2\u6DFB\u52A0\u300C' + name + '\u300D');
-}
-
-function deletePrivateBookmark(index){
-  var bookmarks = getPrivateBookmarks();
-  var name = bookmarks[index].name;
-  bookmarks.splice(index, 1);
-  savePrivateBookmarks(bookmarks);
-  renderPrivateBookmarks();
-  showToast('\u5DF2\u5220\u9664\u300C' + name + '\u300D');
-}
-
-function showToast(msg, type){
-  type = type || '';
-  var d = document.createElement('div');
-  d.className = 'toast' + (type ? ' ' + type : '');
-  d.textContent = msg;
-  document.body.appendChild(d);
-  setTimeout(function(){ d.remove(); }, 2000);
-}
-
 renderCategories();
-document.getElementById('privateSection').classList.add('visible');
-renderPrivateBookmarks();
 
 document.addEventListener('pjax:complete', function(){
   renderCategories();
-  renderPrivateBookmarks();
 });
 })();

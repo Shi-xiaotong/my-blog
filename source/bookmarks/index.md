@@ -14,56 +14,34 @@ permalink: /bookmarks/
   <!-- Header -->
   <div class="header">
     
-    <h1>📑 我的导航</h1>
+    <h1>我的导航</h1>
     <div class="header-right"></div>
   </div>
-  <div class="header-sub">精选好站 · 分类收藏 · 私人书签</div>
+  <div class="header-sub">精选好站 · 分类收藏</div>
 
-  <!-- Search -->
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="🔍 搜索网站名称或描述..." oninput="filterLinks()">
-    <select id="categoryFilter" onchange="filterLinks()">
-      <option value="">全部分类</option>
-    </select>
-  </div>
-
-  <!-- Private Bookmarks Section -->
-  <div class="private-section" id="privateSection">
-    <div class="private-header">
-      <span style="font-size:1.3em">🔒</span>
-      <h2>我的私有书签</h2>
-      <span style="font-size:12px;color:var(--text-secondary)">仅你可见，存在浏览器本地</span>
-      <button class="edit-btn" id="privateEditBtn" onclick="togglePrivateEdit()">✏️ 编辑</button>
-      <button class="edit-btn" onclick="showAddForm()">➕ 添加</button>
+  <!-- 自研项目置顶 -->
+  <div class="category-section pinned-section">
+    <div class="category-header">
+      <h2>本站自研</h2>
+      <span class="category-count">3 个</span>
     </div>
-    <div class="add-form" id="addForm">
-      <div>
-        <label>网站名称</label>
-        <input type="text" id="newName" placeholder="e.g. GitHub">
-      </div>
-      <div>
-        <label>网址</label>
-        <input type="url" id="newUrl" placeholder="https://...">
-      </div>
-      <div>
-        <label>分类标签</label>
-        <input type="text" id="newTag" placeholder="e.g. 开发工具">
-      </div>
-      <div style="display:flex;gap:8px;align-items:end">
-        <button class="btn btn-primary" onclick="addPrivateBookmark()">保存</button>
-        <button class="btn btn-cancel" onclick="hideAddForm()">取消</button>
-      </div>
+    <div class="links-grid">
+      <a href="/tools/" class="link-card" target="_blank" rel="noopener noreferrer" title="在线工具箱">
+        <span class="name">工具箱</span>
+      </a>
+      <a href="/games/" class="link-card" target="_blank" rel="noopener noreferrer" title="网页小游戏">
+        <span class="name">小游戏</span>
+      </a>
+      <a href="/anime/" class="link-card" target="_blank" rel="noopener noreferrer" title="影视屋">
+        <span class="name">影视屋</span>
+      </a>
     </div>
-    <div class="links-grid" id="privateGrid"></div>
   </div>
 
   <!-- Public Categories render here -->
   <div id="categoriesContainer"></div>
 
-  <!-- Footer -->
-  <div style="text-align:center;padding:32px 0 16px;color:var(--text-secondary);font-size:13px">
-    数据本地存储 · 
-  </div>
+
 </div>
 
 <script src="/js/bookmarks-page.js"></script>

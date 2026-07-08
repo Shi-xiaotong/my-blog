@@ -46,7 +46,12 @@ iframe {
    通用动画规范
    ================================================ */
 * {
-    transition: all .25s ease;
+    transition: color .25s ease, background-color .25s ease, border-color .25s ease, box-shadow .25s ease, opacity .25s ease;
+}
+
+/* 触控优化 - 消除 300ms 点击延迟 */
+html {
+    touch-action: manipulation;
 }
 
 /* ================================================

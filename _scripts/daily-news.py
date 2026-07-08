@@ -196,7 +196,8 @@ description: "{date_display} 科技资讯。"
         paras = body.split('\n\n')
         if len(paras) > 2:
             body = paras[0] + '\n\n<!-- more -->\n\n' + '\n\n'.join(paras[1:])
-    desc = articles[0]['title'][:120].replace('"', "'")
+    first_para = body.split('\n\n')[0].replace('\n', ' ').strip()[:120]
+    desc = first_para.replace('"', "'") if len(first_para) > 10 else articles[0]['title'][:120].replace('"', "'")
     title = title.replace('"', "'")
     md = f"""---
 title: "{title}"
