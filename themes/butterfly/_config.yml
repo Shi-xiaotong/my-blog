@@ -1148,11 +1148,8 @@ inject:
   bottom:
     # 太空背景
     - <script src="/tools/bg.js"></script>
-    - <script src="/js/weather-store.js"></script>
-    - <script src="/js/weather-widget.js"></script>
-    #日历
-    - <script src="/js/lunar.js"></script>
-    - <script src="/js/calendar-widget.js"></script>
+    # 侧边栏小组件懒加载 (日历+天气，按需加载)
+    - <script src="/js/widget-loader.js"></script>
     # 看板娘开关
     - <script src="/js/live2d-toggle.js"></script>
 
