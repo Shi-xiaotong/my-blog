@@ -561,11 +561,10 @@ img.error-img-fallback,
   width: auto !important;
   flex: 1 !important;
 }
-#recent-posts .recent-post-item .post_cover.left,
-#recent-posts .recent-post-item .post_cover.right {
-  order: 0;
-}
 /* 6色轮换 */
+#recent-posts .recent-post-item .post_cover.right {
+  border-radius: 0 12px 12px 0 !important;
+}
 #recent-posts .recent-post-item:nth-child(6n+1) .post_cover { background: #3b82f6 !important; }
 #recent-posts .recent-post-item:nth-child(6n+2) .post_cover { background: #22c55e !important; }
 #recent-posts .recent-post-item:nth-child(6n+3) .post_cover { background: #a855f7 !important; }
