@@ -115,6 +115,142 @@ html {
 }
 
 /* ================================================
+   移动端适配 — 覆盖 Butterfly 默认样式
+   ================================================ */
+
+/* 文章封面渐变条 — 移动端减矮 */
+@media screen and (max-width: 768px) {
+  /* 保持封面在左侧，不堆叠到标题上方 */
+  .recent-post-item {
+    flex-direction: row !important;
+    height: auto !important;
+    min-height: 80px;
+  }
+  .recent-post-item .post_cover {
+    width: 80px !important;
+    height: auto !important;
+    min-height: 80px;
+    flex-shrink: 0;
+  }
+  .recent-post-item .post_cover .post-bg {
+    height: 100% !important;
+    min-height: 80px;
+  }
+  /* 取消 right 封面在移动端的 order 重置 */
+  .recent-post-item .post_cover.right {
+    order: 1 !important;
+  }
+  /* 文章信息紧凑 */
+  .recent-post-item > .recent-post-info {
+    padding: 12px 16px !important;
+    width: auto !important;
+    flex: 1;
+  }
+  .recent-post-item > .recent-post-info .article-title {
+    font-size: 1.15em !important;
+  }
+  .recent-post-item > .recent-post-info .content {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+
+/* 侧边栏卡片 — 移动端边距优化 */
+@media screen and (max-width: 768px) {
+  #aside-content {
+    width: 100% !important;
+    padding: 0 4px !important;
+  }
+  #aside-content .card-widget {
+    padding: 16px !important;
+    margin-bottom: 12px !important;
+  }
+  #aside-content .card-info .avatar-img {
+    width: 72px !important;
+    height: 72px !important;
+  }
+  #aside-content .card-info .author-info-name {
+    font-size: 1.2em !important;
+  }
+  #aside-content .card-info .author-info-description {
+    font-size: 12px !important;
+  }
+  #aside-content .card-info-social-icons .social-icon {
+    font-size: 1.2em !important;
+    margin: 0 6px !important;
+  }
+  #aside-content .site-data {
+    margin: 10px 0 0 !important;
+  }
+  #aside-content .site-data a {
+    padding: 2px 0 !important;
+  }
+  #aside-content .site-data .headline {
+    font-size: .85em !important;
+  }
+  #aside-content .site-data .length-num {
+    font-size: 1.1em !important;
+  }
+  #aside-content .aside-list .aside-list-item {
+    padding: 4px 0 !important;
+  }
+  #aside-content .aside-list .aside-list-item .title {
+    font-size: 13px !important;
+  }
+  #aside-content .item-headline {
+    font-size: 1em !important;
+  }
+  #aside-content .card-announcement .announcement_content {
+    font-size: 13px !important;
+  }
+  /* 导航栏 auth bar 移动端紧凑 */
+  #site-auth-bar {
+    margin-left: 4px !important;
+    padding: 0 2px !important;
+  }
+  #site-auth-bar .auth-login-btn {
+    padding: 2px 8px !important;
+    font-size: 11px !important;
+  }
+  #site-auth-bar .auth-user-info {
+    padding: 1px 5px 1px 3px !important;
+    font-size: 11px !important;
+  }
+  #site-auth-bar .auth-user-info .auth-name {
+    max-width: 50px !important;
+    font-size: 11px !important;
+  }
+  /* 移动端强制隐藏导航菜单项，显示汉堡按钮 */
+  #nav .menus_items {
+    display: none !important;
+  }
+  #nav #toggle-menu {
+    display: inline-block !important;
+  }
+}
+
+/* 平板 — 侧边栏优化 */
+@media screen and (min-width: 769px) and (max-width: 900px) {
+  #aside-content {
+    width: 100% !important;
+    padding: 0 8px !important;
+  }
+  #aside-content .card-widget {
+    padding: 18px 20px !important;
+  }
+}
+
+/* 整体布局 — 移动端边距 */
+@media screen and (max-width: 768px) {
+  .layout {
+    padding: 16px 6px !important;
+  }
+  #recent-posts .recent-post-item {
+    margin-bottom: 12px !important;
+  }
+}
+
+/* ================================================
    平板适配
    ================================================ */
 @media screen and (min-width: 768px) and (max-width: 1024px) {

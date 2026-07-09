@@ -161,6 +161,7 @@ var CATEGORIES = [
 
 function renderCategories(){
   var container = document.getElementById('categoriesContainer');
+  if (!container) return;
   container.innerHTML = '';
 
   CATEGORIES.forEach(function(cat){
@@ -177,6 +178,9 @@ function renderCategories(){
 renderCategories();
 
 document.addEventListener('pjax:complete', function(){
-  renderCategories();
+  // 只在书签页重新渲染
+  if (document.getElementById('categoriesContainer')) {
+    renderCategories();
+  }
 });
 })();

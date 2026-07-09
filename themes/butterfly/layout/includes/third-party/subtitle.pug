@@ -39,8 +39,21 @@ script.
 
         sub.length > 0 && typedJSFn.init(sub)
       } else {
-        document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
-          (Array.isArray(content) && content.length > 0 ? content[0] : '')
+        var _el = document.getElementById('subtitle')
+        var _list = Array.isArray(content) ? content : (typeof content === 'string' ? [content] : [])
+        _el.textContent = _list[0] || ''
+        if (_list.length > 1) {
+          _el.style.cssText = 'transition:opacity .6s ease;opacity:1'
+          var _i = 0
+          setInterval(function() {
+            _el.style.opacity = '0'
+            setTimeout(function() {
+              _i = (_i + 1) % _list.length
+              _el.textContent = _list[_i]
+              _el.style.opacity = '1'
+            }, 600)
+          }, 4000)
+        }
       }
     }
   }

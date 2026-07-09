@@ -1,5 +1,5 @@
 /* Site-wide auth bar — inside navbar */
-#site-auth-bar{display:flex;align-items:center;margin-left:auto;padding:0 8px;white-space:nowrap}
+#site-auth-bar{display:flex;align-items:center;padding:0 8px;white-space:nowrap;order:99}
 #site-auth-bar .auth-login-btn{padding:4px 14px;background:rgba(255,217,61,.1);color:#ffd93d;border:1px solid rgba(255,217,61,.2);border-radius:16px;cursor:pointer;font-size:13px;transition:all .2s;display:flex;align-items:center;gap:4px}
 #site-auth-bar .auth-login-btn:hover{background:rgba(255,217,61,.2);border-color:rgba(255,217,61,.4)}
 #site-auth-bar .auth-user-info{display:flex;align-items:center;gap:5px;padding:3px 10px 3px 6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;font-size:13px;color:#999}
