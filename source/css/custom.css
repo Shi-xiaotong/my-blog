@@ -17,6 +17,51 @@
 @import './components/search.css';
 
 /* ================================================
+   Font Awesome 字体优化 — font-display: swap
+   防止字体文件阻塞页面渲染
+   覆盖 Font Awesome 默认的 font-display: block
+   ================================================ */
+@font-face {
+  font-family: "Font Awesome 7 Brands";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Font Awesome 7 Free";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Font Awesome 7 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+}
+/* Legacy Font Awesome 5 compatibility */
+@font-face {
+  font-family: "Font Awesome 5 Brands";
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  font-display: swap;
+}
+/* Legacy FontAwesome */
+@font-face {
+  font-family: "FontAwesome";
+  font-display: swap;
+}
+
+/* ================================================
    全局响应式图片规范
    ================================================ */
 img {

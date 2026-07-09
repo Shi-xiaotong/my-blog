@@ -1144,6 +1144,10 @@ inject:
     - <link rel="stylesheet" href="/tools/site-override.css">
     # 注入 custom.css 全站自定义样式
     - <link rel="stylesheet" href="/css/custom.css">
+    # Font Awesome 字体预加载 — 让字体文件提前下载，减少首次访问的等待时间
+    - <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+    - <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+    - <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
 
   bottom:
     # 太空背景
