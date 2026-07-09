@@ -82,7 +82,7 @@ favicon: /img/favicon.ico
 
 avatar:
   img: https://img.233002.xyz/assets/avatar.webp
-  effect: true
+  effect: false
 
 # 禁用所有顶部图片
 disable_top_img: false
