@@ -2,7 +2,7 @@
 (function() {
   'use strict';
   
-  const MUSIC_URL = '/audio/bgm.mp3';
+  const MUSIC_URL = 'https://cdn.jsdelivr.net/gh/Shi-xiaotong/images@main/audio/bgm.mp3';
   
   let audio = null;
   let isPlaying = false;
@@ -41,7 +41,7 @@
     
     audio = new Audio();
     audio.src = MUSIC_URL;
-    audio.preload = 'auto';
+    audio.preload = 'none';
     audio.loop = true;
     audio.volume = 0.7;
     
