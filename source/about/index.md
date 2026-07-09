@@ -310,7 +310,7 @@ type: about
 <!-- 角色卡 -->
 <div class="char-card">
   <div class="char-card-inner">
-    <img class="card-avatar" src="/img/zipai.png" alt="avatar">
+    <img class="card-avatar" src="https://img.233002.xyz/assets/zipai.webp" alt="avatar">
     <div class="rarity">✦ S S R ✦</div>
     <div class="char-name">Shi_xiaotong</div>
     <div class="char-subtitle">「 在 bug 的海洋中寻找 bug 之外的东西 」</div>
