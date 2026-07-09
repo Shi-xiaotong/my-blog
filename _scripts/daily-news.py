@@ -125,7 +125,8 @@ def llm_summarize(date_display, articles):
 - 每条标注「[来源](url)」
 - 写开头段落和结尾
 - 全文 Markdown，总字数 800-1200 字
-- 文章标题用 #，新闻用 ##
+- 文章标题用 #，用第一条新闻的标题中文翻译，不要写"X月X日科技/每日热点"这种通用标题
+- 新闻用 ##
 - 不要编造事实"""
     payload = json.dumps({
         "model": "agnes-2.0-flash",
@@ -133,7 +134,7 @@ def llm_summarize(date_display, articles):
             {"role": "system", "content": "你是一个专业的科技新闻中文编辑，严格基于提供的新闻内容，不编造事实。回复使用纯 Markdown。"},
             {"role": "user", "content": prompt}
         ],
-        "max_tokens": 8000,
+        "max_tokens": 12000,
         "temperature": 0.7
     }).encode()
 
