@@ -2,7 +2,7 @@
 (function() {
   'use strict';
   
-  const MUSIC_URL = 'https://cdn.jsdelivr.net/gh/Shi-xiaotong/images@main/audio/bgm.mp3';
+  const MUSIC_URL = 'https://img.233002.xyz/assets/bgm.mp3';
   
   let audio = null;
   let isPlaying = false;

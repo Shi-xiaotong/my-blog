@@ -31,7 +31,7 @@ theme_color:
 
 nav:
   # 导航栏 logo 图片
-  logo: https://cdn.jsdelivr.net/gh/Shi-xiaotong/images@main/logo/logo.webp
+  logo: https://img.233002.xyz/assets/logo.webp
   display_title: true
   display_post_title: true
   # 是否固定导航栏
@@ -81,7 +81,7 @@ social:
 favicon: /img/favicon.ico
 
 avatar:
-  img: https://cdn.jsdelivr.net/gh/Shi-xiaotong/images@main/avatar/picture.webp
+  img: https://img.233002.xyz/assets/avatar.webp
   effect: true
 
 # 禁用所有顶部图片

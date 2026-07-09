@@ -63,7 +63,7 @@ top_img: false
     <p>如果你希望将我的博客添加到你的友链中，可以参考以下信息：</p>
     <div class="my-template">
       <div class="template-field"><span class="field-label">名称</span><code>水星引力m</code></div>
-      <div class="template-field"><span class="field-label">头像</span><code>https://cdn.jsdelivr.net/gh/Shi-xiaotong/images@main/avatar/picture.webp</code></div>
+      <div class="template-field"><span class="field-label">头像</span><code>https://img.233002.xyz/assets/avatar.webp</code></div>
       <div class="template-field"><span class="field-label">网址</span><code>https://233002.xyz/</code></div>
       <div class="template-field"><span class="field-label">描述</span><code>编程、折腾、记录生活</code></div>
     </div>
@@ -234,7 +234,7 @@ top_img: false
 </style>
 <script>
 function copyTemplate() {
-  var text = '名称：水星引力m\n头像：https://cdn.jsdelivr.net/gh/Shi-xiaotong/images@main/avatar/picture.webp\n网址：https://233002.xyz/\n描述：编程、折腾、记录生活';
+  var text = '名称：水星引力m\n头像：https://img.233002.xyz/assets/avatar.webp\n网址：https://233002.xyz/\n描述：编程、折腾、记录生活';
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(function() {
       var btn = document.querySelector('.copy-btn');
