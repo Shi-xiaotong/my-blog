@@ -8,7 +8,7 @@
 
   var SCRIPTS = {
     calendar: [
-      '/js/lunar-mini.js',
+      '/js/lunar.js',
       '/js/calendar-widget.js'
     ],
     weather: [
