@@ -133,7 +133,7 @@ def llm_summarize(date_display, articles):
             {"role": "system", "content": "你是一个专业的科技新闻中文编辑，严格基于提供的新闻内容，不编造事实。回复使用纯 Markdown。"},
             {"role": "user", "content": prompt}
         ],
-        "max_tokens": 2000,
+        "max_tokens": 8000,
         "temperature": 0.7
     }).encode()
 
@@ -177,12 +177,16 @@ description: "{date_display} 科技资讯。"
         art['content'] = scrape_content(art['url'])
     print(f"  Summarizing via AI...", flush=True)
     result = llm_summarize(date_display, articles)
-    if result:
+    if result and result.strip():
         body = result
         title_m = re.search(r'^#\s+(.+)', body, re.MULTILINE)
         title = title_m.group(1).strip() if title_m else articles[0]['title']
         body = re.sub(r'^#\s+.*\n', '', body, count=1).strip()
     else:
+        if result is not None:
+            print("  [WARN] AI returned empty content (reasoning model may need more tokens), using raw fallback", flush=True)
+        else:
+            print("  [WARN] AI API call failed after retries, using raw fallback", flush=True)
         body_parts = ["今天的科技圈发生了这些事。\n"]
         for art in articles[:4]:
             body_parts.append(f"## {art['title']}\n")

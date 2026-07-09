@@ -5,7 +5,7 @@ categories:
   - daily-news
 tags:
   - 每日热点
-description: "Politician who investigated spyware abuses had his phone hacked with Pegasus spyware"
+description: "2026年7月2日，全球科技圈依旧波澜不断。从数字隐私安全的重大突破到人工智能商业化落地的现实挑战，再到私营航天在国防领域的深度介入，今日的新闻焦点揭示了技术发展与监管、伦理及地缘政治之间日益复杂的张力。"
 ---
 
 2026年7月2日，全球科技圈依旧波澜不断。从数字隐私安全的重大突破到人工智能商业化落地的现实挑战，再到私营航天在国防领域的深度介入，今日的新闻焦点揭示了技术发展与监管、伦理及地缘政治之间日益复杂的张力。以下为您梳理今日最具影响力的科技动态。
