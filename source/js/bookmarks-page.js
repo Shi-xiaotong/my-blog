@@ -59,6 +59,8 @@ var CATEGORIES = [
       { name: 'Dribbble', url: 'https://dribbble.com', icon: 'https://dribbble.com/favicon.ico' },
       { name: 'Unsplash', url: 'https://unsplash.com', icon: 'https://unsplash.com/favicon.ico' },
       { name: 'IconFont', url: 'https://www.iconfont.cn', icon: 'https://www.iconfont.cn/favicon.ico' },
+      { name: '2DWallpapers', url: 'https://www.2dwallpapers.com', icon: 'https://www.2dwallpapers.com/favicon.ico' },
+      { name: 'MFSC123', url: 'https://www.mfsc123.com', icon: 'https://www.mfsc123.com/favicon.ico' },
     ]
   },
   {
@@ -71,6 +73,7 @@ var CATEGORIES = [
       { name: 'Coursera', url: 'https://www.coursera.org', icon: 'https://www.coursera.org/favicon.ico' },
       { name: 'Udemy', url: 'https://www.udemy.com', icon: 'https://www.udemy.com/favicon.ico' },
       { name: 'LeetCode', url: 'https://leetcode.cn', icon: 'https://leetcode.cn/favicon.ico' },
+      { name: '高考真题', url: 'https://t.urongda.com', icon: 'https://t.urongda.com/favicon.ico' },
     ]
   },
   {
@@ -83,6 +86,7 @@ var CATEGORIES = [
       { name: 'Netflix', url: 'https://www.netflix.com', icon: 'https://www.netflix.com/favicon.ico' },
       { name: 'Spotify', url: 'https://open.spotify.com', icon: 'https://open.spotify.com/favicon.ico' },
       { name: '\u7F51\u6613\u4E91\u97F3\u4E50', url: 'https://music.163.com', icon: 'https://music.163.com/favicon.ico' },
+      { name: 'Animex\u52A8\u6F2B\u793E', url: 'https://www.animetox.com', icon: 'https://www.animetox.com/favicon.ico' },
     ]
   },
   {
@@ -141,10 +145,20 @@ var CATEGORIES = [
     ]
   },
   {
+    id: 'games',
+    icon: '🎮',
+    name: '在线游戏',
+    sites: [
+      { name: 'survev.io', url: 'https://survev.io', icon: 'https://survev.io/favicon.ico' },
+      { name: 'Narrow One', url: 'https://narrow.one', icon: 'https://narrow.one/favicon.ico' },
+    ]
+  },
+  {
     id: 'misc',
     icon: '\uD83D\uDD27',
     name: '\u5B9E\u7528\u5DE5\u5177',
     sites: [
+      { name: '在线新华字典', url: 'https://zd.hwxnet.com', icon: 'https://zd.hwxnet.com/favicon.ico' },
       { name: 'Excalidraw', url: 'https://excalidraw.com', icon: 'https://excalidraw.com/favicon.ico' },
       { name: 'JSON.cn', url: 'https://www.json.cn', icon: 'https://www.json.cn/favicon.ico' },
       { name: 'Regex101', url: 'https://regex101.com', icon: 'https://regex101.com/favicon.ico' },
