@@ -69,7 +69,7 @@ html::before {
 }
 
 /* Layer 2: Earth arc — continents, clouds, city lights, atmosphere */
-html::after {
+body::after {
   content: '';
   position: fixed;
   left: 50%; bottom: 0;
