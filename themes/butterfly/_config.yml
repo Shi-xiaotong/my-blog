@@ -1143,7 +1143,7 @@ inject:
     # 注入 common.css 全站统一设计Token
     - <link rel="stylesheet" href="/tools/common.css">
     # 注入 site-override.css 桥接Butterfly→common.css
-    - <link rel="stylesheet" href="/tools/site-override.css?v=3">
+    - <link rel="stylesheet" href="/tools/site-override.css?v=4">
     # 注入 custom.css 全站自定义样式
     - <link rel="stylesheet" href="/css/custom.css">
     # Font Awesome 字体预加载 — 让字体文件提前下载，减少首次访问的等待时间

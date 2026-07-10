@@ -76,8 +76,9 @@ html::after {
   width: 200%; height: 55%;
   transform: translateX(-50%);
   z-index: -1;
-  pointer-events: none;
-  border-radius: 45% 45% 0 0;
+    pointer-events: none;
+    border-radius: 45% 45% 0 0;
+    /* Above bg.js canvas (z-index: -2) but below page content */
   background:
     /* ── Ocean base (dark deep blue) ── */
     radial-gradient(ellipse at 50% 100%, #0b1a2e 0%, #060f1f 40%, #030814 70%, transparent 100%),

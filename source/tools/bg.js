@@ -6,7 +6,7 @@
 'use strict';
 
 var c = document.createElement('canvas');
-c.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block;';
+c.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;pointer-events:none;display:block;';
 document.body.insertBefore(c, document.body.firstChild);
 
 var ctx = c.getContext('2d');
