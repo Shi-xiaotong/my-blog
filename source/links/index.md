@@ -2,6 +2,7 @@
 title: 友链
 date: 2026-06-14 00:00:00
 type: "links"
+layout: links-page
 top_img: false
 ---
 

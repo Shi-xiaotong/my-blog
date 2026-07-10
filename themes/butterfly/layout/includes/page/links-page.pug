@@ -1,0 +1,9 @@
+#page
+  if page.title
+    h1.page-title
+      i.fas.fa-link
+      = page.title
+  article.card-widget
+    .card-content
+      #article-container.container
+        != page.content

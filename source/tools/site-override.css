@@ -1,19 +1,114 @@
 /* ===== 🌌 site-override.css — Butterfly → Glassmorphism Bridge ===== */
 /* No image dependencies — uses CSS gradients + backdrop-filter      */
 
-/* ─── 1. Body: transparent for cosmic canvas bg ─── */
+/* ─── 1. Body: transparent ─── */
 body {
   background: transparent !important;
 }
 
-/* ─── 2. Cosmic animated background on <html> via CSS ─── */
-/* Only if bg.js hasn't loaded */
+/* ─── 2. 🌌 Pure CSS Space Background — No Images, No JS ─── */
+
+/* Layer 0: Deep space gradient on <html> itself */
+html {
+  background: radial-gradient(ellipse at 50% 25%, #0f1729 0%, #070a1a 30%, #020412 55%, #000005 80%, #000000 100%) !important;
+  min-height: 100%;
+}
+
+/* Layer 1: Stars via box-shadow trick (GPU-friendly, single element) */
 html::before {
   content: '';
-  position: fixed; inset: 0;
-  background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F172A 100%);
-  z-index: -2;
+  position: fixed;
+  top: 0; left: 0;
+  width: 1px; height: 1px;
+  z-index: -1;
   pointer-events: none;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow:
+    /* ── Bright stars (2px) ── */
+    8vw   3vh  0 0 #fff,
+    22vw  8vh  0 0 #fff,
+    35vw  2vh  0 0 #fff,
+    62vw  5vh  0 0 #fff,
+    78vw  4vh  0 0 #fff,
+    91vw  7vh  0 0 #fff,
+    15vw  15vh 0 0 #fff,
+    45vw  12vh 0 0 #fff,
+    72vw  18vh 0 0 #fff,
+    55vw  22vh 0 0 #fff,
+    5vw   25vh 0 0 #fff,
+    85vw  28vh 0 0 #fff,
+    /* ── Medium stars (1px) ── */
+    12vw  6vh  0 0 rgba(255,255,255,0.7),
+    28vw  14vh 0 0 rgba(255,255,255,0.6),
+    42vw  4vh  0 0 rgba(255,255,255,0.7),
+    68vw  10vh 0 0 rgba(255,255,255,0.6),
+    75vw  22vh 0 0 rgba(255,255,255,0.7),
+    88vw  16vh 0 0 rgba(255,255,255,0.6),
+    3vw   20vh 0 0 rgba(255,255,255,0.5),
+    18vw  28vh 0 0 rgba(255,255,255,0.6),
+    32vw  18vh 0 0 rgba(255,255,255,0.5),
+    50vw  8vh  0 0 rgba(255,255,255,0.5),
+    60vw  30vh 0 0 rgba(255,255,255,0.6),
+    95vw  12vh 0 0 rgba(255,255,255,0.6),
+    /* ── Dim stars (0.5px, more numerous) ── */
+    5vw   10vh 0 0 rgba(200,210,255,0.35),
+    10vw  18vh 0 0 rgba(200,210,255,0.3),
+    25vw  22vh 0 0 rgba(200,210,255,0.35),
+    30vw  6vh  0 0 rgba(200,210,255,0.3),
+    38vw  10vh 0 0 rgba(200,210,255,0.35),
+    48vw  15vh 0 0 rgba(200,210,255,0.3),
+    52vw  3vh  0 0 rgba(200,210,255,0.35),
+    58vw  20vh 0 0 rgba(200,210,255,0.3),
+    65vw  13vh 0 0 rgba(200,210,255,0.35),
+    70vw  7vh  0 0 rgba(200,210,255,0.3),
+    80vw  10vh 0 0 rgba(200,210,255,0.35),
+    82vw  24vh 0 0 rgba(200,210,255,0.3),
+    90vw  22vh 0 0 rgba(200,210,255,0.35),
+    96vw  17vh 0 0 rgba(200,210,255,0.3);
+}
+
+/* Layer 2: Earth arc — multi-layered atmosphere + sun-lit rim */
+html::after {
+  content: '';
+  position: fixed;
+  left: 50%; bottom: 0;
+  width: 200%; height: 55%;
+  transform: translateX(-50%);
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 45% 45% 0 0;
+  background:
+    /* Earth surface — dark with subtle structure */
+    radial-gradient(ellipse at 50% 100%, #0b1a2e 0%, #060f1f 40%, #030814 70%, transparent 100%),
+    /* Subtle surface suggestion (terrain-like blobs) */
+    radial-gradient(ellipse at 35% 70%, rgba(15,35,55,0.4) 0%, transparent 40%),
+    radial-gradient(ellipse at 60% 75%, rgba(8,25,45,0.3) 0%, transparent 35%),
+    radial-gradient(ellipse at 45% 55%, rgba(12,30,50,0.2) 0%, transparent 30%);
+  box-shadow:
+    /* Outer atmosphere (wide, soft cyan) */
+    0 0 80px 30px rgba(56, 189, 248, 0.08),
+    0 0 160px 60px rgba(56, 189, 248, 0.04),
+    /* Inner atmosphere (tighter, brighter blue) */
+    0 0 30px 8px rgba(96, 165, 250, 0.12),
+    /* Sun-facing rim light (warm glow, right side) */
+    inset 200px -50px 120px 0 rgba(255, 200, 100, 0.10),
+    /* Lower atmosphere shimmer (purple-pink edge) */
+    0 -10px 60px 10px rgba(192, 132, 252, 0.04);
+}
+
+/* ─── Sun (star at horizon) — using box-shadow on another pseudo-layer ─── */
+/* Added as a spotlight via a fixed radial glow */
+#web_bg::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    /* Sun starburst */
+    radial-gradient(circle at 72% 43%, rgba(255,215,150,0.12) 0%, transparent 35%),
+    radial-gradient(circle at 72% 43%, rgba(255,180,80,0.06) 0%, transparent 50%);
 }
 
 /* ─── 3. Glassmorphism Cards ─── */
@@ -88,19 +183,19 @@ html::before {
 
 /* ─── 4. Navigation ─── */
 #nav {
-  background: rgba(15,23,42,0.65) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border-bottom: 1px solid rgba(226,232,240,0.1) !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: none !important;
 }
 /* Override Butterfly's white background on not-top-img pages */
 #page-header.not-top-img #nav {
-  background: rgba(15,23,42,0.65) !important;
+  background: transparent !important;
   box-shadow: none !important;
 }
 [data-theme="dark"] #nav,
 [data-theme="dark"] #page-header.not-top-img #nav {
-  background: rgba(15,23,42,0.75) !important;
+  background: transparent !important;
 }
 #nav a,
 #nav .site-name,
@@ -121,16 +216,27 @@ html::before {
   position: relative;
   z-index: 1;
 }
+
+/* ─── Large title with depth-of-field fade into Earth ─── */
 #page-header #site-title {
+  font-size: clamp(3.5rem, 10vw, 9rem) !important;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  margin-top: -12vh;
   text-shadow: 0 0 40px rgba(129,140,248,0.3);
   background: linear-gradient(135deg, #818CF8 0%, #A78BFA 50%, #F9A8D4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
+  /* Depth-of-field: only bottom 1/4 fades into Earth */
+    -webkit-mask-image: linear-gradient(to bottom, black 72%, transparent 90%);
+    mask-image: linear-gradient(to bottom, black 72%, transparent 90%);
+  }
+
+  /* ─── Subtitle hidden (merged into title scale) ─── */
 #page-header #site-subtitle {
-  color: rgba(226,232,240,0.8);
-  text-shadow: none;
+  display: none !important;
 }
 
 /* ─── 6. Post block adjustments ─── */
