@@ -46,3 +46,6 @@ source/_posts/**/*.webp
 .env*
 !.env.example
 *.png
+## Python cache
+__pycache__/
+*.pyc
