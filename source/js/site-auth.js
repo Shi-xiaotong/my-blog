@@ -83,7 +83,7 @@ function login(){
     if(btn)btn.disabled=false;
     if(data.error){
       if(data.need_reset){
-        err.textContent='请先设置密码，点击"忘记密码"重置';err.style.color='#ffd93d';
+        err.textContent='请先设置密码，点击"忘记密码"重置';err.style.color='#2563EB';
       }else{
         err.textContent=data.error;err.style.color='#e94560';
       }

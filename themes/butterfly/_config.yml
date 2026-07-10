@@ -1138,6 +1138,8 @@ css_prefix: true
 # 在 head 之前（'</head>' 标签之前）和 bottom 之前（'</body>' 标签之前）插入代码
 inject:
   head:
+    - <link rel="preconnect" href="https://img.233002.xyz">
+    - <link rel="dns-prefetch" href="https://img.233002.xyz">
     # 注入 common.css 全站统一设计Token
     - <link rel="stylesheet" href="/tools/common.css">
     # 注入 site-override.css 桥接Butterfly→common.css
