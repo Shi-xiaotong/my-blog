@@ -1143,6 +1143,9 @@ inject:
     # 预连接 jsDelivr (仍有少量 CDN 资源)
     - <link rel="preconnect" href="https://cdn.jsdelivr.net">
     - <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    # 预连接天气 API
+    - <link rel="preconnect" href="https://api.open-meteo.com">
+    - <link rel="dns-prefetch" href="https://api.open-meteo.com">
     # 注入 common.css 全站统一设计Token
     - <link rel="stylesheet" href="/tools/common.css">
     # 注入 site-override.css 桥接Butterfly→common.css
