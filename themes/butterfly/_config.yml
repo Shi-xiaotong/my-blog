@@ -1140,20 +1140,21 @@ inject:
   head:
     - <link rel="preconnect" href="https://img.233002.xyz">
     - <link rel="dns-prefetch" href="https://img.233002.xyz">
+    # 预连接 jsDelivr (仍有少量 CDN 资源)
+    - <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    - <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     # 注入 common.css 全站统一设计Token
     - <link rel="stylesheet" href="/tools/common.css">
     # 注入 site-override.css 桥接Butterfly→common.css
     - <link rel="stylesheet" href="/tools/site-override.css?v=6">
     # 注入 custom.css 全站自定义样式
     - <link rel="stylesheet" href="/css/custom.css">
-    # Font Awesome 字体预加载 — 让字体文件提前下载，减少首次访问的等待时间
-    - <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-    - <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-    - <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+    # Font Awesome 字体预加载 — 自托管字体文件，避免 jsDelivr 慢速
+    - <link rel="preload" href="/assets/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+    - <link rel="preload" href="/assets/fontawesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+    - <link rel="preload" href="/assets/fontawesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
 
   bottom:
-    # 太空背景
-    - <script src="/tools/bg.js"></script>
     # 侧边栏小组件懒加载 (日历+天气，按需加载)
     - <script src="/js/widget-loader.js"></script>
     # 看板娘开关
@@ -1178,39 +1179,15 @@ CDN:
   custom_format:
 
   option:
-  # fontawesome: https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/7.1.0/css/all.min.css
-  # activate_power_mode:
-  # algolia_js:
-  # algolia_search:
-  # aplayer_css:
-  # aplayer_js:
-  # artalk_css:
-  # artalk_js:
-  # blueimp_md5:
-  # busuanzi:
-  # canvas_fluttering_ribbon:
-  # canvas_nest:
-  # canvas_ribbon:
-  # chartjs:
-  # click_heart:
-  # clickShowText:
-  # disqusjs:
-  # disqusjs_css:
-  # docsearch_css:
-  # docsearch_js:
-  # egjs_infinitegrid:
-  # fancybox:
-  # fancybox_css:
-  # fireworks:
-  # fontawesome:
-  # gitalk:
-  # gitalk_css:
-  # giscus:
-  # instantpage:
-  # katex:
-  # katex_copytex:
-  # lazyload:
-  # local_search:
+    # Font Awesome 自托管 — 随博客部署，避免第三方 CDN 慢速
+    fontawesome: /assets/fontawesome/css/all.min.css
+    # 以下 CDN 资源自托管到本地，减少第三方依赖
+    pace_js: /assets/libs/pace.min.js
+    pace_default_css: /assets/libs/pace-theme-minimal.css
+    pjax: /assets/libs/pjax.min.js
+    medium_zoom: /assets/libs/medium-zoom.min.js
+    activate_power_mode: /assets/libs/activate-power-mode.min.js
+    click_heart: /assets/libs/click-heart.min.js
   # main:
   # main_css:
   # mathjax:

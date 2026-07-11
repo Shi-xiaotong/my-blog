@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "hexo generate",
+    "build": "hexo generate && node _scripts/post-build.js",
     "clean": "hexo clean",
     "deploy": "npm run build && wrangler deploy",
     "server": "hexo server",
-    "start": "hexo clean && hexo g && hexo s",
+    "start": "hexo clean && npm run build && hexo s",
     "preview": "npm run build && wrangler dev"
   },
   "hexo": {
