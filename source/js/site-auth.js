@@ -12,7 +12,7 @@ function render(){
   var bar=document.getElementById('site-auth-bar');
   if(!bar)return;
   if(isLoggedIn()){
-    var avatarHtml=user&&user.avatar_url?'<img src="'+user.avatar_url+'" alt="">':'<i class="fas fa-user" style="font-size:10px"></i>';
+    var avatarHtml=user&&user.avatar_url?'<span class="auth-avatar-sm"><img src="'+user.avatar_url+'" alt=""></span>':'<span class="auth-avatar-sm"><i class="fas fa-user" style="font-size:10px"></i></span>';
     var name=user?(user.display_name||user.email.split('@')[0]):'';
     bar.innerHTML='<div class="menus_item auth-user-info">'
       +'<span class="site-page child" onclick="window.location.href=\'/user/\'" title="个人中心">'

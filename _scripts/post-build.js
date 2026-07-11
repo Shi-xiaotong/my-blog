@@ -94,10 +94,14 @@ function walk(dir) {
         }
       }
 
-      // 清理空标签: 去重导致的空 <script> 和 <link>
+      // 清理空标签: 去重导致的空 <script> 和空 <link>
       const before = html.length
       html = html.replace(/<script\s*><\/script>/g, '')
       html = html.replace(/<link[^>]*?\s+href=""[^>]*?>/g, '')
+      // 清理没有 href 属性的空 <link> 标签
+      html = html.replace(/<link\s[^>]*?rel="stylesheet"[^>]*?\/?>/g, (match) => {
+        return match.includes('href=') ? match : ''
+      })
       if (html.length !== before) mod = true
 
       if (mod) {
