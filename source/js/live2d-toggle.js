@@ -67,9 +67,7 @@
     var btn = document.getElementById('live2d-toggle');
     if (!btn) return;
     btn.addEventListener('click', toggle);
-    if (localStorage.getItem(STORAGE_KEY) === '1') {
-      loadLive2D();
-    }
+    // 不再根据 localStorage 自动加载 — 用户点按钮才加载，省内存
   }
 
   if (document.readyState === 'loading') {
