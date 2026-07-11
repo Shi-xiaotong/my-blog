@@ -102,12 +102,14 @@ comments: false
 <div class="uc-modal" id="ucPwdModal">
   <div class="uc-modal-box">
     <h3 id="ucPwdTitle">修改密码</h3>
+    <form onsubmit="return false">
     <div id="ucPwdOldWrap">
       <input type="password" id="ucPwdOldInput" placeholder="当前密码" onkeydown="if(event.key==='Enter')document.getElementById('ucPwdNewInput').focus()">
     </div>
     <input type="password" id="ucPwdNewInput" placeholder="新密码（至少6位）" onkeydown="if(event.key==='Enter')document.getElementById('ucPwdConfirmInput').focus()" style="margin-top:8px">
     <input type="password" id="ucPwdConfirmInput" placeholder="确认新密码" onkeydown="if(event.key==='Enter')ucChangePassword()" style="margin-top:8px">
     <div class="uc-pwd-error" id="ucPwdError"></div>
+    </form>
     <div class="uc-modal-actions">
       <button class="uc-btn uc-btn-secondary" id="ucPwdCancel">取消</button>
       <button class="uc-btn uc-btn-primary" id="ucPwdSaveBtn" onclick="ucChangePassword()">保存</button>
@@ -120,8 +122,10 @@ comments: false
   <div class="uc-modal-box">
     <h3 style="color:#e94560">注销账号</h3>
     <p style="color:#888;font-size:13px;margin:8px 0 16px;line-height:1.5">此操作不可恢复！你的所有观看记录、评论和弹幕数据将被永久删除。</p>
+    <form onsubmit="return false">
     <input type="password" id="ucDeletePwdInput" placeholder="输入密码确认注销" onkeydown="if(event.key==='Enter')document.getElementById('ucDeleteConfirm').click()">
     <div class="uc-pwd-error" id="ucDeleteError"></div>
+    </form>
     <div class="uc-modal-actions">
       <button class="uc-btn uc-btn-secondary" id="ucDeleteCancel">取消</button>
       <button class="uc-btn uc-btn-danger" id="ucDeleteConfirm"><i class="fas fa-trash-alt"></i> 确认注销</button>
