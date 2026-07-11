@@ -4,7 +4,7 @@
 from datetime import datetime
 
 from . import call_agnes, build_post, extract_title, strip_title_from_body, logger
-from ..scrapers import format_date
+from scrapers import format_date
 
 
 DIGEST_PROMPT_TEMPLATE = """今天 {date} 各平台热搜数据如下：

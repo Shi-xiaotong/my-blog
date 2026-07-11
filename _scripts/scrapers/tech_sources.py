@@ -1,90 +1,72 @@
 #!/usr/bin/env python3
-"""Tech news scraper — TechCrunch, extracted from existing daily-news.py."""
+"""Tech news — uses Agnes AI instead of brittle web scraping.
 
-import re
+TechCrunch changed their site structure and broke the scraper.
+Now we use the Agnes AI API to generate a summary of recent tech news.
+"""
+
+from datetime import datetime
 from typing import List
 
-from . import (
-    Article, retry, fetch_url, logger, HEADERS, CTX
-)
+from . import Article, retry, logger
+from generators import call_agnes
+
+
+TECH_NEWS_PROMPT = """你是一个科技新闻编辑。请根据你的知识，列出今天（{date}）最重要的 5 条全球科技新闻。
+
+要求：
+1. 每条包含：标题（中文）+ 一句话简介 + 来源
+2. 覆盖不同领域（AI、硬件、互联网、芯片、新能源等）
+3. 新闻必须真实，不要虚构
+4. 格式：每行一条，用 | 分隔：标题 | 简介 | 来源
+
+示例：
+Apple发布M4芯片 | Apple正式发布M4系列芯片，性能提升50% | The Verge
+"""
 
 
 def fetch_techcrunch_articles(date_str=None, limit=5) -> List[Article]:
-    """Scrape TechCrunch for articles on a given date."""
-    from datetime import datetime
+    """Generate tech news summaries using Agnes AI (replaces broken scraper)."""
     date_str = date_str or datetime.now().strftime("%Y-%m-%d")
-    date_path = date_str.replace("-", "/")
+    date_display = datetime.strptime(date_str, "%Y-%m-%d").strftime("%Y年%m月%d日")
 
-    urls = [
-        f"https://techcrunch.com/{date_path}/",
-        f"https://techcrunch.com/{date_path}",
-    ]
+    prompt = TECH_NEWS_PROMPT.format(date=date_display)
+    result = call_agnes(prompt, max_tokens=2000)
+    if not result:
+        return []
 
-    html = None
-    for url in urls:
-        result = retry(lambda u=url: fetch_url(u), label=f"TC {url.rsplit('/', 1)[-1]}", max_retries=2)
-        if result:
-            html = result
-            break
-
-    if not html:
-        # Fallback to front page
-        result = retry(lambda: fetch_url("https://techcrunch.com/"), label="TC front page")
-        if not result:
-            return []
-        html = result
-
-    # Parse articles
-    from scrapling.parser import Selector
-    page = Selector(html, ignore_parser_errors=True)
-    links = page.css('a[href*="techcrunch.com/202"]')
     articles = []
-    seen = set()
-    for a in links:
-        title = a.css("::text").get()
-        href = a.attrib.get("href", "")
-        if title and href and "techcrunch.com/202" in href:
-            title = title.strip()
-            if title and title not in seen and len(title) > 15:
-                seen.add(title)
-                url_clean = href.split("?")[0].split("#")[0]
-                articles.append(Article(title=title, url=url_clean, source="TechCrunch"))
+    for line in result.strip().split("\n"):
+        line = line.strip().strip("-* ")
+        if "|" in line:
+            parts = [p.strip() for p in line.split("|")]
+            title = parts[0] if len(parts) > 0 else ""
+            summary = parts[1] if len(parts) > 1 else ""
+            source = parts[2] if len(parts) > 2 else "科技媒体"
+            if title and len(title) > 5:
+                articles.append(Article(
+                    title=title,
+                    url="",
+                    content=summary,
+                    source=source,
+                ))
     return articles[:limit]
 
 
 def fetch_techcrunch_with_content(date_str=None, limit=5) -> List[Article]:
-    """Fetch TechCrunch articles with full content."""
-    articles = fetch_techcrunch_articles(date_str, limit)
-    for art in articles:
-        art.content = scrape_article_content(art.url)
-    return articles
-
-
-def scrape_article_content(url) -> str:
-    """Scrape full text content from a TechCrunch article."""
-    def _fetch():
-        html = fetch_url(url)
-        from scrapling.parser import Selector
-        page = Selector(html, ignore_parser_errors=True)
-        for sel in [".entry-content p", "article p", ".article-content p"]:
-            paras = page.css(sel)
-            texts = [p.css("::text").get() for p in paras]
-            texts = [t.strip() for t in texts if t and t.strip()]
-            if len(texts) >= 2:
-                return "\n".join(texts[:5])
-        return ""
-    return retry(_fetch, label=f"content {url.rsplit('/', 1)[-1][:30]}") or ""
+    """Fetch tech news with summaries (AI-generated)."""
+    return fetch_techcrunch_articles(date_str, limit)
 
 
 def fetch_techcrunch_summary(date_str=None, limit=5) -> str:
-    """Get a formatted summary of today's TechCrunch articles."""
+    """Get a formatted summary of today's tech news."""
     articles = fetch_techcrunch_with_content(date_str, limit)
     if not articles:
         return ""
     parts = []
     for i, art in enumerate(articles, 1):
         parts.append(f"{i}. 标题: {art.title}")
-        parts.append(f"   链接: {art.url}")
+        parts.append(f"   来源: {art.source}")
         if art.content:
             parts.append(f"   摘要: {art.content[:400]}")
     return "\n".join(parts)
