@@ -51,7 +51,7 @@
     });
     
     audio.addEventListener('error', function(e) {
-      console.error('音频加载失败:', e);
+      // 静默处理：资源缺失或跨域失败时不报错
     });
   }
   
