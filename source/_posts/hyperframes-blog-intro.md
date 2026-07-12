@@ -25,7 +25,7 @@ description: "偶然发现 HyperFrames 这个能把 HTML 渲染成 MP4 的开源
 
 工作流大概是这样：
 
-![HyperFrames 工作流](/images/hyperframes-workflow.webp)
+![HyperFrames 工作流](https://img.233002.xyz/blog/images/hyperframes-workflow.webp)
 
 核心概念就几个：
 - **Clip** — 一个有起止时间的可视元素

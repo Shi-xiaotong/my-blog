@@ -125,7 +125,7 @@ walk(PUBLIC)
 console.log(`[post-build] 已修改 ${count} 个 HTML`)
 
 // 清理 search.xml：删 CSS/JS/归档/404 等无用 entry
-(function cleanSearch() {
+function cleanSearch() {
   const xmlPath = path.join(PUBLIC, 'search.xml')
   if (!fs.existsSync(xmlPath)) return
   let xml = fs.readFileSync(xmlPath, 'utf-8')
@@ -162,4 +162,10 @@ console.log(`[post-build] 已修改 ${count} 个 HTML`)
 
   fs.writeFileSync(xmlPath, filtered.join(''), 'utf-8')
   console.log(`[post-build] search.xml 清理: 删除 ${removed} 个无用 entry`)
-})()
+}
+
+// 注册为 hexo after_generate 钩子，hexo server 重启时也会跑
+hexo.extend.filter.register('after_generate', cleanSearch, 10)
+
+// 独立运行（npm run build 也会触发）
+cleanSearch()

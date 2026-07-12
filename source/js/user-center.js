@@ -57,7 +57,7 @@ function render(data){
         +'<button class="uc-btn uc-btn-secondary" onclick="ucShowChangePwdModal()"><i class="fas fa-key"></i> 修改密码</button>';
     }else{
       ps.innerHTML='<h3 class="uc-card-title"><i class="fas fa-lock"></i> 密码管理</h3>'
-        +'<p class="uc-hint" style="text-align:left;padding:0 0 8px;color:#ffd93d">你还没有设置密码，请设置密码以便邮箱登录</p>'
+        +'<p class="uc-hint" style="text-align:left;padding:0 0 8px;color:#3b82f6">你还没有设置密码，请设置密码以便邮箱登录</p>'
         +'<button class="uc-btn uc-btn-primary" onclick="ucShowSetPwdModal()"><i class="fas fa-key"></i> 设置密码</button>';
     }
   }

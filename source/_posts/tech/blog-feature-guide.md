@@ -3,7 +3,6 @@ title: 水星引力m 博客功能全介绍
 date: 2026-07-12 15:40:00
 tags: ["Hexo"]
 categories: tech
-cover: false
 top_img: false
 description: 全面介绍水星引力m博客的各项功能：评论信息缓存、背景音乐、看板娘、导航收藏夹、在线工具箱等。
 ---

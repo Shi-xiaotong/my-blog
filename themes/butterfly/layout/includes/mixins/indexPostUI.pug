@@ -43,8 +43,11 @@ mixin indexPostUI()
           - const link = article.link || article.path
           - const title = article.title || _p('no_title')
           - const leftOrRight = indexLayout === 3 ? (index % 2 === 0 ? 'left' : 'right') : (indexLayout === 2 ? 'right' : '')
-          - const postCover = article.cover
-          - const noCover = article.cover === false || !theme.cover.index_enable ? 'no-cover' : ''
+          - const coverDisabled = article.cover === false || !theme.cover.index_enable
+          - const hasDefault = theme.cover && theme.cover.default_cover && theme.cover.default_cover.length > 0
+          - const defaultCover = hasDefault ? theme.cover.default_cover[index % theme.cover.default_cover.length] : ''
+          - const postCover = coverDisabled ? false : (article.cover || defaultCover || false)
+          - const noCover = coverDisabled ? 'no-cover' : ''
 
           if postCover && theme.cover.index_enable
             .post_cover(class=leftOrRight)
