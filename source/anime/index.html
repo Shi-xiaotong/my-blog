@@ -1,344 +1,685 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>影视屋 - 233002.xyz</title>
-<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-<style>
-:root {
-  --primary: #3b82f6;
-  --primary-hover: #1D4ED8;
-  --bg: #f4f6f9;
-  --card-bg: #ffffff;
-  --text: #1e293b;
-  --text-secondary: #64748b;
-  --border: #e2e8f0;
-  --shadow: 0 2px 8px rgba(0,0,0,0.08);
-  --shadow-lg: 0 6px 20px rgba(0,0,0,0.1);
-  --radius: 12px;
-}
-[data-theme="dark"] {
-  --bg: #0f172a;
-  --card-bg: #1e293b;
-  --text: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --border: #334155;
-  --shadow: 0 2px 8px rgba(0,0,0,0.3);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
-.container { max-width: 1200px; margin: 0 auto; padding: 16px; }
-
-/* Theme toggle */
-.theme-toggle {
-  position: fixed; top: 20px; right: 20px;
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 1px solid var(--border); background: var(--card-bg); color: var(--text);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 18px; z-index: 100; transition: all 0.2s;
-}
-.theme-toggle:hover { border-color: var(--primary); }
-
-/* Back link */
-.back-link {
-  display: inline-flex; align-items: center; gap: 6px;
-  color: var(--primary); text-decoration: none; font-size: 14px; margin-bottom: 10px;
-}
-.back-link:hover { text-decoration: underline; }
-
-/* Auth bar */
-#site-auth-bar {
-  display: flex; align-items: center; justify-content: center;
-  padding: 6px 0; margin-bottom: 8px;
-}
-.auth-login-btn {
-  padding: 6px 18px; border: 1px solid var(--primary); border-radius: 20px;
-  background: transparent; color: var(--primary); cursor: pointer; font-size: 13px;
-  transition: all 0.2s;
-}
-.auth-login-btn:hover { background: var(--primary); color: #fff; }
-.auth-user-info { display: flex; align-items: center; gap: 8px; }
-.auth-avatar-sm {
-  width: 28px; height: 28px; border-radius: 50%; overflow: hidden;
-  background: var(--border); display: flex; align-items: center; justify-content: center;
-  cursor: pointer; border: 1px solid var(--primary);
-}
-.auth-avatar-sm img { width: 100%; height: 100%; object-fit: cover; }
-.auth-name { font-size: 13px; color: var(--text); cursor: pointer; }
-.auth-name:hover { color: var(--primary); }
-.auth-logout {
-  background: none; border: none; color: var(--text-secondary); cursor: pointer;
-  font-size: 14px; padding: 4px;
-}
-.auth-logout:hover { color: var(--primary-hover); }
-
-/* Nav links */
-#anime-page .nav-links {
-  display: flex; justify-content: center; gap: 16px; padding: 10px 16px;
-}
-#anime-page .nav-links a {
-  color: var(--text); opacity: 0.7; text-decoration: none; font-size: 13px;
-  padding: 4px 12px; border: 1px solid var(--border); border-radius: 16px;
-  transition: all 0.2s;
-}
-#anime-page .nav-links a:hover { color: var(--primary); border-color: var(--primary); opacity: 1; }
-
-/* Search bar */
-#anime-page .search-bar {
-  display: flex; max-width: 700px; margin: 10px auto; padding: 0 16px;
-}
-#anime-page .search-bar input {
-  flex: 1; padding: 10px 16px; border: 1px solid var(--border); border-radius: 20px 0 0 20px;
-  background: var(--card-bg); color: var(--text); font-size: 15px; outline: none;
-  transition: border-color 0.2s;
-}
-#anime-page .search-bar input:focus { border-color: var(--primary); }
-#anime-page .search-bar button {
-  padding: 10px 24px; background: var(--primary); color: #fff;
-  border: none; border-radius: 0 20px 20px 0; cursor: pointer; font-size: 15px; font-weight: 600;
-  transition: background 0.2s;
-}
-#anime-page .search-bar button:hover { background: var(--primary-hover); color: #fff; }
-
-/* Category tabs */
-#anime-page .tabs {
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
-  padding: 10px 16px; max-width: 900px; margin: 0 auto;
-}
-#anime-page .tabs button {
-  padding: 6px 18px; border: 1px solid var(--border); background: transparent;
-  color: var(--text); opacity: 0.7; border-radius: 20px; cursor: pointer;
-  font-size: 14px; transition: all 0.2s;
-}
-#anime-page .tabs button.active {
-  background: var(--primary); color: #fff; border-color: var(--primary);
-  font-weight: 600; opacity: 1;
-}
-#anime-page .tabs button:hover { border-color: var(--primary); color: var(--primary); opacity: 1; }
-
-/* Card grid */
-#anime-page .card-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px; padding: 16px; max-width: 1200px; margin: 0 auto;
-}
-#anime-page .card {
-  background: var(--card-bg); border-radius: 8px; overflow: hidden;
-  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-  position: relative; border: 1px solid var(--border);
-}
-#anime-page .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-#anime-page .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
-#anime-page .card .card-info { padding: 8px 10px; }
-#anime-page .card .card-title {
-  font-size: 13px; color: var(--text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-#anime-page .card .card-remark {
-  position: absolute; top: 6px; right: 6px;
-  background: var(--primary); color: #fff;
-  padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600;
-}
-
-/* Pagination */
-#anime-page .pagination {
-  display: flex; justify-content: center; align-items: center;
-  gap: 16px; padding: 20px 16px;
-}
-#anime-page .pagination button {
-  height: 38px; line-height: 38px; padding: 0 16px;
-  background: var(--card-bg); color: var(--primary);
-  border: 1px solid var(--border); border-radius: 8px;
-  cursor: pointer; font-size: 16px; text-align: center; transition: all 0.2s;
-}
-#anime-page .pagination button:hover {
-  border-color: var(--primary); background: var(--primary); color: #fff;
-}
-#anime-page .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
-#anime-page .page-info {
-  color: var(--text); opacity: 0.7; font-size: 14px;
-  width: auto !important; min-width: 100px; line-height: 38px; text-align: center;
-}
-
-/* Continue watching */
-#anime-page .continue-card {
-  display: none; background: var(--card-bg);
-  border: 1px solid var(--primary); border-radius: 12px;
-  padding: 16px; margin: 16px auto; max-width: 600px;
-  cursor: pointer; transition: transform 0.2s;
-}
-#anime-page .continue-card.show { display: flex; gap: 16px; align-items: center; }
-#anime-page .continue-card:hover { transform: translateY(-2px); }
-#anime-page .continue-card img { width: 80px; height: 110px; object-fit: cover; border-radius: 8px; }
-#anime-page .continue-card .cont-info h3 { margin: 0 0 4px; color: var(--primary); font-size: 16px; }
-#anime-page .continue-card .cont-info p { margin: 2px 0; color: var(--text); opacity: 0.7; font-size: 13px; }
-#anime-page .continue-card .cont-info span { color: var(--primary); font-size: 12px; }
-
-/* Login modal */
-#site-login-modal {
-  display: none; position: fixed; inset: 0; z-index: 9999;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-  align-items: center; justify-content: center;
-}
-#site-login-modal.show { display: flex; }
-.slm-box {
-  background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
-  padding: 32px; max-width: 400px; width: 90%; text-align: center;
-  box-shadow: var(--shadow-lg);
-}
-.slm-box h3 { margin-bottom: 6px; color: var(--text); font-size: 18px; }
-.slm-sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 16px; }
-.slm-error { font-size: 13px; min-height: 20px; margin-bottom: 10px; }
-.slm-oauth { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-.slm-oauth-btn {
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border);
-  background: transparent; color: var(--text); cursor: pointer; font-size: 14px;
-  transition: all 0.2s;
-}
-.slm-oauth-btn:hover { border-color: var(--primary); }
-.slm-oauth-btn.github:hover { background: #24292e; color: #fff; border-color: #24292e; }
-.slm-oauth-btn.google:hover { background: #f0f0f0; }
-.slm-icon { display: flex; align-items: center; }
-.slm-divider {
-  color: var(--text-secondary); font-size: 12px; margin: 12px 0;
-  display: flex; align-items: center; gap: 10px;
-}
-.slm-divider::before, .slm-divider::after {
-  content: ''; flex: 1; height: 1px; background: var(--border);
-}
-.slm-email-form { display: flex; flex-direction: column; gap: 10px; }
-.slm-email-form input {
-  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
-  background: var(--bg); color: var(--text); font-size: 14px; outline: none; box-sizing: border-box;
-}
-.slm-email-form input:focus { border-color: var(--primary); }
-.slm-email-row { display: flex; gap: 8px; }
-.slm-email-row input {
-  flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
-  background: var(--bg); color: var(--text); font-size: 14px; outline: none;
-}
-.slm-email-row input:focus { border-color: var(--primary); }
-.slm-email-form input::placeholder,
-.slm-email-row input::placeholder { color: #94a3b8; }
-.slm-send-btn, .slm-submit {
-  padding: 10px 16px; border: none; border-radius: 10px;
-  background: var(--primary); color: #fff; font-size: 14px; font-weight: 600;
-  cursor: pointer; white-space: nowrap;
-}
-.slm-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.slm-cancel {
-  margin-top: 14px; background: none; border: none;
-  color: var(--text-secondary); cursor: pointer; font-size: 13px;
-}
-.slm-cancel:hover { color: var(--text); }
-
-/* Loading */
-#anime-page .loading { text-align: center; padding: 40px; color: var(--text); opacity: 0.7; }
-#anime-page .loading i { animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Footer */
-.footer { text-align: center; padding: 30px 0; color: var(--text-secondary); font-size: 13px; }
-.footer a { color: var(--primary); text-decoration: none; }
-.footer a:hover { text-decoration: underline; }
-
-/* Mobile */
-@media (max-width: 600px) {
-  #anime-page .card-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
-  #anime-page .search-bar input { font-size: 14px; padding: 8px 12px; }
-  .theme-toggle { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 16px; }
-}
-</style>
-</head>
-<body>
-
-<button class="theme-toggle" onclick="toggleTheme()" title="切换主题">☀️</button>
-
-<div class="container">
-  <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> 返回首页</a>
-
-  <div id="site-auth-bar"></div>
-
-  <div id="anime-page">
-    <!-- Nav links -->
-    <div class="nav-links">
-      <a href="/anime/history/"><i class="fas fa-history"></i> 观看记录</a>
-      <a href="/user/"><i class="fas fa-user"></i> 个人中心</a>
-    </div>
-
-    <!-- Search -->
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="搜索动漫、电影、电视剧...">
-      <button onclick="doSearch()"><i class="fas fa-search"></i> 搜索</button>
-    </div>
-
-    <!-- Continue Watching -->
-    <div class="continue-card" id="continueCard" onclick="continueWatching()">
-      <img id="contPic" src="">
-      <div class="cont-info">
-        <h3 id="contTitle"></h3>
-        <p id="contEp"></p>
-        <span><i class="fas fa-play-circle"></i> 继续观看</span>
-      </div>
-    </div>
-
-    <!-- Category Tabs -->
-    <div class="tabs" id="tabs">
-      <button class="active" data-type="">推荐</button>
-      <button data-type="4">日韩动漫</button>
-      <button data-type="49">国产动漫</button>
-      <button data-type="3">欧美动漫</button>
-      <button data-type="1">电影</button>
-      <button data-type="2">连续剧</button>
-      <button data-type="35">综艺</button>
-    </div>
-
-    <!-- Card Grid -->
-    <div class="card-grid" id="cardGrid"></div>
-
-    <!-- Pagination -->
-    <div class="pagination" id="pagination">
-      <button id="prevBtn" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i></button>
-      <span class="page-info" id="pageInfo">1</span>
-      <button id="nextBtn" onclick="changePage(1)"><i class="fas fa-chevron-right"></i></button>
-    </div>
-
-    <!-- Loading -->
-    <div class="loading" id="loading" style="display:none"><i class="fas fa-spinner"></i> 加载中...</div>
-  </div>
-
-  <div class="footer">
-    <p>🎬 影视屋 · <a href="/">233002.xyz</a></p>
-  </div>
-</div>
-
-<!-- Login Modal (managed by site-auth.js) -->
-
-<script>
-// ===== Theme toggle =====
-function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? '' : 'dark');
-  localStorage.setItem('anime-theme', isDark ? 'light' : 'dark');
-  document.querySelector('.theme-toggle').textContent = isDark ? '☀️' : '🌙';
-}
-(function() {
-  const saved = localStorage.getItem('anime-theme');
-  if (saved === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    document.querySelector('.theme-toggle').textContent = '🌙';
-  }
-})();
-
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>影视屋 - 233002.xyz</title>
+
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<style>
+
+:root {
+
+  --primary: #3b82f6;
+
+  --primary-hover: #1D4ED8;
+
+  --bg: #f4f6f9;
+
+  --card-bg: #ffffff;
+
+  --text: #1e293b;
+
+  --text-secondary: #64748b;
+
+  --border: #e2e8f0;
+
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  --shadow-lg: 0 6px 20px rgba(0,0,0,0.1);
+
+  --radius: 12px;
+
+}
+
+[data-theme="dark"] {
+
+  --bg: #0f172a;
+
+  --card-bg: #1e293b;
+
+  --text: #e2e8f0;
+
+  --text-secondary: #94a3b8;
+
+  --border: #334155;
+
+  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+
+  background: var(--bg);
+
+  color: var(--text);
+
+  min-height: 100vh;
+
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+
+
+
+/* Theme toggle */
+
+.theme-toggle {
+
+  position: fixed; top: 20px; right: 20px;
+
+  width: 40px; height: 40px; border-radius: 50%;
+
+  border: 1px solid var(--border); background: var(--card-bg); color: var(--text);
+
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+
+  font-size: 18px; z-index: 100; transition: all 0.2s;
+
+}
+
+.theme-toggle:hover { border-color: var(--primary); }
+
+
+
+/* Back link */
+
+.back-link {
+
+  display: inline-flex; align-items: center; gap: 6px;
+
+  color: var(--primary); text-decoration: none; font-size: 14px; margin-bottom: 10px;
+
+}
+
+.back-link:hover { text-decoration: underline; }
+
+
+
+/* Auth bar */
+
+#site-auth-bar {
+
+  display: flex; align-items: center; justify-content: center;
+
+  padding: 6px 0; margin-bottom: 8px;
+
+}
+
+.auth-login-btn {
+
+  padding: 6px 18px; border: 1px solid var(--primary); border-radius: 20px;
+
+  background: transparent; color: var(--primary); cursor: pointer; font-size: 13px;
+
+  transition: all 0.2s;
+
+}
+
+.auth-login-btn:hover { background: var(--primary); color: #fff; }
+
+.auth-user-info { display: flex; align-items: center; gap: 8px; }
+
+.auth-avatar-sm {
+
+  width: 28px; height: 28px; border-radius: 50%; overflow: hidden;
+
+  background: var(--border); display: flex; align-items: center; justify-content: center;
+
+  cursor: pointer; border: 1px solid var(--primary);
+
+}
+
+.auth-avatar-sm img { width: 100%; height: 100%; object-fit: cover; }
+
+.auth-name { font-size: 13px; color: var(--text); cursor: pointer; }
+
+.auth-name:hover { color: var(--primary); }
+
+.auth-logout {
+
+  background: none; border: none; color: var(--text-secondary); cursor: pointer;
+
+  font-size: 14px; padding: 4px;
+
+}
+
+.auth-logout:hover { color: var(--primary-hover); }
+
+
+
+/* Nav links */
+
+#anime-page .nav-links {
+
+  display: flex; justify-content: center; gap: 16px; padding: 10px 16px;
+
+}
+
+#anime-page .nav-links a {
+
+  color: var(--text); opacity: 0.7; text-decoration: none; font-size: 13px;
+
+  padding: 4px 12px; border: 1px solid var(--border); border-radius: 16px;
+
+  transition: all 0.2s;
+
+}
+
+#anime-page .nav-links a:hover { color: var(--primary); border-color: var(--primary); opacity: 1; }
+
+
+
+/* Search bar */
+
+#anime-page .search-bar {
+
+  display: flex; max-width: 700px; margin: 10px auto; padding: 0 16px;
+
+}
+
+#anime-page .search-bar input {
+
+  flex: 1; padding: 10px 16px; border: 1px solid var(--border); border-radius: 20px 0 0 20px;
+
+  background: var(--card-bg); color: var(--text); font-size: 15px; outline: none;
+
+  transition: border-color 0.2s;
+
+}
+
+#anime-page .search-bar input:focus { border-color: var(--primary); }
+
+#anime-page .search-bar button {
+
+  padding: 10px 24px; background: var(--primary); color: #fff;
+
+  border: none; border-radius: 0 20px 20px 0; cursor: pointer; font-size: 15px; font-weight: 600;
+
+  transition: background 0.2s;
+
+}
+
+#anime-page .search-bar button:hover { background: var(--primary-hover); color: #fff; }
+
+
+
+/* Category tabs */
+
+#anime-page .tabs {
+
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+
+  padding: 10px 16px; max-width: 900px; margin: 0 auto;
+
+}
+
+#anime-page .tabs button {
+
+  padding: 6px 18px; border: 1px solid var(--border); background: transparent;
+
+  color: var(--text); opacity: 0.7; border-radius: 20px; cursor: pointer;
+
+  font-size: 14px; transition: all 0.2s;
+
+}
+
+#anime-page .tabs button.active {
+
+  background: var(--primary); color: #fff; border-color: var(--primary);
+
+  font-weight: 600; opacity: 1;
+
+}
+
+#anime-page .tabs button:hover { border-color: var(--primary); color: var(--primary); opacity: 1; }
+
+
+
+/* Card grid */
+
+#anime-page .card-grid {
+
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+
+  gap: 16px; padding: 16px; max-width: 1200px; margin: 0 auto;
+
+}
+
+#anime-page .card {
+
+  background: var(--card-bg); border-radius: 8px; overflow: hidden;
+
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+
+  position: relative; border: 1px solid var(--border);
+
+}
+
+#anime-page .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+#anime-page .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+
+#anime-page .card .card-info { padding: 8px 10px; }
+
+#anime-page .card .card-title {
+
+  font-size: 13px; color: var(--text);
+
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+
+}
+
+#anime-page .card .card-remark {
+
+  position: absolute; top: 6px; right: 6px;
+
+  background: var(--primary); color: #fff;
+
+  padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600;
+
+}
+
+
+
+/* Pagination */
+
+#anime-page .pagination {
+
+  display: flex; justify-content: center; align-items: center;
+
+  gap: 16px; padding: 20px 16px;
+
+}
+
+#anime-page .pagination button {
+
+  height: 38px; line-height: 38px; padding: 0 16px;
+
+  background: var(--card-bg); color: var(--primary);
+
+  border: 1px solid var(--border); border-radius: 8px;
+
+  cursor: pointer; font-size: 16px; text-align: center; transition: all 0.2s;
+
+}
+
+#anime-page .pagination button:hover {
+
+  border-color: var(--primary); background: var(--primary); color: #fff;
+
+}
+
+#anime-page .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#anime-page .page-info {
+
+  color: var(--text); opacity: 0.7; font-size: 14px;
+
+  width: auto !important; min-width: 100px; line-height: 38px; text-align: center;
+
+}
+
+
+
+/* Continue watching */
+
+#anime-page .continue-card {
+
+  display: none; background: var(--card-bg);
+
+  border: 1px solid var(--primary); border-radius: 12px;
+
+  padding: 16px; margin: 16px auto; max-width: 600px;
+
+  cursor: pointer; transition: transform 0.2s;
+
+}
+
+#anime-page .continue-card.show { display: flex; gap: 16px; align-items: center; }
+
+#anime-page .continue-card:hover { transform: translateY(-2px); }
+
+#anime-page .continue-card img { width: 80px; height: 110px; object-fit: cover; border-radius: 8px; }
+
+#anime-page .continue-card .cont-info h3 { margin: 0 0 4px; color: var(--primary); font-size: 16px; }
+
+#anime-page .continue-card .cont-info p { margin: 2px 0; color: var(--text); opacity: 0.7; font-size: 13px; }
+
+#anime-page .continue-card .cont-info span { color: var(--primary); font-size: 12px; }
+
+
+
+/* Login modal */
+
+#site-login-modal {
+
+  display: none; position: fixed; inset: 0; z-index: 9999;
+
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+
+  align-items: center; justify-content: center;
+
+}
+
+#site-login-modal.show { display: flex; }
+
+.slm-box {
+
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
+
+  padding: 32px; max-width: 400px; width: 90%; text-align: center;
+
+  box-shadow: var(--shadow-lg);
+
+}
+
+.slm-box h3 { margin-bottom: 6px; color: var(--text); font-size: 18px; }
+
+.slm-sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 16px; }
+
+.slm-error { font-size: 13px; min-height: 20px; margin-bottom: 10px; }
+
+.slm-oauth { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+
+.slm-oauth-btn {
+
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+
+  padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border);
+
+  background: transparent; color: var(--text); cursor: pointer; font-size: 14px;
+
+  transition: all 0.2s;
+
+}
+
+.slm-oauth-btn:hover { border-color: var(--primary); }
+
+.slm-oauth-btn.github:hover { background: #24292e; color: #fff; border-color: #24292e; }
+
+.slm-oauth-btn.google:hover { background: #f0f0f0; }
+
+.slm-icon { display: flex; align-items: center; }
+
+.slm-divider {
+
+  color: var(--text-secondary); font-size: 12px; margin: 12px 0;
+
+  display: flex; align-items: center; gap: 10px;
+
+}
+
+.slm-divider::before, .slm-divider::after {
+
+  content: ''; flex: 1; height: 1px; background: var(--border);
+
+}
+
+.slm-email-form { display: flex; flex-direction: column; gap: 10px; }
+
+.slm-email-form input {
+
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+
+  background: var(--bg); color: var(--text); font-size: 14px; outline: none; box-sizing: border-box;
+
+}
+
+.slm-email-form input:focus { border-color: var(--primary); }
+
+.slm-email-row { display: flex; gap: 8px; }
+
+.slm-email-row input {
+
+  flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+
+  background: var(--bg); color: var(--text); font-size: 14px; outline: none;
+
+}
+
+.slm-email-row input:focus { border-color: var(--primary); }
+
+.slm-email-form input::placeholder,
+
+.slm-email-row input::placeholder { color: #94a3b8; }
+
+.slm-send-btn, .slm-submit {
+
+  padding: 10px 16px; border: none; border-radius: 10px;
+
+  background: var(--primary); color: #fff; font-size: 14px; font-weight: 600;
+
+  cursor: pointer; white-space: nowrap;
+
+}
+
+.slm-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.slm-cancel {
+
+  margin-top: 14px; background: none; border: none;
+
+  color: var(--text-secondary); cursor: pointer; font-size: 13px;
+
+}
+
+.slm-cancel:hover { color: var(--text); }
+
+
+
+/* Loading */
+
+#anime-page .loading { text-align: center; padding: 40px; color: var(--text); opacity: 0.7; }
+
+#anime-page .loading i { animation: spin 1s linear infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+
+
+/* Footer */
+
+.footer { text-align: center; padding: 30px 0; color: var(--text-secondary); font-size: 13px; }
+
+.footer a { color: var(--primary); text-decoration: none; }
+
+.footer a:hover { text-decoration: underline; }
+
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  #anime-page .card-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
+
+  #anime-page .search-bar input { font-size: 14px; padding: 8px 12px; }
+
+  .theme-toggle { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 16px; }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<button class="theme-toggle" onclick="toggleTheme()" title="切换主题">☀️</button>
+
+
+
+<div class="container">
+
+  <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> 返回首页</a>
+
+
+
+  <div id="site-auth-bar"></div>
+
+
+
+  <div id="anime-page">
+
+    <!-- Nav links -->
+
+    <div class="nav-links">
+
+      <a href="/anime/history/"><i class="fas fa-history"></i> 观看记录</a>
+
+      <a href="/user/"><i class="fas fa-user"></i> 个人中心</a>
+
+    </div>
+
+
+
+    <!-- Search -->
+
+    <div class="search-bar">
+
+      <input type="text" id="searchInput" placeholder="搜索动漫、电影、电视剧...">
+
+      <button onclick="doSearch()"><i class="fas fa-search"></i> 搜索</button>
+
+    </div>
+
+
+
+    <!-- Continue Watching -->
+
+    <div class="continue-card" id="continueCard" onclick="continueWatching()">
+
+      <img id="contPic" src="">
+
+      <div class="cont-info">
+
+        <h3 id="contTitle"></h3>
+
+        <p id="contEp"></p>
+
+        <span><i class="fas fa-play-circle"></i> 继续观看</span>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- Category Tabs -->
+
+    <div class="tabs" id="tabs">
+
+      <button class="active" data-type="">推荐</button>
+
+      <button data-type="4">日韩动漫</button>
+
+      <button data-type="49">国产动漫</button>
+
+      <button data-type="3">欧美动漫</button>
+
+      <button data-type="1">电影</button>
+
+      <button data-type="2">连续剧</button>
+
+      <button data-type="35">综艺</button>
+
+    </div>
+
+
+
+    <!-- Card Grid -->
+
+    <div class="card-grid" id="cardGrid"></div>
+
+
+
+    <!-- Pagination -->
+
+    <div class="pagination" id="pagination">
+
+      <button id="prevBtn" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i></button>
+
+      <span class="page-info" id="pageInfo">1</span>
+
+      <button id="nextBtn" onclick="changePage(1)"><i class="fas fa-chevron-right"></i></button>
+
+    </div>
+
+
+
+    <!-- Loading -->
+
+    <div class="loading" id="loading" style="display:none"><i class="fas fa-spinner"></i> 加载中...</div>
+
+  </div>
+
+
+
+  <div class="footer">
+
+    <p>🎬 影视屋 · <a href="/">233002.xyz</a></p>
+
+  </div>
+
+</div>
+
+
+
+<!-- Login Modal (managed by site-auth.js) -->
+
+
+
+<script>
+
+// ===== Theme toggle =====
+
+function toggleTheme() {
+
+  const html = document.documentElement;
+
+  const isDark = html.getAttribute('data-theme') === 'dark';
+
+  html.setAttribute('data-theme', isDark ? '' : 'dark');
+
+  localStorage.setItem('anime-theme', isDark ? 'light' : 'dark');
+
+  document.querySelector('.theme-toggle').textContent = isDark ? '☀️' : '🌙';
+
+}
+
+(function() {
+
+  const saved = localStorage.getItem('anime-theme');
+
+  if (saved === 'dark') {
+
+    document.documentElement.setAttribute('data-theme', 'dark');
+
+    document.querySelector('.theme-toggle').textContent = '🌙';
+
+  }
+
+})();
+
+
+
 // ===== Site Auth (shared module) =====
 // Loads site-auth.js dynamically
 (function(){
@@ -347,161 +688,318 @@ function toggleTheme() {
   document.head.appendChild(s);
 })();
 
-// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====
-(function(){
-var API_SOURCES=[
-  {name:'Huya',base:'https://www.huyaapi.com',list:'/api.php/provide/vod/?ac=list'},
-  {name:'FFZY',base:'https://auth.233002.xyz',list:'/api/ffzy?ac=videolist'},
-  {name:'BDZY',base:'https://api.apibdzy.com',list:'/api.php/provide/vod/?ac=list'},
-  {name:'FF22',base:'https://cj.ffzyapi.com',list:'/api.php/provide/vod/?ac=list'}
-];
-var API=API_SOURCES[0].base;
-var currentPage=1;
-var currentType='';
-var currentKeyword='';
-var totalPages=1;
-
-// Auth
-function getToken(){return localStorage.getItem('anime_token')||'';}
-function isLoggedIn(){return !!getToken();}
-
-// Search
-window.doSearch=function(){
-  var q=document.getElementById('searchInput').value.trim();
-  if(!q)return;
-  currentKeyword=q;currentType='';currentPage=1;
-  document.querySelectorAll('#tabs button').forEach(function(b){b.classList.remove('active');});
-  loadList();
-};
-
-document.getElementById('searchInput').addEventListener('keydown',function(e){
-  if(e.key==='Enter')doSearch();
-});
-
-// Tabs
-document.querySelectorAll('#tabs button').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('#tabs button').forEach(function(b){b.classList.remove('active');});
-    btn.classList.add('active');
-    currentType=btn.dataset.type;
-    currentKeyword='';
-    currentPage=1;
-    loadList();
-  });
-});
-
-// Load list
-async function loadList(){
-  var grid=document.getElementById('cardGrid');
-  var loading=document.getElementById('loading');
-  grid.innerHTML='';
-  loading.style.display='block';
-
-  // Try each API source
-  for(var si=0;si<API_SOURCES.length;si++){
-    var src=API_SOURCES[si];
-    try{
-      var url=src.base+src.list+'&pg='+currentPage;
-      if(currentType)url+='&t='+currentType;
-      if(currentKeyword)url+='&wd='+encodeURIComponent(currentKeyword);
-
-      var res=await fetch(url);
-      var data=await res.json();
-      var list=data.list||[];
-      if(list.length===0&&si<API_SOURCES.length-1)continue; // try next source
-      API=src.base;
-      totalPages=data.pagecount||1;
-
-    list.forEach(function(item){
-      var card=document.createElement('div');
-      card.className='card';
-      card.innerHTML='<img src="'+(item.vod_pic||'')+'" alt="'+item.vod_name+'" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 300%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22300%22/><text fill=%22%23555%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22>No Image</text></svg>\'">'
-        +'<div class="card-info"><div class="card-title">'+item.vod_name+'</div></div>'
-        +(item.vod_remarks?'<span class="card-remark">'+item.vod_remarks+'</span>':'');
-      card.onclick=function(){window.location.href='/anime/play/?vod_id='+item.vod_id;};
-      grid.appendChild(card);
-    });
-
-      updatePagination();
-      break; // found working source
-    }catch(err){
-      if(si===API_SOURCES.length-1){
-        grid.innerHTML='<div style="text-align:center;padding:40px;color:#e94560"><i class="fas fa-exclamation-circle"></i> 所有源站均不可用</div>';
-      }
-    }
-  }
-  loading.style.display='none';
-}
-
-function updatePagination(){
-  document.getElementById('pageInfo').textContent=currentPage+' / '+totalPages;
-  document.getElementById('prevBtn').disabled=currentPage<=1;
-  document.getElementById('nextBtn').disabled=currentPage>=totalPages;
-}
-
-window.changePage=function(delta){
-  currentPage+=delta;
-  if(currentPage<1)currentPage=1;
-  if(currentPage>totalPages)currentPage=totalPages;
-  loadList();
-  window.scrollTo({top:0,behavior:'smooth'});
-};
-
-// Continue watching
-window.continueWatching=function(){
-  if(!isLoggedIn()){showSiteLoginModal();return;}
-  // Get latest history item
-  fetch(API+'/api/history',{headers:{'Authorization':'Bearer '+getToken()}})
-  .then(function(r){return r.json();})
-  .then(function(data){
-    var items=data.list||[];
-    if(items.length>0){
-      var h=items[0];
-      window.location.href='/anime/play/?vod_id='+h.vod_id+'&ep='+h.episode_index;
-    }
-  }).catch(function(){});
-};
-
-// Load continue card
-async function loadContinueCard(){
-  if(!isLoggedIn()){document.getElementById('continueCard').classList.remove('show');return;}
-  try{
-    var res=await fetch(API+'/api/history',{headers:{'Authorization':'Bearer '+getToken()}});
-    var data=await res.json();
-    var items=data.list||[];
-    if(items.length>0){
-      var h=items[0];
-      document.getElementById('contPic').src=h.vod_pic||'';
-      document.getElementById('contTitle').textContent=h.vod_name;
-      document.getElementById('contEp').textContent='第'+(h.episode_index+1)+'集 '+(h.episode_name||'')+' · '+formatTime(h.position);
-      document.getElementById('continueCard').classList.add('show');
-    }
-  }catch(e){}
-}
-
-function formatTime(sec){
-  if(!sec||isNaN(sec))return'0:00';
-  sec=Math.floor(sec);var m=Math.floor(sec/60);var s=sec%60;
-  return m+':'+(s<10?'0':'')+s;
-}
-
-// Auth sync
-window.addEventListener('storage',function(e){
-  if(e.key==='anime_token'||e.key==='anime_user'){
-    if(isLoggedIn())loadContinueCard();
-    else document.getElementById('continueCard').classList.remove('show');
-  }
-});
-window.addEventListener('focus',function(){
-  if(isLoggedIn())loadContinueCard();
-});
-
-// Init
-loadList();
-loadContinueCard();
-
-})();
-</script>
-<script src="track.js"></script>
-</body>
+// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====// ===== Anime Page Logic =====
+
+(function(){
+
+var API_SOURCES=[
+
+  {name:'Huya',base:'https://www.huyaapi.com',list:'/api.php/provide/vod/?ac=list'},
+
+  {name:'FFZY',base:'https://auth.233002.xyz',list:'/api/ffzy?ac=videolist'},
+
+  {name:'BDZY',base:'https://api.apibdzy.com',list:'/api.php/provide/vod/?ac=list'},
+
+  {name:'FF22',base:'https://cj.ffzyapi.com',list:'/api.php/provide/vod/?ac=list'}
+
+];
+
+var API=API_SOURCES[0].base;
+
+var currentPage=1;
+
+var currentType='';
+
+var currentKeyword='';
+
+var totalPages=1;
+
+
+
+// Auth
+
+function getToken(){return localStorage.getItem('anime_token')||'';}
+
+function isLoggedIn(){return !!getToken();}
+
+
+
+// Search
+
+window.doSearch=function(){
+
+  var q=document.getElementById('searchInput').value.trim();
+
+  if(!q)return;
+
+  currentKeyword=q;currentType='';currentPage=1;
+
+  document.querySelectorAll('#tabs button').forEach(function(b){b.classList.remove('active');});
+
+  loadList();
+
+};
+
+
+
+document.getElementById('searchInput').addEventListener('keydown',function(e){
+
+  if(e.key==='Enter')doSearch();
+
+});
+
+
+
+// Tabs
+
+document.querySelectorAll('#tabs button').forEach(function(btn){
+
+  btn.addEventListener('click',function(){
+
+    document.querySelectorAll('#tabs button').forEach(function(b){b.classList.remove('active');});
+
+    btn.classList.add('active');
+
+    currentType=btn.dataset.type;
+
+    currentKeyword='';
+
+    currentPage=1;
+
+    loadList();
+
+  });
+
+});
+
+
+
+// Load list
+
+async function loadList(){
+
+  var grid=document.getElementById('cardGrid');
+
+  var loading=document.getElementById('loading');
+
+  grid.innerHTML='';
+
+  loading.style.display='block';
+
+
+
+  // Try each API source
+
+  for(var si=0;si<API_SOURCES.length;si++){
+
+    var src=API_SOURCES[si];
+
+    try{
+
+      var url=src.base+src.list+'&pg='+currentPage;
+
+      if(currentType)url+='&t='+currentType;
+
+      if(currentKeyword)url+='&wd='+encodeURIComponent(currentKeyword);
+
+
+
+      var res=await fetch(url);
+
+      var data=await res.json();
+
+      var list=data.list||[];
+
+      if(list.length===0&&si<API_SOURCES.length-1)continue; // try next source
+
+      API=src.base;
+
+      totalPages=data.pagecount||1;
+
+
+
+    list.forEach(function(item){
+
+      var card=document.createElement('div');
+
+      card.className='card';
+
+      card.innerHTML='<img src="'+(item.vod_pic||'')+'" alt="'+item.vod_name+'" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 300%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22300%22/><text fill=%22%23555%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22>No Image</text></svg>\'">'
+
+        +'<div class="card-info"><div class="card-title">'+item.vod_name+'</div></div>'
+
+        +(item.vod_remarks?'<span class="card-remark">'+item.vod_remarks+'</span>':'');
+
+      card.onclick=function(){window.location.href='/anime/play/?vod_id='+item.vod_id;};
+
+      grid.appendChild(card);
+
+    });
+
+
+
+      updatePagination();
+
+      break; // found working source
+
+    }catch(err){
+
+      if(si===API_SOURCES.length-1){
+
+        grid.innerHTML='<div style="text-align:center;padding:40px;color:#e94560"><i class="fas fa-exclamation-circle"></i> 所有源站均不可用</div>';
+
+      }
+
+    }
+
+  }
+
+  loading.style.display='none';
+
+}
+
+
+
+function updatePagination(){
+
+  document.getElementById('pageInfo').textContent=currentPage+' / '+totalPages;
+
+  document.getElementById('prevBtn').disabled=currentPage<=1;
+
+  document.getElementById('nextBtn').disabled=currentPage>=totalPages;
+
+}
+
+
+
+window.changePage=function(delta){
+
+  currentPage+=delta;
+
+  if(currentPage<1)currentPage=1;
+
+  if(currentPage>totalPages)currentPage=totalPages;
+
+  loadList();
+
+  window.scrollTo({top:0,behavior:'smooth'});
+
+};
+
+
+
+// Continue watching
+
+window.continueWatching=function(){
+
+  if(!isLoggedIn()){showSiteLoginModal();return;}
+
+  // Get latest history item
+
+  fetch(API+'/api/history',{headers:{'Authorization':'Bearer '+getToken()}})
+
+  .then(function(r){return r.json();})
+
+  .then(function(data){
+
+    var items=data.list||[];
+
+    if(items.length>0){
+
+      var h=items[0];
+
+      window.location.href='/anime/play/?vod_id='+h.vod_id+'&ep='+h.episode_index;
+
+    }
+
+  }).catch(function(){});
+
+};
+
+
+
+// Load continue card
+
+async function loadContinueCard(){
+
+  if(!isLoggedIn()){document.getElementById('continueCard').classList.remove('show');return;}
+
+  try{
+
+    var res=await fetch(API+'/api/history',{headers:{'Authorization':'Bearer '+getToken()}});
+
+    var data=await res.json();
+
+    var items=data.list||[];
+
+    if(items.length>0){
+
+      var h=items[0];
+
+      document.getElementById('contPic').src=h.vod_pic||'';
+
+      document.getElementById('contTitle').textContent=h.vod_name;
+
+      document.getElementById('contEp').textContent='第'+(h.episode_index+1)+'集 '+(h.episode_name||'')+' · '+formatTime(h.position);
+
+      document.getElementById('continueCard').classList.add('show');
+
+    }
+
+  }catch(e){}
+
+}
+
+
+
+function formatTime(sec){
+
+  if(!sec||isNaN(sec))return'0:00';
+
+  sec=Math.floor(sec);var m=Math.floor(sec/60);var s=sec%60;
+
+  return m+':'+(s<10?'0':'')+s;
+
+}
+
+
+
+// Auth sync
+
+window.addEventListener('storage',function(e){
+
+  if(e.key==='anime_token'||e.key==='anime_user'){
+
+    if(isLoggedIn())loadContinueCard();
+
+    else document.getElementById('continueCard').classList.remove('show');
+
+  }
+
+});
+
+window.addEventListener('focus',function(){
+
+  if(isLoggedIn())loadContinueCard();
+
+});
+
+
+
+// Init
+
+loadList();
+
+loadContinueCard();
+
+
+
+})();
+
+</script>
+
+<script src="track.js"></script>
+
+</body>
+
 </html>
