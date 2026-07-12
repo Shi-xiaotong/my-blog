@@ -73,8 +73,11 @@ def main():
 
     # ── Step 2: AI editor decides ──
     logger.info("[Step 2] AI 编辑决策...")
+    from scrapers import get_recent_digest_topics
+    recent_topics = get_recent_digest_topics(days=3)
+    logger.info("  近期已写文章: %d 篇", len(recent_topics))
     from generators.editor import editor_decide
-    decisions = editor_decide(news_data, tech_articles, anime_data, trending_data)
+    decisions = editor_decide(news_data, tech_articles, anime_data, trending_data, recent_topics)
     logger.info("  决策结果: %d 篇", len(decisions))
 
     if not decisions:
@@ -97,7 +100,7 @@ def main():
         logger.info("  生成 [%s]: %s", dtype, reason)
 
         if dtype == "digest":
-            md = generate_digest(news_data, comments_text, today)
+            md = generate_digest(news_data, comments_text, today, recent_topics)
             if md:
                 save_post("daily-news", f"{today}-digest.md", md)
                 generated.append(f"daily-news/{today}-digest.md")

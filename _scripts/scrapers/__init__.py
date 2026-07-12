@@ -171,3 +171,34 @@ def save_post(category, filename, content):
         f.write(content)
     logger.info("[OK] %s", path)
     return path
+
+
+def get_recent_digest_topics(days=3):
+    """Read recent daily-news posts and return a list of topic keywords to avoid repeating."""
+    posts_dir = os.path.join(BLOG_DIR, "source", "_posts", "daily-news")
+    if not os.path.isdir(posts_dir):
+        return []
+    from datetime import datetime, timedelta
+    cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+    topics = []
+    for fname in sorted(os.listdir(posts_dir), reverse=True):
+        if not fname.endswith(".md"):
+            continue
+        # Extract date from filename (YYYY-MM-DD)
+        date_part = fname[:10]
+        if date_part < cutoff:
+            break
+        fpath = os.path.join(posts_dir, fname)
+        try:
+            with open(fpath, "r", encoding="utf-8") as f:
+                content = f.read()
+            # Extract title
+            m = re.search(r'^title:\s*["\']?(.+?)["\']?\s*$', content, re.MULTILINE)
+            title = m.group(1).strip() if m else ""
+            # Extract tags
+            tags = re.findall(r'^\s*-\s*(.+)$', content.split("tags:")[1].split("---")[0] if "tags:" in content else "", re.MULTILINE)
+            tags = [t.strip() for t in tags]
+            topics.append({"title": title, "tags": tags, "file": fname})
+        except Exception:
+            continue
+    return topics

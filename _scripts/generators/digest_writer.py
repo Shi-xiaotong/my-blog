@@ -16,6 +16,9 @@ DIGEST_PROMPT_TEMPLATE = """今天 {date} 各平台热搜数据如下：
 
 以上数据中「多平台热议」的话题是跨平台同时出现的热点，优先写。
 
+【近期已写过的文章——绝对不要重复这些话题】
+{recent_topics}
+
 格式要求（严格遵循）：
 1. 文章开头用 # 一级标题（会被提取为文章标题，不要用"X月X日信息差"这种通用标题）
 2. 每个话题用 ## 二级标题开头，不要用其他级别标题
@@ -34,9 +37,14 @@ DIGEST_PROMPT_TEMPLATE = """今天 {date} 各平台热搜数据如下：
 13. 每篇文章至少有一句主观表达"""
 
 
-def generate_digest(news_data: dict, comments_text: str, date_str: str) -> str:
+def generate_digest(news_data: dict, comments_text: str, date_str: str, recent_topics: list = None) -> str:
     """Generate a daily digest article. Returns full frontmatter + markdown."""
     date_display = format_date(date_str)
+
+    # Format recent topics
+    recent_text = "无"
+    if recent_topics:
+        recent_text = "\n".join(f"  - {t['title']}" for t in recent_topics)
 
     # Format news data for prompt
     news_lines = []
@@ -53,6 +61,7 @@ def generate_digest(news_data: dict, comments_text: str, date_str: str) -> str:
         date=date_display,
         news_data=news_block,
         comments_data=comments_text or "暂无",
+        recent_topics=recent_text,
     )
 
     result = call_agnes(prompt, max_tokens=4000)
