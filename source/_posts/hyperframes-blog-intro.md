@@ -194,7 +194,7 @@ HyperFrames 的 lint 能查出很多常见问题（重叠 clip、同轨道冲突
 ## 最终效果
 
 <video controls width="100%" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
-  <source src="/videos/blog-intro-v3.mp4" type="video/mp4">
+  <source src="https://img.233002.xyz/blog/videos/blog-intro-v3.mp4" type="video/mp4">
   您的浏览器不支持视频播放
 </video>
 
