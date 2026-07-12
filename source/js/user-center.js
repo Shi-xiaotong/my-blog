@@ -280,6 +280,9 @@ function load(){
   });
 }
 
+// 监听登录状态变化，自动刷新
+try{window.addEventListener('anime_login_change', load);}catch(e){}
+
 function loadHistory(){
   api('/api/history').then(function(d){
     var list=d.list||[];

@@ -207,11 +207,13 @@ function handleOAuthCallback(){
   if(authParam){
     try{
       var data=JSON.parse(decodeURIComponent(authParam));
-      if(data.token&&data.token.split('.').length===3&&data.user&&data.user.email){
+      if(data.token && data.user && data.user.email){
         token=data.token;user=data.user;
         localStorage.setItem('anime_token',token);
         localStorage.setItem('anime_user',JSON.stringify(user));
         render();
+        // 通知 user-center 重新加载
+        try{window.dispatchEvent(new Event('anime_login_change'));}catch(e){}
       }
     }catch(e){}
     var url=new URL(window.location.href);
