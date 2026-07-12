@@ -113,8 +113,9 @@ theme: butterfly
 # 搜索
 search:
   path: search.xml
-  field: post
-  format: html
+  field: all
+  format: plain
+  content: false
   limit: 100
 
 # Cloudflare R2 媒体存储
