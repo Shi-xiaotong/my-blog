@@ -171,12 +171,19 @@
     var name = u.display_name || (u.email ? u.email.split('@')[0] : 'user');
     var email = u.email || '';
     var url = u.website || '';
+    // Fallback to localStorage in case API field is missing/null
+    if (!url) {
+      try { var stored = JSON.parse(localStorage.getItem('anime_user') || '{}'); url = stored.website || ''; } catch(e) {}
+    }
     try {
       localStorage.setItem('cwd_user_info', JSON.stringify({ name: name, email: email, url: url }));
     } catch(e) {}
   }
 
   function addVerifyButton() {
+    // Only show for article pages that have a comment area
+    var commentArea = document.querySelector('#cwd-comments') || document.querySelector('.comment-wrap');
+    if (!commentArea) return;
     // Only show for the admin user logged in via site-auth
     var auth = window._siteAuth;
     if (!auth || !auth.isLoggedIn()) return;

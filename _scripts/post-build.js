@@ -13,7 +13,7 @@ const cssFiles = [
 ]
 
 const jsFiles = [
-  'js/widget-loader.js', 'js/live2d-toggle.js',
+  'js/typed-polyfill.js', 'js/widget-loader.js', 'js/live2d-toggle.js',
   'js/site-auth.js', 'js/cwd-auth-hook.js',
   'js/music-player.js', 'js/user-center.js',
 ]
@@ -43,7 +43,7 @@ const cssRefs = [
   '/css/site-auth.css', '/css/user-center.css',
 ]
 const jsRefs = [
-  '/js/widget-loader.js', '/js/live2d-toggle.js',
+  '/js/typed-polyfill.js', '/js/widget-loader.js', '/js/live2d-toggle.js',
   '/js/site-auth.js', '/js/cwd-auth-hook.js',
   '/js/music-player.js', '/js/user-center.js',
 ]
@@ -103,6 +103,15 @@ function walk(dir) {
         return match.includes('href=') ? match : ''
       })
       if (html.length !== before) mod = true
+
+      // 在 utils.js 之前注入 typed polyfill（subtitle.effect=false 时 typed 未定义，Pjax 会抛 ReferenceError）
+      const utilsJsTag = '<script src="/js/utils.js?v=5.5.4"></script>'
+      const utilsIdx = html.indexOf(utilsJsTag)
+      if (utilsIdx !== -1) {
+        const polyfill = '<script>if(typeof typed==="undefined"){window.typed={destroy:function(){}};window.typedDestroy=function(){}}</script>'
+        html = html.substring(0, utilsIdx) + polyfill + html.substring(utilsIdx)
+        mod = true
+      }
 
       if (mod) {
         fs.writeFileSync(fp, html)

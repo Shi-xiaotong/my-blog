@@ -209,6 +209,8 @@ var ws=$('ucWebsiteSave');
 if(ws)ws.onclick=function(){
   var wi=$('ucWebsiteInput');if(!wi)return;
   var url=wi.value.trim();
+  // 自动补 https://
+  if(url && !/^https?:\/\//i.test(url)){url='https://'+url;}
   api('/api/auth/profile',{method:'PUT',body:{website:url}}).then(function(d){
     if(d.error){alert(d.error);return;}
     var cw=$('ucCommentWebsite');if(cw)cw.textContent=url||'未设置';
