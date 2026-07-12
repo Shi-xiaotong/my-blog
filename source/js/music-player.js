@@ -35,12 +35,11 @@
     return player;
   }
   
-  // 初始化音频
+  // 初始化音频（延迟到用户点播放时调用）
   function initAudio() {
     if (audio) return;
     
     audio = new Audio();
-    audio.src = MUSIC_URL;
     audio.preload = 'none';
     audio.loop = true;
     audio.volume = 0.7;
@@ -51,7 +50,7 @@
     });
     
     audio.addEventListener('error', function(e) {
-      // 静默处理：资源缺失或跨域失败时不报错
+      console.error('音频加载失败:', e);
     });
   }
   
@@ -66,6 +65,9 @@
       playerElement.classList.remove('playing');
       isPlaying = false;
     } else {
+      if (!audio.src) {
+        audio.src = MUSIC_URL;
+      }
       audio.play().then(function() {
         playerElement.classList.add('playing');
         isPlaying = true;
@@ -90,8 +92,7 @@
       togglePlay();
     });
     
-    // 初始化音频
-    initAudio();
+    // 音频延迟到用户点播放时加载
   }
   
   // 页面加载完成后初始化
