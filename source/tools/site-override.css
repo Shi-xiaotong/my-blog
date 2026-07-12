@@ -833,3 +833,74 @@ img.error-img-fallback,
   border-color: rgba(51,65,85,0.4) !important;
   color: #E2E8F0 !important;
 }
+
+/* ─── 29. ⭐ 移动端汉堡菜单 — 毛玻璃统一 ─── */
+/* Override Butterfly's solid sidebar background with glassmorphism */
+#sidebar-menus {
+  background: rgba(255,255,255,0.80) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-left: 1px solid rgba(226,232,240,0.5) !important;
+  box-shadow: -8px 0 32px rgba(0,0,0,0.06) !important;
+}
+[data-theme="dark"] #sidebar-menus {
+  background: rgba(15,23,42,0.85) !important;
+  border-left-color: rgba(51,65,85,0.4) !important;
+  box-shadow: -8px 0 48px rgba(0,0,0,0.25) !important;
+}
+/* Menu items container inside sidebar */
+#sidebar-menus .menus_items {
+  background: rgba(255,255,255,0.50) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(226,232,240,0.4) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04) !important;
+}
+[data-theme="dark"] #sidebar-menus .menus_items {
+  background: rgba(30,41,59,0.45) !important;
+  border-color: rgba(51,65,85,0.35) !important;
+}
+/* Sub-menu items inside mobile sidebar */
+#sidebar-menus .menus_item_child {
+  background: transparent !important;
+}
+#sidebar-menus .menus_item_child li a {
+  color: #334155 !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
+}
+#sidebar-menus .menus_item_child li a:hover {
+  background: rgba(129,140,248,0.15) !important;
+  color: #818CF8 !important;
+}
+[data-theme="dark"] #sidebar-menus .menus_item_child li a {
+  color: #CBD5E1 !important;
+}
+[data-theme="dark"] #sidebar-menus .menus_item_child li a:hover {
+  background: rgba(129,140,248,0.15) !important;
+  color: #A5B4FC !important;
+}
+/* Sidabar menu mask overlay — subtle dark glass rather than solid black */
+#menu-mask {
+  background: rgba(0,0,0,0.45) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+/* Site page links in sidebar */
+#sidebar-menus .site-page {
+  color: #334155 !important;
+  transition: all 0.15s ease !important;
+}
+#sidebar-menus .site-page:hover {
+  background: rgba(129,140,248,0.12) !important;
+  color: #818CF8 !important;
+  transform: translateX(3px) !important;
+  box-shadow: none !important;
+}
+[data-theme="dark"] #sidebar-menus .site-page {
+  color: #CBD5E1 !important;
+}
+[data-theme="dark"] #sidebar-menus .site-page:hover {
+  background: rgba(129,140,248,0.15) !important;
+  color: #A5B4FC !important;
+}

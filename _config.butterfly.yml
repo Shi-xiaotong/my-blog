@@ -26,3 +26,5 @@ inject:
     - <script src="/js/music-player.js"></script>
     # 个人中心
     - <script src="/js/user-center.js"></script>
+    # 移动端侧栏 — 点击菜单链接自动收起
+    - <script>document.addEventListener('click',function(e){var s=document.getElementById('sidebar-menus');if(!s||!s.classList.contains('open'))return;var l=e.target.closest('a');if(!l||!l.closest('#sidebar-menus'))return;if(l.closest('.site-page.group'))return;s.classList.remove('open');var m=document.getElementById('menu-mask');if(m)m.style.display='none'})</script>
