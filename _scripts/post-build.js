@@ -124,48 +124,7 @@ function walk(dir) {
 walk(PUBLIC)
 console.log(`[post-build] 已修改 ${count} 个 HTML`)
 
-// 清理 search.xml：删 CSS/JS/归档/404 等无用 entry
-function cleanSearch() {
-  const xmlPath = path.join(PUBLIC, 'search.xml')
-  if (!fs.existsSync(xmlPath)) return
-  let xml = fs.readFileSync(xmlPath, 'utf-8')
-
-  // 修复 hexo-generator-searchdb 的 //bookmarks/ 双斜杠 bug
-  xml = xml.replace(/<url>\/\//g, '<url>/')
-
-  const excludePatterns = [
-    /^<url>\/assets\//,
-    /^<url>\/css\//,
-    /^<url>\/js\//,
-    /^<url>\/live2d\//,
-    /^<url>\/fonts\//,
-    /^<url>\/404\.html<\/url>$/,
-    /^<url>\/archives\//,
-    /^<url>\/categories\//,
-    /^<url>\/tags\//,
-    /^<url>\/page\//,
-    /^<url>\/feed\.xml<\/url>$/,
-    /^<url>\/sitemap\.xml<\/url>$/,
-  ]
-  const excludeExtensions = ['.css','.js','.woff2','.woff','.png','.jpg','.jpeg','.webp','.svg','.ico','.xml','.json']
-
-  const entries = xml.split(/(<entry[\s\S]*?<\/entry>)/).filter(e => e.trim())
-  let removed = 0
-  const filtered = entries.filter(entry => {
-    const m = entry.match(/<url>(.*?)<\/url>/)
-    if (!m) return false
-    const url = m[1]
-    for (const p of excludePatterns) if (p.test('<url>' + url + '</url>')) { removed++; return false }
-    for (const ext of excludeExtensions) if (url.endsWith(ext)) { removed++; return false }
-    return true
-  })
-
-  fs.writeFileSync(xmlPath, filtered.join(''), 'utf-8')
-  console.log(`[post-build] search.xml 清理: 删除 ${removed} 个无用 entry`)
-}
-
-// 注册为 hexo after_generate 钩子，hexo server 重启时也会跑
-hexo.extend.filter.register('after_generate', cleanSearch, 10)
-
+// 共享的 search.xml 清理逻辑（也是 scripts/hexo-init.js 的钩子目标）
+const { cleanSearch } = require('./clean-search.js')
 // 独立运行（npm run build 也会触发）
 cleanSearch()
