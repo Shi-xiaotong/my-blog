@@ -36,5 +36,6 @@ jobs:
           git add source/_posts/
           if ! git diff --cached --quiet; then
             git commit -m "auto: daily content $(date +%F)"
+            git pull --rebase origin master
             git push
           fi
