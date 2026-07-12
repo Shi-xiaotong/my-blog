@@ -289,13 +289,20 @@ function formatDate(s){
 load();
 }
 
-// Wait for DOM element then init
-var tries=0;
-var timer=setInterval(function(){
-  tries++;
-  if(document.getElementById('ucLoading')){clearInterval(timer);init();}
-  if(tries>100){clearInterval(timer);}
-},200);
+// 等待 DOM 元素就绪后 init
+function waitForElement(selector, callback, maxTries) {
+  maxTries = maxTries || 50;
+  var el = document.getElementById(selector);
+  if (el) { callback(); return; }
+  var tries = 0;
+  var timer = setInterval(function() {
+    tries++;
+    el = document.getElementById(selector);
+    if (el) { clearInterval(timer); callback(); return; }
+    if (tries >= maxTries) { clearInterval(timer); }
+  }, 200);
+}
+waitForElement('ucLoading', init);
 
 // Expose functions for HTML onclick
 window.ucShowChangePwdModal=function(){

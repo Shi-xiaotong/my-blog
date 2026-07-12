@@ -103,11 +103,18 @@
   
   // pjax 加载完成后重新初始化
   document.addEventListener('pjax:complete', function() {
+    // 销毁旧实例释放内存
+    if (playerElement && playerElement.parentNode) {
+      playerElement.parentNode.removeChild(playerElement);
+    }
+    if (audio) {
+      audio.pause();
+      audio.src = '';
+      audio = null;
+    }
     // 重置状态
     isPlaying = false;
-    if (playerElement) {
-      playerElement.classList.remove('playing');
-    }
+    playerElement = null;
     initPlayer();
   });
   

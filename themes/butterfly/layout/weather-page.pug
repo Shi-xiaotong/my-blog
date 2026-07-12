@@ -5,9 +5,14 @@ block content
     article.card-widget
       .card-content
         .weather-page-header
-          h2.weather-page-title
-            i.fas.fa-cloud-sun
-            | 天气预报
+          if page.title
+                h2.weather-page-title
+                  i.fas.fa-cloud-sun
+                  = page.title
+              else
+                h2.weather-page-title
+                  i.fas.fa-cloud-sun
+                  | 天气预报
           #weather-page-container(
             data-default-city=theme.aside.card_weather.default_location.city
             data-default-lat=theme.aside.card_weather.default_location.lat

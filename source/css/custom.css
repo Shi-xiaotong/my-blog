@@ -3,18 +3,8 @@
    文件: /source/css/custom.css
    规范: hexo_butterfly_work_cn.md
 
-   目录结构:
-   - components/typography.css    - 文字排版
-   - components/navbar.css        - 导航栏
-   - components/note.css          - Note 标签
-   - components/search.css        - 搜索框
+   注意: 组件样式已通过 post-build.js 合并到 bundle.css 中
    ================================================ */
-
-/* 导入组件 */
-@import './components/typography.css';
-@import './components/navbar.css';
-@import './components/note.css';
-@import './components/search.css';
 
 /* ================================================
    Font Awesome 字体优化 — font-display: swap

@@ -13,7 +13,7 @@ function render(){
   if(!bar)return;
   if(isLoggedIn()){
     var avatarHtml=user&&user.avatar_url?'<span class="auth-avatar-sm"><img src="'+user.avatar_url+'" alt=""></span>':'<span class="auth-avatar-sm"><i class="fas fa-user" style="font-size:10px"></i></span>';
-    var name=user?(user.display_name||user.email.split('@')[0]):'';
+    var name=user?(user.display_name||(user.email?user.email.split('@')[0]:'User')):'';
     bar.innerHTML='<div class="menus_item auth-user-info">'
       +'<span class="site-page child" onclick="window.location.href=\'/user/\'" title="个人中心">'
       +  avatarHtml
@@ -207,7 +207,7 @@ function handleOAuthCallback(){
   if(authParam){
     try{
       var data=JSON.parse(decodeURIComponent(authParam));
-      if(data.token&&data.user){
+      if(data.token&&data.token.split('.').length===3&&data.user&&data.user.email){
         token=data.token;user=data.user;
         localStorage.setItem('anime_token',token);
         localStorage.setItem('anime_user',JSON.stringify(user));

@@ -137,23 +137,3 @@ sitemap:
   rel: false
   tags: true
   categories: true
-
-# 搜索引擎主动推送
-hexo_submit_urls_to_search_engine:
-  submit_condition: count
-  count: 10
-  period: 900
-  google: 0
-  bing: 1
-  baidu: 1
-  txt_path: submit_urls.txt
-  baidu_host: https://233002.xyz
-  baidu_token: ""
-  bing_host: https://233002.xyz
-  bing_token: ""
-  google_host: https://233002.xyz
-  google_key_file: ""
-  google_proxy: 0
-  replace: 0
-
-# 排除不需要索引的文件
