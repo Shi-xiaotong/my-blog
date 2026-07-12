@@ -37,7 +37,12 @@ function render(data){
   if(u.created_at)parts.push('注册于 '+u.created_at.split('T')[0]);
   var mt=$('ucMeta');if(mt)mt.textContent=parts.join(' · ');
 
-  var linked=data.linked||[];
+    // Comment info section
+    var cn=$('ucCommentName');if(cn)cn.textContent=u.display_name||u.email.split('@')[0];
+    var ce=$('ucCommentEmail');if(ce)ce.textContent=u.email||'未绑定邮箱';
+    var cw=$('ucCommentWebsite');if(cw)cw.textContent=u.website||'未设置';
+
+    var linked=data.linked||[];
   var types={};
   linked.forEach(function(a){types[a.auth_type]=a.auth_id;});
   setStatus('github',types.github||null);
@@ -189,6 +194,31 @@ if(as)as.onclick=function(){
 
 var am=$('ucAvatarModal');
 if(am)am.addEventListener('click',function(e){if(e.target===this){var m=$('ucAvatarModal');if(m)m.classList.remove('show');}});
+
+// Website modal events
+var we=$('ucWebsiteEdit');
+if(we)we.onclick=function(){
+  var wm=$('ucWebsiteModal'),wi=$('ucWebsiteInput'),cw=$('ucCommentWebsite');
+  if(wm)wm.classList.add('show');
+  if(wi&&cw)wi.value=cw.textContent!=='未设置'?cw.textContent:'';
+  if(wi)wi.focus();
+};
+var wc=$('ucWebsiteCancel');
+if(wc)wc.onclick=function(){var m=$('ucWebsiteModal');if(m)m.classList.remove('show');};
+var ws=$('ucWebsiteSave');
+if(ws)ws.onclick=function(){
+  var wi=$('ucWebsiteInput');if(!wi)return;
+  var url=wi.value.trim();
+  api('/api/auth/profile',{method:'PUT',body:{website:url}}).then(function(d){
+    if(d.error){alert(d.error);return;}
+    var cw=$('ucCommentWebsite');if(cw)cw.textContent=url||'未设置';
+    var u=JSON.parse(localStorage.getItem('anime_user')||'{}');
+    u.website=url;localStorage.setItem('anime_user',JSON.stringify(u));
+    var m=$('ucWebsiteModal');if(m)m.classList.remove('show');
+  });
+};
+var wm=$('ucWebsiteModal');
+if(wm)wm.addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
 
 // Password modal events
 var pwdModal=$('ucPwdModal');

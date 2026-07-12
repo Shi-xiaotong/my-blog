@@ -42,6 +42,37 @@ comments: false
         </div>
       </div>
     </div>
+    <div class="uc-card" id="ucCommentSection">
+      <h3 class="uc-card-title"><i class="fas fa-comment"></i> 评论信息</h3>
+      <p class="uc-hint" style="text-align:left;padding:0 0 12px;color:#888;font-size:13px">设置后评论时自动填充，无需每次手动输入</p>
+      <div class="uc-comment-info">
+        <div class="uc-comment-field">
+          <span class="uc-comment-label">昵称</span>
+          <span class="uc-comment-value" id="ucCommentName"></span>
+          <button class="uc-edit-btn uc-comment-edit" onclick="document.getElementById('ucNameEdit').click()" title="编辑"><i class="fas fa-pen"></i></button>
+        </div>
+        <div class="uc-comment-field">
+          <span class="uc-comment-label">邮箱</span>
+          <span class="uc-comment-value" id="ucCommentEmail"></span>
+        </div>
+        <div class="uc-comment-field">
+          <span class="uc-comment-label">网站</span>
+          <span class="uc-comment-value" id="ucCommentWebsite"></span>
+          <button class="uc-edit-btn uc-comment-edit" id="ucWebsiteEdit" title="编辑网站"><i class="fas fa-pen"></i></button>
+        </div>
+      </div>
+    </div>
+    <!-- Website URL modal -->
+    <div class="uc-modal" id="ucWebsiteModal">
+      <div class="uc-modal-box">
+        <h3>修改网站</h3>
+        <input type="url" id="ucWebsiteInput" placeholder="https://your-site.com" maxlength="200">
+        <div class="uc-modal-actions">
+          <button class="uc-btn uc-btn-secondary" id="ucWebsiteCancel">取消</button>
+          <button class="uc-btn uc-btn-primary" id="ucWebsiteSave">保存</button>
+        </div>
+      </div>
+    </div>
     <div class="uc-card" id="ucPasswordSection">
       <h3 class="uc-card-title"><i class="fas fa-lock"></i> 密码管理</h3>
       <div class="uc-hint">加载中...</div>

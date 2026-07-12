@@ -103,10 +103,13 @@ async function migrateDatabase(env) {
     await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN display_name TEXT`).run();
   } catch (e) {}
   try {
-    await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN avatar_url TEXT`).run();
-  } catch (e) {}
-  try {
-    await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN created_at TEXT`).run();
+      await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN avatar_url TEXT`).run();
+    } catch (e) {}
+    try {
+      await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN website TEXT`).run();
+    } catch (e) {}
+    try {
+      await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN created_at TEXT`).run();
   } catch (e) {}
   try {
     await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN updated_at TEXT`).run();
@@ -417,7 +420,7 @@ async function handleAuthMe(env, request) {
   const email = await getAuthEmail(env, request);
   if (!email) return unauthorized();
   const user = await env.DB.prepare(
-    "SELECT email, display_name, avatar_url, created_at, last_login FROM anime_users WHERE email = ?"
+    "SELECT email, display_name, avatar_url, website, created_at, last_login FROM anime_users WHERE email = ?"
   ).bind(email).first();
   if (!user) return unauthorized("User not found");
   const { results: linked } = await env.DB.prepare(
@@ -439,9 +442,9 @@ async function handleProfile(env, request) {
   const email = await getAuthEmail(env, request);
   if (!email) return unauthorized();
   if (request.method === "GET") {
-    const user = await env.DB.prepare(
-      "SELECT email, display_name, avatar_url, created_at, last_login FROM anime_users WHERE email = ?"
-    ).bind(email).first();
+      const user = await env.DB.prepare(
+        "SELECT email, display_name, avatar_url, website, created_at, last_login FROM anime_users WHERE email = ?"
+      ).bind(email).first();
     if (!user) return unauthorized("User not found");
     const hc = await env.DB.prepare("SELECT COUNT(*) as cnt FROM anime_history WHERE email = ?").bind(email).first();
     const dc = await env.DB.prepare("SELECT COUNT(*) as cnt FROM anime_danmaku WHERE email = ?").bind(email).first();
@@ -454,14 +457,17 @@ async function handleProfile(env, request) {
     } catch {
       return badRequest("Invalid JSON");
     }
-    const { display_name, avatar_url } = body;
-    if (display_name !== void 0) {
-      await env.DB.prepare("UPDATE anime_users SET display_name = ?1, updated_at = datetime('now') WHERE email = ?2").bind(display_name.trim() || "", email).run();
-    }
-    if (avatar_url !== void 0) {
-      await env.DB.prepare("UPDATE anime_users SET avatar_url = ?1, updated_at = datetime('now') WHERE email = ?2").bind(avatar_url, email).run();
-    }
-    const user = await env.DB.prepare("SELECT email, display_name, avatar_url, created_at FROM anime_users WHERE email = ?").bind(email).first();
+    const { display_name, avatar_url, website } = body;
+        if (display_name !== void 0) {
+          await env.DB.prepare("UPDATE anime_users SET display_name = ?1, updated_at = datetime('now') WHERE email = ?2").bind(display_name.trim() || "", email).run();
+        }
+        if (avatar_url !== void 0) {
+          await env.DB.prepare("UPDATE anime_users SET avatar_url = ?1, updated_at = datetime('now') WHERE email = ?2").bind(avatar_url, email).run();
+        }
+        if (website !== void 0) {
+          await env.DB.prepare("UPDATE anime_users SET website = ?1, updated_at = datetime('now') WHERE email = ?2").bind(website.trim() || "", email).run();
+        }
+        const user = await env.DB.prepare("SELECT email, display_name, avatar_url, website, created_at FROM anime_users WHERE email = ?").bind(email).first();
     return jsonResponse({ success: true, user });
   }
   return badRequest("Method not allowed");

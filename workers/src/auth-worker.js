@@ -83,7 +83,7 @@ async function sendEmail(env, to, subject, html) {
 // ─── Migration ───────────────────────────────────────────────────────────────
 
 async function migrate(env) {
-  for (const col of ['password_hash', 'display_name', 'avatar_url', 'created_at', 'updated_at']) {
+  for (const col of ['password_hash', 'display_name', 'avatar_url', 'website', 'created_at', 'updated_at']) {
     try { await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN ${col} TEXT`).run(); } catch (e) {}
   }
   await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_password_codes (
@@ -274,14 +274,14 @@ async function handleVerifyCode(env, request) {
   await env.DB.prepare("DELETE FROM anime_verify_codes WHERE email = ?").bind(ne).run();
   await upsertUser(env, ne, "email", `email:${ne}`, "", "");
   const st = await createSession(env, ne);
-  const u = await env.DB.prepare("SELECT email, display_name, avatar_url FROM anime_users WHERE email = ?").bind(ne).first();
+  const u = await env.DB.prepare("SELECT email, display_name, avatar_url, website FROM anime_users WHERE email = ?").bind(ne).first();
   return jsonResponse({ token: st, user: u });
 }
 
 async function handleAuthMe(env, request) {
   const email = await getAuthEmail(env, request);
   if (!email) return unauthorized();
-  const user = await env.DB.prepare("SELECT email, display_name, avatar_url, created_at, last_login FROM anime_users WHERE email = ?").bind(email).first();
+  const user = await env.DB.prepare("SELECT email, display_name, avatar_url, website, created_at, last_login FROM anime_users WHERE email = ?").bind(email).first();
   if (!user) return unauthorized("User not found");
   const { results: linked } = await env.DB.prepare("SELECT auth_type, auth_id, linked_at FROM anime_user_auth_methods WHERE email = ?").bind(email).all();
   const hp = await env.DB.prepare("SELECT password_hash FROM anime_users WHERE email = ?").bind(email).first();
@@ -306,10 +306,11 @@ async function handleProfile(env, request) {
   }
   if (request.method === "PUT") {
     let body; try { body = await request.json(); } catch { return badRequest("Invalid JSON"); }
-    const { display_name, avatar_url } = body;
+    const { display_name, avatar_url, website } = body;
     if (display_name !== void 0) { await env.DB.prepare("UPDATE anime_users SET display_name = ?1, updated_at = datetime('now') WHERE email = ?2").bind(display_name.trim() || "", email).run(); }
     if (avatar_url !== void 0) { await env.DB.prepare("UPDATE anime_users SET avatar_url = ?1, updated_at = datetime('now') WHERE email = ?2").bind(avatar_url, email).run(); }
-    const user = await env.DB.prepare("SELECT email, display_name, avatar_url, created_at FROM anime_users WHERE email = ?").bind(email).first();
+    if (website !== void 0) { await env.DB.prepare("UPDATE anime_users SET website = ?1, updated_at = datetime('now') WHERE email = ?2").bind(website.trim() || "", email).run(); }
+    const user = await env.DB.prepare("SELECT email, display_name, avatar_url, website, created_at FROM anime_users WHERE email = ?").bind(email).first();
     return jsonResponse({ success: true, user });
   }
   return badRequest("Method not allowed");

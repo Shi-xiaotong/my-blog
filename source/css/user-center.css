@@ -40,6 +40,18 @@
 .uc-modal-box input:focus{border-color:#ffd93d}
 .uc-modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
 .uc-pwd-error{color:#e94560;font-size:12px;margin-top:8px;min-height:16px}
+/* Comment info section */
+.uc-comment-info{display:flex;flex-direction:column;gap:0}
+.uc-comment-field{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.uc-comment-field:last-child{border-bottom:none}
+.uc-comment-label{font-size:13px;color:#888;min-width:48px;flex-shrink:0}
+.uc-comment-value{font-size:14px;color:#e0e0e0;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.uc-comment-edit{flex-shrink:0;background:none;border:none;color:#888;cursor:pointer;font-size:12px;padding:4px}
+.uc-comment-edit:hover{color:#ffd93d}
+[data-theme="dark"] .uc-comment-value{color:#e0e0e0}
+[data-theme="light"] .uc-comment-value{color:#333}
+[data-theme="light"] .uc-comment-label{color:#999}
+[data-theme="light"] .uc-comment-field{border-bottom-color:rgba(0,0,0,.08)}
 .uc-loading{text-align:center;padding:120px 20px;color:#888;font-size:16px}
 .uc-loading i{margin-right:8px}
 @media(max-width:768px){#user-center{padding:70px 16px 30px}.uc-card{padding:18px}
