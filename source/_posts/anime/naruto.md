@@ -1,9 +1,6 @@
 ---
 title: 火影忍者：那些年我们追过的忍者梦
 date: 2026-04-20 10:00:00
-tags:
-  - anime
-  - 火影忍者
 
 categories:
   - anime

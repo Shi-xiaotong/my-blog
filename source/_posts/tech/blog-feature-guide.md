@@ -1,10 +1,7 @@
 ---
 title: 水星引力m 博客功能全介绍
 date: 2026-07-12 15:40:00
-tags:
-  - 博客
-  - 功能介绍
-  - Hexo
+tags: ["Hexo"]
 categories: tech
 cover: false
 top_img: false

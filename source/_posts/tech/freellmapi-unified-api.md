@@ -3,12 +3,7 @@ title: "亲测：1个工具聚合10家免费AI API，月白嫖13亿Token"
 date: 2026-06-15 23:00:00
 categories:
   - tech
-tags:
-  - AI工具
-  - 免费API
-  - OpenAI兼容
-  - FreeLLMAPI
-  - 效率
+tags: ["AI工具", "效率"]
 ---
 
 你有没有算过，每个月各大 AI 平台给的免费额度加起来有多少？

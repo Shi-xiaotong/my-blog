@@ -1,10 +1,6 @@
 ---
 title: 济南护城河漫步｜泉水叮咚，清澈见底
 date: 2026-05-23 20:00:00
-tags:
-  - 旅行
-  - 济南
-  - Vlog
 categories:
   - life
 ---

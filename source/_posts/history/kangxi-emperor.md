@@ -1,10 +1,7 @@
 ---
 title: 康熙皇帝：千古一帝的传奇人生
 date: 2026-03-15 20:00:00
-tags:
-  - history
-  - 清朝
-  - 人物
+tags: ["清朝", "人物"]
 categories:
   - history
 ---

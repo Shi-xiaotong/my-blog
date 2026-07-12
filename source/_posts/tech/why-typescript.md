@@ -1,10 +1,7 @@
 ---
 title: 为什么选择TypeScript？一次前端开发的真实体验
 date: 2026-02-14 17:00:00
-tags:
-  - TypeScript
-  - 前端
-  - JavaScript
+tags: ["前端"]
 categories:
   - tech
 ---

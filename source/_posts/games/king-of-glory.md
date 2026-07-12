@@ -1,10 +1,7 @@
 ---
 title: 王者荣耀：现象级手游是如何炼成的
 date: 2026-03-05 20:00:00
-tags:
-  - 游戏
-  - 王者荣耀
-  - MOBA
+tags: ["游戏"]
 categories:
   - life
 ---

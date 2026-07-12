@@ -1,12 +1,7 @@
 ---
 title: 我的博客搭建全记录：从零到AI自动化部署
 date: 2026-05-23 01:30:00
-tags:
-  - Hexo
-  - Cloudflare
-  - AI
-  - 博客搭建
-  - 自动化
+tags: ["Hexo", "Cloudflare", "AI", "博客搭建", "自动化"]
 categories:
   - tech
 ---

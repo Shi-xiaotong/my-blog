@@ -1,10 +1,7 @@
 ---
 title: 乾隆皇帝：盛极而衰的六十年
 date: 2026-04-10 22:00:00
-tags:
-  - history
-  - 清朝
-  - 人物
+tags: ["清朝", "人物"]
 categories:
   - history
 ---

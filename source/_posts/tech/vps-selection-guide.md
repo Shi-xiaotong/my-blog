@@ -1,10 +1,7 @@
 ---
 title: VPS选购指南：如何选择适合自己的服务器
 date: 2026-03-05 19:00:00
-tags:
-  - VPS
-  - 服务器
-  - 运维
+tags: ["运维"]
 categories:
   - tech
 ---

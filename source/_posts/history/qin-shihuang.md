@@ -1,9 +1,7 @@
 ---
 title: 秦始皇：千古一帝的功过是非
 date: 2026-01-05 12:00:00
-tags:
-  - history
-  - 人物
+tags: ["人物"]
 categories:
   - history
 ---

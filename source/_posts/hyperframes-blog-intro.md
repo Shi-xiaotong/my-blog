@@ -3,11 +3,7 @@ title: "从零到一：用 HyperFrames 给博客做个介绍视频"
 date: 2026-07-12 01:00:00
 categories:
   - tech
-tags:
-  - HyperFrames
-  - 视频制作
-  - AI
-  - 踩坑
+tags: ["AI", "踩坑"]
 description: "偶然发现 HyperFrames 这个能把 HTML 渲染成 MP4 的开源项目，于是动手给博客做了个介绍视频。从 38 秒的粗糙第一版到 74 秒的全功能最终版，中间经历了几次迭代和无数踩坑。"
 ---
 

@@ -3,12 +3,7 @@ title: R2 存储大清理：从 340MB 到 7.5MB，全站图片 WebP 化
 date: 2026-07-09
 categories:
   - tech
-tags:
-  - Cloudflare
-  - R2
-  - WebP
-  - 性能优化
-  - 踩坑
+tags: ["Cloudflare", "WebP", "性能优化", "踩坑"]
 ---
 
 ## 起因

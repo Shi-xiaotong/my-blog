@@ -1,10 +1,7 @@
 ---
 title: AI的隐形代价：2030年耗水量够13亿人用一年
 date: 2026-06-04 09:00:00
-tags:
-  - AI
-  - 环境
-  - 科技
+tags: ["AI", "科技"]
 categories:
   - science
 ---

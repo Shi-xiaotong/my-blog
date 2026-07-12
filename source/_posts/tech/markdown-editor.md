@@ -1,11 +1,7 @@
 ---
 title: 从零搭建 Markdown 编辑器：写完直接发博客，不用再复制粘贴
 date: 2026-06-06 20:00:00
-tags:
-  - Markdown
-  - 博客搭建
-  - 前端
-  - 自动化
+tags: ["博客搭建", "前端", "自动化"]
 categories:
   - tech
 ---

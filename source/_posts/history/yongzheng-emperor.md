@@ -1,10 +1,7 @@
 ---
 title: 雍正皇帝：改革者的孤独与坚持
 date: 2026-03-25 21:00:00
-tags:
-  - history
-  - 清朝
-  - 人物
+tags: ["清朝", "人物"]
 categories:
   - history
 ---
