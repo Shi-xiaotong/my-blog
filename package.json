@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "hexo generate && node _scripts/post-build.js",
+    "build": "hexo generate && node _scripts/post-build.js && node _scripts/r2-upload.js",
     "clean": "hexo clean",
     "deploy": "npm run build && wrangler deploy",
     "server": "hexo server",
@@ -27,9 +27,7 @@
     "hexo-renderer-marked": "^6.0.0",
     "hexo-renderer-stylus": "^3.0.0",
     "hexo-server": "^3.0.0",
-    "hexo-submit-urls-to-search-engine": "^2.1.0",
     "hexo-theme-butterfly": "^5.5.4",
-    "hexo-theme-landscape": "^1.0.0",
     "lunar-javascript": "^1.7.7"
   },
   "devDependencies": {
