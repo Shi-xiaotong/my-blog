@@ -10,3 +10,5 @@ block content
       .card-content
         #article-container.container
           != page.content
+    if page.comments !== false && theme.comments.use
+      !=partial('includes/third-party/comments/index', {}, {cache: true})

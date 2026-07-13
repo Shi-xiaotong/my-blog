@@ -1,6 +1,6 @@
 // Agnes AI 通用调用模块
 // 支持文本、图片、视频等所有 Agnes 模型
-// 使用前需部署 Cloudflare Worker，见 ai-worker.js
+// 使用前需部署 Cloudflare Worker（ai.233002.xyz）
 
 const AI_ENDPOINT = 'https://ai.233002.xyz'; // 改成你的 Worker 地址
 
