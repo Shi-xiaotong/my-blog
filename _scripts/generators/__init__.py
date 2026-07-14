@@ -77,6 +77,27 @@ def _clean_reasoning_output(text: str) -> str:
     return text.strip()
 
 
+def extract_article_from_leaky_output(text: str) -> tuple[str, str]:
+    """Extract the actual article content from model output that leaked prompt/thinking.
+
+    Some models return the full conversation including system prompt, instructions,
+    and chain-of-thought alongside the actual article. This function strips everything
+    before the first level-1 heading (#) and returns (raw, cleaned).
+
+    Returns (original_text, cleaned_text) where cleaned_text is the article portion
+    starting from the first # heading, or empty if no # heading found.
+    """
+    # Look for the first # heading - the actual article starts there
+    m = re.search(r'^#\s+.+', text, re.MULTILINE)
+    if m:
+        # Extract from the first # heading to the end
+        article_start = m.start()
+        # Also check for markdown formatting after the article body
+        article = text[article_start:].strip()
+        return text, article
+    return text, ""
+
+
 # ── Agnes API Call ──
 
 def call_agnes(prompt, system=SYSTEM_PROMPT, max_tokens=3000, temperature=0.7, model="agnes-2.0-flash", max_retries=3):
@@ -105,6 +126,11 @@ def call_agnes(prompt, system=SYSTEM_PROMPT, max_tokens=3000, temperature=0.7, m
                 raw = json.loads(resp.read().decode())
                 content = raw["choices"][0]["message"].get("content", "")
                 if content and content.strip():
+                    # Check if content contains chain-of-thought / prompt leakage
+                    # (e.g. starts with "Role/Persona", "Key Instruction", system prompt text)
+                    _, cleaned = extract_article_from_leaky_output(content)
+                    if cleaned:
+                        content = cleaned
                     for word in FORBIDDEN_WORDS:
                         if word in content:
                             logger.warning("输出包含禁用词「%s」，重试...", word)
@@ -115,6 +141,9 @@ def call_agnes(prompt, system=SYSTEM_PROMPT, max_tokens=3000, temperature=0.7, m
                 rc = raw["choices"][0]["message"].get("reasoning_content", "")
                 if rc:
                     clean = _clean_reasoning_output(rc)
+                    _, extracted = extract_article_from_leaky_output(clean)
+                    if extracted:
+                        clean = extracted
                     if clean:
                         logger.info("Using reasoning_content (cleaned) as fallback")
                         return clean
