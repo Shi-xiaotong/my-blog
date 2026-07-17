@@ -129,7 +129,8 @@ def extract_article_from_leaky_output(text: str) -> tuple[str, str]:
     m2 = re.search(r'^##\s+.+', text, re.MULTILINE)
     if m2:
         article = text[m2.start():].strip()
-        review_m = re.search(r'\n\*?\(?(Check|Let.s refine|Self-Correction)', article)
+        # Cut at common self-review/checklist markers
+        review_m = re.search(r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction)', article)
         if review_m:
             article = article[:review_m.start()].strip()
         return text, article
@@ -202,6 +203,14 @@ def build_post(title, content, category, date_str, tags, description=""):
     """Build a complete Hexo markdown post with frontmatter."""
     from datetime import datetime
 
+    # Safety net: strip any remaining self-review/checklist content
+    review_m = re.search(r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction)', content)
+    if review_m:
+        content = content[:review_m.start()].strip()
+    
+    # Also strip backtick-wrapped review sections
+    content = re.sub(r'\n`[^`]*`\n', '\n', content)
+    
     # Clean title
     title = title.replace('"', "'").strip()
 
