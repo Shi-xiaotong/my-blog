@@ -81,20 +81,59 @@ def extract_article_from_leaky_output(text: str) -> tuple[str, str]:
     """Extract the actual article content from model output that leaked prompt/thinking.
 
     Some models return the full conversation including system prompt, instructions,
-    and chain-of-thought alongside the actual article. This function strips everything
-    before the first level-1 heading (#) and returns (raw, cleaned).
+    and chain-of-thought alongside the actual article in various formats:
+    - With # heading: article starts at first # heading
+    - No # heading but has ## headings: look for ## or backtick-wrapped ##
+    - Backtick-wrapped: article content is in `` blocks
 
-    Returns (original_text, cleaned_text) where cleaned_text is the article portion
-    starting from the first # heading, or empty if no # heading found.
+    Returns (original_text, cleaned_text).
     """
-    # Look for the first # heading - the actual article starts there
+    # Strategy 1: Find first # heading (standard markdown)
     m = re.search(r'^#\s+.+', text, re.MULTILINE)
     if m:
-        # Extract from the first # heading to the end
-        article_start = m.start()
-        # Also check for markdown formatting after the article body
-        article = text[article_start:].strip()
+        article = text[m.start():].strip()
+        # Check if there's self-review/checklist after the article
+        # Usually signaled by lines like "(Check constraints)", "*(Check", "Let's refine"
+        review_m = re.search(r'\n\*?\(?(Check|Let.s refine|Self-Correction|I will carefully)', article)
+        if review_m:
+            article = article[:review_m.start()].strip()
+        # Also strip trailing lines that are just checkmarks/self-review
+        article = re.sub(r'\n\*?\(?(Check .+|Self-Correction|Let.s refine|Refined structure).*', '', article)
         return text, article
+
+    # Strategy 2: Look for backtick-wrapped ## headings (model outputs code blocks)
+    bt = re.findall(r'`##\s+(.+?)`', text)
+    if bt:
+        # Found backtick-wrapped headings, extract the article portion
+        lines = text.split('\n')
+        article_lines = []
+        in_article = False
+        for line in lines:
+            stripped = line.strip()
+            # Start when we see `## or `---`
+            if stripped.startswith('`##') or stripped.startswith('`---'):
+                in_article = True
+            if in_article:
+                # Remove backtick wrapping
+                cleaned = stripped.strip('`').strip()
+                if cleaned:
+                    article_lines.append(cleaned)
+            # Stop when we see self-review patterns
+            if in_article and re.match(r'\*?\(?(Check|Let.s refine|Self-Correction)', stripped):
+                break
+        if article_lines:
+            article = '\n'.join(article_lines)
+            return text, article
+
+    # Strategy 3: Look for ## headings directly
+    m2 = re.search(r'^##\s+.+', text, re.MULTILINE)
+    if m2:
+        article = text[m2.start():].strip()
+        review_m = re.search(r'\n\*?\(?(Check|Let.s refine|Self-Correction)', article)
+        if review_m:
+            article = article[:review_m.start()].strip()
+        return text, article
+
     return text, ""
 
 
