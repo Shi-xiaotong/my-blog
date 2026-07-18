@@ -80,60 +80,70 @@ def _clean_reasoning_output(text: str) -> str:
 def extract_article_from_leaky_output(text: str) -> tuple[str, str]:
     """Extract the actual article content from model output that leaked prompt/thinking.
 
-    Some models return the full conversation including system prompt, instructions,
-    and chain-of-thought alongside the actual article in various formats:
-    - With # heading: article starts at first # heading
-    - No # heading but has ## headings: look for ## or backtick-wrapped ##
-    - Backtick-wrapped: article content is in `` blocks
-
     Returns (original_text, cleaned_text).
     """
-    # Strategy 1: Find first # heading (standard markdown)
-    m = re.search(r'^#\s+.+', text, re.MULTILINE)
+    # Helper: strip self-review/checklist from end of article
+    def _strip_review(article):
+        markers = [
+            r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction|I need to ensure)',
+            r'\n\*?\(?(Check|Let.s refine|Self-Correction|I will carefully)',
+        ]
+        for p in markers:
+            m = re.search(p, article)
+            if m:
+                article = article[:m.start()].strip()
+        return article
+
+    # Strategy 1: Find first # heading (allow leading whitespace)
+    m = re.search(r'^\s*#\s+.+', text, re.MULTILINE)
     if m:
         article = text[m.start():].strip()
-        # Check if there's self-review/checklist after the article
-        # Usually signaled by lines like "(Check constraints)", "*(Check", "Let's refine"
-        review_m = re.search(r'\n\*?\(?(Check|Let.s refine|Self-Correction|I will carefully)', article)
-        if review_m:
-            article = article[:review_m.start()].strip()
-        # Also strip trailing lines that are just checkmarks/self-review
-        article = re.sub(r'\n\*?\(?(Check .+|Self-Correction|Let.s refine|Refined structure).*', '', article)
+        article = _strip_review(article)
         return text, article
 
-    # Strategy 2: Look for backtick-wrapped ## headings (model outputs code blocks)
+    # Strategy 2: Backtick-wrapped ## headings
     bt = re.findall(r'`##\s+(.+?)`', text)
     if bt:
-        # Found backtick-wrapped headings, extract the article portion
         lines = text.split('\n')
         article_lines = []
         in_article = False
         for line in lines:
             stripped = line.strip()
-            # Start when we see `## or `---`
             if stripped.startswith('`##') or stripped.startswith('`---'):
                 in_article = True
             if in_article:
-                # Remove backtick wrapping
                 cleaned = stripped.strip('`').strip()
                 if cleaned:
                     article_lines.append(cleaned)
-            # Stop when we see self-review patterns
             if in_article and re.match(r'\*?\(?(Check|Let.s refine|Self-Correction)', stripped):
                 break
         if article_lines:
-            article = '\n'.join(article_lines)
-            return text, article
+            return text, '\n'.join(article_lines)
 
-    # Strategy 3: Look for ## headings directly
-    m2 = re.search(r'^##\s+.+', text, re.MULTILINE)
+    # Strategy 3: ## headings (allow leading whitespace)
+    m2 = re.search(r'^\s*##\s+.+', text, re.MULTILINE)
     if m2:
         article = text[m2.start():].strip()
-        # Cut at common self-review/checklist markers
-        review_m = re.search(r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction)', article)
-        if review_m:
-            article = article[:review_m.start()].strip()
+        article = _strip_review(article)
         return text, article
+
+    # Strategy 4: No headings found — strip prompt/thinking prefix lines
+    lines = text.split('\n')
+    start = 0
+    for i, line in enumerate(lines):
+        s = line.strip()
+        if not s or re.match(r'^[-*\d]+\s*(Role/Persona|Input Data|Forbidden|Recent Articles|Format Requirements|Content Rules|I will|Let.s|Need to|Check|Output|Self-Correction)', s):
+            start = i + 1
+            continue
+        if s.startswith('*('):
+            start = i + 1
+            continue
+        break
+    if start > 0 and start < len(lines):
+        article = '\n'.join(lines[start:]).strip()
+        article = _strip_review(article)
+        if len(article) > 100:
+            return text, article
 
     return text, ""
 
@@ -220,9 +230,15 @@ def build_post(title, content, category, date_str, tags, description=""):
         if len(paras) > 2:
             content = paras[0] + "\n\n<!-- more -->\n\n" + "\n\n".join(paras[1:])
 
-    # Description from first paragraph
+    # Description from first paragraph (skip markdown headings)
     if not description:
-        first = content.split("\n\n")[0].replace("\n", " ").strip()[:120]
+        lines = content.split("\n\n")
+        first = ""
+        for line in lines:
+            clean = line.replace("\n", " ").strip()
+            if clean and not clean.startswith("#") and not clean.startswith("`"):
+                first = clean[:120]
+                break
         description = first.replace('"', "'")
 
     # Tags
@@ -244,10 +260,10 @@ description: "{description}"
 
 def extract_title(content):
     """Extract the first # heading from markdown content."""
-    m = re.search(r"^#\s+(.+)", content, re.MULTILINE)
+    m = re.search(r"^\s*#\s+(.+)", content, re.MULTILINE)
     return m.group(1).strip() if m else ""
 
 
 def strip_title_from_body(content):
     """Remove the first # heading from content."""
-    return re.sub(r"^#\s+.*\n", "", content, count=1).strip()
+    return re.sub(r"^\s*#\s+.*\n", "", content, count=1).strip()
