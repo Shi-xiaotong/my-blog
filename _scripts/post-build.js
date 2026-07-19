@@ -1,7 +1,8 @@
-// 构建后处理 — CSS/JS 合并打包 + HTML 替换 + 去重
+// 构建后处理 — CSS/JS 合并打包 + HTML 替换 + 去重 + 图片 WebP 优化
 const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
+const { execSync } = require('child_process')
 
 const ROOT = path.resolve(__dirname, '..')
 const PUBLIC = path.join(ROOT, 'public')
@@ -63,7 +64,147 @@ const jsRefs = [
 ]
 
 let count = 0
+// ===== 图片 WebP 优化模块 =====
+const IMAGE_OPTIMIZE_TEMP = path.join(ROOT, '.temp', 'images')
+const MIN_IMAGE_SIZE = 5 * 1024 // 跳过 < 5KB 的小图标/emoji
+const WEBP_QUALITY = 82
 
+// 检测 cwebp 是否可用
+let hasCwebp = false
+try {
+  execSync('cwebp -version', { stdio: 'ignore' })
+  hasCwebp = true
+} catch (_) { hasCwebp = false }
+
+/**
+ * 从 HTML 中提取所有 img src，转换为 WebP 并替换为 <picture> 标签
+ * @param {string} html - 原始 HTML
+ * @returns {{ processed: number, skipped: number }}
+ */
+function optimizeImages(html) {
+  if (!hasCwebp) {
+    console.log('[post-build] ⚠️ cwebp 未安装，跳过图片优化（brew install libwebp）')
+    return { processed: 0, skipped: 0 }
+  }
+
+  fs.mkdirSync(IMAGE_OPTIMIZE_TEMP, { recursive: true })
+
+  let processed = 0
+  let skipped = 0
+
+  // 匹配 <img ... src="URL" ...> （支持单引号、双引号）
+  const imgRegex = /(<img\b[^>]*\bsrc\s*=\s*)(["'])([^"']+?)\2([^>]*\/?>)/gi
+
+  html = html.replace(imgRegex, (match, prefix, quote, src, suffix) => {
+    // 跳过非 jpg/jpeg/png 格式
+    const ext = path.extname(src).toLowerCase()
+    if (!['.jpg', '.jpeg', '.png'].includes(ext)) return match
+
+    // 跳过 data: URI
+    if (src.startsWith('data:')) return match
+
+    try {
+      const result = convertImageToWebP(src)
+      if (!result) {
+        skipped++
+        return match
+      }
+
+      processed++
+      return buildPictureTag(match, quote, src, result.webpUrl)
+    } catch (e) {
+      console.warn(`[post-build] 🖼️ 处理失败: ${src} (${e.message})`)
+      skipped++
+      return match
+    }
+  })
+
+  return { processed, skipped }
+}
+
+/**
+ * 将单张图片转换为 WebP，返回 WebP URL 和原始 URL
+ */
+function convertImageToWebP(src) {
+  const ext = path.extname(src).toLowerCase()
+  const baseName = path.basename(src, ext)
+  const webpFileName = `${baseName}.webp`
+
+  let localFilePath = null
+  const isRemote = src.startsWith('http://') || src.startsWith('https://')
+
+  if (isRemote) {
+    // 下载远程图片到临时目录
+    localFilePath = path.join(IMAGE_OPTIMIZE_TEMP, `${baseName}${ext}`)
+    if (!fs.existsSync(localFilePath)) {
+      try {
+        execSync(`curl -fsSL --max-time 30 -o "${localFilePath}" "${src}"`, { stdio: 'pipe' })
+      } catch (e) {
+        console.warn(`[post-build] 🖼️ 下载失败: ${src}`)
+        return null
+      }
+    }
+  } else {
+    // 本地文件路径
+    localFilePath = path.join(PUBLIC, src)
+    if (!fs.existsSync(localFilePath)) return null
+  }
+
+  // 跳过太小文件
+  const stats = fs.statSync(localFilePath)
+  if (stats.size < MIN_IMAGE_SIZE) return null
+
+  // 生成 WebP 输出路径
+  const webpLocalPath = path.join(IMAGE_OPTIMIZE_TEMP, webpFileName)
+
+  // 已存在则跳过转换
+  if (!fs.existsSync(webpLocalPath)) {
+    try {
+      execSync(`cwebp -q ${WEBP_QUALITY} -m 6 "${localFilePath}" -o "${webpLocalPath}"`, { stdio: 'pipe' })
+    } catch (e) {
+      console.warn(`[post-build] 🖼️ cwebp 转换失败: ${src}`)
+      return null
+    }
+  }
+
+  // 无 R2 凭证时，将 WebP 复制到 public 目录对应位置
+  // 有 R2 凭证时由 r2-upload.js 后续上传（本脚本只负责转换和本地缓存）
+  let webpUrl
+  if (isRemote) {
+    // CDN 图片：生成同路径的 .webp URL
+    const urlObj = new URL(src)
+    webpUrl = urlObj.origin + urlObj.pathname.replace(new RegExp(`${ext}$`), '.webp')
+  } else {
+    // 本地文件：复制到 public 目录
+    const publicDir = path.dirname(path.join(PUBLIC, src))
+    fs.mkdirSync(publicDir, { recursive: true })
+    const publicWebpPath = path.join(publicDir, webpFileName)
+    fs.copyFileSync(webpLocalPath, publicWebpPath)
+    const urlPath = path.relative(PUBLIC, publicWebpPath).split(path.sep).join('/')
+    webpUrl = `/${urlPath}`
+  }
+
+  return { originalSrc: src, webpUrl }
+}
+
+/**
+ * 将 <img src="..."> 转换为 <picture><source webp><img fallback>
+ * 保留原始 img 的所有属性
+ */
+function buildPictureTag(originalMatch, quote, src, webpSrc) {
+  // 移除 src 属性，保留其他属性
+  const withoutSrc = originalMatch.replace(
+    new RegExp('\\bsrc\\s*=\\s*' + quote + '[^' + quote + ']*' + quote, 'i'),
+    ''
+  )
+
+  // 清理可能残留的空格
+  const cleanAttrs = withoutSrc.replace(/\s{2,}/g, ' ').replace(/^\s+/, '').replace(/\s+$/, '')
+
+  return `<picture>\n  <source type="image/webp" srcset="${webpSrc}">\n  <img${cleanAttrs}src="${quote}${src}${quote}">\n</picture>`
+}
+
+// ===== 递归遍历 HTML 文件 =====
 function walk(dir) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const fp = path.join(dir, e.name)
@@ -125,6 +266,13 @@ function walk(dir) {
         const polyfill = '<script>if(typeof typed==="undefined"){window.typed={destroy:function(){}};window.typedDestroy=function(){}}</script>'
         html = html.substring(0, utilsIdx) + polyfill + html.substring(utilsIdx)
         mod = true
+      }
+
+      // ===== 图片 WebP 优化 =====
+      const imgStats = optimizeImages(html)
+      if (imgStats.processed > 0) {
+        mod = true
+        console.log(`[post-build] 🖼️ ${imgStats.processed} 张图片已生成 WebP（${imgStats.skipped} 跳过）`)
       }
 
       if (mod) {

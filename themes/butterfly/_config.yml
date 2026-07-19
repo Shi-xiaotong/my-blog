@@ -1183,7 +1183,7 @@ CDN:
 
   option:
     # Font Awesome 自托管 — 随博客部署，避免第三方 CDN 慢速
-    fontawesome: /assets/fontawesome/css/all.min.css
+    fontawesome: /assets/fontawesome/css/fa-subset.min.css
     # 以下 CDN 资源自托管到本地，减少第三方依赖
     pace_js: /assets/libs/pace.min.js
     pace_default_css: /assets/libs/pace-theme-minimal.css
