@@ -70,13 +70,13 @@ def scrape_date_archive(date_str):
     if not result:
         return []
     page = Selector(result)
-    links = page.css('a[href*="/2026/"]')
+    links = page.css('a[href*="/' + datetime.now().strftime('%Y') + '/"]')
     articles = []
     seen = set()
     for a in links:
         title = a.css('::text').get()
         href = a.attrib.get('href', '')
-        if title and href and 'techcrunch.com/2026/' in href:
+        if title and href and 'techcrunch.com/' + datetime.now().strftime('%Y') + '/' in href:
             title = title.strip()
             if title and title not in seen and len(title) > 15:
                 seen.add(title)
@@ -144,7 +144,7 @@ def llm_summarize(date_str, articles_data):
 以上就是 {date_str} 的科技资讯精选。关注「水星引力m」，每天带你看点不一样的。"""
 
     payload = json.dumps({
-        "model": "agnes-2.0-flash",
+        "model": "agnes-2.5-flash",
         "messages": [
             {"role": "system", "content": "你是一个专业的科技新闻中文编辑，擅长将英文科技新闻总结为通俗易懂的中文短文。你不编造事实，严格基于提供的新闻内容。回复使用纯 Markdown。"},
             {"role": "user", "content": prompt}
@@ -182,7 +182,7 @@ def generate_article(date_str, force=False):
     date_obj = datetime.strptime(date_str, "%Y-%m-%d")
     date_display = date_obj.strftime("%Y年%m月%d日")
 
-    post_path = os.path.join(BLOG_DIR, "source", "_posts", "daily-news", f"{date_str}-daily-hotspot.md")
+    post_path = os.path.join(BLOG_DIR, "source", "_posts", "daily-news", f"{date_str}-digest.md")
     if os.path.exists(post_path) and not force:
         print(f"  [SKIP] File exists")
         return
@@ -275,8 +275,8 @@ def main():
         return
 
     if '--all' in sys.argv:
-        start = datetime(2026, 6, 1)
-        end = datetime(2026, 7, 8)
+        start = datetime(datetime.now().year, 6, 1)
+        end = datetime.now()
     else:
         end = datetime.now()
         start = end - timedelta(days=3)

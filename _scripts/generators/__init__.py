@@ -68,8 +68,8 @@ def _clean_reasoning_output(text: str) -> str:
     # Remove lines starting with "Here's a thinking process" or similar
     text = re.sub(r'^Here.s a thinking process.*?(?:\n|$)', '', text, flags=re.IGNORECASE)
     text = re.sub(r'^Let me think.*?(?:\n|$)', '', text, flags=re.IGNORECASE)
-    # Remove "Analyze User Input" style sections
-    text = re.sub(r'^\s*\*\*.*?\*\*.*?(?:\n|$)', '', text, flags=re.MULTILINE)
+    # Remove "Analyze User Input" style sections (only match thinking-specific patterns, not legitimate bold text)
+    text = re.sub(r'^\s*\*\*(?:Analyze|Thought|Reasoning|Plan|Step|Check|Review|Summary|Key Point|Output|Response|Input|Context)\*\*.*?(?:\n|$)', '', text, flags=re.IGNORECASE | re.MULTILINE)
     # Remove bullet-point thinking lines
     text = re.sub(r'^\s*[-*]\s+(?:User|Input|Response|Constraint|Language|Goal|Tone).*?(?:\n|$)', '', text, flags=re.MULTILINE)
     # Clean up excessive blank lines
@@ -150,7 +150,7 @@ def extract_article_from_leaky_output(text: str) -> tuple[str, str]:
 
 # ── Agnes API Call ──
 
-def call_agnes(prompt, system=SYSTEM_PROMPT, max_tokens=3000, temperature=0.7, model="agnes-2.0-flash", max_retries=3):
+def call_agnes(prompt, system=SYSTEM_PROMPT, max_tokens=3000, temperature=0.7, model="agnes-2.5-flash", max_retries=3):
     """Call Agnes AI API with retry. Returns text content or None."""
     if not AGNES_KEY:
         logger.error("AGNES_API_KEY 未设置")
@@ -230,15 +230,18 @@ def build_post(title, content, category, date_str, tags, description=""):
         if len(paras) > 2:
             content = paras[0] + "\n\n<!-- more -->\n\n" + "\n\n".join(paras[1:])
 
-    # Description from first paragraph (skip markdown headings)
+    # Description from first paragraph (skip markdown headings, <!-- more -->, backticks)
     if not description:
         lines = content.split("\n\n")
         first = ""
         for line in lines:
             clean = line.replace("\n", " ").strip()
-            if clean and not clean.startswith("#") and not clean.startswith("`"):
+            if clean and not clean.startswith("#") and not clean.startswith("`") and clean != "<!-- more -->":
                 first = clean[:120]
                 break
+        if not first:
+            # Fallback to title if no valid paragraph found
+            first = title[:120].replace('"', "'")
         description = first.replace('"', "'")
 
     # Tags

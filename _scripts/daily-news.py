@@ -70,7 +70,7 @@ def scrape_articles(date_str):
         html = result
 
     page = Selector(html)
-    links = page.css('a[href*="techcrunch.com/2026/"]')
+    links = page.css('a[href*="techcrunch.com/' + datetime.now().strftime('%Y') + '/"]')
     articles = []
     seen = set()
     for a in links:
@@ -129,7 +129,7 @@ def llm_summarize(date_display, articles):
 - 新闻用 ##
 - 不要编造事实"""
     payload = json.dumps({
-        "model": "agnes-2.0-flash",
+        "model": "agnes-2.5-flash",
         "messages": [
             {"role": "system", "content": "你是一个专业的科技新闻中文编辑，严格基于提供的新闻内容，不编造事实。回复使用纯 Markdown。"},
             {"role": "user", "content": prompt}
@@ -152,7 +152,7 @@ def llm_summarize(date_display, articles):
 def generate(date_str):
     date_obj = datetime.strptime(date_str, "%Y-%m-%d")
     date_display = date_obj.strftime("%Y年%m月%d日")
-    post_path = os.path.join(BLOG_DIR, "source", "_posts", "daily-news", f"{date_str}-daily-hotspot.md")
+    post_path = os.path.join(BLOG_DIR, "source", "_posts", "daily-news", f"{date_str}-digest.md")
     if os.path.exists(post_path):
         print(f"[{date_str}] Exists, skip")
         return
