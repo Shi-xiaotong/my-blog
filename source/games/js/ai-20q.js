@@ -13,7 +13,14 @@ function addMsg(role, content, extraClass) {
   var div = document.createElement('div');
   div.className = 'msg ' + role;
   var avatar = role === 'ai' ? 'AI' : role === 'user' ? '?' : '';
-  div.innerHTML = `<div class="avatar">${avatar}</div><div class="bubble ${extraClass || ''}">${content}</div>`;
+  var avatarDiv = document.createElement('div');
+  avatarDiv.className = 'avatar';
+  avatarDiv.textContent = avatar;
+  var bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (extraClass || '');
+  bubble.textContent = content;
+  div.appendChild(avatarDiv);
+  div.appendChild(bubble);
   el.appendChild(div);
   el.scrollTop = el.scrollHeight;
 }

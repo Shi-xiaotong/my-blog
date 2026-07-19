@@ -5,7 +5,7 @@ var questionCount = 0;
 var gameActive = false;
 
 `;
-  div.innerHTML = text;
+  div.textContent = text;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
   return div;
@@ -32,7 +32,7 @@ async function startGame() {
     loader.remove();
     addMsg(puzzle, 'ai');
   } catch(e) {
-    loader.innerHTML = '❌ 生成失败，请重试';
+    loader.textContent = '❌ 生成失败，请重试';
   }
 }
 
@@ -56,7 +56,7 @@ async function askQuestion() {
     loader.remove();
     addMsg(answer, 'ai');
   } catch(e) {
-    loader.innerHTML = '❌ 出错了，请重试';
+    loader.textContent = '❌ 出错了，请重试';
     questionCount--;
     updateStats();
   }
@@ -75,10 +75,10 @@ async function revealAnswer() {
     var prompt = `之前的对话:\n${ctx}\n\n现在揭晓汤底（答案）。请给出完整的汤底，并简要解释这个谜题的逻辑。回答要有趣。`;
     var answer = await askAI(prompt, SYSTEM_PROMPT, {temperature: 0.9, max_tokens: 500});
     loader.remove();
-    addMsg(`🍲 <b>汤底揭晓</b><br><br>${answer}`, 'ai');
+    addMsg(`🍲 汤底揭晓\n\n${answer}`, 'ai');
     document.getElementById('newGameBtn').classList.remove('hidden');
   } catch(e) {
-    loader.innerHTML = '❌ 出错了，请点击"再来一局"';
+    loader.textContent = '❌ 出错了，请点击"再来一局"';
     document.getElementById('newGameBtn').classList.remove('hidden');
   }
 }

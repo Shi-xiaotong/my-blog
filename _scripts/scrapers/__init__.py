@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import re
+import random
 import ssl
 import sys
 import time
@@ -119,12 +120,18 @@ def fetch_url(url, headers=None, timeout=REQUEST_TIMEOUT, decode=True):
 
 def safe_fetch(name, func, limit=10):
     try:
+        rate_limit_delay()
         items = func(limit)
         logger.info("%s: 获取 %d 条", name, len(items))
         return items or []
     except Exception as e:
         logger.warning("%s 失败: %s", name, e)
         return []
+
+
+def rate_limit_delay():
+    """Random delay between requests to avoid triggering rate limits."""
+    time.sleep(random.uniform(1, 3))
 
 
 def deduplicate(items, threshold=0.6):

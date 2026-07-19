@@ -6,10 +6,22 @@ var CORS = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Secret"
 };
 
+var CSP = {
+  "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https://img.233002.xyz https://*.cfassets.io https://*.googleusercontent.com https://*.githubusercontent.com; font-src 'self' data:; connect-src 'self' https://ai.233002.xyz https://api.github.com https://accounts.google.com https://oauth.githubusercontent.com https://cj.ffzyapi.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+};
+
+function mergeHeaders(...objs) {
+  const merged = {};
+  for (const obj of objs) {
+    if (obj) Object.assign(merged, obj);
+  }
+  return merged;
+}
+
 function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...CORS, "Content-Type": "application/json; charset=utf-8" }
+    headers: mergeHeaders(CORS, CSP, { "Content-Type": "application/json; charset=utf-8" })
   });
 }
 
@@ -859,7 +871,7 @@ async function handleAdminUsers(env, request) {
 
 export default {
   async fetch(request, env) {
-    if (request.method === "OPTIONS") return new Response(null, { headers: CORS });
+    if (request.method === "OPTIONS") return new Response(null, { headers: mergeHeaders(CORS, CSP) });
 
     // Run migration on each deploy (first request)
     try { await migrateDatabase(env); await ensureTables(env); } catch (e) { console.error('[migrate]', e); }
@@ -898,7 +910,7 @@ export default {
       const target = params ? `https://cj.ffzyapi.com/api.php/provide/vod?${params}` : "https://cj.ffzyapi.com/api.php/provide/vod";
       try {
         const resp = await fetch(target, { headers: { "User-Agent": "Mozilla/5.0" }, cf: { cacheTtl: 300, cacheEverything: true } });
-        return new Response(await resp.text(), { headers: { ...CORS, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=300" } });
+        return new Response(await resp.text(), { headers: mergeHeaders(CORS, CSP, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=300" }) });
       } catch (e) {
         return jsonResponse({ error: e.message }, 502);
       }
@@ -983,9 +995,9 @@ export default {
           const base = targetUrl.href.substring(0, targetUrl.href.lastIndexOf("/") + 1);
           body = body.replace(/^(?!#)(.+\.m3u8.*)$/gm, (m) => m.startsWith("http") ? m : `/m3u8?url=${encodeURIComponent(base + m)}`);
           body = body.replace(/^(?!#)(.+\.ts.*)$/gm, (m) => m.startsWith("http") ? m : `/ts?url=${encodeURIComponent(base + m)}`);
-          return new Response(body, { headers: { ...CORS, "Content-Type": "application/vnd.apple.mpegurl", "Cache-Control": "public, max-age=10" } });
+          return new Response(body, { headers: mergeHeaders(CORS, CSP, { "Content-Type": "application/vnd.apple.mpegurl", "Cache-Control": "public, max-age=10" }) });
         }
-        return new Response(body, { headers: { ...CORS, "Content-Type": ct || "application/octet-stream" } });
+        return new Response(body, { headers: mergeHeaders(CORS, CSP, { "Content-Type": ct || "application/octet-stream" }) });
       } catch (e) {
         return jsonResponse({ error: e.message }, 502);
       }
@@ -1037,7 +1049,7 @@ export default {
           "Sec-Fetch-Site": "same-origin"
         };
         const resp = await fetch(targetUrl.href, { headers: browserHeaders, cf: { cacheTtl: 3600, cacheEverything: true } });
-        return new Response(resp.body, { headers: { ...CORS, "Content-Type": "video/mp2t", "Cache-Control": "public, max-age=86400" } });
+        return new Response(resp.body, { headers: mergeHeaders(CORS, CSP, { "Content-Type": "video/mp2t", "Cache-Control": "public, max-age=86400" }) });
       } catch (e) {
         return jsonResponse({ error: e.message }, 502);
       }

@@ -1,6 +1,7 @@
 // 构建后处理 — CSS/JS 合并打包 + HTML 替换 + 去重
 const fs = require('fs')
 const path = require('path')
+const crypto = require('crypto')
 
 const ROOT = path.resolve(__dirname, '..')
 const PUBLIC = path.join(ROOT, 'public')
@@ -27,15 +28,28 @@ function concat(files, baseDir) {
   return content
 }
 
+function contentHash(content) {
+  return crypto.createHash('md5').update(content).digest('hex').slice(0, 8)
+}
+
 fs.mkdirSync(path.join(PUBLIC, 'assets'), { recursive: true })
 
 const cssContent = concat(cssFiles, SOURCE)
-fs.writeFileSync(path.join(PUBLIC, 'assets', 'bundle.css'), cssContent)
-console.log(`[post-build] bundle.css: ${(cssContent.length / 1024).toFixed(1)} KB`)
+const cssHash = contentHash(cssContent)
+const cssBundleName = `bundle.${cssHash}.css`
+const jsBundleName = `bundle.${jsHash}` // placeholder, set after JS concat below
+
+fs.writeFileSync(path.join(PUBLIC, 'assets', cssBundleName), cssContent)
+fs.copyFileSync(path.join(PUBLIC, 'assets', cssBundleName), path.join(PUBLIC, 'assets', 'bundle.css'))
+console.log(`[post-build] bundle.css → ${cssBundleName} + bundle.css (${(cssContent.length / 1024).toFixed(1)} KB)`)
 
 const jsContent = concat(jsFiles, SOURCE)
-fs.writeFileSync(path.join(PUBLIC, 'assets', 'bundle.js'), jsContent)
-console.log(`[post-build] bundle.js: ${(jsContent.length / 1024).toFixed(1)} KB`)
+const jsHash = contentHash(jsContent)
+jsBundleName = `bundle.${jsHash}.js`
+
+fs.writeFileSync(path.join(PUBLIC, 'assets', jsBundleName), jsContent)
+fs.copyFileSync(path.join(PUBLIC, 'assets', jsBundleName), path.join(PUBLIC, 'assets', 'bundle.js'))
+console.log(`[post-build] bundle.js → ${jsBundleName} + bundle.js (${(jsContent.length / 1024).toFixed(1)} KB)`)
 
 const cssRefs = [
   '/tools/common.css', '/tools/site-override.css',
@@ -59,19 +73,19 @@ function walk(dir) {
       let html = fs.readFileSync(fp, 'utf-8')
       let mod = false
 
-      // 替换独立文件引用为 bundle
+      // 替换独立文件引用为带 hash 的 bundle
       for (const r of cssRefs) {
-        while (html.includes(r)) { html = html.replace(r, '/assets/bundle.css'); mod = true }
+        while (html.includes(r)) { html = html.replace(r, `/assets/${cssBundleName}`); mod = true }
       }
       for (const r of jsRefs) {
-        while (html.includes(r)) { html = html.replace(r, '/assets/bundle.js'); mod = true }
+        while (html.includes(r)) { html = html.replace(r, `/assets/${jsBundleName}`); mod = true }
       }
 
       // 清理: 去掉 bundle.css 上残留的 ?v=N
-      html = html.replace(/href="\/assets\/bundle\.css\?v=\d+"/g, 'href="/assets/bundle.css"')
+      html = html.replace(new RegExp(`href="/assets/bundle\\.css\\?v=\\d+"`, 'g'), `href="/assets/bundle.css"`)
 
       // 去重 bundle.css：保留第一个，删后续
-      const cssTag = 'href="/assets/bundle.css"'
+      const cssTag = `href="/assets/${cssBundleName}"`
       const fc = html.indexOf(cssTag)
       if (fc !== -1) {
         while (true) {
@@ -83,7 +97,7 @@ function walk(dir) {
       }
 
       // 去重 bundle.js：保留第一个，删后续
-      const jsTag = 'src="/assets/bundle.js"'
+      const jsTag = `src="/assets/${jsBundleName}"`
       const fj = html.indexOf(jsTag)
       if (fj !== -1) {
         while (true) {

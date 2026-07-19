@@ -79,7 +79,7 @@ function newRound() {
 async function askAI() {
   if (guessed) return;
   var guessEl = document.getElementById('aiGuess');
-  guessEl.innerHTML = '<span class="loading"><span class="spinner"></span>AI 正在看图...</span>';
+  guessEl.textContent = 'AI 正在看图...';
 
   try {
     var base64 = canvas.toDataURL('image/png').split(',')[1];

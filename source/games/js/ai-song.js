@@ -17,9 +17,9 @@ var gameActive = false;
     var diffGuide = {'简单': '选择一首非常著名的华语流行歌曲，给很明显的线索', '中等': '选择一首有一定知名度的歌曲，给中等难度的线索', '困难': '选择一首比较小众或冷门的歌曲，给较隐晦的线索'}[diff];
     var clue = await askAI(`请描述一首歌。${diffGuide}。描述中包含：歌词片段（不直接引用歌名）、歌手特征、发行年代、风格等线索。不要说出歌名。直接给出描述。`, SYSTEM_PROMPT, {temperature: 1.1, max_tokens: 300});
     songContext = clue;
-    document.getElementById('clueCard').innerHTML = `💡 <b>线索：</b><br><br>${clue}`;
+    document.getElementById('clueCard').textContent = `💡 线索：\n\n${clue}`;
   } catch(e) {
-    document.getElementById('clueCard').innerHTML = '❌ 生成失败，请刷新重试';
+    document.getElementById('clueCard').textContent = '❌ 生成失败，请刷新重试';
   }
 }
 
@@ -33,7 +33,7 @@ async function makeGuess() {
 
   var loader = document.createElement('div');
   loader.className = 'history-item';
-  loader.innerHTML = `${guess} <span>判断中<span class="loading"></span></span>`;
+  loader.textContent = `${guess} 判断中`;
   document.getElementById('history').appendChild(loader);
 
   document.getElementById('guessBtn').disabled = true;
@@ -43,16 +43,16 @@ async function makeGuess() {
 
     if (result.startsWith('正确') || result.includes('恭喜')) {
       loader.className = 'history-item correct';
-      loader.innerHTML = `${guess} <span>✅ 正确！</span>`;
+      loader.textContent = `${guess} ✅ 正确！`;
       gameActive = false;
       showResult(true, result);
     } else if (result.startsWith('接近') || result.includes('接近')) {
       loader.className = 'history-item close';
-      loader.innerHTML = `${guess} <span>🟡 接近了！</span>`;
+      loader.textContent = `${guess} 🟡 接近了！`;
       addClue(result);
     } else {
       loader.className = 'history-item wrong';
-      loader.innerHTML = `${guess} <span>❌ 不对</span>`;
+      loader.textContent = `${guess} ❌ 不对`;
       addClue(result);
     }
 
@@ -61,7 +61,7 @@ async function makeGuess() {
       giveUp();
     }
   } catch(e) {
-    loader.innerHTML = `${guess} <span>⚠️ 判断失败</span>`;
+    loader.textContent = `${guess} ⚠️ 判断失败`;
     attempts--;
     updateAttemptStat();
   }
@@ -70,7 +70,7 @@ async function makeGuess() {
 
 function addClue(text) {
   var card = document.getElementById('clueCard');
-  card.innerHTML += `<br><br>💬 ${text}`;
+  card.textContent += `\n\n💬 ${text}`;
 }
 
 async function getHint() {
@@ -100,7 +100,7 @@ function showResult(win, text) {
   var area = document.getElementById('resultArea');
   area.classList.remove('hidden');
   area.className = `result ${win ? 'win' : 'lose'}`;
-  area.innerHTML = win ? `🎉 ${text}` : `🏳️ 答案揭晓：${text}`;
+  area.textContent = win ? `🎉 ${text}` : `🏳️ 答案揭晓：${text}`;
   document.getElementById('guessArea').classList.add('hidden');
   document.getElementById('newGameBtn').classList.remove('hidden');
 }

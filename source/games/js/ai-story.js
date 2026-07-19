@@ -19,9 +19,26 @@ function addSegment(author, text, scoreVal) {
   var scoreHtml = '';
   if (scoreVal !== undefined && scoreVal !== null) {
     var cls = scoreVal >= 8 ? 'high' : scoreVal >= 5 ? 'mid' : 'low';
-    scoreHtml = `<span class="score-badge ${cls}">${scoreVal}/10</span>`;
+    var scoreSpan = document.createElement('span');
+    scoreSpan.className = 'score-badge ' + cls;
+    scoreSpan.textContent = scoreVal + '/10';
+    scoreHtml = scoreSpan.outerHTML;
   }
-  div.innerHTML = `<div class="author">${author}${scoreHtml}</div><div>${text}</div>`;
+  var authorDiv = document.createElement('div');
+  authorDiv.className = 'author';
+  var authorSpan = document.createElement('span');
+  authorSpan.textContent = author;
+  authorDiv.appendChild(authorSpan);
+  if (scoreHtml) {
+    var scoreBadge = document.createElement('span');
+    scoreBadge.className = 'score-badge ' + cls;
+    scoreBadge.textContent = scoreVal + '/10';
+    authorDiv.appendChild(scoreBadge);
+  }
+  var textDiv = document.createElement('div');
+  textDiv.textContent = text;
+  div.appendChild(authorDiv);
+  div.appendChild(textDiv);
   el.appendChild(div);
   el.scrollTop = el.scrollHeight;
   storySegments.push({ author, text });

@@ -35,7 +35,10 @@ async function newRound() {
   document.getElementById('overlay').style.display = 'none';
 
   // Show loading
-  document.getElementById('imageArea').innerHTML = '<div class="loading"><div class="spinner"></div><p>AI 正在生成图片...</p></div>';
+  var loaderDiv = document.createElement('div');
+  loaderDiv.className = 'loading';
+  loaderDiv.textContent = 'AI 正在生成图片...';
+  document.getElementById('imageArea').appendChild(loaderDiv);
   addHint('新的一轮开始！AI 正在画图...', 'system');
 
   try {
@@ -56,13 +59,21 @@ async function newRound() {
     imageUrl = data?.data?.[0]?.url;
 
     if (imageUrl) {
-      document.getElementById('imageArea').innerHTML = `<img src="${imageUrl}" alt="AI Generated">`;
+      document.getElementById('imageArea').innerHTML = '';
+  var img = document.createElement('img');
+  img.src = imageUrl;
+  img.alt = 'AI Generated';
+  document.getElementById('imageArea').appendChild(img);
       addHint('图片已生成！猜猜它的描述词是什么？', 'system');
     } else {
       throw new Error('No image URL');
     }
   } catch (e) {
-    document.getElementById('imageArea').innerHTML = '<div class="placeholder" style="color:#ef4444">图片生成失败，请重试</div>';
+    var placeholder = document.createElement('div');
+    placeholder.className = 'placeholder';
+    placeholder.style.color = '#ef4444';
+    placeholder.textContent = '图片生成失败，请重试';
+    document.getElementById('imageArea').appendChild(placeholder);
     addHint('生成失败: ' + e.message, 'wrong');
   }
 }

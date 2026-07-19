@@ -35,7 +35,7 @@ async function generatePoem() {
   genBtn.textContent = 'AI创作中...';
 
   document.getElementById('poemArea').classList.remove('hidden');
-  document.getElementById('poemDisplay').innerHTML = '创作中<span class="loading"></span>';
+  document.getElementById('poemDisplay').textContent = '创作中';
   document.getElementById('feedbackArea').classList.add('hidden');
   selectedStars = 0;
   document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('on'));
@@ -44,9 +44,9 @@ async function generatePoem() {
     var prompt = `请用"${currentStyle}"的风格，包含以下三个关键词写一首诗：${kw1}、${kw2}、${kw3}。${currentStyle === '藏头诗' ? '请确保每行第一个字组成一个有意义的词语或句子。' : ''}${currentStyle === 'rap' ? '注意押韵和节奏感。' : ''}直接输出诗歌内容，不需要额外解释。`;
     var poem = await askAI(prompt, SYSTEM_PROMPT, {temperature: 1.0, max_tokens: 400});
     currentPoem = poem;
-    document.getElementById('poemDisplay').innerHTML = `<div class="poem-title">《${kw1}·${kw2}·${kw3}》 — ${currentStyle}</div>${poem}`;
+    document.getElementById('poemDisplay').textContent = `《${kw1}·${kw2}·${kw3}》 — ${currentStyle}\n${currentPoem}`;
   } catch(e) {
-    document.getElementById('poemDisplay').innerHTML = '❌ 生成失败，请重试';
+    document.getElementById('poemDisplay').textContent = '❌ 生成失败，请重试';
   }
 
   genBtn.disabled = false;
@@ -56,14 +56,14 @@ async function generatePoem() {
 async function giveFeedback(stars) {
   var area = document.getElementById('feedbackArea');
   area.classList.remove('hidden');
-  document.getElementById('feedback').innerHTML = 'AI点评中<span class="loading"></span>';
+  document.getElementById('feedback').textContent = 'AI点评中';
 
   try {
     var prompt = `你写了一首${currentStyle}诗，关键词是${currentKeywords.join('、')}。诗的内容：\n${currentPoem}\n\n用户给了${stars}星评价（满分5星）。请给出简短的评价和改进建议。如果分数低，虚心接受并提出如何改进。如果分数高，表示感谢。`;
     var feedback = await askAI(prompt, SYSTEM_PROMPT, {temperature: 0.8, max_tokens: 200});
-    document.getElementById('feedback').innerHTML = `💬 <b>AI点评：</b><br><br>${feedback}`;
+    document.getElementById('feedback').textContent = `💬 AI点评：\n\n${feedback}`;
   } catch(e) {
-    document.getElementById('feedback').innerHTML = '❌ 点评生成失败';
+    document.getElementById('feedback').textContent = '❌ 点评生成失败';
   }
 }
 
