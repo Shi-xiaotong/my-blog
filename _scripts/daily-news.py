@@ -15,9 +15,7 @@ if not AGNES_KEY:
                     AGNES_KEY = line.strip().split("=", 1)[1]
                     break
 
-ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
+# SSL verification enabled by default — no custom context needed for urllib
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
 AI_API = "https://apihub.agnes-ai.com/v1/chat/completions"
 MAX_RETRIES = 3
@@ -40,7 +38,7 @@ def retry(fn, label="", max_retries=MAX_RETRIES):
 
 def fetch_html(url, timeout=25):
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as r:
+    with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read().decode('utf-8', errors='replace')
 
 
@@ -87,7 +85,7 @@ def scrape_articles(date_str):
 def scrape_content(url):
     def _fetch():
         req = urllib.request.Request(url, headers=HEADERS)
-        with urllib.request.urlopen(req, timeout=15, context=ctx) as r:
+        with urllib.request.urlopen(req, timeout=15) as r:
             raw = r.read()
             ct = r.headers.get('Content-Type', '')
             charset = 'utf-8'
@@ -143,7 +141,7 @@ def llm_summarize(date_display, articles):
             AI_API, data=payload,
             headers={"Authorization": f"Bearer {AGNES_KEY}", "Content-Type": "application/json"}
         )
-        with urllib.request.urlopen(req, timeout=120, context=ctx) as r:
+        with urllib.request.urlopen(req, timeout=120) as r:
             return json.loads(r.read())["choices"][0]["message"]["content"]
 
     return retry(_call, label="Agnes API")

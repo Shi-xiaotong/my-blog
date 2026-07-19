@@ -23,9 +23,7 @@ MAX_RETRIES = 3
 RETRY_DELAY_BASE = 2
 REQUEST_TIMEOUT = 20
 
-CTX = ssl.create_default_context()
-CTX.check_hostname = False
-CTX.verify_mode = ssl.CERT_NONE
+# SSL verification enabled by default — no custom context needed for urllib
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -108,7 +106,7 @@ def retry(fn, label="", max_retries=MAX_RETRIES):
 def fetch_url(url, headers=None, timeout=REQUEST_TIMEOUT, decode=True):
     hdrs = headers or HEADERS
     req = urllib.request.Request(url, headers=hdrs)
-    with urllib.request.urlopen(req, timeout=timeout, context=CTX) as resp:
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
         raw = resp.read()
         if decode:
             charset = "utf-8"

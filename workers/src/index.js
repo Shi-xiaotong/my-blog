@@ -117,6 +117,41 @@ async function migrateDatabase(env) {
 }
 
 async function ensureTables(env) {
+  // Core auth tables
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_users (
+    id TEXT PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT,
+    display_name TEXT,
+    avatar_url TEXT,
+    website TEXT,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    last_login TEXT
+  )`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_user_auth_methods (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    auth_type TEXT NOT NULL,
+    auth_id TEXT NOT NULL,
+    linked_at TEXT DEFAULT (datetime('now')),
+    UNIQUE(auth_type, auth_id)
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_aum_email ON anime_user_auth_methods(email)`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_sessions (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    email TEXT NOT NULL,
+    token TEXT UNIQUE NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
+    expires_at TEXT NOT NULL
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_as_token ON anime_sessions(token)`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_as_user ON anime_sessions(user_id)`).run();
+
+  // Verification / password reset codes
   await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_password_codes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL,
@@ -127,6 +162,35 @@ async function ensureTables(env) {
     created_at TEXT DEFAULT (datetime('now'))
   )`).run();
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_apc_email ON anime_password_codes(email, code)`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_verify_codes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    code TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_avc_email ON anime_verify_codes(email)`).run();
+
+  // Anime-specific tables
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    anime_id TEXT NOT NULL,
+    watched_at TEXT DEFAULT (datetime('now'))
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_ah_email ON anime_history(email)`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_danmaku (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    anime_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    color TEXT DEFAULT '#ffffff',
+    size TEXT DEFAULT 'normal',
+    created_at TEXT DEFAULT (datetime('now'))
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_ad_anime ON anime_danmaku(anime_id)`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_ad_email ON anime_danmaku(email)`).run();
 }
 
 // ─── Existing auth helpers ────────────────────────────────────────────────────
@@ -847,12 +911,25 @@ export default {
     const dm = path.match(/^\/api\/danmaku\/(\d+)$/);
     if (dm) return handleDanmaku(env, request, parseInt(dm[1], 10));
 
-    // ── M3U8 proxy ──
+    // ── M3U8 proxy (SSRF-protected) ──
     if (path === "/m3u8") {
       const target = url.searchParams.get("url");
       if (!target) return badRequest("missing url param");
+      let targetUrl;
       try {
-        const targetUrl = new URL(target);
+        targetUrl = new URL(target);
+      } catch {
+        return badRequest("invalid url");
+      }
+      // Only allow https, block private/internal IPs
+      if (targetUrl.protocol !== "https:") return badRequest("only https allowed");
+      const hostname = targetUrl.hostname.toLowerCase();
+      if (/^(localhost|127\.\d+\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+|::1|fc00|fe80)/i.test(hostname)) {
+        return badRequest("internal hosts not allowed");
+      }
+      // Block IP literals
+      if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)) return badRequest("IP addresses not allowed");
+      try {
         const origin = targetUrl.origin;
         const browserHeaders = {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -887,8 +964,20 @@ export default {
     if (path === "/ts") {
       const target = url.searchParams.get("url");
       if (!target) return badRequest("missing url param");
+      let targetUrl;
       try {
-        const targetUrl = new URL(target);
+        targetUrl = new URL(target);
+      } catch {
+        return badRequest("invalid url");
+      }
+      // Only allow https, block private/internal IPs
+      if (targetUrl.protocol !== "https:") return badRequest("only https allowed");
+      const hostname = targetUrl.hostname.toLowerCase();
+      if (/^(localhost|127\.\d+\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+|::1|fc00|fe80)/i.test(hostname)) {
+        return badRequest("internal hosts not allowed");
+      }
+      if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)) return badRequest("IP addresses not allowed");
+      try {
         const origin = targetUrl.origin;
         const browserHeaders = {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",

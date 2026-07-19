@@ -83,15 +83,57 @@ async function sendEmail(env, to, subject, html) {
 // ─── Migration ───────────────────────────────────────────────────────────────
 
 async function migrate(env) {
-  for (const col of ['password_hash', 'display_name', 'avatar_url', 'website', 'created_at', 'updated_at']) {
-    try { await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN ${col} TEXT`).run(); } catch (e) {}
-  }
+  // Ensure core tables exist (CREATE TABLE IF NOT EXISTS is idempotent)
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_users (
+    id TEXT PRIMARY KEY, email TEXT UNIQUE NOT NULL, password_hash TEXT,
+    display_name TEXT, avatar_url TEXT, website TEXT,
+    created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')), last_login TEXT
+  )`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_user_auth_methods (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, auth_type TEXT NOT NULL,
+    auth_id TEXT NOT NULL, linked_at TEXT DEFAULT (datetime('now')), UNIQUE(auth_type, auth_id)
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_aum_email ON anime_user_auth_methods(email)`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_sessions (
+    id TEXT PRIMARY KEY, user_id TEXT NOT NULL, email TEXT NOT NULL, token TEXT UNIQUE NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')), expires_at TEXT NOT NULL
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_as_token ON anime_sessions(token)`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_as_user ON anime_sessions(user_id)`).run();
+
   await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_password_codes (
     id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, code TEXT NOT NULL,
     type TEXT NOT NULL DEFAULT 'register', used INTEGER DEFAULT 0,
     expires_at TEXT NOT NULL, created_at TEXT DEFAULT (datetime('now'))
   )`).run();
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_apc_email ON anime_password_codes(email, code)`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_verify_codes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, code TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_avc_email ON anime_verify_codes(email)`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, anime_id TEXT NOT NULL,
+    watched_at TEXT DEFAULT (datetime('now'))
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_ah_email ON anime_history(email)`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS anime_danmaku (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, anime_id TEXT NOT NULL,
+    content TEXT NOT NULL, color TEXT DEFAULT '#ffffff', size TEXT DEFAULT 'normal',
+    created_at TEXT DEFAULT (datetime('now'))
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_ad_anime ON anime_danmaku(anime_id)`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_ad_email ON anime_danmaku(email)`).run();
+
+  // Run legacy ALTER TABLE migrations for existing databases
+  for (const col of ['password_hash', 'display_name', 'avatar_url', 'website', 'created_at', 'updated_at']) {
+    try { await env.DB.prepare(`ALTER TABLE anime_users ADD COLUMN ${col} TEXT`).run(); } catch (e) {}
+  }
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

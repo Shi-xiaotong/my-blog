@@ -12,10 +12,7 @@ import urllib.request
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-# ── SSL Context ──
-CTX = ssl.create_default_context()
-CTX.check_hostname = False
-CTX.verify_mode = ssl.CERT_NONE
+# SSL verification enabled by default — no custom context needed for urllib
 
 # ── Config ──
 
@@ -172,7 +169,7 @@ def call_agnes(prompt, system=SYSTEM_PROMPT, max_tokens=3000, temperature=0.7, m
                 AGNES_API, data=payload,
                 headers={"Authorization": f"Bearer {AGNES_KEY}", "Content-Type": "application/json"},
             )
-            with urllib.request.urlopen(req, timeout=300, context=CTX) as resp:
+            with urllib.request.urlopen(req, timeout=300) as resp:
                 raw = json.loads(resp.read().decode())
                 content = raw["choices"][0]["message"].get("content", "")
                 if content and content.strip():
