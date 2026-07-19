@@ -946,11 +946,41 @@ export default {
           "Sec-Fetch-Mode": "cors",
           "Sec-Fetch-Site": "same-origin"
         };
-        const resp = await fetch(target, { headers: browserHeaders, cf: { cacheTtl: 60, cacheEverything: true } });
+        // Block IP literals
+      if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)) return badRequest("IP addresses not allowed");
+      // Resolve hostname to IP and check again (DNS rebinding mitigation)
+      try {
+        const resolver = new DNSResolver();
+        const ips = await resolver.resolve4(hostname);
+        for (const ip of ips) {
+          if (isPrivateIP(ip)) return badRequest("internal hosts not allowed");
+        }
+      } catch (e) {
+        console.error(`[SSRF] DNS resolution failed for ${hostname}:`, e);
+        return badRequest("invalid url");
+      }
+      try {
+        const origin = targetUrl.origin;
+        const browserHeaders = {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "Accept": "*/*",
+          "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Referer": origin + "/",
+          "Origin": origin,
+          "Connection": "keep-alive",
+          "Sec-Ch-Ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+          "Sec-Ch-Ua-Mobile": "?0",
+          "Sec-Ch-Ua-Platform": '"Windows"',
+          "Sec-Fetch-Dest": "empty",
+          "Sec-Fetch-Mode": "cors",
+          "Sec-Fetch-Site": "same-origin"
+        };
+        const resp = await fetch(targetUrl.href, { headers: browserHeaders, cf: { cacheTtl: 60, cacheEverything: true } });
         let body = await resp.text();
         const ct = resp.headers.get("content-type") || "";
         if (body.includes("#EXTM3U") && !ct.includes("octet-stream")) {
-          const base = target.substring(0, target.lastIndexOf("/") + 1);
+          const base = targetUrl.href.substring(0, targetUrl.href.lastIndexOf("/") + 1);
           body = body.replace(/^(?!#)(.+\.m3u8.*)$/gm, (m) => m.startsWith("http") ? m : `/m3u8?url=${encodeURIComponent(base + m)}`);
           body = body.replace(/^(?!#)(.+\.ts.*)$/gm, (m) => m.startsWith("http") ? m : `/ts?url=${encodeURIComponent(base + m)}`);
           return new Response(body, { headers: { ...CORS, "Content-Type": "application/vnd.apple.mpegurl", "Cache-Control": "public, max-age=10" } });
@@ -976,7 +1006,19 @@ export default {
       if (/^(localhost|127\.\d+\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+|::1|fc00|fe80)/i.test(hostname)) {
         return badRequest("internal hosts not allowed");
       }
+      // Block IP literals
       if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)) return badRequest("IP addresses not allowed");
+      // Resolve hostname to IP and check again (DNS rebinding mitigation)
+      try {
+        const resolver = new DNSResolver();
+        const ips = await resolver.resolve4(hostname);
+        for (const ip of ips) {
+          if (isPrivateIP(ip)) return badRequest("internal hosts not allowed");
+        }
+      } catch (e) {
+        console.error(`[SSRF] DNS resolution failed for ${hostname}:`, e);
+        return badRequest("invalid url");
+      }
       try {
         const origin = targetUrl.origin;
         const browserHeaders = {
@@ -994,7 +1036,7 @@ export default {
           "Sec-Fetch-Mode": "cors",
           "Sec-Fetch-Site": "same-origin"
         };
-        const resp = await fetch(target, { headers: browserHeaders, cf: { cacheTtl: 3600, cacheEverything: true } });
+        const resp = await fetch(targetUrl.href, { headers: browserHeaders, cf: { cacheTtl: 3600, cacheEverything: true } });
         return new Response(resp.body, { headers: { ...CORS, "Content-Type": "video/mp2t", "Cache-Control": "public, max-age=86400" } });
       } catch (e) {
         return jsonResponse({ error: e.message }, 502);
