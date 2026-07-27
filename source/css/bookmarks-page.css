@@ -48,6 +48,42 @@ body {
 .auth-bar .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .auth-bar .user-name { font-weight: 600; font-size: 13px; }
 
+/* Navigation Bar */
+.bookmarks-nav {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px; padding: 10px 14px;
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 12px; flex-wrap: wrap;
+}
+.bookmarks-nav-inner {
+  display: flex; gap: 4px; flex-wrap: wrap; flex: 1;
+}
+.bookmarks-nav-item {
+  padding: 5px 12px; border-radius: 8px; border: none;
+  background: transparent; color: var(--text-secondary);
+  cursor: pointer; font-size: 13px; white-space: nowrap;
+  transition: all 0.15s;
+}
+.bookmarks-nav-item:hover { background: var(--border); color: var(--text); }
+.bookmarks-nav-item.active {
+  background: var(--primary); color: #fff; font-weight: 600;
+}
+.bookmarks-search {
+  flex-shrink: 0;
+}
+.bookmarks-search input {
+  padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--text); font-size: 13px;
+  width: 160px; outline: none; transition: border-color 0.15s;
+}
+.bookmarks-search input:focus { border-color: var(--primary); }
+.bookmarks-search input::placeholder { color: var(--text-secondary); }
+
+@media (max-width: 640px) {
+  .bookmarks-nav { flex-direction: column; align-items: stretch; }
+  .bookmarks-search input { width: 100%; }
+}
+
 .category-section {
   margin-bottom: 28px;
 }

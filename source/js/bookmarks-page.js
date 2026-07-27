@@ -87,6 +87,7 @@ var CATEGORIES = [
       { name: 'Spotify', url: 'https://open.spotify.com', icon: 'https://open.spotify.com/favicon.ico' },
       { name: '\u7F51\u6613\u4E91\u97F3\u4E50', url: 'https://music.163.com', icon: 'https://music.163.com/favicon.ico' },
       { name: 'Animex\u52A8\u6F2B\u793E', url: 'https://www.animetox.com', icon: 'https://www.animetox.com/favicon.ico' },
+      { name: '\u6A31\u4E4B\u7A7A', url: 'https://skr.skr2.cc:666', icon: 'https://skr.skr2.cc:666/favicon.ico' },
     ]
   },
   {
@@ -169,32 +170,70 @@ var CATEGORIES = [
       { name: '\u767E\u5EA6\u7F51\u76D8', url: 'https://pan.baidu.com', icon: 'https://pan.baidu.com/favicon.ico' },
       { name: '\u963F\u91CC\u4E91\u76D8', url: 'https://www.aliyundrive.com', icon: 'https://www.aliyundrive.com/favicon.ico' },
       { name: 'OneDrive', url: 'https://onedrive.live.com', icon: 'https://onedrive.live.com/favicon.ico' },
-      { name: 'SKR', url: 'https://skr.skr2.cc:666', icon: 'https://skr.skr2.cc:666/favicon.ico' },
     ]
   }
 ];
 
-function renderCategories(){
+function renderCategories(filter){
   var container = document.getElementById('categoriesContainer');
   if (!container) return;
   container.innerHTML = '';
 
-  CATEGORIES.forEach(function(cat){
+  var filtered = CATEGORIES;
+  if (filter && filter !== 'all') {
+    filtered = CATEGORIES.filter(function(c){ return c.id === filter; });
+  }
+
+  var searchInput = document.getElementById('bookmarkSearch');
+  var searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+  filtered.forEach(function(cat){
+    var sites = cat.sites;
+    if (searchTerm) {
+      sites = sites.filter(function(s){
+        return s.name.toLowerCase().includes(searchTerm) || s.url.toLowerCase().includes(searchTerm);
+      });
+    }
+    if (sites.length === 0) return;
+
     var section = document.createElement('div');
     section.className = 'category-section';
     section.dataset.category = cat.id;
-    section.innerHTML = '<div class="category-header"><h2>' + cat.name + '</h2><span class="category-count">' + cat.sites.length + ' \u4E2A</span></div><div class="links-grid" id="grid-' + cat.id + '">' + cat.sites.map(function(s){
+    section.innerHTML = '<div class="category-header"><h2>' + cat.name + '</h2><span class="category-count">' + sites.length + ' \u4E2A</span></div><div class="links-grid" id="grid-' + cat.id + '">' + sites.map(function(s){
       return '<a href="' + s.url + '" class="link-card" target="_blank" rel="noopener noreferrer" title="' + s.name + '"><span class="name">' + s.name + '</span></a>';
     }).join('') + '</div>';
     container.appendChild(section);
   });
 }
 
-renderCategories();
+function switchCategory(catId){
+  document.querySelectorAll('.bookmarks-nav-item').forEach(function(el){
+    el.classList.toggle('active', el.dataset.cat === catId);
+  });
+  renderCategories(catId === 'all' ? null : catId);
+}
+
+function initBookmarks(){
+  renderCategories();
+  var searchInput = document.getElementById('bookmarkSearch');
+  if (searchInput) {
+    searchInput.addEventListener('input', function(){
+      var active = document.querySelector('.bookmarks-nav-item.active');
+      var cat = active ? active.dataset.cat : 'all';
+      renderCategories(cat === 'all' ? null : cat);
+    });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initBookmarks);
+} else {
+  initBookmarks();
+}
 
 document.addEventListener('pjax:complete', function(){
   if (document.getElementById('categoriesContainer')) {
-    renderCategories();
+    initBookmarks();
   }
 });
 })();
