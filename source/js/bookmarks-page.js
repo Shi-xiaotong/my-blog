@@ -88,6 +88,16 @@ var CATEGORIES = [
       { name: '\u7F51\u6613\u4E91\u97F3\u4E50', url: 'https://music.163.com', icon: 'https://music.163.com/favicon.ico' },
       { name: 'Animex\u52A8\u6F2B\u793E', url: 'https://www.animetox.com', icon: 'https://www.animetox.com/favicon.ico' },
       { name: '\u6A31\u4E4B\u7A7A', url: 'https://skr.skr2.cc:666', icon: 'https://skr.skr2.cc:666/favicon.ico' },
+      { name: '\u5189\u6B21\u5143', url: 'https://www.jiongciyuan.com', icon: 'https://www.jiongciyuan.com/favicon.ico' },
+      { name: '\u52A8\u6F2B\u5171\u548C\u56FD', url: 'https://www.dongmanrg.com', icon: 'https://www.dongmanrg.com/favicon.ico' },
+      { name: 'Age\u52A8\u6F2B', url: 'https://www.agefans.cc', icon: 'https://www.agefans.cc/favicon.ico' },
+      { name: '\u6A31\u82B1\u52A8\u6F2B', url: 'https://www.yinghuacd.com', icon: 'https://www.yinghuacd.com/favicon.ico' },
+      { name: '\u98CE\u8F66\u52A8\u6F2B', url: 'https://www.fengche.tv', icon: 'https://www.fengche.tv/favicon.ico' },
+      { name: 'Zzzfun', url: 'https://www.zzzfun.com', icon: 'https://www.zzzfun.com/favicon.ico' },
+      { name: '\u871C\u67D1\u8BA1\u5212', url: 'https://mikanani.me', icon: 'https://mikanani.me/favicon.ico' },
+      { name: '\u52A8\u6F2B\u82B1\u56ED', url: 'https://www.dmhy.org', icon: 'https://www.dmhy.org/favicon.ico' },
+      { name: 'Bangumi', url: 'https://bangumi.tv', icon: 'https://bangumi.tv/favicon.ico' },
+      { name: 'AcFun', url: 'https://www.acfun.cn', icon: 'https://www.acfun.cn/favicon.ico' },
     ]
   },
   {
