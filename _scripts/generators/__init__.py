@@ -65,6 +65,11 @@ def _clean_reasoning_output(text: str) -> str:
     # Remove lines starting with "Here's a thinking process" or similar
     text = re.sub(r'^Here.s a thinking process.*?(?:\n|$)', '', text, flags=re.IGNORECASE)
     text = re.sub(r'^Let me think.*?(?:\n|$)', '', text, flags=re.IGNORECASE)
+    # Remove "Wait, constraint" style self-instructions
+    text = re.sub(r'^Wait, constraint.*?(?:\n|$)', '', text, flags=re.IGNORECASE | re.MULTILINE)
+    text = re.sub(r'^Check tone.*?(?:\n|$)', '', text, flags=re.IGNORECASE | re.MULTILINE)
+    text = re.sub(r'^Constraint \d.*?(?:\n|$)', '', text, flags=re.IGNORECASE | re.MULTILINE)
+    text = re.sub(r'^\*Topic \d+:.*?\*', '', text, flags=re.MULTILINE)
     # Remove "Analyze User Input" style sections (only match thinking-specific patterns, not legitimate bold text)
     text = re.sub(r'^\s*\*\*(?:Analyze|Thought|Reasoning|Plan|Step|Check|Review|Summary|Key Point|Output|Response|Input|Context)\*\*.*?(?:\n|$)', '', text, flags=re.IGNORECASE | re.MULTILINE)
     # Remove bullet-point thinking lines
@@ -82,7 +87,7 @@ def extract_article_from_leaky_output(text: str) -> tuple[str, str]:
     # Helper: strip self-review/checklist from end of article
     def _strip_review(article):
         markers = [
-            r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction|I need to ensure)',
+            r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction|I need to ensure|Wait,|Constraint \d)',
             r'\n\*?\(?(Check|Let.s refine|Self-Correction|I will carefully)',
         ]
         for p in markers:
@@ -211,7 +216,7 @@ def build_post(title, content, category, date_str, tags, description=""):
     from datetime import datetime
 
     # Safety net: strip any remaining self-review/checklist content
-    review_m = re.search(r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction)', content)
+    review_m = re.search(r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction|Wait,|Constraint \d)', content)
     if review_m:
         content = content[:review_m.start()].strip()
     

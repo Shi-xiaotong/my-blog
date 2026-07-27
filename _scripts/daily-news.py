@@ -129,7 +129,7 @@ def llm_summarize(date_display, articles):
     payload = json.dumps({
         "model": "agnes-2.5-flash",
         "messages": [
-            {"role": "system", "content": "你是一个专业的科技新闻中文编辑，严格基于提供的新闻内容，不编造事实。回复使用纯 Markdown。"},
+            {"role": "system", "content": "你是一个专业的科技新闻中文编辑，严格基于提供的新闻内容，不编造事实。回复使用纯 Markdown。不要输出任何思考过程、自我检查、约束条件、格式说明——只输出文章本身。"},
             {"role": "user", "content": prompt}
         ],
         "max_tokens": 12000,
@@ -142,7 +142,21 @@ def llm_summarize(date_display, articles):
             headers={"Authorization": f"Bearer {AGNES_KEY}", "Content-Type": "application/json"}
         )
         with urllib.request.urlopen(req, timeout=120) as r:
-            return json.loads(r.read())["choices"][0]["message"]["content"]
+            raw = json.loads(r.read())
+            content = raw["choices"][0]["message"].get("content", "")
+            if not content or not content.strip():
+                return None
+            # Clean leaked thinking/self-review from AI output
+            from generators import extract_article_from_leaky_output, _clean_reasoning_output
+            content = _clean_reasoning_output(content)
+            _, cleaned = extract_article_from_leaky_output(content)
+            if cleaned:
+                content = cleaned
+            # Strip any remaining self-review at end
+            review_m = re.search(r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction|I need to ensure|Wait,|Constraint \d)', content)
+            if review_m:
+                content = content[:review_m.start()].strip()
+            return content.strip()
 
     return retry(_call, label="Agnes API")
 
