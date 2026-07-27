@@ -222,6 +222,7 @@ function switchCategory(catId){
   });
   renderCategories(catId === 'all' ? null : catId);
 }
+window.switchCategory = switchCategory;
 
 function initBookmarks(){
   renderCategories();
