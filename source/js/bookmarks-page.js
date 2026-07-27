@@ -73,7 +73,7 @@ var CATEGORIES = [
       { name: 'Coursera', url: 'https://www.coursera.org', icon: 'https://www.coursera.org/favicon.ico' },
       { name: 'Udemy', url: 'https://www.udemy.com', icon: 'https://www.udemy.com/favicon.ico' },
       { name: 'LeetCode', url: 'https://leetcode.cn', icon: 'https://leetcode.cn/favicon.ico' },
-      { name: '高考真题', url: 'https://t.urongda.com', icon: 'https://t.urongda.com/favicon.ico' },
+      { name: '\u9AD8\u8003\u771F\u9898', url: 'https://t.urongda.com', icon: 'https://t.urongda.com/favicon.ico' },
     ]
   },
   {
@@ -146,8 +146,8 @@ var CATEGORIES = [
   },
   {
     id: 'games',
-    icon: '🎮',
-    name: '在线游戏',
+    icon: '\uD83C\uDFAE',
+    name: '\u5728\u7EBF\u6E38\u620F',
     sites: [
       { name: 'survev.io', url: 'https://survev.io', icon: 'https://survev.io/favicon.ico' },
       { name: 'Narrow One', url: 'https://narrow.one', icon: 'https://narrow.one/favicon.ico' },
@@ -158,7 +158,7 @@ var CATEGORIES = [
     icon: '\uD83D\uDD27',
     name: '\u5B9E\u7528\u5DE5\u5177',
     sites: [
-      { name: '在线新华字典', url: 'https://zd.hwxnet.com', icon: 'https://zd.hwxnet.com/favicon.ico' },
+      { name: '\u5728\u7EBF\u65B0\u534E\u5B57\u5178', url: 'https://zd.hwxnet.com', icon: 'https://zd.hwxnet.com/favicon.ico' },
       { name: 'Excalidraw', url: 'https://excalidraw.com', icon: 'https://excalidraw.com/favicon.ico' },
       { name: 'JSON.cn', url: 'https://www.json.cn', icon: 'https://www.json.cn/favicon.ico' },
       { name: 'Regex101', url: 'https://regex101.com', icon: 'https://regex101.com/favicon.ico' },
@@ -169,6 +169,7 @@ var CATEGORIES = [
       { name: '\u767E\u5EA6\u7F51\u76D8', url: 'https://pan.baidu.com', icon: 'https://pan.baidu.com/favicon.ico' },
       { name: '\u963F\u91CC\u4E91\u76D8', url: 'https://www.aliyundrive.com', icon: 'https://www.aliyundrive.com/favicon.ico' },
       { name: 'OneDrive', url: 'https://onedrive.live.com', icon: 'https://onedrive.live.com/favicon.ico' },
+      { name: 'SKR', url: 'https://skr.skr2.cc:666', icon: 'https://skr.skr2.cc:666/favicon.ico' },
     ]
   }
 ];
@@ -192,7 +193,6 @@ function renderCategories(){
 renderCategories();
 
 document.addEventListener('pjax:complete', function(){
-  // 只在书签页重新渲染
   if (document.getElementById('categoriesContainer')) {
     renderCategories();
   }
