@@ -120,12 +120,55 @@ Must not appear in generated content:
 - Start directly, no preamble
 - End casually, like chatting with a friend
 
-### Article Format
-- Title: `# First heading` (single hash)
-- Sections: `## Second heading` (double hash)
-- Topics separated by `---` (horizontal rule)
-- `<!-- more -->` inserted after first paragraph for blog card preview
-- Description: auto-extracted from first non-heading paragraph
+### Article Format (Daily News)
+
+```
+格式模板：
+# 标题（单 #，15-25字，有钩子，不用"X月X日热搜"这种通用标题）
+
+## 话题一（## 双井号）
+正文...
+
+<!-- more -->（第一段后插入，用于首页卡片预览）
+
+## 话题二
+正文...
+
+## 话题三
+正文...
+
+---（结尾剪刀虚线，且只在文章结尾出现一次）
+
+互动结尾（"你们怎么看？"类问题）
+```
+
+### 严格规则（踩坑记录，不要违反）
+
+1. **`---` 分隔线只在文章结尾出现一次**，版权声明上方。不要在话题之间加 `---`，否则每个话题后面都会出现剪刀虚线样式，破坏阅读体验。
+
+2. **标题不要用"名词、名词、名词——今天热搜XX"的格式**。这是用户明确不喜欢的风格。标题应该聚焦一个核心话题，例如：
+   - ✅ `哈兰德身价破纪录，但世界杯公信力先破了`
+   - ❌ `台风登陆、医疗翻车、长辈模式劝退：今天热搜有点重`
+
+3. **`#` 标题用单井号，话题用 `##` 双井号**。AI 经常搞混，必须检查。
+
+4. **`<!-- more -->` 必须存在**，放在第一段之后。没有它，首页卡片不会显示预览。
+
+5. **description 字段**必须从正文中提取，不能包含 AI 思考过程、自检内容、格式指令等。
+
+6. **正文中不要出现任何 AI 思考痕迹**，包括：
+   - `*Topic N:*` 标记
+   - `Wait, constraint N says...`
+   - `Check tone per topic:`
+   - `Self-Correction/Refinement during thought:`
+   - `Let's draft carefully.`
+   - 禁用词检查列表、格式检查列表等
+
+7. **Font Awesome 用 `all.min.css`**（完整版），不要用 `fa-subset.min.css`（子集版缺少大部分图标）。
+
+8. **每篇文章必须有至少一句主观表达**："说实话"/"我觉得"/"好家伙"/"个人看法"。
+
+9. **禁用词检查**：`聚焦于, 旨在, 折射出, 上述动态, 与此同时, 值得关注的是, 引发了广泛讨论, 综上所述, 值得一提的是, 不可忽视的是, 标志着, 进一步加剧了, 后续进展值得持续跟踪`
 
 ---
 
