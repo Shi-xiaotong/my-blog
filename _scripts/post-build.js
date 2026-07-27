@@ -38,7 +38,7 @@ fs.mkdirSync(path.join(PUBLIC, 'assets'), { recursive: true })
 const cssContent = concat(cssFiles, SOURCE)
 const cssHash = contentHash(cssContent)
 const cssBundleName = `bundle.${cssHash}.css`
-const jsBundleName = `bundle.${jsHash}` // placeholder, set after JS concat below
+let jsBundleName = 'bundle.js' // placeholder, set after JS concat below
 
 fs.writeFileSync(path.join(PUBLIC, 'assets', cssBundleName), cssContent)
 fs.copyFileSync(path.join(PUBLIC, 'assets', cssBundleName), path.join(PUBLIC, 'assets', 'bundle.css'))
