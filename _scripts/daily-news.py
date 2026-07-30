@@ -209,16 +209,21 @@ description: "{date_display} 科技资讯。"
         body_parts.append(f"---\n以上就是 {date_display} 的科技资讯精选。关注「水星引力m」，每天带你看点不一样的。\n")
         body = "\n".join(body_parts)
         title = articles[0]['title']
+    # Strip --- separators between topics (keep only the last one at the end)
+    import re as _re
+    body = _re.sub(r'\n---\n(?=\n?## )', '\n', body)
+    body = _re.sub(r'\n---\n(?=\n?---)', '\n', body)
+    body = _re.sub(r'\n{3,}', '\n\n', body)
     if '<!-- more -->' not in body:
         paras = body.split('\n\n')
         if len(paras) > 2:
             body = paras[0] + '\n\n<!-- more -->\n\n' + '\n\n'.join(paras[1:])
-    # Extract description: skip <!-- more --> and empty lines
+    # Extract description: skip <!-- more -->, --- separators, and empty lines
     paras = body.split('\n\n')
     first_para = ''
     for p in paras:
         p = p.replace('\n', ' ').strip()
-        if p and p != '<!-- more -->' and not p.startswith('#'):
+        if p and p != '<!-- more -->' and p != '---' and not p.startswith('#'):
             first_para = p[:120]
             break
     if not first_para:

@@ -223,6 +223,12 @@ def build_post(title, content, category, date_str, tags, description=""):
     # Also strip backtick-wrapped review sections
     content = re.sub(r'\n`[^`]*`\n', '\n', content)
     
+    # Strip --- separators between topics (keep only the last one at the end)
+    content = re.sub(r'\n---\n(?=\n?## )', '\n', content)
+    content = re.sub(r'\n---\n(?=\n?---)', '\n', content)
+    # Clean up excessive blank lines
+    content = re.sub(r'\n{3,}', '\n\n', content)
+    
     # Clean title
     title = title.replace('"', "'").strip()
 
@@ -232,19 +238,18 @@ def build_post(title, content, category, date_str, tags, description=""):
         if len(paras) > 2:
             content = paras[0] + "\n\n<!-- more -->\n\n" + "\n\n".join(paras[1:])
 
-    # Description from first paragraph (skip markdown headings, <!-- more -->, backticks)
+    # Description from first paragraph (skip headings, <!-- more -->, backticks, ---)
     if not description:
-        lines = content.split("\n\n")
-        first = ""
-        for line in lines:
-            clean = line.replace("\n", " ").strip()
-            if clean and not clean.startswith("#") and not clean.startswith("`") and clean != "<!-- more -->":
+        lines_ = content.split("\n\n")
+        first = ''
+        for line_ in lines_:
+            clean = line_.replace("\n", " ").strip()
+            if clean and not clean.startswith("#") and not clean.startswith("`") and clean != "<!-- more -->" and clean != "---":
                 first = clean[:120]
                 break
-        if not first:
-            # Fallback to title if no valid paragraph found
-            first = title[:120].replace('"', "'")
-        description = first.replace('"', "'")
+    if not first:
+        first = title[:120].replace('"', "'")
+    description = first.replace('"', "'")
 
     # Tags
     tags_yaml = "\n".join(f"  - {t}" for t in tags)
@@ -261,7 +266,6 @@ description: "{description}"
 
 {content}
 """
-
 
 def extract_title(content):
     """Extract the first # heading from markdown content."""
