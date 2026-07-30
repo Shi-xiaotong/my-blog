@@ -325,15 +325,6 @@ body {
   position: relative;
   z-index: 1;
   overflow: hidden;
-  background: var(--bg);
-}
-.link-card .favicon {
-  width: 16px;
-  height: 16px;
-  display: none;
-}
-.link-card .favicon-wrap.loaded .favicon {
-  display: block;
 }
 .link-card .favicon-fallback {
   display: block;
@@ -341,9 +332,6 @@ body {
   font-weight: 700;
   color: #fff;
   line-height: 1;
-}
-.link-card .favicon-wrap.loaded .favicon-fallback {
-  display: none;
 }
 
 /* ── Pinned Section ── */
