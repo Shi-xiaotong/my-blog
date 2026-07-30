@@ -330,32 +330,20 @@ body {
 .link-card .favicon {
   width: 16px;
   height: 16px;
+  display: none;
+}
+.link-card .favicon-wrap.loaded .favicon {
   display: block;
 }
 .link-card .favicon-fallback {
-  display: none;
+  display: block;
   font-size: 12px;
   font-weight: 700;
   color: #fff;
   line-height: 1;
 }
-.link-card .favicon-wrap.no-icon .favicon-fallback {
-  display: block;
-}
-.link-card .favicon-wrap.no-icon .favicon {
+.link-card .favicon-wrap.loaded .favicon-fallback {
   display: none;
-}
-.link-card .link-icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  opacity: 0.5;
-  position: relative;
-  z-index: 1;
-  transition: opacity var(--duration-fast) var(--ease-out);
-}
-.link-card:hover .link-icon {
-  opacity: 0.8;
 }
 
 /* ── Pinned Section ── */
