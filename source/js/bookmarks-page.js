@@ -279,11 +279,16 @@ function renderCategories(filter){
     if (sites.length === 0) return;
 
     var section = document.createElement('div');
-    section.className = 'category-section';
-    section.dataset.category = cat.id;
-    section.innerHTML = '<div class="category-header"><h2>' + cat.name + '</h2><span class="category-count">' + sites.length + ' \u4E2A</span></div><div class="links-grid" id="grid-' + cat.id + '">' + sites.map(function(s){
-      return '<a href="' + s.url + '" class="link-card" target="_blank" rel="noopener noreferrer" title="' + s.name + '"><span class="name">' + s.name + '</span></a>';
-    }).join('') + '</div>';
+        section.className = 'category-section';
+        section.dataset.category = cat.id;
+        section.innerHTML = '<div class="category-header"><h2>' + cat.name + '</h2><span class="category-count">' + sites.length + ' \u4E2A</span></div><div class="links-grid" id="grid-' + cat.id + '">' + sites.map(function(s){
+          var domain = s.url.replace(/^https?:\/\//, '').replace(/\/.*$/, '').replace(/^www\./, '');
+          var initial = s.name.charAt(0);
+          var colorIdx = Math.abs(domain.split('').reduce(function(a,c){return a + c.charCodeAt(0);}, 0)) % 10;
+          var colors = ['#3b82f6','#8b5cf6','#ec4899','#f59e0b','#10b981','#06b6d4','#f97316','#6366f1','#84cc16','#14b8a6'];
+          var bg = colors[colorIdx];
+          return '<a href="' + s.url + '" class="link-card" target="_blank" rel="noopener noreferrer" title="' + s.name + '"><span class="favicon-wrap"><img src="https://www.google.com/s2/favicons?domain=' + domain + '&sz=32" class="favicon" alt="" onerror="this.style.display=\'none\';this.parentElement.classList.add(\'no-icon\');this.parentElement.style.background=\'' + bg + '\'"><span class="favicon-fallback">' + initial + '</span></span><span class="name">' + s.name + '</span></a>';
+        }).join('') + '</div>';
     container.appendChild(section);
   });
 }

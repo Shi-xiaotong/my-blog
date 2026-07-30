@@ -304,6 +304,37 @@ body {
   position: relative;
   z-index: 1;
 }
+.link-card .favicon-wrap {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: var(--bg);
+}
+.link-card .favicon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+.link-card .favicon-fallback {
+  display: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+.link-card .favicon-wrap.no-icon .favicon-fallback {
+  display: block;
+}
+.link-card .favicon-wrap.no-icon .favicon {
+  display: none;
+}
 .link-card .link-icon {
   width: 18px;
   height: 18px;
