@@ -30,7 +30,7 @@ def generate_anime(anime_data: list, comments_text: str, date_str: str) -> str:
     date_display = format_date(date_str)
 
     # Format anime data for prompt
-    from ..scrapers.anime_sources import format_anime_for_prompt
+    from scrapers.anime_sources import format_anime_for_prompt
     anime_block = format_anime_for_prompt(anime_data)
 
     prompt = ANIME_PROMPT_TEMPLATE.format(
