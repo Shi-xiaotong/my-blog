@@ -224,8 +224,8 @@ def build_post(title, content, category, date_str, tags, description=""):
     content = re.sub(r'\n`[^`]*`\n', '\n', content)
     
     # Strip --- separators between topics (keep only the last one at the end)
-    content = re.sub(r'\n---\n(?=\n?## )', '\n', content)
-    content = re.sub(r'\n---\n(?=\n?---)', '\n', content)
+    content = re.sub(r'\n---\n\s*(?=\n?## )', '\n', content)
+    content = re.sub(r'\n---\n\s*(?=\n?---)', '\n', content)
     # Clean up excessive blank lines
     content = re.sub(r'\n{3,}', '\n\n', content)
     

@@ -25,8 +25,9 @@ Content: tech articles, daily news digests, anime, tools, games.
 - Never push without user approval unless it's an urgent fix
 
 ### Node.js
-- Node v24 is at `/c/nvm4w/nodejs/node` (nvm4w)
-- PATH must be prepended: `PATH="/c/nvm4w/nodejs:$PATH"`
+- Node v24 is at `C:\Users\Administrator\AppData\Local\nvm\v24.16.0` (nvm-windows)
+- Switch: `nvm use 24.16.0`
+- PATH must be prepended: `PATH="/c/nvm4w/nodejs:$PATH"` (symlink auto-updates on nvm use)
 - Build: `npm run build` (= `hexo generate && node _scripts/post-build.js && node _scripts/r2-upload.js`)
 
 ---

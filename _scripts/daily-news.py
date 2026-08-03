@@ -211,8 +211,8 @@ description: "{date_display} 科技资讯。"
         title = articles[0]['title']
     # Strip --- separators between topics (keep only the last one at the end)
     import re as _re
-    body = _re.sub(r'\n---\n(?=\n?## )', '\n', body)
-    body = _re.sub(r'\n---\n(?=\n?---)', '\n', body)
+    body = _re.sub(r'\n---\n\s*(?=\n?## )', '\n', body)
+    body = _re.sub(r'\n---\n\s*(?=\n?---)', '\n', body)
     body = _re.sub(r'\n{3,}', '\n\n', body)
     if '<!-- more -->' not in body:
         paras = body.split('\n\n')
