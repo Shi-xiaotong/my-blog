@@ -12,7 +12,7 @@ layout: links-page
   <div class="friend-links-card">
     <div class="friend-link-item">
       <div class="friend-link-avatar" data-name="笔尖">
-        <img src="https://123456l.com/favicon.ico" alt="笔尖代码" onerror="this.parentElement.classList.add('no-icon');this.remove();">
+        <img src="https://123456l.com/assets/images/favicon.ico" alt="笔尖代码" onerror="this.parentElement.classList.add('no-icon');this.remove();">
       </div>
       <div class="friend-link-info">
         <a href="https://123456l.com/" target="_blank" rel="noopener noreferrer">
