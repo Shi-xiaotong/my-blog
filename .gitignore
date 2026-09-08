@@ -53,3 +53,6 @@ __pycache__/
 # Hermes Agent 工作目录（不提交）
 .hermes/
 source/videos/
+
+# 临时文件
+.temp/
