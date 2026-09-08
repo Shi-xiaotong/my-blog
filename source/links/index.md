@@ -11,14 +11,14 @@ layout: links-page
   </div>
   <div class="friend-links-card">
     <div class="friend-link-item">
-      <div class="friend-link-avatar" data-name="笔尖">
-        <img src="https://123456l.com/assets/images/favicon.ico" alt="笔尖代码" onerror="this.parentElement.classList.add('no-icon');this.remove();">
+      <div class="friend-link-avatar" data-name="万象">
+        <img src="https://3z.ink/assets/images/logo-v2.png" alt="万象存笺" onerror="this.parentElement.classList.add('no-icon');this.remove();">
       </div>
       <div class="friend-link-info">
-        <a href="https://123456l.com/" target="_blank" rel="noopener noreferrer">
-          <span class="friend-link-name">笔尖代码</span>
+        <a href="https://3z.ink/" target="_blank" rel="noopener noreferrer">
+          <span class="friend-link-name">万象存笺</span>
         </a>
-        <span class="friend-link-desc">https://123456l.com/</span>
+        <span class="friend-link-desc">万象存笺 - 一个汇聚了前端、后端、数据库、运维、系统知识等内容的网络日志</span>
       </div>
     </div>
     <div class="friend-link-item">
