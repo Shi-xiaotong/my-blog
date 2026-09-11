@@ -73,6 +73,7 @@ body { margin: 0; padding: 0; }
   width: 12px;
   font-size: 10px;
   transition: transform 0.2s;
+  margin-right: 2px;
 }
 .collapsible.collapsed::before {
   transform: rotate(-90deg);
@@ -176,7 +177,7 @@ function copyText(t) {
 }
 
 let rawResult = '';
-let collapsedPaths = {}; // 存储折叠状态
+let nodeId = 0;
 
 function syntaxHighlight(json) {
   return json.replace(/("(\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?|\bnull\b)/g, function(match) {
@@ -196,37 +197,64 @@ function syntaxHighlight(json) {
   });
 }
 
-// 添加折叠功能的辅助函数
-function addCollapsible(html) {
-  // 匹配 JSON 数组和对象的开始标签
-  return html.replace(/(<span class="json-number">\[[\s\S]*?<\/span>)/g, function(match, p1) {
-    return addCollapseButton(match, 'arr');
-  }).replace(/(<span class="json-number">\{[\s\S]*?<\/span>)/g, function(match, p1) {
-    return addCollapseButton(match, 'obj');
-  });
-}
-
-function addCollapseButton(html, type) {
-  const id = 'collapse_' + Math.random().toString(36).substr(2, 9);
+// 构建带折叠功能的 JSON HTML
+function buildJSONHTML(obj) {
+  if (obj === null) return '<span class="json-null">null</span>';
+  if (typeof obj === 'boolean') return '<span class="json-boolean">' + obj + '</span>';
+  if (typeof obj === 'number') return '<span class="json-number">' + obj + '</span>';
+  if (typeof obj === 'string') return '<span class="json-string">"' + escapeHtml(obj) + '"</span>';
   
-  // 计算项目数量（简化处理）
-  let count = 0;
-  if (type === 'arr') {
-    // 简单统计逗号来估算数组元素
-    count = (html.match(/,/g) || []).length + 1;
-  } else {
-    // 简单统计逗号来估算对象属性
-    count = (html.match(/,/g) || []).length + 1;
+  if (Array.isArray(obj)) {
+    if (obj.length === 0) return '<span class="json-number">[]</span>';
+    
+    const id = 'node_' + (nodeId++);
+    let html = '<span class="json-number">[</span>';
+    html += '<span class="collapsible" onclick="toggleNode(\'' + id + '\', this)">';
+    html += '<span class="collapse-hint">... ' + obj.length + ' 项</span></span>';
+    html += '<span class="collapse-content" id="' + id + '">';
+    html += '\n';
+    
+    for (let i = 0; i < obj.length; i++) {
+      html += '  ';
+      html += buildJSONHTML(obj[i]);
+      if (i < obj.length - 1) html += ',';
+      html += '\n';
+    }
+    
+    html += '</span>';
+    html += '<span class="json-number">]</span>';
+    return html;
   }
   
-  const collapseHtml = `<span class="json-number">${type === 'arr' ? '[' : '{'}</span>` +
-                       `<span class="collapsible" onclick="toggleCollapse('${id}', this)"><span class="collapse-hint">... ${count} 项</span></span>` +
-                       `<span class="collapse-content" id="${id}">${html.substring(type === 'arr' ? 1 : 1, html.length - 1)}</span>` +
-                       `<span class="json-number">${type === 'arr' ? ']' : '}'}</span>`;
-  return collapseHtml;
+  if (typeof obj === 'object') {
+    const keys = Object.keys(obj);
+    if (keys.length === 0) return '<span class="json-number">{}</span>';
+    
+    const id = 'node_' + (nodeId++);
+    let html = '<span class="json-number">{</span>';
+    html += '<span class="collapsible" onclick="toggleNode(\'' + id + '\', this)">';
+    html += '<span class="collapse-hint">... ' + keys.length + ' 项</span></span>';
+    html += '<span class="collapse-content" id="' + id + '">';
+    html += '\n';
+    
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      html += '  ';
+      html += '<span class="json-key">"' + escapeHtml(key) + '"</span>: ';
+      html += buildJSONHTML(obj[key]);
+      if (i < keys.length - 1) html += ',';
+      html += '\n';
+    }
+    
+    html += '</span>';
+    html += '<span class="json-number">}</span>';
+    return html;
+  }
+  
+  return '<span>' + escapeHtml(String(obj)) + '</span>';
 }
 
-function toggleCollapse(id, el) {
+function toggleNode(id, el) {
   const content = document.getElementById(id);
   if (content) {
     content.classList.toggle('collapsed');
@@ -247,11 +275,9 @@ function doFormat() {
     const indent = indentSel === 'tab' ? '\t' : parseInt(indentSel);
     rawResult = JSON.stringify(obj, null, indent);
     
-    // 先语法高亮，再加折叠功能
-    let html = syntaxHighlight(rawResult);
-    html = addCollapsible(html);
-    
-    outEl.innerHTML = html;
+    // 使用带折叠功能的渲染
+    nodeId = 0; // 重置节点 ID
+    outEl.innerHTML = buildJSONHTML(obj);
     infoEl.textContent = rawResult.length + ' 字符';
   } catch(e) {
     outEl.innerHTML = '<div class="error">JSON 解析错误: ' + escapeHtml(e.message) + '</div>';
