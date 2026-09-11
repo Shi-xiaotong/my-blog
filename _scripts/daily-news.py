@@ -137,7 +137,7 @@ def llm_summarize(date_display, articles):
             {"role": "user", "content": prompt}
         ],
         "max_tokens": 12000,
-        "temperature": 0.7
+        "temperature": 0.3
     }).encode()
 
     def _call():
