@@ -65,26 +65,40 @@ body { margin: 0; padding: 0; }
 .error { color: #ef4444; padding: 10px; font-size: 14px; }
 
 /* 折叠功能样式 */
-.collapsible { cursor: pointer; user-select: none; }
-.collapsible:hover { opacity: 0.8; }
-.collapsible::before {
-  content: '▶';
+.collapsible-toggle {
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+.collapsible-toggle:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+.collapse-arrow {
   display: inline-block;
   width: 12px;
   font-size: 10px;
   transition: transform 0.2s;
-  margin-right: 2px;
+  margin-right: 4px;
+  color: #64748b;
 }
-.collapsible.collapsed::before {
+.collapse-arrow.collapsed {
   transform: rotate(-90deg);
 }
 .collapse-hint {
   color: #94a3b8;
   font-size: 12px;
-  margin-left: 4px;
+  font-style: italic;
 }
-.collapse-content { display: block; }
-.collapse-content.collapsed { display: none; }
+.collapse-content {
+  display: block;
+}
+.collapse-content.collapsed {
+  display: none;
+}
 
 .toast {
   position: fixed;
@@ -198,68 +212,74 @@ function syntaxHighlight(json) {
 }
 
 // 构建带折叠功能的 JSON HTML
-function buildJSONHTML(obj) {
+function buildJSONHTML(obj, depth = 0) {
   if (obj === null) return '<span class="json-null">null</span>';
   if (typeof obj === 'boolean') return '<span class="json-boolean">' + obj + '</span>';
   if (typeof obj === 'number') return '<span class="json-number">' + obj + '</span>';
   if (typeof obj === 'string') return '<span class="json-string">"' + escapeHtml(obj) + '"</span>';
-  
+
+  const indent = '  '.repeat(depth);
+  const childIndent = '  '.repeat(depth + 1);
+
   if (Array.isArray(obj)) {
     if (obj.length === 0) return '<span class="json-number">[]</span>';
-    
+
     const id = 'node_' + (nodeId++);
-    let html = '<span class="json-number">[</span>';
-    html += '<span class="collapsible" onclick="toggleNode(\'' + id + '\', this)">';
-    html += '<span class="collapse-hint">... ' + obj.length + ' 项</span></span>';
-    html += '<span class="collapse-content" id="' + id + '">';
-    html += '\n';
-    
+    let html = '<span class="collapsible-toggle" data-id="' + id + '">';
+    html += '<span class="collapse-arrow">▶</span>';
+    html += '<span class="collapse-hint">... ' + obj.length + ' 项</span>';
+    html += '</span>\n';
+    html += indent + '<span class="json-number">[</span>\n';
+
     for (let i = 0; i < obj.length; i++) {
-      html += '  ';
-      html += buildJSONHTML(obj[i]);
+      html += childIndent;
+      html += buildJSONHTML(obj[i], depth + 1);
       if (i < obj.length - 1) html += ',';
       html += '\n';
     }
-    
-    html += '</span>';
-    html += '<span class="json-number">]</span>';
-    return html;
+
+    html += indent + '<span class="json-number">]</span>';
+    return '<span class="collapse-content" id="' + id + '">' + html + '</span>';
   }
-  
+
   if (typeof obj === 'object') {
     const keys = Object.keys(obj);
     if (keys.length === 0) return '<span class="json-number">{}</span>';
-    
+
     const id = 'node_' + (nodeId++);
-    let html = '<span class="json-number">{</span>';
-    html += '<span class="collapsible" onclick="toggleNode(\'' + id + '\', this)">';
-    html += '<span class="collapse-hint">... ' + keys.length + ' 项</span></span>';
-    html += '<span class="collapse-content" id="' + id + '">';
-    html += '\n';
-    
+    let html = '<span class="collapsible-toggle" data-id="' + id + '">';
+    html += '<span class="collapse-arrow">▶</span>';
+    html += '<span class="collapse-hint">... ' + keys.length + ' 项</span>';
+    html += '</span>\n';
+    html += indent + '<span class="json-number">{</span>\n';
+
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
-      html += '  ';
+      html += childIndent;
       html += '<span class="json-key">"' + escapeHtml(key) + '"</span>: ';
-      html += buildJSONHTML(obj[key]);
+      html += buildJSONHTML(obj[key], depth + 1);
       if (i < keys.length - 1) html += ',';
       html += '\n';
     }
-    
-    html += '</span>';
-    html += '<span class="json-number">}</span>';
-    return html;
+
+    html += indent + '<span class="json-number">}</span>';
+    return '<span class="collapse-content" id="' + id + '">' + html + '</span>';
   }
-  
+
   return '<span>' + escapeHtml(String(obj)) + '</span>';
 }
 
-function toggleNode(id, el) {
-  const content = document.getElementById(id);
-  if (content) {
-    content.classList.toggle('collapsed');
-    el.classList.toggle('collapsed');
-  }
+function initCollapsible() {
+  document.querySelectorAll('.collapsible-toggle').forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      const id = this.getAttribute('data-id');
+      const group = document.getElementById(id);
+      if (group) {
+        group.classList.toggle('collapsed');
+        this.querySelector('.collapse-arrow').textContent = group.classList.contains('collapsed') ? '▶' : '▼';
+      }
+    });
+  });
 }
 
 function doFormat() {
@@ -278,6 +298,7 @@ function doFormat() {
     // 使用带折叠功能的渲染
     nodeId = 0; // 重置节点 ID
     outEl.innerHTML = buildJSONHTML(obj);
+    initCollapsible(); // 初始化折叠事件
     infoEl.textContent = rawResult.length + ' 字符';
   } catch(e) {
     outEl.innerHTML = '<div class="error">JSON 解析错误: ' + escapeHtml(e.message) + '</div>';
