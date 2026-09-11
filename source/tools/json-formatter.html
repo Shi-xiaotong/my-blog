@@ -68,25 +68,20 @@ body { margin: 0; padding: 0; }
 .collapsible-toggle {
   cursor: pointer;
   user-select: none;
-  display: inline-flex;
-  align-items: center;
+  display: inline;
   padding: 2px 6px;
   border-radius: 4px;
-  margin-bottom: 2px;
 }
 .collapsible-toggle:hover {
   background: rgba(59, 130, 246, 0.1);
 }
 .collapse-arrow {
   display: inline-block;
-  width: 12px;
+  width: 14px;
   font-size: 10px;
   transition: transform 0.2s;
-  margin-right: 4px;
+  margin-right: 2px;
   color: #64748b;
-}
-.collapse-arrow.collapsed {
-  transform: rotate(-90deg);
 }
 .collapse-hint {
   color: #94a3b8;
@@ -94,7 +89,7 @@ body { margin: 0; padding: 0; }
   font-style: italic;
 }
 .collapse-content {
-  display: block;
+  display: inline;
 }
 .collapse-content.collapsed {
   display: none;
@@ -186,8 +181,31 @@ function showToast(msg) {
 }
 
 function copyText(t) {
-  navigator.clipboard.writeText(t);
-  showToast('已复制到剪贴板');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(function() {
+      showToast('已复制到剪贴板');
+    }, function() {
+      fallbackCopy(t);
+    });
+  } else {
+    fallbackCopy(t);
+  }
+}
+
+function fallbackCopy(t) {
+  const ta = document.createElement('textarea');
+  ta.value = t;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast('已复制到剪贴板');
+  } catch (e) {
+    showToast('复制失败，请手动选择');
+  }
+  document.body.removeChild(ta);
 }
 
 let rawResult = '';
@@ -207,39 +225,43 @@ function syntaxHighlight(json) {
     } else if (/null/.test(match)) {
       cls = 'json-null';
     }
-    return '<span class="' + cls + '">' + match + '</span>';
+    // 必须转义，否则字符串值里的 < > & 会破坏 HTML 甚至执行脚本（XSS）
+    return '<span class="' + cls + '">' + escapeHtml(match) + '</span>';
   });
 }
 
 // 构建带折叠功能的 JSON HTML
-function buildJSONHTML(obj, depth = 0) {
+function buildJSONHTML(obj, depth = 0, indentStr = '  ') {
   if (obj === null) return '<span class="json-null">null</span>';
   if (typeof obj === 'boolean') return '<span class="json-boolean">' + obj + '</span>';
   if (typeof obj === 'number') return '<span class="json-number">' + obj + '</span>';
   if (typeof obj === 'string') return '<span class="json-string">"' + escapeHtml(obj) + '"</span>';
 
-  const indent = '  '.repeat(depth);
-  const childIndent = '  '.repeat(depth + 1);
+  const indent = indentStr.repeat(depth);
+  const childIndent = indentStr.repeat(depth + 1);
 
   if (Array.isArray(obj)) {
     if (obj.length === 0) return '<span class="json-number">[]</span>';
 
     const id = 'node_' + (nodeId++);
+    // toggle 独占一行；所有换行都在 content 内部，折叠时整块隐藏不残留空行
     let html = '<span class="collapsible-toggle" data-id="' + id + '">';
-    html += '<span class="collapse-arrow">▶</span>';
-    html += '<span class="collapse-hint">... ' + obj.length + ' 项</span>';
-    html += '</span>\n';
+    html += '<span class="collapse-arrow">▼</span>';
+    html += '<span class="collapse-hint">[' + obj.length + ' 项]</span>';
+    html += '</span>';
+    html += '<span class="collapse-content" id="' + id + '">\n';
     html += indent + '<span class="json-number">[</span>\n';
 
     for (let i = 0; i < obj.length; i++) {
       html += childIndent;
-      html += buildJSONHTML(obj[i], depth + 1);
+      html += buildJSONHTML(obj[i], depth + 1, indentStr);
       if (i < obj.length - 1) html += ',';
       html += '\n';
     }
 
     html += indent + '<span class="json-number">]</span>';
-    return '<span class="collapse-content" id="' + id + '">' + html + '</span>';
+    html += '</span>';
+    return html;
   }
 
   if (typeof obj === 'object') {
@@ -248,22 +270,24 @@ function buildJSONHTML(obj, depth = 0) {
 
     const id = 'node_' + (nodeId++);
     let html = '<span class="collapsible-toggle" data-id="' + id + '">';
-    html += '<span class="collapse-arrow">▶</span>';
-    html += '<span class="collapse-hint">... ' + keys.length + ' 项</span>';
-    html += '</span>\n';
+    html += '<span class="collapse-arrow">▼</span>';
+    html += '<span class="collapse-hint">{' + keys.length + ' 项}</span>';
+    html += '</span>';
+    html += '<span class="collapse-content" id="' + id + '">\n';
     html += indent + '<span class="json-number">{</span>\n';
 
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       html += childIndent;
       html += '<span class="json-key">"' + escapeHtml(key) + '"</span>: ';
-      html += buildJSONHTML(obj[key], depth + 1);
+      html += buildJSONHTML(obj[key], depth + 1, indentStr);
       if (i < keys.length - 1) html += ',';
       html += '\n';
     }
 
     html += indent + '<span class="json-number">}</span>';
-    return '<span class="collapse-content" id="' + id + '">' + html + '</span>';
+    html += '</span>';
+    return html;
   }
 
   return '<span>' + escapeHtml(String(obj)) + '</span>';
@@ -276,6 +300,7 @@ function initCollapsible() {
       const group = document.getElementById(id);
       if (group) {
         group.classList.toggle('collapsed');
+        // 折叠时显示 ▶（可展开），展开时显示 ▼（可折叠）
         this.querySelector('.collapse-arrow').textContent = group.classList.contains('collapsed') ? '▶' : '▼';
       }
     });
@@ -292,12 +317,13 @@ function doFormat() {
   try {
     const obj = JSON.parse(input);
     const indentSel = document.getElementById('indent').value;
-    const indent = indentSel === 'tab' ? '\t' : parseInt(indentSel);
-    rawResult = JSON.stringify(obj, null, indent);
+    // 统一为字符串：JSON.stringify 和 buildJSONHTML 都需要字符串缩进
+    const indentStr = indentSel === 'tab' ? '\t' : ' '.repeat(parseInt(indentSel) || 2);
+    rawResult = JSON.stringify(obj, null, indentStr);
     
-    // 使用带折叠功能的渲染
+    // 使用带折叠功能的渲染（缩进与选择一致）
     nodeId = 0; // 重置节点 ID
-    outEl.innerHTML = buildJSONHTML(obj);
+    outEl.innerHTML = buildJSONHTML(obj, 0, indentStr);
     initCollapsible(); // 初始化折叠事件
     infoEl.textContent = rawResult.length + ' 字符';
   } catch(e) {
@@ -335,6 +361,8 @@ function doEscape() {
   } catch(e) {
     rawResult = JSON.stringify(input);
     outEl.innerHTML = '<span class="json-string">' + escapeHtml(rawResult) + '</span>';
+    const infoEl = document.getElementById('output-info');
+    infoEl.textContent = rawResult.length + ' 字符 (转义)';
   }
 }
 
