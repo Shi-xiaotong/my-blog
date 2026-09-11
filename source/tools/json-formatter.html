@@ -271,7 +271,7 @@ function doFormat() {
     parsedObj = obj;
     
     outEl.innerHTML = syntaxHighlightJSON(obj);
-    infoEl.textContent = format + ' ' + rawResult.length + ' 字符';
+    infoEl.textContent = rawResult.length + ' 字符';
   } catch(e) {
     outEl.innerHTML = '<div class="error">JSON 解析错误: ' + escapeHtml(e.message) + '</div>';
     parsedObj = null;
