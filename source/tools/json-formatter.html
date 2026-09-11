@@ -245,11 +245,13 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-// 自动格式化
-let debounceTimer;
-document.getElementById('input').addEventListener('input', function() {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(doFormat, 500);
+// 自动格式化 - 必须放在所有函数定义之后
+window.addEventListener('DOMContentLoaded', function() {
+  let debounceTimer;
+  document.getElementById('input').addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(doFormat, 500);
+  });
 });
 </script>
 <script src="track.js"></script>
