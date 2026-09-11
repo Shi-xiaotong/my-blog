@@ -64,6 +64,27 @@ body { margin: 0; padding: 0; }
 
 .error { color: #ef4444; padding: 10px; font-size: 14px; }
 
+/* 折叠功能样式 */
+.collapsible { cursor: pointer; user-select: none; }
+.collapsible:hover { opacity: 0.8; }
+.collapsible::before {
+  content: '▶';
+  display: inline-block;
+  width: 12px;
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+.collapsible.collapsed::before {
+  transform: rotate(-90deg);
+}
+.collapse-hint {
+  color: #94a3b8;
+  font-size: 12px;
+  margin-left: 4px;
+}
+.collapse-content { display: block; }
+.collapse-content.collapsed { display: none; }
+
 .toast {
   position: fixed;
   bottom: 24px;
@@ -155,6 +176,7 @@ function copyText(t) {
 }
 
 let rawResult = '';
+let collapsedPaths = {}; // 存储折叠状态
 
 function syntaxHighlight(json) {
   return json.replace(/("(\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?|\bnull\b)/g, function(match) {
@@ -174,6 +196,44 @@ function syntaxHighlight(json) {
   });
 }
 
+// 添加折叠功能的辅助函数
+function addCollapsible(html) {
+  // 匹配 JSON 数组和对象的开始标签
+  return html.replace(/(<span class="json-number">\[[\s\S]*?<\/span>)/g, function(match, p1) {
+    return addCollapseButton(match, 'arr');
+  }).replace(/(<span class="json-number">\{[\s\S]*?<\/span>)/g, function(match, p1) {
+    return addCollapseButton(match, 'obj');
+  });
+}
+
+function addCollapseButton(html, type) {
+  const id = 'collapse_' + Math.random().toString(36).substr(2, 9);
+  
+  // 计算项目数量（简化处理）
+  let count = 0;
+  if (type === 'arr') {
+    // 简单统计逗号来估算数组元素
+    count = (html.match(/,/g) || []).length + 1;
+  } else {
+    // 简单统计逗号来估算对象属性
+    count = (html.match(/,/g) || []).length + 1;
+  }
+  
+  const collapseHtml = `<span class="json-number">${type === 'arr' ? '[' : '{'}</span>` +
+                       `<span class="collapsible" onclick="toggleCollapse('${id}', this)"><span class="collapse-hint">... ${count} 项</span></span>` +
+                       `<span class="collapse-content" id="${id}">${html.substring(type === 'arr' ? 1 : 1, html.length - 1)}</span>` +
+                       `<span class="json-number">${type === 'arr' ? ']' : '}'}</span>`;
+  return collapseHtml;
+}
+
+function toggleCollapse(id, el) {
+  const content = document.getElementById(id);
+  if (content) {
+    content.classList.toggle('collapsed');
+    el.classList.toggle('collapsed');
+  }
+}
+
 function doFormat() {
   const input = document.getElementById('input').value.trim();
   const outEl = document.getElementById('output');
@@ -186,7 +246,12 @@ function doFormat() {
     const indentSel = document.getElementById('indent').value;
     const indent = indentSel === 'tab' ? '\t' : parseInt(indentSel);
     rawResult = JSON.stringify(obj, null, indent);
-    outEl.innerHTML = syntaxHighlight(rawResult);
+    
+    // 先语法高亮，再加折叠功能
+    let html = syntaxHighlight(rawResult);
+    html = addCollapsible(html);
+    
+    outEl.innerHTML = html;
     infoEl.textContent = rawResult.length + ' 字符';
   } catch(e) {
     outEl.innerHTML = '<div class="error">JSON 解析错误: ' + escapeHtml(e.message) + '</div>';
