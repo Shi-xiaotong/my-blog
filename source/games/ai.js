@@ -37,7 +37,7 @@ async function askAI(prompt, system = '', opts = {}) {
   messages.push({ role: 'user', content: prompt });
 
   const data = await aiRequest({
-    model: opts.model || 'agnes-2.0-flash',
+    model: opts.model || 'agnes-2.5-flash',
     messages,
     temperature: opts.temperature ?? 0.8,
     max_tokens: opts.max_tokens ?? 200,

@@ -26,7 +26,7 @@ async function newRiddle() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'agnes-2.0-flash',
+        model: 'agnes-2.5-flash',
         messages: [
           { role: 'system', content: `你是一个谜语出题者。生成一个${diffDesc}的中文谜语。回复格式严格为JSON: {"riddle": "谜面", "answer": "谜底(2-4个字)", "explain": "解释(一句话)"}` },
           { role: 'user', content: '出一个谜语' }
@@ -109,7 +109,7 @@ async function showHint() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'agnes-2.0-flash',
+        model: 'agnes-2.5-flash',
         messages: [
           { role: 'system', content: '给一个关于谜底的简短提示，不要直接说出答案。用中文，不超过15字。' },
           { role: 'user', content: `谜底是"${currentAnswer}"，给一个提示` }

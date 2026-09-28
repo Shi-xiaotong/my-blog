@@ -93,7 +93,7 @@ async function makeGuess() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'agnes-2.0-flash',
+        model: 'agnes-2.5-flash',
         messages: [
           { role: 'system', content: 'You are an image description evaluator. Compare the user\'s guess with the actual description. Reply with ONLY a JSON object: {"match": true/false, "similarity": 0-100, "feedback": "brief comment in Chinese"}. Be generous - if the main subject matches, consider it correct.' },
           { role: 'user', content: `Actual description: "${secretPrompt}"\nUser guess: "${guess}"` }
@@ -169,7 +169,7 @@ async function getAIHint() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'agnes-2.0-flash',
+        model: 'agnes-2.5-flash',
         messages: [
           { role: 'system', content: 'Give a vague one-sentence hint about the image description without revealing it directly. Use Chinese. Be brief.' },
           { role: 'user', content: `The description is: "${secretPrompt}". Give a hint.` }

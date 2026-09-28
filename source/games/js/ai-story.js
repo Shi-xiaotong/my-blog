@@ -59,7 +59,7 @@ async function newStory() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'agnes-2.0-flash',
+        model: 'agnes-2.5-flash',
         messages: [
           { role: 'system', content: `你是一个创意写作AI。写一个${GENRES[genre]}故事的开头，2-3句话，设置悬念，让玩家能接着写。只输出故事内容，不要其他说明。` },
           { role: 'user', content: '开始一个故事' }
@@ -100,7 +100,7 @@ async function submitSegment() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'agnes-2.0-flash',
+        model: 'agnes-2.5-flash',
         messages: [
           { role: 'system', content: `你是故事接龙的AI伙伴。玩家续写了故事，你需要：
 1. 给玩家的续写打分(1-10)，考虑创意、连贯性、文采
@@ -145,7 +145,7 @@ async function aiContinue() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'agnes-2.0-flash',
+        model: 'agnes-2.5-flash',
         messages: [
           { role: 'system', content: `你是故事接龙的AI。继续推进故事，写2-3句话。保持风格一致，制造悬念或转折。只输出故事内容。` },
           { role: 'user', content: `题材: ${GENRES[genre]}\n\n${storyContext}\n\n继续写。` }

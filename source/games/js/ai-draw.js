@@ -87,7 +87,7 @@ async function askAI() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'agnes-2.0-flash',
+        model: 'agnes-2.5-flash',
         messages: [
           { role: 'system', content: 'You are looking at a simple drawing/sketch. Guess what it depicts in ONE or TWO Chinese words only. Just output the guess, nothing else.' },
           { role: 'user', content: [

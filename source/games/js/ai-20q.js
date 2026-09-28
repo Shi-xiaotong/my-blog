@@ -58,7 +58,7 @@ async function ask(question) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'agnes-2.0-flash',
+        model: 'agnes-2.5-flash',
         messages: [
           { role: 'system', content: `You are playing a 20 questions game. The secret word is "${secretWord}". Answer the user's yes/no questions truthfully with ONLY "是" or "否", followed by a very brief explanation (max 15 Chinese chars). Never reveal the word directly. If the user asks something that can't be answered yes/no, say "请问我是非题".` },
           { role: 'user', content: question }
