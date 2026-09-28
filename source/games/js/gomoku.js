@@ -1,17 +1,19 @@
-)()
 
-var SIZE = 15;
-var canvas = document.getElementById('board');
-var ctx = canvas.getContext('2d');
-var PADDING = 20;
-var CELL = (canvas.width - PADDING * 2) / (SIZE - 1);
-var STONE_R = CELL * 0.42;
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='light';h.setAttribute('data-theme',d?'':'light');localStorage.setItem('game-theme',d?'dark':'light')}
+(function(){const s=localStorage.getItem('game-theme');if(s==='light')document.documentElement.setAttribute('data-theme','light')})()
 
-var board, currentPlayer, gameOver, mode, history, winCells, moveCount, hoverPos, difficulty;
-var EMPTY = 0, BLACK = 1, WHITE = 2;
+const SIZE = 15;
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+const PADDING = 20;
+const CELL = (canvas.width - PADDING * 2) / (SIZE - 1);
+const STONE_R = CELL * 0.42;
+
+let board, currentPlayer, gameOver, mode, history, winCells, moveCount, hoverPos, difficulty;
+const EMPTY = 0, BLACK = 1, WHITE = 2;
 
 // Star points (天元 + 星位)
-var STAR_POINTS = [[3,3],[3,11],[7,7],[11,3],[11,11],[3,7],[7,3],[7,11],[11,7]];
+const STAR_POINTS = [[3,3],[3,11],[7,7],[11,3],[11,11],[3,7],[7,3],[7,11],[11,7]];
 
 function setDiff(d) {
   difficulty = d;
@@ -39,16 +41,16 @@ function setStatus(msg) { document.getElementById('status').textContent = msg; }
 
 function toCanvas(r, c) { return [PADDING + c * CELL, PADDING + r * CELL]; }
 function fromCanvas(x, y) {
-  var c = Math.round((x - PADDING) / CELL);
-  var r = Math.round((y - PADDING) / CELL);
+  const c = Math.round((x - PADDING) / CELL);
+  const r = Math.round((y - PADDING) / CELL);
   if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) return null;
   return [r, c];
 }
 
 function draw() {
-  var dpr = window.devicePixelRatio || 1;
-  var w = canvas.width;
-  var h = canvas.height;
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.width;
+  const h = canvas.height;
   ctx.clearRect(0, 0, w, h);
 
   // Board background
@@ -58,46 +60,46 @@ function draw() {
   // Grid lines
   ctx.strokeStyle = '#8b6914';
   ctx.lineWidth = 1;
-  for (var i = 0; i < SIZE; i++) {
-    var [x1, y1] = toCanvas(i, 0);
-    var [x2, y2] = toCanvas(i, SIZE - 1);
+  for (let i = 0; i < SIZE; i++) {
+    const [x1, y1] = toCanvas(i, 0);
+    const [x2, y2] = toCanvas(i, SIZE - 1);
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-    var [x3, y3] = toCanvas(0, i);
-    var [x4, y4] = toCanvas(SIZE - 1, i);
+    const [x3, y3] = toCanvas(0, i);
+    const [x4, y4] = toCanvas(SIZE - 1, i);
     ctx.beginPath(); ctx.moveTo(x3, y3); ctx.lineTo(x4, y4); ctx.stroke();
   }
 
   // Star points
   ctx.fillStyle = '#8b6914';
-  for (var [r, c] of STAR_POINTS) {
-    var [x, y] = toCanvas(r, c);
+  for (const [r, c] of STAR_POINTS) {
+    const [x, y] = toCanvas(r, c);
     ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
   }
 
   // Hover indicator
   if (hoverPos && !gameOver) {
-    var [r, c] = hoverPos;
+    const [r, c] = hoverPos;
     if (board[r][c] === EMPTY) {
-      var [x, y] = toCanvas(r, c);
+      const [x, y] = toCanvas(r, c);
       ctx.fillStyle = currentPlayer === BLACK ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.3)';
       ctx.beginPath(); ctx.arc(x, y, STONE_R, 0, Math.PI * 2); ctx.fill();
     }
   }
 
   // Stones
-  for (var r = 0; r < SIZE; r++) for (var c = 0; c < SIZE; c++) {
+  for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) {
     if (board[r][c] === EMPTY) continue;
-    var [x, y] = toCanvas(r, c);
-    var isBlack = board[r][c] === BLACK;
-    var isLast = history.length && history[history.length-1][0] === r && history[history.length-1][1] === c;
-    var isWin = winCells.some(([wr, wc]) => wr === r && wc === c);
+    const [x, y] = toCanvas(r, c);
+    const isBlack = board[r][c] === BLACK;
+    const isLast = history.length && history[history.length-1][0] === r && history[history.length-1][1] === c;
+    const isWin = winCells.some(([wr, wc]) => wr === r && wc === c);
 
     // Shadow
     ctx.fillStyle = 'rgba(0,0,0,0.25)';
     ctx.beginPath(); ctx.arc(x + 2, y + 2, STONE_R, 0, Math.PI * 2); ctx.fill();
 
     // Stone body
-    var grad = ctx.createRadialGradient(x - STONE_R * 0.3, y - STONE_R * 0.3, STONE_R * 0.1, x, y, STONE_R);
+    const grad = ctx.createRadialGradient(x - STONE_R * 0.3, y - STONE_R * 0.3, STONE_R * 0.1, x, y, STONE_R);
     if (isBlack) {
       grad.addColorStop(0, '#666');
       grad.addColorStop(1, '#111');
@@ -125,10 +127,10 @@ function draw() {
 
 // Mouse events
 canvas.addEventListener('mousemove', (e) => {
-  var rect = canvas.getBoundingClientRect();
-  var scaleX = canvas.width / rect.width;
-  var scaleY = canvas.height / rect.height;
-  var pos = fromCanvas((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const pos = fromCanvas((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
   hoverPos = pos;
   draw();
 });
@@ -136,21 +138,21 @@ canvas.addEventListener('mousemove', (e) => {
 canvas.addEventListener('mouseleave', () => { hoverPos = null; draw(); });
 
 canvas.addEventListener('click', (e) => {
-  var rect = canvas.getBoundingClientRect();
-  var scaleX = canvas.width / rect.width;
-  var scaleY = canvas.height / rect.height;
-  var pos = fromCanvas((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const pos = fromCanvas((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
   if (pos) placeStone(pos[0], pos[1]);
 });
 
 // Touch events
 canvas.addEventListener('touchend', (e) => {
   e.preventDefault();
-  var rect = canvas.getBoundingClientRect();
-  var touch = e.changedTouches[0];
-  var scaleX = canvas.width / rect.width;
-  var scaleY = canvas.height / rect.height;
-  var pos = fromCanvas((touch.clientX - rect.left) * scaleX, (touch.clientY - rect.top) * scaleY);
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.changedTouches[0];
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const pos = fromCanvas((touch.clientX - rect.left) * scaleX, (touch.clientY - rect.top) * scaleY);
   if (pos) placeStone(pos[0], pos[1]);
 });
 
@@ -162,13 +164,13 @@ function placeStone(r, c, isAi) {
   history.push([r, c, currentPlayer]);
   moveCount++;
 
-  var win = checkWin(r, c, currentPlayer);
+  const win = checkWin(r, c, currentPlayer);
   if (win) {
     winCells = win;
     gameOver = true;
     draw();
-    var isBlack = currentPlayer === BLACK;
-    var title = mode === 'ai' ? (isBlack ? '你赢了!' : 'AI 赢了!') : (isBlack ? '黑棋获胜!' : '白棋获胜!');
+    const isBlack = currentPlayer === BLACK;
+    const title = mode === 'ai' ? (isBlack ? '你赢了!' : 'AI 赢了!') : (isBlack ? '黑棋获胜!' : '白棋获胜!');
     showOverlay(title, moveCount + ' 手');
     return;
   }
@@ -192,11 +194,11 @@ function placeStone(r, c, isAi) {
 }
 
 function checkWin(r, c, player) {
-  var dirs = [[0,1],[1,0],[1,1],[1,-1]];
-  for (var [dr,dc] of dirs) {
-    var cells = [[r,c]];
-    for (var i = 1; i < 5; i++) { var nr = r+dr*i, nc = c+dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) cells.push([nr,nc]); else break; }
-    for (var i = 1; i < 5; i++) { var nr = r-dr*i, nc = c-dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) cells.push([nr,nc]); else break; }
+  const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+  for (const [dr,dc] of dirs) {
+    const cells = [[r,c]];
+    for (let i = 1; i < 5; i++) { const nr = r+dr*i, nc = c+dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) cells.push([nr,nc]); else break; }
+    for (let i = 1; i < 5; i++) { const nr = r-dr*i, nc = c-dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) cells.push([nr,nc]); else break; }
     if (cells.length >= 5) return cells;
   }
   return null;
@@ -206,15 +208,15 @@ function undoMove() {
   if (!history.length || gameOver) return;
   if (mode === 'ai') {
     if (history.length >= 2) {
-      var [r2,c2] = history.pop(); board[r2][c2] = EMPTY;
-      var [r1,c1] = history.pop(); board[r1][c1] = EMPTY;
+      const [r2,c2] = history.pop(); board[r2][c2] = EMPTY;
+      const [r1,c1] = history.pop(); board[r1][c1] = EMPTY;
       moveCount -= 2;
     } else {
-      var [r,c] = history.pop(); board[r][c] = EMPTY;
+      const [r,c] = history.pop(); board[r][c] = EMPTY;
       moveCount--;
     }
   } else {
-    var [r,c] = history.pop(); board[r][c] = EMPTY;
+    const [r,c] = history.pop(); board[r][c] = EMPTY;
     moveCount--;
     currentPlayer = currentPlayer === BLACK ? WHITE : BLACK;
   }
@@ -227,7 +229,7 @@ function showOverlay(title, msg) {
   document.getElementById('winMsg').textContent = msg;
   document.getElementById('overlay').style.display = 'flex';
   if (mode === 'ai' && typeof getGameComment === 'function') {
-    var won = title.includes('你赢');
+    const won = title.includes('你赢');
     getGameComment('五子棋', moveCount + '手', won).then(c => {
       if (c) document.getElementById('winMsg').textContent = msg + ' | ' + c;
     });
@@ -236,20 +238,20 @@ function showOverlay(title, msg) {
 function closeOverlay() { document.getElementById('overlay').style.display = 'none'; }
 
 // ===== AI =====
-var DIRS = [[0,1],[1,0],[1,1],[1,-1]];
+const DIRS = [[0,1],[1,0],[1,1],[1,-1]];
 
 function scorePoint(r, c, player) {
-  var total = 0;
-  for (var [dr, dc] of DIRS) {
-    var count = 1, openEnds = 0;
-    for (var i = 1; i < 5; i++) {
-      var nr = r + dr*i, nc = c + dc*i;
+  let total = 0;
+  for (const [dr, dc] of DIRS) {
+    let count = 1, openEnds = 0;
+    for (let i = 1; i < 5; i++) {
+      const nr = r + dr*i, nc = c + dc*i;
       if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) break;
       if (board[nr][nc] === player) count++;
       else { if (board[nr][nc] === EMPTY) openEnds++; break; }
     }
-    for (var i = 1; i < 5; i++) {
-      var nr = r - dr*i, nc = c - dc*i;
+    for (let i = 1; i < 5; i++) {
+      const nr = r - dr*i, nc = c - dc*i;
       if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) break;
       if (board[nr][nc] === player) count++;
       else { if (board[nr][nc] === EMPTY) openEnds++; break; }
@@ -263,12 +265,12 @@ function scorePoint(r, c, player) {
 }
 
 function getNeighbors() {
-  var neighbors = new Set();
-  for (var r = 0; r < SIZE; r++) for (var c = 0; c < SIZE; c++) {
+  const neighbors = new Set();
+  for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) {
     if (board[r][c] !== EMPTY) {
-      for (var dr = -2; dr <= 2; dr++) for (var dc = -2; dc <= 2; dc++) {
+      for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) {
         if (dr === 0 && dc === 0) continue;
-        var nr = r + dr, nc = c + dc;
+        const nr = r + dr, nc = c + dc;
         if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && board[nr][nc] === EMPTY) {
           neighbors.add(nr * SIZE + nc);
         }
@@ -279,18 +281,18 @@ function getNeighbors() {
 }
 
 function evalBoard(player) {
-  var score = 0;
-  for (var r = 0; r < SIZE; r++) for (var c = 0; c < SIZE; c++) {
+  let score = 0;
+  for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) {
     if (board[r][c] === player) score += scorePoint(r, c, player);
   }
   return score;
 }
 
 function checkWinFast(r, c, player) {
-  for (var [dr, dc] of DIRS) {
-    var count = 1;
-    for (var i = 1; i < 5; i++) { var nr = r+dr*i, nc = c+dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) count++; else break; }
-    for (var i = 1; i < 5; i++) { var nr = r-dr*i, nc = c-dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) count++; else break; }
+  for (const [dr, dc] of DIRS) {
+    let count = 1;
+    for (let i = 1; i < 5; i++) { const nr = r+dr*i, nc = c+dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) count++; else break; }
+    for (let i = 1; i < 5; i++) { const nr = r-dr*i, nc = c-dc*i; if (nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&board[nr][nc]===player) count++; else break; }
     if (count >= 5) return true;
   }
   return false;
@@ -298,7 +300,7 @@ function checkWinFast(r, c, player) {
 
 // --- Easy: random near existing stones ---
 function getEasyMove() {
-  var neighbors = getNeighbors();
+  const neighbors = getNeighbors();
   if (!neighbors.length) return [7, 7];
   // 80% random, 20% best heuristic
   if (Math.random() < 0.8) {
@@ -310,26 +312,26 @@ function getEasyMove() {
 // --- Medium: heuristic scoring ---
 function getMediumMove() {
   if (moveCount === 0) return [7, 7];
-  var neighbors = getNeighbors();
+  const neighbors = getNeighbors();
   if (!neighbors.length) return [7, 7];
 
-  var scored = neighbors.map(([r, c]) => {
+  const scored = neighbors.map(([r, c]) => {
     board[r][c] = WHITE;
-    var a = scorePoint(r, c, WHITE);
+    const a = scorePoint(r, c, WHITE);
     board[r][c] = BLACK;
-    var b = scorePoint(r, c, BLACK);
+    const b = scorePoint(r, c, BLACK);
     board[r][c] = EMPTY;
     return { r, c, score: a * 1.1 + b };
   }).sort((a, b) => b.score - a.score);
 
   // Check instant win
-  for (var {r, c} of scored) {
+  for (const {r, c} of scored) {
     board[r][c] = WHITE;
     if (checkWinFast(r, c, WHITE)) { board[r][c] = EMPTY; return [r, c]; }
     board[r][c] = EMPTY;
   }
   // Check must block
-  for (var {r, c} of scored) {
+  for (const {r, c} of scored) {
     board[r][c] = BLACK;
     if (checkWinFast(r, c, BLACK)) { board[r][c] = EMPTY; return [r, c]; }
     board[r][c] = EMPTY;
@@ -341,23 +343,23 @@ function getMediumMove() {
 function minimax(depth, alpha, beta, isMax) {
   if (depth === 0) return evalBoard(WHITE) - evalBoard(BLACK);
 
-  var neighbors = getNeighbors();
+  const neighbors = getNeighbors();
   if (!neighbors.length) return 0;
 
   // Score and sort candidates for better pruning
-  var scored = neighbors.map(([r, c]) => {
+  const scored = neighbors.map(([r, c]) => {
     board[r][c] = isMax ? WHITE : BLACK;
-    var s = scorePoint(r, c, isMax ? WHITE : BLACK);
+    const s = scorePoint(r, c, isMax ? WHITE : BLACK);
     board[r][c] = EMPTY;
     return [r, c, s];
   }).sort((a, b) => b[2] - a[2]).slice(0, 12);
 
   if (isMax) {
-    var best = -Infinity;
-    for (var [r, c] of scored) {
+    let best = -Infinity;
+    for (const [r, c] of scored) {
       board[r][c] = WHITE;
       if (checkWinFast(r, c, WHITE)) { board[r][c] = EMPTY; return 10000000; }
-      var val = minimax(depth - 1, alpha, beta, false);
+      const val = minimax(depth - 1, alpha, beta, false);
       board[r][c] = EMPTY;
       best = Math.max(best, val);
       alpha = Math.max(alpha, val);
@@ -365,11 +367,11 @@ function minimax(depth, alpha, beta, isMax) {
     }
     return best;
   } else {
-    var best = Infinity;
-    for (var [r, c] of scored) {
+    let best = Infinity;
+    for (const [r, c] of scored) {
       board[r][c] = BLACK;
       if (checkWinFast(r, c, BLACK)) { board[r][c] = EMPTY; return -10000000; }
-      var val = minimax(depth - 1, alpha, beta, true);
+      const val = minimax(depth - 1, alpha, beta, true);
       board[r][c] = EMPTY;
       best = Math.min(best, val);
       beta = Math.min(beta, val);
@@ -381,37 +383,37 @@ function minimax(depth, alpha, beta, isMax) {
 
 function getHardMove() {
   if (moveCount === 0) return [7, 7];
-  var neighbors = getNeighbors();
+  const neighbors = getNeighbors();
   if (!neighbors.length) return [7, 7];
 
   // Score candidates
-  var scored = neighbors.map(([r, c]) => {
+  const scored = neighbors.map(([r, c]) => {
     board[r][c] = WHITE;
-    var a = scorePoint(r, c, WHITE);
+    const a = scorePoint(r, c, WHITE);
     board[r][c] = BLACK;
-    var b = scorePoint(r, c, BLACK);
+    const b = scorePoint(r, c, BLACK);
     board[r][c] = EMPTY;
     return { r, c, score: a * 1.1 + b };
   }).sort((a, b) => b.score - a.score).slice(0, 15);
 
   // Check instant win
-  for (var {r, c} of scored) {
+  for (const {r, c} of scored) {
     board[r][c] = WHITE;
     if (checkWinFast(r, c, WHITE)) { board[r][c] = EMPTY; return [r, c]; }
     board[r][c] = EMPTY;
   }
   // Check must block
-  for (var {r, c} of scored) {
+  for (const {r, c} of scored) {
     board[r][c] = BLACK;
     if (checkWinFast(r, c, BLACK)) { board[r][c] = EMPTY; return [r, c]; }
     board[r][c] = EMPTY;
   }
 
   // Minimax on top candidates
-  var bestScore = -Infinity, bestMove = [scored[0].r, scored[0].c];
-  for (var {r, c} of scored.slice(0, 10)) {
+  let bestScore = -Infinity, bestMove = [scored[0].r, scored[0].c];
+  for (const {r, c} of scored.slice(0, 10)) {
     board[r][c] = WHITE;
-    var score = minimax(2, -Infinity, Infinity, false);
+    const score = minimax(2, -Infinity, Infinity, false);
     board[r][c] = EMPTY;
     if (score > bestScore) { bestScore = score; bestMove = [r, c]; }
   }
@@ -426,7 +428,7 @@ function getBestMove() {
 
 function aiMove() {
   if (gameOver) return;
-  var [r, c] = getBestMove();
+  const [r, c] = getBestMove();
   placeStone(r, c, true);
 }
 
