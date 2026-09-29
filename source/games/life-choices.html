@@ -18,6 +18,7 @@
 .lc-attrs { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
 .lc-attr { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; min-width: 96px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
 .lc-attr .lc-attr-icon { font-size: 18px; margin-bottom: 2px; }
+.lc-attr .lc-attr-icon svg { width: 20px; height: 20px; display: block; margin: 0 auto; color: var(--primary); }
 .lc-attr .lc-attr-name { font-size: 11px; color: var(--text-secondary); }
 .lc-attr .lc-attr-val { font-size: 20px; font-weight: 700; font-family: 'SF Mono', monospace; margin-top: 2px; }
 .lc-attr .lc-attr-delta { font-size: 12px; font-weight: 600; height: 16px; }
@@ -31,7 +32,8 @@
 .lc-option:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .lc-option:active { transform: translateY(0); }
 .lc-option-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-.lc-option-icon { font-size: 24px; }
+.lc-option-icon { font-size: 24px; line-height: 1; }
+.lc-option-icon svg { width: 24px; height: 24px; color: var(--primary); }
 .lc-option-title { font-size: 16px; font-weight: 600; }
 .lc-option-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
 .lc-option-hint { display: inline-block; margin-top: 8px; font-size: 12px; color: var(--warning); background: rgba(245,158,11,0.12); padding: 2px 8px; border-radius: 6px; }
@@ -39,10 +41,12 @@
 /* Choice echo (what player picked) */
 .lc-echo { background: var(--primary-light, rgba(59,130,246,0.12)); border: 1px solid var(--primary); border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; font-size: 14px; animation: lcFadeIn 0.4s ease; }
 .lc-echo strong { color: var(--primary); }
+.lc-echo svg { width: 18px; height: 18px; vertical-align: -3px; color: var(--primary); margin-right: 4px; }
 
 /* Ending */
 .lc-ending { text-align: center; animation: lcFadeIn 0.5s ease; }
 .lc-ending-emoji { font-size: 56px; margin-bottom: 12px; }
+.lc-ending-emoji svg { width: 64px; height: 64px; color: var(--primary); display: block; margin: 0 auto; }
 .lc-ending-title { font-size: 1.6em; font-weight: 700; margin-bottom: 10px; }
 .lc-ending-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; max-width: 440px; margin: 0 auto 24px; }
 .lc-ending-attrs { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
@@ -68,6 +72,7 @@
   .lc-attr .lc-attr-val { font-size: 17px; }
   .lc-phase h2 { font-size: 1.4em; }
   .lc-ending-emoji { font-size: 44px; }
+  .lc-ending-emoji svg { width: 48px; height: 48px; }
 }
 </style>
 </head>

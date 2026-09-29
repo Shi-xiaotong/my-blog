@@ -2,49 +2,88 @@
   "meta": {
     "version": 1,
     "attributes": [
-      { "id": "wealth", "name": "家境", "icon": "💰", "min": -10, "max": 10 },
-      { "id": "intellect", "name": "智力", "icon": "🧠", "min": -10, "max": 10 },
-      { "id": "happiness", "name": "快乐", "icon": "😊", "min": -10, "max": 10 }
+      {
+        "id": "wealth",
+        "name": "家境",
+        "icon": "coins",
+        "min": -10,
+        "max": 10
+      },
+      {
+        "id": "intellect",
+        "name": "智力",
+        "icon": "brain",
+        "min": -10,
+        "max": 10
+      },
+      {
+        "id": "happiness",
+        "name": "快乐",
+        "icon": "heart",
+        "min": -10,
+        "max": 10
+      }
     ],
     "flags": [
-      { "id": "mystery_box", "name": "神秘盒子", "triggerAt": 100 }
+      {
+        "id": "mystery_box",
+        "name": "神秘盒子",
+        "triggerAt": 100
+      }
     ]
   },
   "talents": [
     {
       "id": "golden_touch",
       "name": "点石成金",
-      "icon": "✨",
+      "icon": "sparkle",
       "desc": "你天生对财富有敏锐的嗅觉，无论做什么事都能赚点小钱。",
-      "effects": { "wealth": 4, "happiness": 1 }
+      "effects": {
+        "wealth": 4,
+        "happiness": 1
+      }
     },
     {
       "id": "quick_mind",
       "name": "过目不忘",
-      "icon": "📚",
+      "icon": "books",
       "desc": "你拥有超凡的记忆力和学习能力，知识的积累快得惊人。",
-      "effects": { "intellect": 4, "happiness": 1 }
+      "effects": {
+        "intellect": 4,
+        "happiness": 1
+      }
     },
     {
       "id": "charisma",
       "name": "万人迷",
-      "icon": "🌹",
+      "icon": "rose",
       "desc": "你走到哪里都能交到朋友，人气高到离谱。",
-      "effects": { "happiness": 4, "wealth": 1 }
+      "effects": {
+        "happiness": 4,
+        "wealth": 1
+      }
     },
     {
       "id": "lucky",
       "name": "欧气满满",
-      "icon": "🍀",
+      "icon": "clover",
       "desc": "生活总是在关键时刻给你开绿灯，但好事多磨。",
-      "effects": { "wealth": 2, "intellect": 2, "happiness": 2 }
+      "effects": {
+        "wealth": 2,
+        "intellect": 2,
+        "happiness": 2
+      }
     },
     {
       "id": "workaholic",
       "name": "卷王",
-      "icon": "⚙️",
+      "icon": "gear",
       "desc": "你天生就爱干正事，但快乐什么的，不存在的。",
-      "effects": { "intellect": 2, "wealth": 3, "happiness": -2 }
+      "effects": {
+        "intellect": 2,
+        "wealth": 3,
+        "happiness": -2
+      }
     }
   ],
   "stages": [
@@ -56,25 +95,35 @@
       "options": [
         {
           "id": "read_books",
-          "icon": "📖",
+          "icon": "book",
           "title": "泡在图书馆",
           "desc": "每天放学后都跑去图书馆，把书架上的书翻了个遍。",
-          "effects": { "intellect": 3, "happiness": -1 }
+          "effects": {
+            "intellect": 3,
+            "happiness": -1
+          }
         },
         {
           "id": "play_mud",
-          "icon": "🐛",
+          "icon": "worm",
           "title": "满泥巴疯跑",
           "desc": "泥巴人、抓虫子、爬树，快乐就是这么朴实无华。",
-          "effects": { "happiness": 3, "intellect": -1 }
+          "effects": {
+            "happiness": 3,
+            "intellect": -1
+          }
         },
         {
           "id": "mystery_box",
-          "icon": "🎁",
+          "icon": "gift",
           "title": "神秘的小盒子",
           "desc": "路边捡到一个小盒子，上面写着'100岁时才能开启'。你鬼使神差地收下了。",
-          "effects": { "happiness": 1 },
-          "flags": ["mystery_box"]
+          "effects": {
+            "happiness": 1
+          },
+          "flags": [
+            "mystery_box"
+          ]
         }
       ]
     },
@@ -86,24 +135,36 @@
       "options": [
         {
           "id": "study_hard",
-          "icon": "✏️",
+          "icon": "pencil",
           "title": "拼命学习",
           "desc": "放弃所有娱乐，把青春全押在学习上。",
-          "effects": { "intellect": 3, "wealth": 1, "happiness": -2 }
+          "effects": {
+            "intellect": 3,
+            "wealth": 1,
+            "happiness": -2
+          }
         },
         {
           "id": "entrepreneur",
-          "icon": "🚀",
+          "icon": "rocket",
           "title": "创业",
           "desc": "辞职不干了，拿家里钱出来搏一把，成则豪门败则赤贫。",
-          "effects": { "wealth": 3, "happiness": 1, "intellect": -1 }
+          "effects": {
+            "wealth": 3,
+            "happiness": 1,
+            "intellect": -1
+          }
         },
         {
           "id": "sabbatical",
-          "icon": "✈️",
+          "icon": "plane",
           "title": "放荡不羁爱自由",
           "desc": "辞掉工作去环游世界，人生苦短及时行乐。",
-          "effects": { "happiness": 3, "intellect": -1, "wealth": -1 }
+          "effects": {
+            "happiness": 3,
+            "intellect": -1,
+            "wealth": -1
+          }
         }
       ]
     },
@@ -115,24 +176,34 @@
       "options": [
         {
           "id": "stable_life",
-          "icon": "🏠",
+          "icon": "home",
           "title": "过安稳日子",
           "desc": "不折腾了，老婆孩子热炕头，日子就是这么过的。",
-          "effects": { "happiness": 2, "wealth": 1 }
+          "effects": {
+            "happiness": 2,
+            "wealth": 1
+          }
         },
         {
           "id": "retire_early",
-          "icon": "🧘",
+          "icon": "meditate",
           "title": "提前退休",
           "desc": "攒够了就早点躺平，去山里开民宿种菜。",
-          "effects": { "wealth": -2, "happiness": 3 }
+          "effects": {
+            "wealth": -2,
+            "happiness": 3
+          }
         },
         {
           "id": "second_wind",
-          "icon": "🔥",
+          "icon": "flame",
           "title": "二次创业",
           "desc": "不服老，再搏一把，万一成功了就是人生赢家。",
-          "effects": { "wealth": 3, "intellect": 1, "happiness": -2 }
+          "effects": {
+            "wealth": 3,
+            "intellect": 1,
+            "happiness": -2
+          }
         }
       ]
     }
@@ -141,7 +212,7 @@
     {
       "id": "golden_ending",
       "title": "人生赢家",
-      "emoji": "🏆",
+      "emoji": "trophy",
       "desc": "家境优渥、学有所成、生活幸福——你把人生剧本写成了爽文。",
       "priority": 90,
       "conditions": {
@@ -151,7 +222,7 @@
     {
       "id": "mystery_ending",
       "title": "百宝箱的预言",
-      "emoji": "🎁",
+      "emoji": "gift",
       "desc": "100岁生日那天，你终于打开了那个神秘的小盒子。里面有一封信，写着：'你这一生，活成了自己想要的样子。'",
       "priority": 100,
       "conditions": {
@@ -161,7 +232,7 @@
     {
       "id": "ordinary_ending",
       "title": "平凡一生",
-      "emoji": "🌤️",
+      "emoji": "sun",
       "desc": "没有大富大贵，也没有大起大落。平凡的一天又一天，但你过得很踏实。",
       "priority": 50,
       "conditions": {}
