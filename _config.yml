@@ -37,6 +37,7 @@ skip_render:
   - 'tools/**'
   - 'games/*.html'
   - 'games/*.js'
+  - 'games/*.json'
   - 'games/common.css'
   - 'games/track.js'
   - 'games/js/*.js'
