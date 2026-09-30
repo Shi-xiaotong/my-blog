@@ -13,9 +13,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .header-center h1 { font-size: 2em; margin-bottom: 8px; }
 .header-center p { color: var(--text-secondary); font-size: 1.05em; }
 
-/* Links */
-.back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--primary); text-decoration: none; font-size: 14px; }
-.back-link:hover { text-decoration: underline; }
+/* Back link — pill chip */
+.back-link { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--card-bg); color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: all 0.15s; }
+.back-link:hover { color: var(--primary); border-color: var(--primary); transform: translateX(-2px); }
+.back-link svg { width: 14px; height: 14px; }
 
 /* Buttons */
 .btn { padding: 8px 18px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.15s; }
@@ -53,7 +54,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .game-page-header { text-align: center; padding: 28px 0 0; }
 .game-page-header .back-link { justify-content: center; }
 .game-page-header h1 { font-size: 1.8em; margin: 8px 0 0; }
-.game-page-footer { text-align: center; padding: 36px 0 20px; color: var(--text-secondary); font-size: 13px; }
+.game-page-footer { text-align: center; padding: 40px 0 20px; color: var(--text-secondary); font-size: 14px; }
+.game-page-footer a { color: var(--primary); text-decoration: none; }
+.game-page-footer a:hover { text-decoration: underline; }
 
 /* Footer */
 .footer { text-align: center; padding: 40px 0; color: var(--text-secondary); font-size: 13px; }
