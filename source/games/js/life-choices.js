@@ -1,6 +1,15 @@
 /**
- * 人生选择题 — 纯前端文字选项游戏
- * 数据文件: /games/life-choices.json (天赋/阶段/选项/结局全部在这, 改内容不用动代码)
+ * 人生选择题 v2 — 纯前端文字选项游戏
+ * 数据文件: /games/life-choices.json
+ *
+ * v2 新增:
+ *   - 8 个阶段 (童年→小学→高中→大学→初入职场→奋斗期→中年→老年)
+ *   - 5 个属性 (家境/智力/快乐/事业/健康)
+ *   - 20 个天赋 (含随机池天赋)
+ *   - 每阶段 4 个选项
+ *   - 16 个随机事件 (命运插叙)
+ *   - 15+ 个结局 (条件更细)
+ *   - 18 个隐藏 flag
  */
 (function () {
   'use strict';
@@ -8,13 +17,12 @@
   var DATA_URL = '/games/life-choices.json';
   var $game = document.getElementById('lcGame');
 
-  var data = null;      // JSON 内容
-  var state = null;     // 当前游戏状态
-  var lastDeltas = {}; // 上次变更的属性增量 (用于显示 ±)
+  var data = null;
+  var state = null;
+  var lastDeltas = {};
+  var lastRandomEvent = null;   // 本回合触发的随机事件, 用于显示插叙
 
   // ---------- 图标映射表 ----------
-  // JSON 里 icon/emoji 字段存的是这里的 key (如 "coins"), 渲染时查表取 SVG
-  // 改图标风格只改这一处, JSON 不用动; 想加新图标也在这加
   var ICONS = {
     coins: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="6"/><path d="M15 15a6 6 0 1 0-6-6"/></svg>',
     brain: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3a4 4 0 0 0-4 4 4 4 0 0 0 1 8v2a3 3 0 0 0 3 3h1V3H9z"/><path d="M15 3a4 4 0 0 1 4 4 4 4 0 0 1-1 8v2a3 3 0 0 1-3 3h-1V3h1z"/></svg>',
@@ -58,16 +66,18 @@
     var attrs = {};
     data.meta.attributes.forEach(function (a) { attrs[a.id] = 0; });
     state = {
-      phase: 'talent',           // talent -> stageIdx -> ending
+      phase: 'talent',
       talentPool: null,
       talent: null,
       stageIdx: 0,
       attrs: attrs,
       flags: [],
-      choices: []                // 记录走过的选择, 用于结局页回顾
+      choices: [],
+      randomEventHistory: []   // 记录所有触发过的随机事件
     };
     lastDeltas = {};
-    // 随机抽 3 个天赋
+    lastRandomEvent = null;
+    // 随机抽 3 个天赋 (v2: 20 个里抽 3)
     var pool = data.talents.slice();
     for (var i = pool.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -82,9 +92,17 @@
     if (!t) return;
     state.talent = t;
     applyEffects(t.effects);
-    state.choices.push({ label: '天赋', value: t.name });
+    // v2: 天赋带随机池 → 选一个随机效果
+    if (t.randomEffectPool && t.randomEffectPool.length) {
+      var pick = t.randomEffectPool[Math.floor(Math.random() * t.randomEffectPool.length)];
+      applyEffects(pick.effects);
+      state.choices.push({ label: '天赋·意外', value: pick.text || '未知命运' });
+    } else {
+      state.choices.push({ label: '天赋', value: t.name });
+    }
     state.phase = 'stage';
     lastDeltas = {};
+    lastRandomEvent = null;
     render();
   }
 
@@ -93,6 +111,7 @@
     state.choices.push({ label: '天赋', value: '（没有选择天赋）' });
     state.phase = 'stage';
     lastDeltas = {};
+    lastRandomEvent = null;
     render();
   }
 
@@ -100,11 +119,40 @@
     var stage = data.stages[state.stageIdx];
     var opt = stage.options.find(function (o) { return o.id === optionId; });
     if (!opt || stage.id !== stageId) return;
+
     applyEffects(opt.effects);
+
+    // v2: 选项带随机池 → 随机一条
+    if (opt.randomEffectPool && opt.randomEffectPool.length) {
+      var pick = opt.randomEffectPool[Math.floor(Math.random() * opt.randomEffectPool.length)];
+      applyEffects(pick.effects);
+      state.choices.push({ label: stage.title + '·意外', value: pick.text || '命运插叙' });
+    }
+
     (opt.flags || []).forEach(function (f) {
       if (state.flags.indexOf(f) === -1) state.flags.push(f);
     });
-    state.choices.push({ label: stage.title, value: opt.title });
+    if (!opt.randomEffectPool || !opt.randomEffectPool.length) {
+      state.choices.push({ label: stage.title, value: opt.title });
+    }
+    // 若随机池已记录了, 这里不重复记
+    if (!opt.randomEffectPool || !opt.randomEffectPool.length) {
+      state.choices.push({ label: stage.title, value: opt.title });
+    }
+
+    // v2: 每个阶段结束后触发一条随机事件 (40% 概率)
+    lastRandomEvent = null;
+    if (Math.random() < 0.4 && data.random_events && data.random_events.length) {
+      var evt = data.random_events[Math.floor(Math.random() * data.random_events.length)];
+      applyEffects(evt.effects);
+      (evt.flags || []).forEach(function (f) {
+        if (state.flags.indexOf(f) === -1) state.flags.push(f);
+      });
+      lastRandomEvent = evt;
+      state.randomEventHistory.push(evt);
+      state.choices.push({ label: '命运插叙', value: evt.title });
+    }
+
     state.stageIdx++;
     lastDeltas = {};
     if (state.stageIdx >= data.stages.length) {
@@ -119,28 +167,35 @@
     Object.keys(effects).forEach(function (k) {
       if (k in state.attrs) {
         state.attrs[k] += effects[k];
-        lastDeltas[k] = effects[k];
+        lastDeltas[k] = (lastDeltas[k] || 0) + effects[k];
       }
     });
   }
 
-  // 结局判定: 按 priority 从高到低, conditions 全部满足才命中;
-  // 都没命中就用没有 conditions 的兜底结局 (ordinary_ending)
+  // v2: 结局判定增强 — 支持 minScore / minWealth / minHappiness / minIntellect / minHealth / minCareer / flag / maxScore
   function resolveEnding() {
+    var total = totalScore();
     var candidates = data.endings
       .filter(function (e) {
         var c = e.conditions || {};
-        if (c.minScore !== undefined) {
-          var total = data.meta.attributes.reduce(function (s, a) {
-            return s + (state.attrs[a.id] || 0);
-          }, 0);
-          if (total < c.minScore) return false;
-        }
+        if (c.minScore !== undefined && total < c.minScore) return false;
+        if (c.maxScore !== undefined && total > c.maxScore) return false;
         if (c.flag && state.flags.indexOf(c.flag) === -1) return false;
+        if (c.minWealth !== undefined && state.attrs.wealth < c.minWealth) return false;
+        if (c.minHappiness !== undefined && state.attrs.happiness < c.minHappiness) return false;
+        if (c.minIntellect !== undefined && state.attrs.intellect < c.minIntellect) return false;
+        if (c.minHealth !== undefined && state.attrs.health < c.minHealth) return false;
+        if (c.minCareer !== undefined && state.attrs.career < c.minCareer) return false;
         return true;
       })
       .sort(function (a, b) { return (b.priority || 0) - (a.priority || 0); });
     state.ending = candidates[0] || null;
+  }
+
+  function totalScore() {
+    return data.meta.attributes.reduce(function (s, a) {
+      return s + (state.attrs[a.id] || 0);
+    }, 0);
   }
 
   // ---------- 渲染 ----------
@@ -157,9 +212,19 @@
         '<div class="lc-attr-icon">' + icon(a.icon) + '</div>' +
         '<div class="lc-attr-name">' + esc(a.name) + '</div>' +
         '<div class="lc-attr-val" style="color:' + (v > 0 ? 'var(--accent)' : v < 0 ? 'var(--danger)' : 'var(--text-secondary)') + '">' +
-        (v > 0 ? '+' : '') + v + '</div>' + dHtml +
+        (v > 0 ? '+' : '') + v + '</div> ' + dHtml +
         '</div>';
     }).join('');
+  }
+
+  function randomEventHTML() {
+    if (!lastRandomEvent) return '';
+    var evt = lastRandomEvent;
+    return '<div class="lc-random-event lc-fade-in">' +
+      '<div class="lc-random-event-title">✦ 命运插叙</div>' +
+      '<div class="lc-random-event-name">' + esc(evt.title) + '</div>' +
+      '<div class="lc-random-event-desc">' + esc(evt.desc) + '</div>' +
+      '</div>';
   }
 
   function render() {
@@ -170,10 +235,12 @@
 
   function renderTalent() {
     var cards = state.talentPool.map(function (t) {
+      var randHint = t.randomEffectPool ? '<span class="lc-option-hint">? 触发未知命运</span>' : '';
       return '<button class="lc-option lc-fade-in" onclick="LC.pickTalent(\'' + t.id + '\')">' +
         '<div class="lc-option-head"><span class="lc-option-icon">' + icon(t.icon) + '</span>' +
         '<span class="lc-option-title">' + esc(t.name) + '</span></div>' +
-        '<div class="lc-option-desc">' + esc(t.desc) + '</div></button>';
+        '<div class="lc-option-desc">' + esc(t.desc) + '</div>' + randHint +
+        '</button>';
     }).join('');
     $game.innerHTML =
       '<div class="lc-container">' +
@@ -187,15 +254,19 @@
 
   function renderStage() {
     var stage = data.stages[state.stageIdx];
+    var progress = (state.stageIdx + 1) + ' / ' + data.stages.length;
     var cards = stage.options.map(function (o) {
       var flagHint = '';
       if (o.flags && o.flags.length) {
         flagHint = '<span class="lc-option-hint">✦ 可能触发隐藏事件</span>';
       }
+      var randHint = (o.randomEffectPool && o.randomEffectPool.length)
+        ? '<span class="lc-option-hint lc-hint-random">? 结果未知</span>' : '';
       return '<button class="lc-option lc-fade-in" onclick="LC.chooseOption(\'' + stage.id + '\',\'' + o.id + '\')">' +
         '<div class="lc-option-head"><span class="lc-option-icon">' + icon(o.icon) + '</span>' +
         '<span class="lc-option-title">' + esc(o.title) + '</span></div>' +
-        '<div class="lc-option-desc">' + esc(o.desc) + '</div>' + flagHint +
+        '<div class="lc-option-desc">' + esc(o.desc) + '</div>' +
+        flagHint + randHint +
         '</button>';
     }).join('');
 
@@ -203,22 +274,30 @@
       ? '<div class="lc-echo">你的天赋：<strong>' + icon(state.talent.icon) + esc(state.talent.name) + '</strong></div>'
       : '';
 
+    // v2: 进度条
+    var progressPct = Math.round((state.stageIdx / data.stages.length) * 100);
+
     $game.innerHTML =
       '<div class="lc-container">' +
-      '<div class="lc-phase"><div class="lc-age">' + esc(stage.subtitle) + '</div><h2>' + esc(stage.title) + '</h2>' +
+      '<div class="lc-progress"><div class="lc-progress-fill" style="width:' + progressPct + '%"></div></div>' +
+      '<div class="lc-phase">' +
+      '<div class="lc-age">' + esc(stage.subtitle) + ' · ' + progress + '</div>' +
+      '<h2>' + esc(stage.title) + '</h2>' +
       '<p class="lc-intro">' + esc(stage.intro) + '</p></div>' +
       talentLine +
       '<div class="lc-attrs">' + attrBarHTML() + '</div>' +
+      randomEventHTML() +
       '<div class="lc-options">' + cards + '</div>' +
       '</div>';
   }
 
   function renderEnding() {
     var e = state.ending;
-    var total = data.meta.attributes.reduce(function (s, a) { return s + (state.attrs[a.id] || 0); }, 0);
+    var total = totalScore();
 
     var choiceList = state.choices.map(function (c) {
-      return '<li>' + esc(c.label) + '：' + esc(c.value) + '</li>';
+      var cls = c.label === '命运插叙' ? ' class="lc-choice-random"' : '';
+      return '<li' + cls + '>' + esc(c.label) + '：' + esc(c.value) + '</li>';
     }).join('');
 
     var flagLine = '';
@@ -230,12 +309,19 @@
       flagLine = '<div class="lc-ending-flag">✦ 触发隐藏事件：' + esc(fnames.join('、')) + '</div>';
     }
 
+    // v2: 随机事件回顾
+    var evtLine = '';
+    if (state.randomEventHistory.length) {
+      var evts = state.randomEventHistory.map(function (ev) { return esc(ev.title); }).join('、');
+      evtLine = '<div class="lc-ending-flag lc-ending-flag-random">⚡ 命运插叙：' + evts + '</div>';
+    }
+
     $game.innerHTML =
       '<div class="lc-container lc-ending">' +
       '<div class="lc-ending-emoji">' + icon(e.emoji) + '</div>' +
       '<div class="lc-ending-title">' + esc(e.title) + '</div>' +
       '<div class="lc-ending-desc">' + esc(e.desc) + '</div>' +
-      flagLine +
+      flagLine + evtLine +
       '<div class="lc-ending-attrs">' +
       data.meta.attributes.map(function (a) {
         var v = state.attrs[a.id] || 0;

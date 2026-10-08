@@ -66,6 +66,25 @@
 @keyframes lcFadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .lc-fade-in { animation: lcFadeIn 0.4s ease; }
 
+/* v2 progress bar */
+.lc-progress { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 20px; overflow: hidden; }
+.lc-progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.4s ease; }
+
+/* v2 random event card */
+.lc-random-event { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; animation: lcFadeIn 0.5s ease; }
+.lc-random-event-title { font-size: 11px; color: var(--warning); letter-spacing: 2px; margin-bottom: 4px; }
+.lc-random-event-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.lc-random-event-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+/* v2 random hint variant */
+.lc-hint-random { color: var(--primary); background: rgba(59,130,246,0.12); }
+
+/* v2 ending flag for random events */
+.lc-ending-flag-random { color: var(--primary); background: rgba(59,130,246,0.1); margin-top: 4px; display: inline-block; margin-bottom: 16px; }
+
+/* v2 random choice styling */
+.lc-choice-random { color: var(--warning); font-style: italic; }
+
 /* Mobile */
 @media (max-width: 480px) {
   .lc-attr { min-width: 80px; padding: 8px 10px; }
