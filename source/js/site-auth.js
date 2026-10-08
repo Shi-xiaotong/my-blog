@@ -262,7 +262,7 @@ function ensureModal(){
   if(document.getElementById('site-login-modal'))return;
   var modal=document.createElement('div');modal.id='site-login-modal';
   modal.innerHTML='<div class="slm-box">'
-    +'<h3>Mercury 博客</h3>'
+    +'<h3>水星引力m 博客</h3>'
     +'<div class="slm-tabs">'
     +'<button class="slm-tab active" data-view="login" onclick="siteSwitchView(\'login\')">登录</button>'
     +'<button class="slm-tab" data-view="register" onclick="siteSwitchView(\'register\')">注册</button>'

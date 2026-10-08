@@ -1,4 +1,4 @@
-# Mercury Blog (233002.xyz) — AI Agent Development Guide
+# 水星引力m (233002.xyz) — AI Agent Development Guide
 
 ## Project Overview
 
@@ -115,7 +115,7 @@ Must not appear in generated content:
 ```
 
 ### Writing Style
-- System prompt: "你是「水星引力m」博客的博主 Mercury"
+- System prompt: "你是「水星引力m」博客的博主"
 - First-person voice, conversational tone
 - At least one subjective expression per article ("我觉得"/"说实话"/"好家伙")
 - Start directly, no preamble

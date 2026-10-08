@@ -199,8 +199,8 @@ async function handleRegister(env, request) {
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
   await env.DB.prepare(`UPDATE anime_password_codes SET used = 1 WHERE email = ? AND type = 'register' AND used = 0`).bind(normalized).run();
   await env.DB.prepare("INSERT INTO anime_password_codes (email, code, type, expires_at) VALUES (?1, ?2, 'register', ?3)").bind(normalized, code, expiresAt).run();
-  const html = `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px"><h2 style="color:#ffd93d">Mercury Blog</h2><p>您的注册验证码为：</p><div style="font-size:32px;letter-spacing:8px;font-weight:700;color:#ffd93d;background:#1a1a2e;padding:16px;text-align:center;border-radius:8px;margin:16px 0">${code}</div><p style="color:#888">验证码有效期为10分钟，请勿泄露给他人。</p></div>`;
-  try { await sendEmail(env, normalized, '注册 Mercury Blog', html); } catch (e) { return badRequest('邮件发送失败，请稍后重试'); }
+  const html = `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px"><h2 style="color:#ffd93d">水星引力m Blog</h2><p>您的注册验证码为：</p><div style="font-size:32px;letter-spacing:8px;font-weight:700;color:#ffd93d;background:#1a1a2e;padding:16px;text-align:center;border-radius:8px;margin:16px 0">${code}</div><p style="color:#888">验证码有效期为10分钟，请勿泄露给他人。</p></div>`;
+  try { await sendEmail(env, normalized, '注册 水星引力m Blog', html); } catch (e) { return badRequest('邮件发送失败，请稍后重试'); }
   return jsonResponse({ success: true, dev_code: env.DEV_MODE === "true" ? code : undefined });
 }
 
@@ -261,8 +261,8 @@ async function handlePasswordReset(env, request) {
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
   await env.DB.prepare(`UPDATE anime_password_codes SET used = 1 WHERE email = ? AND type = 'reset' AND used = 0`).bind(normalized).run();
   await env.DB.prepare("INSERT INTO anime_password_codes (email, code, type, expires_at) VALUES (?1, ?2, 'reset', ?3)").bind(normalized, code, expiresAt).run();
-  const html = `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px"><h2 style="color:#ffd93d">Mercury Blog</h2><p>您的重置密码验证码为：</p><div style="font-size:32px;letter-spacing:8px;font-weight:700;color:#ffd93d;background:#1a1a2e;padding:16px;text-align:center;border-radius:8px;margin:16px 0">${code}</div><p style="color:#888">验证码有效期为10分钟，请勿泄露给他人。</p></div>`;
-  try { await sendEmail(env, normalized, '重置密码 - Mercury Blog', html); } catch (e) { return badRequest('邮件发送失败，请稍后重试'); }
+  const html = `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px"><h2 style="color:#ffd93d">水星引力m Blog</h2><p>您的重置密码验证码为：</p><div style="font-size:32px;letter-spacing:8px;font-weight:700;color:#ffd93d;background:#1a1a2e;padding:16px;text-align:center;border-radius:8px;margin:16px 0">${code}</div><p style="color:#888">验证码有效期为10分钟，请勿泄露给他人。</p></div>`;
+  try { await sendEmail(env, normalized, '重置密码 - 水星引力m Blog', html); } catch (e) { return badRequest('邮件发送失败，请稍后重试'); }
   return jsonResponse({ success: true, dev_code: env.DEV_MODE === "true" ? code : undefined });
 }
 
@@ -294,11 +294,11 @@ async function handleSendCode(env, request) {
   await env.DB.prepare("INSERT OR REPLACE INTO anime_verify_codes (email, code, created_at) VALUES (?1, ?2, datetime('now'))").bind(ne, code).run();
   if (env.DEV_MODE !== "true") {
     const html = '<div style="font-family:sans-serif;max-width:400px;margin:0 auto;padding:20px">'
-      + '<h2 style="color:#ffd93d">Mercury 博客</h2><p>你的登录验证码是：</p>'
+      + '<h2 style="color:#ffd93d">水星引力m 博客</h2><p>你的登录验证码是：</p>'
       + '<div style="font-size:32px;font-weight:bold;letter-spacing:8px;padding:16px;background:#1a1a2e;border-radius:8px;text-align:center;color:#ffd93d">'
       + code + '</div>'
       + '<p style="color:#888;font-size:13px">验证码 5 分钟内有效，请勿泄露给他人。</p></div>';
-    try { await sendEmail(env, ne, "登录验证码 - Mercury 博客", html); }
+    try { await sendEmail(env, ne, "登录验证码 - 水星引力m 博客", html); }
     catch { return jsonResponse({ error: "邮件发送失败，请稍后重试" }, 500); }
   }
   return jsonResponse({ success: true, ...env.DEV_MODE === "true" ? { dev_code: code } : {} });
