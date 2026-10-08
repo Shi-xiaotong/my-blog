@@ -312,7 +312,7 @@ type: about
   <div class="char-card-inner">
     <img class="card-avatar" src="https://img.233002.xyz/assets/zipai.webp" alt="avatar">
     <div class="rarity">✦ S S R ✦</div>
-    <div class="char-name">Shi_xiaotong</div>
+    <div class="char-name">水星引力m</div>
     <div class="char-subtitle">「 在 bug 的海洋中寻找 bug 之外的东西 」</div>
     <p style="color: #a8b2d1; line-height: 1.8;">
       一个被代码选中的普通少年（自封的）。白天假装在写代码，实际上在写 bug；
@@ -410,7 +410,7 @@ type: about
 
 ## 关于这个博客
 
-这里是 Shi_xiaotong 的秘密基地（其实就是一个 Hexo 博客）。
+这里是 水星引力m 的秘密基地（其实就是一个 Hexo 博客）。
 
 在这里你可以看到：
 
