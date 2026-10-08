@@ -2,80 +2,356 @@
   "meta": {
     "version": 2,
     "attributes": [
-      { "id": "wealth",      "name": "家境",   "icon": "coins",     "min": -15, "max": 25 },
-      { "id": "intellect",   "name": "智力",   "icon": "brain",     "min": -10, "max": 25 },
-      { "id": "happiness",   "name": "快乐",   "icon": "heart",     "min": -15, "max": 30 },
-      { "id": "career",      "name": "事业",   "icon": "trophy",    "min": -5,  "max": 25 },
-      { "id": "health",      "name": "健康",   "icon": "meditate",  "min": -10, "max": 20 }
+      {
+        "id": "wealth",
+        "name": "家境",
+        "icon": "coins",
+        "min": -15,
+        "max": 25
+      },
+      {
+        "id": "intellect",
+        "name": "智力",
+        "icon": "brain",
+        "min": -10,
+        "max": 25
+      },
+      {
+        "id": "happiness",
+        "name": "快乐",
+        "icon": "heart",
+        "min": -15,
+        "max": 30
+      },
+      {
+        "id": "career",
+        "name": "事业",
+        "icon": "trophy",
+        "min": -5,
+        "max": 25
+      },
+      {
+        "id": "health",
+        "name": "健康",
+        "icon": "meditate",
+        "min": -10,
+        "max": 20
+      }
     ],
     "flags": [
-      { "id": "mystery_box",    "name": "神秘盒子" },
-      { "id": "gold_tooth",     "name": "金牙秘密" },
-      { "id": "childhood_friend","name": "童年挚友" },
-      { "id": "secret_letter",   "name": "一封旧信" },
-      { "id": "injury",          "name": "隐伤" },
-      { "id": "viral_video",     "name": "走红的瞬间" },
-      { "id": "mystery_investor","name": "神秘投资人" },
-      { "id": "lost_family",     "name": "失散家人" },
-      { "id": "art_soul",        "name": "文艺之魂" },
-      { "id": "curse",           "name": "某种诅咒" },
-      { "id": "time_machine",    "name": "时间碎片" },
-      { "id": "hidden_guarantor","name": "隐形担保人" },
-      { "id": "pet_fox",         "name": "狐狸朋友" },
-      { "id": "astral_travel",  "name": "星体旅行" },
-      { "id": "memory_lapse",    "name": "记忆空洞" },
-      { "id": "double_life",     "name": "双重身份" },
-      { "id": "inherited_house", "name": "祖屋遗产" },
-      { "id": "robot_colleague",  "name": "机器人同事" }
+      {
+        "id": "mystery_box",
+        "name": "神秘盒子"
+      },
+      {
+        "id": "gold_tooth",
+        "name": "金牙秘密"
+      },
+      {
+        "id": "childhood_friend",
+        "name": "童年挚友"
+      },
+      {
+        "id": "secret_letter",
+        "name": "一封旧信"
+      },
+      {
+        "id": "injury",
+        "name": "隐伤"
+      },
+      {
+        "id": "viral_video",
+        "name": "走红的瞬间"
+      },
+      {
+        "id": "mystery_investor",
+        "name": "神秘投资人"
+      },
+      {
+        "id": "lost_family",
+        "name": "失散家人"
+      },
+      {
+        "id": "art_soul",
+        "name": "文艺之魂"
+      },
+      {
+        "id": "curse",
+        "name": "某种诅咒"
+      },
+      {
+        "id": "time_machine",
+        "name": "时间碎片"
+      },
+      {
+        "id": "hidden_guarantor",
+        "name": "隐形担保人"
+      },
+      {
+        "id": "pet_fox",
+        "name": "狐狸朋友"
+      },
+      {
+        "id": "astral_travel",
+        "name": "星体旅行"
+      },
+      {
+        "id": "memory_lapse",
+        "name": "记忆空洞"
+      },
+      {
+        "id": "double_life",
+        "name": "双重身份"
+      },
+      {
+        "id": "inherited_house",
+        "name": "祖屋遗产"
+      },
+      {
+        "id": "robot_colleague",
+        "name": "机器人同事"
+      }
     ]
   },
   "talents": [
-    { "id": "golden_touch",   "name": "点石成金",   "icon": "sparkle", "desc": "你天生对财富有敏锐嗅觉，做什么都能小赚一笔。",
-      "effects": { "wealth": 4, "happiness": 1 } },
-    { "id": "quick_mind",     "name": "过目不忘",   "icon": "books",  "desc": "超凡记忆力，知识积累速度快得惊人。",
-      "effects": { "intellect": 4, "happiness": 1 } },
-    { "id": "charisma",       "name": "万人迷",     "icon": "rose",   "desc": "走到哪都能交到朋友，人气高到离谱。",
-      "effects": { "happiness": 4, "wealth": 1 } },
-    { "id": "lucky",          "name": "欧气满满",   "icon": "clover", "desc": "生活总给你开绿灯，但好事多磨。",
-      "effects": { "wealth": 2, "intellect": 2, "happiness": 2 } },
-    { "id": "workaholic",     "name": "卷王",       "icon": "gear",   "desc": "天生爱干正事，快乐什么的，不存在的。",
-      "effects": { "intellect": 2, "wealth": 3, "happiness": -2 } },
-    { "id": "iron_body",      "name": "铁人身体",   "icon": "flame",  "desc": "从小到大没生过什么病，精力旺盛得像台发动机。",
-      "effects": { "health": 5, "intellect": -1 } },
-    { "id": "empathy",        "name": "共情大师",   "icon": "heart",  "desc": "能感受到别人感受不到情绪，朋友特别多。",
-      "effects": { "happiness": 3, "health": 1 } },
-    { "id": "risk_gambler",   "name": "风险狂徒",   "icon": "rocket", "desc": "赌性天生，大事件来临时总能找到别人看不到的机会。",
-      "effects": { "wealth": 3, "health": -1, "happiness": 1 } },
-    { "id": "calm_stoic",     "name": "不动如山的斯多葛", "icon": "meditate", "desc": "遇事不慌，情绪稳定得让人羡慕，但生活少了点色彩。",
-      "effects": { "health": 2, "intellect": 1, "happiness": -1 } },
-    { "id": "art_sense",      "name": "审美敏锐",   "icon": "pencil", "desc": "对美有天然感知，画画、音乐、穿搭都能做出不错判断。",
-      "effects": { "intellect": 2, "happiness": 2 } },
-    { "id": "social_fox",     "name": "社交狐狸",   "icon": "clover", "desc": "嘴甜，会来事，到哪都能混得开。",
-      "effects": { "wealth": 2, "career": 3, "happiness": 1 } },
-    { "id": "curious",        "name": "好奇心旺盛","icon": "sparkle","desc": "什么都想搞明白，学东西快，但容易走偏。",
-      "effects": { "intellect": 3, "health": -1 } },
-    { "id": "night_owl",      "name": "夜猫子",     "icon": "sun",    "desc": "深夜灵感爆发，白天睡不醒，效率极高但身体慢慢透支。",
-      "effects": { "intellect": 3, "health": -2 } },
-    { "id": "early_bird",     "name": "晨型人格",   "icon": "sun",    "desc": "天不亮就醒，一天效率高得离谱，精力充沛。",
-      "effects": { "health": 3, "career": 1 } },
-    { "id": "free_spirit",    "name": "自由灵魂",   "icon": "plane",  "desc": "受不了束缚，喜欢说走就走的生活方式。",
-      "effects": { "happiness": 3, "career": -1, "health": 1 } },
-    { "id": "perfectionist",  "name": "完美主义者",  "icon": "gear",   "desc": "凡事追求极致，做出好东西的概率高，但活得较真。",
-      "effects": { "career": 3, "intellect": 1, "happiness": -2 } },
-    { "id": "money_saver",    "name": "守财奴",     "icon": "coins",  "desc": "花钱极其谨慎，复利效应强，但生活品质一般。",
-      "effects": { "wealth": 3, "happiness": -1 } },
-    { "id": "healer",        "name": "治愈者",      "icon": "rose",   "desc": "身边的人都喜欢你，你天然让人放松。",
-      "effects": { "happiness": 3, "health": 2 } },
-    { "id": "strategist",    "name": "战略家",     "icon": "books",  "desc": "天生会看大局，做决策时多一步算账，少走弯路。",
-      "effects": { "career": 3, "intellect": 1 } },
-    { "id": "wild_card",      "name": "X因子",      "icon": "gift",   "desc": "完全不确定你会触发什么，可能是天灾也可能是天降横财。",
-      "effects": {}, "randomEffectPool": [
-        { "effects": { "wealth": 8, "happiness": 3 } },
-        { "effects": { "health": -5, "intellect": 4 } },
-        { "effects": { "happiness": 7, "career": -3 } },
-        { "effects": { "career": 8, "wealth": 2, "health": -3 } },
-        { "effects": { "intellect": 7, "happiness": 2, "health": -2 } }
-      ] }
+    {
+      "id": "golden_touch",
+      "name": "点石成金",
+      "icon": "sparkle",
+      "desc": "你天生对财富有敏锐嗅觉，做什么都能小赚一笔。",
+      "effects": {
+        "wealth": 4,
+        "happiness": 1
+      }
+    },
+    {
+      "id": "quick_mind",
+      "name": "过目不忘",
+      "icon": "books",
+      "desc": "超凡记忆力，知识积累速度快得惊人。",
+      "effects": {
+        "intellect": 4,
+        "happiness": 1
+      }
+    },
+    {
+      "id": "charisma",
+      "name": "万人迷",
+      "icon": "rose",
+      "desc": "走到哪都能交到朋友，人气高到离谱。",
+      "effects": {
+        "happiness": 4,
+        "wealth": 1
+      }
+    },
+    {
+      "id": "lucky",
+      "name": "欧气满满",
+      "icon": "clover",
+      "desc": "生活总给你开绿灯，但好事多磨。",
+      "effects": {
+        "wealth": 2,
+        "intellect": 2,
+        "happiness": 2
+      }
+    },
+    {
+      "id": "workaholic",
+      "name": "卷王",
+      "icon": "gear",
+      "desc": "天生爱干正事，快乐什么的，不存在的。",
+      "effects": {
+        "intellect": 2,
+        "wealth": 3,
+        "happiness": -2
+      }
+    },
+    {
+      "id": "iron_body",
+      "name": "铁人身体",
+      "icon": "flame",
+      "desc": "从小到大没生过什么病，精力旺盛得像台发动机。",
+      "effects": {
+        "health": 5,
+        "intellect": -1
+      }
+    },
+    {
+      "id": "empathy",
+      "name": "共情大师",
+      "icon": "heart",
+      "desc": "能感受到别人感受不到情绪，朋友特别多。",
+      "effects": {
+        "happiness": 3,
+        "health": 1
+      }
+    },
+    {
+      "id": "risk_gambler",
+      "name": "风险狂徒",
+      "icon": "rocket",
+      "desc": "赌性天生，大事件来临时总能找到别人看不到的机会。",
+      "effects": {
+        "wealth": 3,
+        "health": -1,
+        "happiness": 1
+      }
+    },
+    {
+      "id": "calm_stoic",
+      "name": "不动如山的斯多葛",
+      "icon": "meditate",
+      "desc": "遇事不慌，情绪稳定得让人羡慕，但生活少了点色彩。",
+      "effects": {
+        "health": 2,
+        "intellect": 1,
+        "happiness": -1
+      }
+    },
+    {
+      "id": "art_sense",
+      "name": "审美敏锐",
+      "icon": "pencil",
+      "desc": "对美有天然感知，画画、音乐、穿搭都能做出不错判断。",
+      "effects": {
+        "intellect": 2,
+        "happiness": 2
+      }
+    },
+    {
+      "id": "social_fox",
+      "name": "社交狐狸",
+      "icon": "clover",
+      "desc": "嘴甜，会来事，到哪都能混得开。",
+      "effects": {
+        "wealth": 2,
+        "career": 3,
+        "happiness": 1
+      }
+    },
+    {
+      "id": "curious",
+      "name": "好奇心旺盛",
+      "icon": "sparkle",
+      "desc": "什么都想搞明白，学东西快，但容易走偏。",
+      "effects": {
+        "intellect": 3,
+        "health": -1
+      }
+    },
+    {
+      "id": "night_owl",
+      "name": "夜猫子",
+      "icon": "sun",
+      "desc": "深夜灵感爆发，白天睡不醒，效率极高但身体慢慢透支。",
+      "effects": {
+        "intellect": 3,
+        "health": -2
+      }
+    },
+    {
+      "id": "early_bird",
+      "name": "晨型人格",
+      "icon": "sun",
+      "desc": "天不亮就醒，一天效率高得离谱，精力充沛。",
+      "effects": {
+        "health": 3,
+        "career": 1
+      }
+    },
+    {
+      "id": "free_spirit",
+      "name": "自由灵魂",
+      "icon": "plane",
+      "desc": "受不了束缚，喜欢说走就走的生活方式。",
+      "effects": {
+        "happiness": 3,
+        "career": -1,
+        "health": 1
+      }
+    },
+    {
+      "id": "perfectionist",
+      "name": "完美主义者",
+      "icon": "gear",
+      "desc": "凡事追求极致，做出好东西的概率高，但活得较真。",
+      "effects": {
+        "career": 3,
+        "intellect": 1,
+        "happiness": -2
+      }
+    },
+    {
+      "id": "money_saver",
+      "name": "守财奴",
+      "icon": "coins",
+      "desc": "花钱极其谨慎，复利效应强，但生活品质一般。",
+      "effects": {
+        "wealth": 3,
+        "happiness": -1
+      }
+    },
+    {
+      "id": "healer",
+      "name": "治愈者",
+      "icon": "rose",
+      "desc": "身边的人都喜欢你，你天然让人放松。",
+      "effects": {
+        "happiness": 3,
+        "health": 2
+      }
+    },
+    {
+      "id": "strategist",
+      "name": "战略家",
+      "icon": "books",
+      "desc": "天生会看大局，做决策时多一步算账，少走弯路。",
+      "effects": {
+        "career": 3,
+        "intellect": 1
+      }
+    },
+    {
+      "id": "wild_card",
+      "name": "X因子",
+      "icon": "gift",
+      "desc": "完全不确定你会触发什么，可能是天灾也可能是天降横财。",
+      "effects": {},
+      "randomEffectPool": [
+        {
+          "effects": {
+            "wealth": 8,
+            "happiness": 3
+          }
+        },
+        {
+          "effects": {
+            "health": -5,
+            "intellect": 4
+          }
+        },
+        {
+          "effects": {
+            "happiness": 7,
+            "career": -3
+          }
+        },
+        {
+          "effects": {
+            "career": 8,
+            "wealth": 2,
+            "health": -3
+          }
+        },
+        {
+          "effects": {
+            "intellect": 7,
+            "happiness": 2,
+            "health": -2
+          }
+        }
+      ]
+    }
   ],
   "stages": [
     {
@@ -84,19 +360,85 @@
       "subtitle": "0 ~ 6 岁",
       "intro": "人生第一道选择题还没开始，命运已经随机分配了你的出身。",
       "options": [
-        { "id": "rich_family",  "icon": "coins", "title": "富二代出身",
+        {
+          "id": "rich_family",
+          "icon": "coins",
+          "title": "富二代出身",
           "desc": "家里开公司，从小玩的就是高端玩具。起点高，但压力也大。",
-          "effects": { "wealth": 6, "happiness": 1, "health": 1 } },
-        { "id": "peasant_family", "icon": "home", "title": "农村出身",
+          "effects": {
+            "wealth": 6,
+            "happiness": 1,
+            "health": 1
+          },
+          "mini_ending": {
+            "title": "含着金汤匙出生",
+            "desc": "你的童年是别的小孩子做梦都想拥有的那种。玩具堆成山，假期飞欧洲，但爸妈眼里总藏着一丝你读不懂的期待。"
+          }
+        },
+        {
+          "id": "peasant_family",
+          "icon": "home",
+          "title": "农村出身",
           "desc": "土路上长大，夏天抓鱼捉虾，冬天烧柴取暖。快乐很朴实。",
-          "effects": { "wealth": -3, "happiness": 2, "health": 1 } },
-        { "id": "struggled_family", "icon": "gear", "title": "普通工薪家庭",
+          "effects": {
+            "wealth": -3,
+            "happiness": 2,
+            "health": 1
+          },
+          "mini_ending": {
+            "title": "土路上的童年",
+            "desc": "夏天地热得不行就下河捉虾，冬天烧柴火暖手。快乐很便宜，也很干净。"
+          }
+        },
+        {
+          "id": "struggled_family",
+          "icon": "gear",
+          "title": "普通工薪家庭",
           "desc": "爸妈上班，你放学在小区里疯跑，日子不咸不淡。",
-          "effects": { "wealth": 1, "intellect": 1, "happiness": 1 } },
-        { "id": "orphan_found", "icon": "gift", "title": "被领养的婴儿",
+          "effects": {
+            "wealth": 1,
+            "intellect": 1,
+            "happiness": 1
+          },
+          "mini_ending": {
+            "title": "普通小区里的普通人",
+            "desc": "放学在小区里疯跑，楼下有几个固定玩伴，日子不咸不淡，但也没出什么岔子。"
+          }
+        },
+        {
+          "id": "orphan_found",
+          "icon": "gift",
+          "title": "被领养的婴儿",
           "desc": "你是在火车站被好心人抱走的，身世是个谜。",
-          "effects": { "wealth": -2, "happiness": -1, "intellect": 2 },
-          "flags": ["lost_family"] }
+          "effects": {
+            "wealth": -2,
+            "happiness": -1,
+            "intellect": 2
+          },
+          "flags": [
+            "lost_family"
+          ],
+          "mini_ending": {
+            "title": "身世的裂缝",
+            "desc": "爸妈对你很好，但偶尔你看到他们偷偷抹眼泪。你一直想知道，自己是谁从哪里来的。"
+          }
+        },
+        {
+          "id": "mystery_box",
+          "icon": "gift",
+          "title": "神秘的小盒子",
+          "desc": "路边捡到一个小盒子，上面写着'100岁时才能开启'。你鬼使神差地收下了。",
+          "effects": {
+            "happiness": 1
+          },
+          "flags": [
+            "mystery_box"
+          ],
+          "mini_ending": {
+            "title": "盒子里的秘密",
+            "desc": "你把它藏在自己房间最深处。夜里偶尔会听到低低的声响，你告诉自己那只是风声。"
+          }
+        }
       ]
     },
     {
@@ -105,24 +447,89 @@
       "subtitle": "6 ~ 12 岁",
       "intro": "该上学了。你的童年画风，取决于你在这六年里怎么过。",
       "options": [
-        { "id": "model_student", "icon": "pencil", "title": "三好学生",
+        {
+          "id": "model_student",
+          "icon": "pencil",
+          "title": "三好学生",
           "desc": "年年拿奖状，老师最喜欢，但快乐是别人的。",
-          "effects": { "intellect": 4, "happiness": -2, "career": 1 } },
-        { "id": "class_troublemaker", "icon": "flame", "title": "班级风云人物",
+          "effects": {
+            "intellect": 4,
+            "happiness": -2,
+            "career": 1
+          },
+          "mini_ending": {
+            "title": "奖状贴满墙",
+            "desc": "墙上奖状比衣服还多。老师喜欢你，家长也有面子，但你开始记不清上一次纯粹快乐是什么时候了。"
+          }
+        },
+        {
+          "id": "class_troublemaker",
+          "icon": "flame",
+          "title": "班级风云人物",
           "desc": "坐最后一排，上课画小人，下课是班里的国王。",
-          "effects": { "happiness": 4, "intellect": -1, "career": 1 },
-          "flags": ["childhood_friend"] },
-        { "id": "library_kid", "icon": "book", "title": "图书馆常客",
+          "effects": {
+            "happiness": 4,
+            "intellect": -1,
+            "career": 1
+          },
+          "flags": [
+            "childhood_friend"
+          ],
+          "mini_ending": {
+            "title": "最后一排的国王",
+            "desc": "下课你是班里的王，上课睡觉没人敢管。有个固定哥们儿，从一年级一起坐到了毕业。"
+          }
+        },
+        {
+          "id": "library_kid",
+          "icon": "book",
+          "title": "图书馆常客",
           "desc": "别人下课疯玩，你抱着书看，安静得像另一个人。",
-          "effects": { "intellect": 3, "happiness": 1, "health": 1 } },
-        { "id": "street_kid", "icon": "worm", "title": "放学即自由",
+          "effects": {
+            "intellect": 3,
+            "happiness": 1,
+            "health": 1
+          },
+          "mini_ending": {
+            "title": "安静的角落",
+            "desc": "别人疯跑的时候你在翻书，没人知道你读了多少本。世界很小，但书里的很大。"
+          }
+        },
+        {
+          "id": "street_kid",
+          "icon": "worm",
+          "title": "放学即自由",
           "desc": "书包一扔，街边游戏机玩到爸妈来接，江湖义气全靠游戏。",
-          "effects": { "happiness": 3, "intellect": -1, "health": -1 },
+          "effects": {
+            "happiness": 3,
+            "intellect": -1,
+            "health": -1
+          },
           "randomEffectPool": [
-            { "effects": { "wealth": 2 }, "text": "捡到5块钱，从此对钱有了概念" },
-            { "effects": { "health": -2 }, "text": "爬树摔了一跤，膝盖到现在还有疤" },
-            { "effects": { "happiness": 2 }, "text": "认识了巷口卖冰棍的老爷爷，他成了半个外公" }
-          ] }
+            {
+              "effects": {
+                "wealth": 2
+              },
+              "text": "捡到5块钱，从此对钱有了概念"
+            },
+            {
+              "effects": {
+                "health": -2
+              },
+              "text": "爬树摔了一跤，膝盖到现在还有疤"
+            },
+            {
+              "effects": {
+                "happiness": 2
+              },
+              "text": "认识了巷口卖冰棍的老爷爷，他成了半个外公"
+            }
+          ],
+          "mini_ending": {
+            "title": "巷口的江湖",
+            "desc": "放学即自由，游戏机投币声是背景音。江湖义气在游戏里学的，但那些下午是真的快乐。"
+          }
+        }
       ]
     },
     {
@@ -131,24 +538,89 @@
       "subtitle": "12 ~ 18 岁",
       "intro": "高考大考在即。这三年怎么过，直接决定你人生的第二道分岔口。",
       "options": [
-        { "id": "exam_machine", "icon": "gear", "title": "刷题机器",
+        {
+          "id": "exam_machine",
+          "icon": "gear",
+          "title": "刷题机器",
           "desc": "每天学到凌晨一点，题目做了一堆，快乐欠了一堆。",
-          "effects": { "intellect": 4, "career": 2, "happiness": -3, "health": -2 } },
-        { "id": "band_guy", "icon": "flame", "title": "乐队少年",
+          "effects": {
+            "intellect": 4,
+            "career": 2,
+            "happiness": -3,
+            "health": -2
+          },
+          "mini_ending": {
+            "title": "凌晨一点的书桌",
+            "desc": "题目堆成小山，咖啡喝了一杯又一杯。你考进了不错的大学，但好像忘了怎么笑。"
+          }
+        },
+        {
+          "id": "band_guy",
+          "icon": "flame",
+          "title": "乐队少年",
           "desc": "乐队排练到晚上十点半，音乐才是正经事，学业是顺带的。",
-          "effects": { "happiness": 4, "intellect": 1, "career": 1, "health": -1 },
-          "flags": ["art_soul"] },
-        { "id": "sports_star", "icon": "trophy", "title": "校队主力",
+          "effects": {
+            "happiness": 4,
+            "intellect": 1,
+            "career": 1,
+            "health": -1
+          },
+          "flags": [
+            "art_soul"
+          ],
+          "mini_ending": {
+            "title": "琴房里的少年",
+            "desc": "排练到半夜，吉他弦断了三根。学业确实差了，但你们那个小乐队，后来居然演了一小场live。"
+          }
+        },
+        {
+          "id": "sports_star",
+          "icon": "trophy",
+          "title": "校队主力",
           "desc": "每天跑操训练，体育特长加试，高考少了几分但多了条路。",
-          "effects": { "health": 4, "happiness": 2, "career": 1 },
+          "effects": {
+            "health": 4,
+            "happiness": 2,
+            "career": 1
+          },
           "randomEffectPool": [
-            { "effects": { "career": 3 }, "text": "被省队看中，体育特长正式认定" },
-            { "effects": { "health": -3 }, "text": "训练中骨折，休了两个月" }
-          ] },
-        { "id": "dropout_wanderer", "icon": "plane", "title": "15岁出走",
+            {
+              "effects": {
+                "career": 3
+              },
+              "text": "被省队看中，体育特长正式认定"
+            },
+            {
+              "effects": {
+                "health": -3
+              },
+              "text": "训练中骨折，休了两个月"
+            }
+          ],
+          "mini_ending": {
+            "title": "校队训练场",
+            "desc": "每天五点起床跑操，膝盖是青的，身体倒是结实得离谱。体育这条路，比想象中走得远。"
+          }
+        },
+        {
+          "id": "dropout_wanderer",
+          "icon": "plane",
+          "title": "15岁出走",
           "desc": "受不了学校，直接跑去了海边打工，15岁就开始了社会大学。",
-          "effects": { "happiness": 3, "intellect": -3, "health": -1, "career": 1 },
-          "flags": ["double_life"] }
+          "effects": {
+            "happiness": 3,
+            "intellect": -3,
+            "health": -1,
+            "career": 1
+          },
+          "flags": [
+            "double_life"
+          ],
+          "mini_ending": {
+            "title": "15岁的海边",
+            "desc": "跑去了海边打工，晒得脱了三层皮。没有学历，但见过了比学校大得多的世界。"
+          }
+        }
       ]
     },
     {
@@ -157,20 +629,75 @@
       "subtitle": "18 ~ 24 岁",
       "intro": "四年时间，你可以把自己活成学霸，也可以彻底放飞。",
       "options": [
-        { "id": "top_student", "icon": "book", "title": "全系第一",
+        {
+          "id": "top_student",
+          "icon": "book",
+          "title": "全系第一",
           "desc": "GPA 4.0，保研，奖学金拿到手软，但快乐是什么不记得了。",
-          "effects": { "intellect": 4, "career": 3, "happiness": -2, "health": -1 } },
-        { "id": "entrepreneurship", "icon": "rocket", "title": "退学创业",
+          "effects": {
+            "intellect": 4,
+            "career": 3,
+            "happiness": -2,
+            "health": -1
+          },
+          "mini_ending": {
+            "title": "GPA 4.0",
+            "desc": "保研，奖学金，所有荣誉拿了一遍。朋友越来越少，手机里的消息全是导师发的论文。"
+          }
+        },
+        {
+          "id": "entrepreneurship",
+          "icon": "rocket",
+          "title": "退学创业",
           "desc": "大二退学，拉着室友开公司。赔得倾家荡产，但见识长出来了。",
-          "effects": { "wealth": -2, "career": 4, "happiness": 1, "intellect": 1 },
-          "flags": ["mystery_investor"] },
-        { "id": "art_studies", "icon": "pencil", "title": "辅修艺术",
+          "effects": {
+            "wealth": -2,
+            "career": 4,
+            "happiness": 1,
+            "intellect": 1
+          },
+          "flags": [
+            "mystery_investor"
+          ],
+          "mini_ending": {
+            "title": "退学那一周",
+            "desc": "室友帮你办了退学手续，你们在地下室开了公司。赔了，但那个神秘投资人的名片至今还压在你的书下面。"
+          }
+        },
+        {
+          "id": "art_studies",
+          "icon": "pencil",
+          "title": "辅修艺术",
           "desc": "主业不碰，辅修画画/音乐/设计，四年后多了一手好技能。",
-          "effects": { "intellect": 2, "happiness": 3, "health": 1 },
-          "flags": ["art_soul"] },
-        { "id": "gap_year_abroad", "icon": "plane", "title": "Gap Year 去欧洲",
+          "effects": {
+            "intellect": 2,
+            "happiness": 3,
+            "health": 1
+          },
+          "flags": [
+            "art_soul"
+          ],
+          "mini_ending": {
+            "title": "画布上的四年",
+            "desc": "主业够用，副业让你觉得自己像个真正的人。毕业时你的作品集比简历厚了五倍。"
+          }
+        },
+        {
+          "id": "gap_year_abroad",
+          "icon": "plane",
+          "title": "Gap Year 去欧洲",
           "desc": "背了个包走了12个国家，回来以后对这个世界理解完全不同了。",
-          "effects": { "happiness": 4, "intellect": 2, "wealth": -2, "health": -1 } }
+          "effects": {
+            "happiness": 4,
+            "intellect": 2,
+            "wealth": -2,
+            "health": -1
+          },
+          "mini_ending": {
+            "title": "12个国家一个背包",
+            "desc": "从里斯本走到了伊斯坦布尔，丢了护照，被骗了两回，但眼睛里装了别处没有的光。"
+          }
+        }
       ]
     },
     {
@@ -179,23 +706,87 @@
       "subtitle": "24 ~ 30 岁",
       "intro": "第一份工作定了调，但真正的大戏还在后面。",
       "options": [
-        { "id": "big_corp", "icon": "gear", "title": "大厂螺丝钉",
+        {
+          "id": "big_corp",
+          "icon": "gear",
+          "title": "大厂螺丝钉",
           "desc": "进了大厂，薪资不错，但996把你榨成干电池。",
-          "effects": { "wealth": 4, "career": 3, "health": -3, "happiness": -1 } },
-        { "id": "startup_life", "icon": "rocket", "title": "加入初创",
+          "effects": {
+            "wealth": 4,
+            "career": 3,
+            "health": -3,
+            "happiness": -1
+          },
+          "mini_ending": {
+            "title": "工位在15楼",
+            "desc": "进大厂第一年，工资够还房贷，但体检报告多了一堆箭头。你开始习惯深夜办公室只剩你一个人。"
+          }
+        },
+        {
+          "id": "startup_life",
+          "icon": "rocket",
+          "title": "加入初创",
           "desc": "小公司，钱少事多，但学东西飞快，说不定还能拿到期权。",
-          "effects": { "wealth": -1, "career": 4, "intellect": 2, "health": -1 },
+          "effects": {
+            "wealth": -1,
+            "career": 4,
+            "intellect": 2,
+            "health": -1
+          },
           "randomEffectPool": [
-            { "effects": { "wealth": 8 }, "text": "公司被收购，期权兑现，一夜翻身" },
-            { "effects": { "wealth": -5 }, "text": "公司倒闭，期权归零，负债起步" }
-          ] },
-        { "id": "freelance", "icon": "pencil", "title": "自由职业",
+            {
+              "effects": {
+                "wealth": 8
+              },
+              "text": "公司被收购，期权兑现，一夜翻身"
+            },
+            {
+              "effects": {
+                "wealth": -5
+              },
+              "text": "公司倒闭，期权归零，负债起步"
+            }
+          ],
+          "mini_ending": {
+            "title": "六个人的公司",
+            "desc": "工位是桌子，厕所是隔间，期权是PPT。学东西飞快，睡眠是借的。"
+          }
+        },
+        {
+          "id": "freelance",
+          "icon": "pencil",
+          "title": "自由职业",
           "desc": "不打工了，接活为生。收入不稳定，但时间说了算。",
-          "effects": { "happiness": 3, "wealth": -1, "career": 1, "health": 1 },
-          "flags": ["robot_colleague"] },
-        { "id": "civil_exam", "icon": "home", "title": "考公务员",
+          "effects": {
+            "happiness": 3,
+            "wealth": -1,
+            "career": 1,
+            "health": 1
+          },
+          "flags": [
+            "robot_colleague"
+          ],
+          "mini_ending": {
+            "title": "第一个项目来了",
+            "desc": "客户是网友，报价是玄学，但你有了属于自己的时间表。收入不稳，但心里是松的。"
+          }
+        },
+        {
+          "id": "civil_exam",
+          "icon": "home",
+          "title": "考公务员",
           "desc": "上岸了，稳定到令人发指，周末才是真正的生活。",
-          "effects": { "wealth": 2, "career": 2, "happiness": 1, "health": 2 } }
+          "effects": {
+            "wealth": 2,
+            "career": 2,
+            "happiness": 1,
+            "health": 2
+          },
+          "mini_ending": {
+            "title": "上岸了",
+            "desc": "公务员面试过了，同事说你运气好，你知道是熬了三年才熬出来的。稳定，真的稳定，稳定到有点慌。"
+          }
+        }
       ]
     },
     {
@@ -204,26 +795,100 @@
       "subtitle": "30 ~ 40 岁",
       "intro": "上有老下有小，房贷车贷压着，这十年是你人生最硬的仗。",
       "options": [
-        { "id": "career_sprint", "icon": "flame", "title": "全速冲刺",
+        {
+          "id": "career_sprint",
+          "icon": "flame",
+          "title": "全速冲刺",
           "desc": "35岁前必须升上去，否则就等着被优化，没有退路。",
-          "effects": { "career": 5, "wealth": 2, "health": -3, "happiness": -2 } },
-        { "id": "side_business", "icon": "sparkle", "title": "搞副业",
+          "effects": {
+            "career": 5,
+            "wealth": 2,
+            "health": -3,
+            "happiness": -2
+          },
+          "mini_ending": {
+            "title": "35岁的门槛",
+            "desc": "冲上去了，但代价是体检报告上的数字和你鬓角慢慢变白的速度。你开始算，还能跑多久。"
+          }
+        },
+        {
+          "id": "side_business",
+          "icon": "sparkle",
+          "title": "搞副业",
           "desc": "白天上班晚上直播/开网店/做自媒体，第二曲线慢慢起来了。",
-          "effects": { "wealth": 4, "happiness": 1, "health": -2, "career": 1 },
+          "effects": {
+            "wealth": 4,
+            "happiness": 1,
+            "health": -2,
+            "career": 1
+          },
           "randomEffectPool": [
-            { "effects": { "wealth": 5 }, "text": "副业爆了，比主业赚得多" },
-            { "effects": { "happiness": -3 }, "text": "副业做了一堆，哪个都没起量" }
-          ] },
-        { "id": "family_first", "icon": "heart", "title": "回归家庭",
+            {
+              "effects": {
+                "wealth": 5
+              },
+              "text": "副业爆了，比主业赚得多"
+            },
+            {
+              "effects": {
+                "happiness": -3
+              },
+              "text": "副业做了一堆，哪个都没起量"
+            }
+          ],
+          "mini_ending": {
+            "title": "白天是螺丝钉，晚上是老板",
+            "desc": "凌晨两点在写代码，早上八点在坐地铁。两条腿走路，哪条能先跑通还是未知数。"
+          }
+        },
+        {
+          "id": "family_first",
+          "icon": "heart",
+          "title": "回归家庭",
           "desc": "主动降职，多点时间陪家人。快乐回来了，钱包瘦了。",
-          "effects": { "happiness": 4, "health": 2, "wealth": -2, "career": -2 } },
-        { "id": "investor_moment", "icon": "coins", "title": "All in 一笔投资",
+          "effects": {
+            "happiness": 4,
+            "health": 2,
+            "wealth": -2,
+            "career": -2
+          },
+          "mini_ending": {
+            "title": "降职那天",
+            "desc": "领导说理解，同事眼神复杂。你开始接送孩子，周末不再加班。快乐回来了，但账户余额没跟上。"
+          }
+        },
+        {
+          "id": "investor_moment",
+          "icon": "coins",
+          "title": "All in 一笔投资",
           "desc": "听朋友推荐All in了一个项目，要么翻身要么归零。",
-          "effects": {}, "randomEffectPool": [
-            { "effects": { "wealth": 12 }, "text": "赚了，人生直接换个赛道" },
-            { "effects": { "wealth": -8 }, "text": "亏了，房贷差点还不上" },
-            { "effects": { "wealth": 3, "happiness": 2 }, "text": "小赚，心态好了很多" }
-          ] }
+          "effects": {},
+          "randomEffectPool": [
+            {
+              "effects": {
+                "wealth": 12
+              },
+              "text": "赚了，人生直接换个赛道"
+            },
+            {
+              "effects": {
+                "wealth": -8
+              },
+              "text": "亏了，房贷差点还不上"
+            },
+            {
+              "effects": {
+                "wealth": 3,
+                "happiness": 2
+              },
+              "text": "小赚，心态好了很多"
+            }
+          ],
+          "mini_ending": {
+            "title": "All in 的那一刻",
+            "desc": "把钱全部押进去了，心跳到嗓子眼。没有人知道结果，包括你自己。"
+          }
+        }
       ]
     },
     {
@@ -232,26 +897,98 @@
       "subtitle": "40 ~ 55 岁",
       "intro": "人到中年，上有老下有小，但奇怪的是，反而开始想明白一些事了。",
       "options": [
-        { "id": "crisis_45", "icon": "flame", "title": "中年危机",
+        {
+          "id": "crisis_45",
+          "icon": "flame",
+          "title": "中年危机",
           "desc": "某天下班后在车里坐了一小时不想上楼，开始怀疑自己这一辈子值不值。",
-          "effects": { "happiness": -3, "health": -1, "intellect": 2 },
+          "effects": {
+            "happiness": -3,
+            "health": -1,
+            "intellect": 2
+          },
           "randomEffectPool": [
-            { "effects": { "happiness": 5, "career": 2 }, "text": "想通了，主动辞职换赛道，反而活明白了" },
-            { "effects": { "happiness": -2, "wealth": -3 }, "text": "冲动辞职，结果下一份工作更难找" }
-          ] },
-        { "id": "second_mountain", "icon": "rocket", "title": "第二座山",
+            {
+              "effects": {
+                "happiness": 5,
+                "career": 2
+              },
+              "text": "想通了，主动辞职换赛道，反而活明白了"
+            },
+            {
+              "effects": {
+                "happiness": -2,
+                "wealth": -3
+              },
+              "text": "冲动辞职，结果下一份工作更难找"
+            }
+          ],
+          "mini_ending": {
+            "title": "车里的那一小时",
+            "desc": "下班后没上楼，在车里坐了一个小时。你开始认真思考：这一辈子，到底在干什么？"
+          }
+        },
+        {
+          "id": "second_mountain",
+          "icon": "rocket",
+          "title": "第二座山",
           "desc": "主业稳了，开始搞第二个事业。50岁开咖啡馆，60岁可能还在创业。",
-          "effects": { "career": 3, "happiness": 2, "wealth": 1, "health": -1 } },
-        { "id": "retire_plan", "icon": "meditate", "title": "规划提前退休",
+          "effects": {
+            "career": 3,
+            "happiness": 2,
+            "wealth": 1,
+            "health": -1
+          },
+          "mini_ending": {
+            "title": "50岁的第二个事业",
+            "desc": "别人退休你开店，别人遛弯你开咖啡。慢，但稳，而且是你自己选的。"
+          }
+        },
+        {
+          "id": "retire_plan",
+          "icon": "meditate",
+          "title": "规划提前退休",
           "desc": "开始认真算钱，45岁能不能躺平？目标：提前15年退休。",
-          "effects": { "happiness": 3, "health": 2, "wealth": -1, "career": -1 } },
-        { "id": "health_warning", "icon": "meditate", "title": "体检红灯",
+          "effects": {
+            "happiness": 3,
+            "health": 2,
+            "wealth": -1,
+            "career": -1
+          },
+          "mini_ending": {
+            "title": "45岁退休计划",
+            "desc": "开始认真算钱，做Excel做到半夜。梦想是提前15年退休，现实是数字还差一点。"
+          }
+        },
+        {
+          "id": "health_warning",
+          "icon": "meditate",
+          "title": "体检红灯",
           "desc": "体检结果出来，有一项是红的。医生让你开始养生。",
-          "effects": { "health": -3, "happiness": -1 },
+          "effects": {
+            "health": -3,
+            "happiness": -1
+          },
           "randomEffectPool": [
-            { "effects": { "health": 2, "happiness": 1 }, "text": "及时调理，指标慢慢降下来了" },
-            { "effects": { "health": -3 }, "text": "拖了拖，又添了个慢性病" }
-          ] }
+            {
+              "effects": {
+                "health": 2,
+                "happiness": 1
+              },
+              "text": "及时调理，指标慢慢降下来了"
+            },
+            {
+              "effects": {
+                "health": -3
+              },
+              "text": "拖了拖，又添了个慢性病"
+            }
+          ],
+          "mini_ending": {
+            "title": "体检报告上的红箭头",
+            "desc": "医生说了些让你坐不住的话。从今天开始，养生是正经事了。"
+          }
+        }
       ]
     },
     {
@@ -260,131 +997,448 @@
       "subtitle": "55 岁以后",
       "intro": "终于不用上班了。问题是，接下来几十年你要怎么活？",
       "options": [
-        { "id": "garden_life", "icon": "rose", "title": "回乡下种菜",
+        {
+          "id": "garden_life",
+          "icon": "rose",
+          "title": "回乡下种菜",
           "desc": "城市太吵，回去种菜养鸡，日出而作，日落而息，快活似神仙。",
-          "effects": { "happiness": 4, "health": 2, "wealth": -2 } },
-        { "id": "university_55", "icon": "book", "title": "55岁考个大学",
+          "effects": {
+            "happiness": 4,
+            "health": 2,
+            "wealth": -2
+          },
+          "mini_ending": {
+            "title": "回乡下第一天",
+            "desc": "没有闹钟，没有WiFi，只有菜地的鸡叫。你居然不慌了。"
+          }
+        },
+        {
+          "id": "university_55",
+          "icon": "book",
+          "title": "55岁考个大学",
           "desc": "年轻时没读够，现在读回来。同班都是退休老人，学得很快乐。",
-          "effects": { "intellect": 3, "happiness": 3, "health": -1 } },
-        { "id": "travel_the_world", "icon": "plane", "title": "环游世界",
+          "effects": {
+            "intellect": 3,
+            "happiness": 3,
+            "health": -1
+          },
+          "mini_ending": {
+            "title": "55岁的同桌",
+            "desc": "教室里坐着的都是退休老人，你居然不觉得违和。这届新同学，认真得让人感动。"
+          }
+        },
+        {
+          "id": "travel_the_world",
+          "icon": "plane",
+          "title": "环游世界",
           "desc": "攒了一辈子钱，现在花出去。70岁走完了六洲，身体比50岁的白领还好。",
-          "effects": { "happiness": 5, "health": 1, "wealth": -3 } },
-        { "id": "mentor_role", "icon": "sparkle", "title": "当人生导师",
+          "effects": {
+            "happiness": 5,
+            "health": 1,
+            "wealth": -3
+          },
+          "mini_ending": {
+            "title": "第一站：里斯本",
+            "desc": "攒了一辈子钱，现在开始花。70岁的你，走得比50岁的白领还远。"
+          }
+        },
+        {
+          "id": "mentor_role",
+          "icon": "sparkle",
+          "title": "当人生导师",
           "desc": "退休后开始带学生/写专栏/做顾问，把自己的人生经验传下去。",
-          "effects": { "career": 2, "happiness": 3, "intellect": 1 } }
+          "effects": {
+            "career": 2,
+            "happiness": 3,
+            "intellect": 1
+          },
+          "mini_ending": {
+            "title": "第一堂顾问课",
+            "desc": "你坐在会议室里，对面是一群刚毕业的孩子。你讲的话，他们听进去了。"
+          }
+        }
       ]
     }
   ],
   "random_events": [
-    { "id": "event_rain",   "title": "一场意外暴雨",
+    {
+      "id": "event_rain",
+      "title": "一场意外暴雨",
       "desc": "下班路上暴雨，车被淹了。保险赔了，但你损失了一部分存款。",
-      "effects": { "wealth": -2 } },
-    { "id": "event_lottery", "title": "路边10元彩票",
+      "effects": {
+        "wealth": -2
+      }
+    },
+    {
+      "id": "event_lottery",
+      "title": "路边10元彩票",
       "desc": "随手买的彩票，居然中了。不多，但够吃一年的。",
-      "effects": { "wealth": 3, "happiness": 2 } },
-    { "id": "event_friendship", "title": "多年未见老友",
+      "effects": {
+        "wealth": 3,
+        "happiness": 2
+      }
+    },
+    {
+      "id": "event_friendship",
+      "title": "多年未见老友",
       "desc": "多年没联系的老友突然来找你，聊了一夜，觉得人生没白活。",
-      "effects": { "happiness": 3 },
-      "flags": ["childhood_friend"] },
-    { "id": "event_inheritance", "title": "远房亲戚遗产",
+      "effects": {
+        "happiness": 3
+      },
+      "flags": [
+        "childhood_friend"
+      ]
+    },
+    {
+      "id": "event_inheritance",
+      "title": "远房亲戚遗产",
       "desc": "一个你从未听说过的亲戚去世了，留了一笔遗产给你。",
-      "effects": { "wealth": 4 },
-      "flags": ["inherited_house"] },
-    { "id": "event_viral", "title": "一个视频意外爆火",
+      "effects": {
+        "wealth": 4
+      },
+      "flags": [
+        "inherited_house"
+      ]
+    },
+    {
+      "id": "event_viral",
+      "title": "一个视频意外爆火",
       "desc": "随手拍的视频被算法推上热门，一夜之间有了上万粉丝。",
-      "effects": { "happiness": 3, "career": 1 },
-      "flags": ["viral_video"] },
-    { "id": "event_sick_parent", "title": "父母生病",
+      "effects": {
+        "happiness": 3,
+        "career": 1
+      },
+      "flags": [
+        "viral_video"
+      ]
+    },
+    {
+      "id": "event_sick_parent",
+      "title": "父母生病",
       "desc": "父母突然生病住院，花了很多钱，也让你开始认真对待健康这件事。",
-      "effects": { "wealth": -2, "happiness": -1, "health": 1 } },
-    { "id": "event_time_machine", "title": "一封1999年的信",
+      "effects": {
+        "wealth": -2,
+        "happiness": -1,
+        "health": 1
+      }
+    },
+    {
+      "id": "event_time_machine",
+      "title": "一封1999年的信",
       "desc": "整理老房子时翻出一封信，是1999年的自己写的：'希望50岁的我过得还不错。'你愣了一下。",
-      "effects": { "happiness": 2 },
-      "flags": ["time_machine"] },
-    { "id": "event_injury_recovery", "title": "伤愈归来",
+      "effects": {
+        "happiness": 2
+      },
+      "flags": [
+        "time_machine"
+      ]
+    },
+    {
+      "id": "event_injury_recovery",
+      "title": "伤愈归来",
       "desc": "多年的旧伤终于彻底好了，身体比从前更硬朗了。",
-      "effects": { "health": 4 } },
-    { "id": "event_secret_letter", "title": "陌生人的信",
+      "effects": {
+        "health": 4
+      }
+    },
+    {
+      "id": "event_secret_letter",
+      "title": "陌生人的信",
       "desc": "收到一封没有署名的信，里面只有一张你小时候的照片，背面写着'你并不孤单'。",
-      "effects": { "happiness": 2 },
-      "flags": ["secret_letter"] },
-    { "id": "event_robot_colleague", "title": "机器人同事",
+      "effects": {
+        "happiness": 2
+      },
+      "flags": [
+        "secret_letter"
+      ]
+    },
+    {
+      "id": "event_robot_colleague",
+      "title": "机器人同事",
       "desc": "公司新来了一个AI同事，效率极高，你开始重新思考自己的价值。",
-      "effects": { "intellect": 2, "happiness": -1 },
-      "flags": ["robot_colleague"] },
-    { "id": "event_lost_family_found", "title": "找到了失散的人",
+      "effects": {
+        "intellect": 2,
+        "happiness": -1
+      },
+      "flags": [
+        "robot_colleague"
+      ]
+    },
+    {
+      "id": "event_lost_family_found",
+      "title": "找到了失散的人",
       "desc": "多年后，通过DNA数据库找到了失散的亲人。那一刻，所有的谜都解开了。",
-      "effects": { "happiness": 5 },
-      "flags": ["lost_family"] },
-    { "id": "event_gold_tooth", "title": "金牙的秘密",
+      "effects": {
+        "happiness": 5
+      },
+      "flags": [
+        "lost_family"
+      ]
+    },
+    {
+      "id": "event_gold_tooth",
+      "title": "金牙的秘密",
       "desc": "小时候藏了一枚金牙，原来那是失踪的外公留给你的信物。",
-      "effects": { "wealth": 1, "happiness": 2 },
-      "flags": ["gold_tooth"] },
-    { "id": "event_astral", "title": "奇怪的体验",
+      "effects": {
+        "wealth": 1,
+        "happiness": 2
+      },
+      "flags": [
+        "gold_tooth"
+      ]
+    },
+    {
+      "id": "event_astral",
+      "title": "奇怪的体验",
       "desc": "某天晚上做了一个极其清晰的梦，梦里的细节真实得像去过。醒来后，你不知道那是什么。",
-      "effects": { "intellect": 1 },
-      "flags": ["astral_travel"] },
-    { "id": "event_memory", "title": "记忆出现了空白",
+      "effects": {
+        "intellect": 1
+      },
+      "flags": [
+        "astral_travel"
+      ]
+    },
+    {
+      "id": "event_memory",
+      "title": "记忆出现了空白",
       "desc": "有一天你突然发现自己想不起小学某年的事，但照片上清晰写着那一年的日期。",
-      "effects": { "happiness": -1 },
-      "flags": ["memory_lapse"] },
-    { "id": "event_petal", "title": "一只狐狸",
+      "effects": {
+        "happiness": -1
+      },
+      "flags": [
+        "memory_lapse"
+      ]
+    },
+    {
+      "id": "event_petal",
+      "title": "一只狐狸",
       "desc": "搬家那天，发现了一只橘色的小狐狸，它居然跟着你回了家。",
-      "effects": { "happiness": 3 },
-      "flags": ["pet_fox"] },
-    { "id": "event_guarantor", "title": "隐形担保人",
+      "effects": {
+        "happiness": 3
+      },
+      "flags": [
+        "pet_fox"
+      ]
+    },
+    {
+      "id": "event_guarantor",
+      "title": "隐形担保人",
       "desc": "某次贷款被拒，后来发现有人一直在背后帮你担保，你始终没查到是谁。",
-      "effects": { "wealth": 2 },
-      "flags": ["hidden_guarantor"] }
+      "effects": {
+        "wealth": 2
+      },
+      "flags": [
+        "hidden_guarantor"
+      ]
+    },
+    {
+      "id": "event_injury",
+      "title": "旧伤复发",
+      "desc": "年轻时落下的伤，最近在阴雨天开始疼得睡不着。你翻出旧时医生给的建议，开始认真康复。",
+      "effects": {
+        "health": -1,
+        "happiness": -1
+      },
+      "flags": [
+        "injury"
+      ]
+    },
+    {
+      "id": "event_curse",
+      "title": "古宅的诅咒",
+      "desc": "你继承了一座老宅，但入住后开始遇到一些无法解释的事。你选择继续住下去，因为搬走的成本太高了。",
+      "effects": {
+        "happiness": -2,
+        "intellect": 1
+      },
+      "flags": [
+        "curse"
+      ]
+    }
   ],
   "endings": [
-    { "id": "golden_ending", "title": "人生赢家", "emoji": "trophy",
+    {
+      "id": "golden_ending",
+      "title": "人生赢家",
+      "emoji": "trophy",
       "desc": "家境优渥、学有所成、生活幸福——你把人生剧本写成了爽文。",
-      "priority": 90, "conditions": { "minScore": 30 } },
-    { "id": "mystery_box_ending", "title": "百宝箱的预言", "emoji": "gift",
+      "priority": 90,
+      "conditions": {
+        "minScore": 30
+      }
+    },
+    {
+      "id": "mystery_box_ending",
+      "title": "百宝箱的预言",
+      "emoji": "gift",
       "desc": "100岁生日那天，你终于打开了那个神秘的小盒子。里面有一封信，写着：'你这一生，活成了自己想要的样子。'",
-      "priority": 100, "conditions": { "flag": "mystery_box" } },
-    { "id": "lost_family_ending", "title": "血浓于水", "emoji": "heart",
+      "priority": 100,
+      "conditions": {
+        "flag": "mystery_box"
+      }
+    },
+    {
+      "id": "lost_family_ending",
+      "title": "血浓于水",
+      "emoji": "heart",
       "desc": "多年后找到了失散的亲人。你们隔着桌子，谁都没说话，但都在哭。",
-      "priority": 95, "conditions": { "flag": "lost_family", "minHappiness": 5 } },
-    { "id": "art_ending", "title": "艺术家的灵魂", "emoji": "pencil",
+      "priority": 95,
+      "conditions": {
+        "flag": "lost_family",
+        "minHappiness": 5
+      }
+    },
+    {
+      "id": "art_ending",
+      "title": "艺术家的灵魂",
+      "emoji": "pencil",
       "desc": "你没有成为最大的赢家，但你留下了自己的作品。多年以后，有人在你画布前站了很长时间。",
-      "priority": 80, "conditions": { "flag": "art_soul" } },
-    { "id": "viral_ending", "title": "一夜成名", "emoji": "sparkle",
+      "priority": 80,
+      "conditions": {
+        "flag": "art_soul"
+      }
+    },
+    {
+      "id": "viral_ending",
+      "title": "一夜成名",
+      "emoji": "sparkle",
       "desc": "那个视频改变了一切。你成为了一个小小的传奇，生活再也没有回到从前。",
-      "priority": 75, "conditions": { "flag": "viral_video", "minScore": 15 } },
-    { "id": "investor_ending", "title": "神秘资本", "emoji": "coins",
+      "priority": 75,
+      "conditions": {
+        "flag": "viral_video",
+        "minScore": 15
+      }
+    },
+    {
+      "id": "investor_ending",
+      "title": "神秘资本",
+      "emoji": "coins",
       "desc": "那个神秘投资人在关键时刻推了你一把。你成功了，但你始终没能见到对方的真面目。",
-      "priority": 70, "conditions": { "flag": "mystery_investor", "minWealth": 8 } },
-    { "id": "healer_ending", "title": "治愈之光", "emoji": "rose",
+      "priority": 70,
+      "conditions": {
+        "flag": "mystery_investor",
+        "minWealth": 8
+      }
+    },
+    {
+      "id": "healer_ending",
+      "title": "治愈之光",
+      "emoji": "rose",
       "desc": "你这一生没有创造什么伟业，但你治愈了无数人。很多陌生人说起你，眼里都有光。",
-      "priority": 65, "conditions": { "minHappiness": 20 } },
-    { "id": "iron_ending", "title": "钢铁之躯", "emoji": "flame",
+      "priority": 65,
+      "conditions": {
+        "minHappiness": 20
+      }
+    },
+    {
+      "id": "iron_ending",
+      "title": "钢铁之躯",
+      "emoji": "flame",
       "desc": "你活到了105岁，身体好到让医生都惊讶。你这一生没有太多戏剧性，但足够长、足够稳。",
-      "priority": 60, "conditions": { "minHealth": 15 } },
-    { "id": "troublemaker_ending", "title": "传奇痞子", "emoji": "flame",
+      "priority": 60,
+      "conditions": {
+        "minHealth": 10
+      }
+    },
+    {
+      "id": "troublemaker_ending",
+      "title": "传奇痞子",
+      "emoji": "flame",
       "desc": "你这一生犯了很多错，也做了很多事。到最后，人们提起你，说'他这辈子，真他妈活明白了'。",
-      "priority": 55, "conditions": { "flag": "double_life" } },
-    { "id": "guarantor_ending", "title": "无形之手", "emoji": "sparkle",
+      "priority": 55,
+      "conditions": {
+        "flag": "double_life"
+      }
+    },
+    {
+      "id": "guarantor_ending",
+      "title": "无形之手",
+      "emoji": "sparkle",
       "desc": "你一辈子都在被一个隐形人守护，直到最后你才猜到是谁。你没能当面说谢谢，但你在心里说了100次。",
-      "priority": 70, "conditions": { "flag": "hidden_guarantor", "minWealth": 5 } },
-    { "id": "fox_ending", "title": "狐狸的一生", "emoji": "clover",
+      "priority": 70,
+      "conditions": {
+        "flag": "hidden_guarantor",
+        "minWealth": 5
+      }
+    },
+    {
+      "id": "fox_ending",
+      "title": "狐狸的一生",
+      "emoji": "clover",
       "desc": "你养了一辈子的那只狐狸，在你最后的日子里，安静地趴在你的脚边。",
-      "priority": 50, "conditions": { "flag": "pet_fox", "minHappiness": 10 } },
-    { "id": "astral_ending", "title": "另一个世界", "emoji": "gift",
+      "priority": 50,
+      "conditions": {
+        "flag": "pet_fox",
+        "minHappiness": 10
+      }
+    },
+    {
+      "id": "astral_ending",
+      "title": "另一个世界",
+      "emoji": "gift",
       "desc": "你这一生经历过几次无法解释的事。最后那天，你闭上眼睛，去了一个很远的地方。那里很安静。",
-      "priority": 60, "conditions": { "flag": "astral_travel" } },
-    { "id": "sage_ending", "title": "智慧的长者", "emoji": "books",
+      "priority": 60,
+      "conditions": {
+        "flag": "astral_travel"
+      }
+    },
+    {
+      "id": "sage_ending",
+      "title": "智慧的长者",
+      "emoji": "books",
       "desc": "你这一生学了很多，也教了很多。你成为了别人人生的那盏灯，虽然你从未想过要当老师。",
-      "priority": 55, "conditions": { "minIntellect": 20 } },
-    { "id": "career_peak", "title": "巅峰时刻", "emoji": "trophy",
+      "priority": 55,
+      "conditions": {
+        "minIntellect": 20
+      }
+    },
+    {
+      "id": "career_peak",
+      "title": "巅峰时刻",
+      "emoji": "trophy",
       "desc": "事业在你55岁那年到了顶点。你功成身退，把公司交给了年轻人，自己去了山里住了下来。",
-      "priority": 50, "conditions": { "minCareer": 15 } },
-    { "id": "ordinary_ending", "title": "平凡一生", "emoji": "sun",
+      "priority": 50,
+      "conditions": {
+        "minCareer": 15
+      }
+    },
+    {
+      "id": "ordinary_ending",
+      "title": "平凡一生",
+      "emoji": "sun",
       "desc": "没有大富大贵，也没有大起大落。平凡的一天又一天，但你过得很踏实。",
-      "priority": 30, "conditions": {} },
-    { "id": "rock_bottom", "title": "跌入谷底", "emoji": "flame",
+      "priority": 30,
+      "conditions": {}
+    },
+    {
+      "id": "rock_bottom",
+      "title": "跌入谷底",
+      "emoji": "flame",
       "desc": "你这一生走得磕磕绊绊，很多事没有如你所愿。但你在谷底也找到了一点光。",
-      "priority": 40, "conditions": { "maxScore": 0 } }
+      "priority": 40,
+      "conditions": {
+        "maxScore": 0
+      }
+    },
+    {
+      "id": "injury_ending",
+      "title": "带伤前行",
+      "emoji": "flame",
+      "desc": "你这一生带着旧伤走过。它有时会疼，有时完全忘了。你学会了与它共存，就像学会了与很多事共存一样。",
+      "priority": 45,
+      "conditions": {
+        "flag": "injury"
+      }
+    },
+    {
+      "id": "curse_ending",
+      "title": "古宅的主人",
+      "emoji": "gift",
+      "desc": "你成了那座老宅的主人。多年以后你终于弄明白了那些事的原因，你选择继续住下去，因为这里已经是你的家了。",
+      "priority": 48,
+      "conditions": {
+        "flag": "curse"
+      }
+    }
   ]
 }

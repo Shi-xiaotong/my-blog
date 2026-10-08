@@ -21,6 +21,7 @@
   var state = null;
   var lastDeltas = {};
   var lastRandomEvent = null;   // 本回合触发的随机事件, 用于显示插叙
+  var pendingMini = null;       // 刚选完的选项, 小结局页展示用
 
   // ---------- 图标映射表 ----------
   var ICONS = {
@@ -126,19 +127,15 @@
     if (opt.randomEffectPool && opt.randomEffectPool.length) {
       var pick = opt.randomEffectPool[Math.floor(Math.random() * opt.randomEffectPool.length)];
       applyEffects(pick.effects);
+      opt._randomPick = pick;   // 小结局页展示随机结果
       state.choices.push({ label: stage.title + '·意外', value: pick.text || '命运插叙' });
+    } else {
+      state.choices.push({ label: stage.title, value: opt.title });
     }
 
     (opt.flags || []).forEach(function (f) {
       if (state.flags.indexOf(f) === -1) state.flags.push(f);
     });
-    if (!opt.randomEffectPool || !opt.randomEffectPool.length) {
-      state.choices.push({ label: stage.title, value: opt.title });
-    }
-    // 若随机池已记录了, 这里不重复记
-    if (!opt.randomEffectPool || !opt.randomEffectPool.length) {
-      state.choices.push({ label: stage.title, value: opt.title });
-    }
 
     // v2: 每个阶段结束后触发一条随机事件 (40% 概率)
     lastRandomEvent = null;
@@ -153,11 +150,22 @@
       state.choices.push({ label: '命运插叙', value: evt.title });
     }
 
-    state.stageIdx++;
+    // v3: 先进小结局, 点继续再进下一阶段
+    pendingMini = { stage: stage, option: opt };
+    state.phase = 'mini_ending';
+    render();
+  }
+
+  function continueAfterMini() {
+    pendingMini = null;
     lastDeltas = {};
+    lastRandomEvent = null;
+    state.stageIdx++;
     if (state.stageIdx >= data.stages.length) {
       state.phase = 'ending';
       resolveEnding();
+    } else {
+      state.phase = 'stage';
     }
     render();
   }
@@ -230,7 +238,72 @@
   function render() {
     if (state.phase === 'talent') return renderTalent();
     if (state.phase === 'stage') return renderStage();
+    if (state.phase === 'mini_ending') return renderMiniEnding();
     if (state.phase === 'ending') return renderEnding();
+  }
+
+  // v3: 小结局 — 阶段选完后的反馈页, 显示本段回顾 + 属性快照 + 继续按钮
+  function renderMiniEnding() {
+    var m = pendingMini;
+    if (!m) { state.phase = 'stage'; return render(); }
+    var opt = m.option;
+    var mini = opt.mini_ending || { title: opt.title, desc: '' };
+    var total = totalScore();
+
+    // 本阶段属性变化摘要 (lastDeltas 是选完瞬间的增量)
+    var deltas = Object.keys(lastDeltas)
+      .filter(function (k) { return lastDeltas[k] !== 0; })
+      .map(function (k) {
+        var a = data.meta.attributes.find(function (x) { return x.id === k; });
+        var d = lastDeltas[k];
+        return '<span class="lc-mini-delta ' + (d > 0 ? 'up' : 'down') + '">' +
+          icon(a.icon) + ' ' + esc(a.name) + ' ' + (d > 0 ? '+' : '') + d + '</span>';
+      }).join('');
+
+    // 随机结果展示
+    var randLine = '';
+    if (opt._randomPick) {
+      randLine = '<div class="lc-random-result">⚡ 命运掷了个骰子：' +
+        esc(opt._randomPick.text || '未知结果') + '</div>';
+    }
+
+    // 隐藏事件提示
+    var flagLine = '';
+    if (opt.flags && opt.flags.length) {
+      var fnames = opt.flags.map(function (fid) {
+        var f = (data.meta.flags || []).find(function (x) { return x.id === fid; });
+        return f ? f.name : fid;
+      });
+      flagLine = '<div class="lc-mini-flag">✦ 解锁隐藏事件：' + esc(fnames.join('、')) + '</div>';
+    }
+
+    // 随机事件插叙
+    var evtLine = lastRandomEvent
+      ? '<div class="lc-random-event">' +
+        '<div class="lc-random-event-title">✦ 命运插叙</div>' +
+        '<div class="lc-random-event-name">' + esc(lastRandomEvent.title) + '</div>' +
+        '<div class="lc-random-event-desc">' + esc(lastRandomEvent.desc) + '</div>' +
+        '</div>'
+      : '';
+
+    var isLast = (state.stageIdx >= data.stages.length - 1);
+    var continueLabel = isLast ? '走完最后一段 →' : '继续下一章 →';
+
+    $game.innerHTML =
+      '<div class="lc-container lc-mini-ending">' +
+      '<div class="lc-progress"><div class="lc-progress-fill" style="width:' +
+        Math.round(((state.stageIdx + 1) / data.stages.length) * 100) + '%"></div></div>' +
+      '<div class="lc-mini-chapter">' + esc(m.stage.subtitle) + ' · ' +
+        (state.stageIdx + 1) + ' / ' + data.stages.length + '</div>' +
+      '<div class="lc-mini-icon">' + icon(opt.icon) + '</div>' +
+      '<div class="lc-mini-title">' + esc(mini.title) + '</div>' +
+      '<div class="lc-mini-desc">' + esc(mini.desc) + '</div>' +
+      flagLine + randLine + evtLine +
+      (deltas ? '<div class="lc-mini-deltas">' + deltas + '</div>' : '') +
+      '<div class="lc-mini-score">当前总评分 <strong>' + total + '</strong></div>' +
+      '<div class="lc-actions">' +
+      '<button class="lc-btn lc-btn-primary" onclick="LC.continueAfterMini()">' + continueLabel + '</button>' +
+      '</div></div>';
   }
 
   function renderTalent() {
@@ -347,6 +420,7 @@
     pickTalent: pickTalent,
     skipTalent: skipTalent,
     chooseOption: chooseOption,
+    continueAfterMini: continueAfterMini,
     restart: startGame
   };
 

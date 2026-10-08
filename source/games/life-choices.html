@@ -85,6 +85,23 @@
 /* v2 random choice styling */
 .lc-choice-random { color: var(--warning); font-style: italic; }
 
+/* v3 mini ending (stage recap card) */
+.lc-mini-ending { text-align: center; animation: lcFadeIn 0.5s ease; }
+.lc-mini-chapter { font-size: 12px; color: var(--text-secondary); letter-spacing: 2px; margin-bottom: 10px; }
+.lc-mini-icon { margin-bottom: 8px; }
+.lc-mini-icon svg { width: 44px; height: 44px; color: var(--primary); display: block; margin: 0 auto; }
+.lc-mini-title { font-size: 1.5em; font-weight: 700; margin-bottom: 10px; }
+.lc-mini-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; max-width: 440px; margin: 0 auto 14px; }
+.lc-mini-flag { display: inline-block; margin-bottom: 12px; font-size: 13px; color: var(--warning); background: rgba(245,158,11,0.12); padding: 4px 12px; border-radius: 8px; }
+.lc-random-result { display: inline-block; margin-bottom: 12px; font-size: 13px; color: var(--primary); background: rgba(59,130,246,0.1); padding: 4px 12px; border-radius: 8px; }
+.lc-mini-deltas { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+.lc-mini-delta { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; }
+.lc-mini-delta svg { width: 14px; height: 14px; }
+.lc-mini-delta.up { color: var(--accent); }
+.lc-mini-delta.down { color: var(--danger); }
+.lc-mini-score { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+.lc-mini-score strong { font-family: 'SF Mono', monospace; color: var(--primary); font-size: 15px; }
+
 /* Mobile */
 @media (max-width: 480px) {
   .lc-attr { min-width: 80px; padding: 8px 10px; }
