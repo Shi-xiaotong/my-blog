@@ -2,7 +2,7 @@
 title: 博客全量性能优化实录：从 21 个请求到 11 个，CDN 依赖从 7 个砍到 1 个
 date: 2026-07-11 10:00:00
 tags: ["性能优化", "Hexo", "Cloudflare", "WebP"]
-categories: tech
+categories: 技术
 top_img: false
 description: 一天时间，把博客从 21 个请求 + 7 个 CDN 依赖优化到 11 个请求 + 1 个 CDN 依赖。记录了每个优化项的思路、操作和效果。
 ---

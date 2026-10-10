@@ -1,7 +1,7 @@
 ---
 title: 新能源车维修成本为什么远高于燃油车？买车前必看
 date: 2026-06-03 14:00:00
-categories: life
+categories: 生活
 tags: ["生活"]
 ---
 
