@@ -80,6 +80,13 @@ index_generator:
 # 分类 & 标签
 default_category: uncategorized
 category_map:
+  anime: 动漫
+  daily-news: 每日热点
+  history: 历史
+  life: 生活
+  notes: 笔记
+  science: 科学
+  tech: 技术
 tag_map:
 
 # 元数据元素
