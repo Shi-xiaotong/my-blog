@@ -199,7 +199,7 @@ def generate(date_str):
 title: "{date_display} 科技资讯"
 date: {date_str} 12:00:00
 categories:
-  - daily-news
+  - 每日热点
 tags:
   - 每日热点
 description: "{date_display} 科技资讯。"
@@ -257,7 +257,7 @@ description: "{date_display} 科技资讯。"
 title: "{title}"
 date: {date_str} 12:00:00
 categories:
-  - daily-news
+  - 每日热点
 tags:
   - 每日热点
 description: "{desc}"
