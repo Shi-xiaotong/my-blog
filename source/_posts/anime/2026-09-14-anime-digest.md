@@ -1,5 +1,5 @@
 ---
-title: "本季神仙打架！死神评分90，无职热度碾压， nicotine喵喵也杀疯了"
+title: "当季新番：BLEACH 评分90，无职转生三期热度领先，ニコニコ喵喵"
 date: 2026-09-14 12:00:00
 categories:
   - anime

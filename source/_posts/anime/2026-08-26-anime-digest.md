@@ -1,5 +1,5 @@
 ---
-title: "本季神作扎堆！BLEACH评分90封神，转生者第三季热度碾压全场"
+title: "当季新番：BLEACH 评分90，无职转生三期热度领先"
 date: 2026-08-26 12:00:00
 categories:
   - anime
