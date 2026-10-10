@@ -3,7 +3,7 @@ title: 咒术回战：当代最燃热血番
 date: 2026-04-15 14:00:00
 
 categories:
-  - anime
+  - 动漫
 tags: ["动漫"]
 ---
 

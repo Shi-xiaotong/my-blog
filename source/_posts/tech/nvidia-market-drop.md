@@ -2,7 +2,7 @@
 title: "英伟达市值一夜蒸发2.2万亿：AI泡沫要破了吗"
 date: 2026-06-06 22:00:00
 categories:
-  - tech
+  - 技术
 tags: ["AI"]
 ---
 

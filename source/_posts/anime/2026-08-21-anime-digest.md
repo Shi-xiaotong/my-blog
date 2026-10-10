@@ -2,7 +2,7 @@
 title: "当季新番：无职转生三期、BLEACH 千年血战篇终章"
 date: 2026-08-21 12:00:00
 categories:
-  - anime
+  - 动漫
 tags:
   - 动漫推荐
   - 新番

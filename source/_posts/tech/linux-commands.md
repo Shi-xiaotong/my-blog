@@ -3,7 +3,7 @@ title: Linux常用命令总结
 date: 2025-12-05 14:30:00
 tags: ["运维"]
 categories:
-  - tech
+  - 技术
 ---
 
 # Linux常用命令总结

@@ -2,7 +2,7 @@
 title: 我花了一周用AI写小说发抖音，播放量个位数
 date: 2026-06-11 21:00:00
 categories:
-  - tech
+  - 技术
 tags: ["AI"]
 ---
 

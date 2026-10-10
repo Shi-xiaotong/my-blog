@@ -3,7 +3,7 @@ title: Docker Compose快速指南
 date: 2025-12-15 11:00:00
 tags: ["Docker"]
 categories:
-  - tech
+  - 技术
 ---
 
 # Docker Compose快速指南

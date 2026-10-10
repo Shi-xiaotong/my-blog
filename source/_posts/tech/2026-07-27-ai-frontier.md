@@ -2,7 +2,7 @@
 title: "AI医疗大突破：AlphaFold 4来了，新药研发要提速了？"
 date: 2026-07-27 12:00:00
 categories:
-  - tech
+  - 技术
 tags:
   - AI
   - 每日热点

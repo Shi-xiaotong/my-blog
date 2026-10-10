@@ -2,7 +2,7 @@
 title: "特斯拉Optimus Gen 3来了，这机器人能干活了？"
 date: 2026-07-29 12:00:00
 categories:
-  - tech
+  - 技术
 tags:
   - AI
   - 每日热点

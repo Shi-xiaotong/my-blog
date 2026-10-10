@@ -3,7 +3,7 @@ title: 为什么选择TypeScript？一次前端开发的真实体验
 date: 2026-02-14 17:00:00
 tags: ["前端"]
 categories:
-  - tech
+  - 技术
 ---
 
 # 为什么选择TypeScript？一次前端开发的真实体验

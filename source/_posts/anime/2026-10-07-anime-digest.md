@@ -2,7 +2,7 @@
 title: "当季新番推荐：口碑与热度并存"
 date: 2026-10-07 12:00:00
 categories:
-  - anime
+  - 动漫
 tags:
   - 动漫推荐
   - 新番

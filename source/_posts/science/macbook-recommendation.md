@@ -2,7 +2,7 @@
 title: MacBook选购指南：2026年苹果笔记本怎么选
 date: 2026-03-20 15:00:00
 categories:
-  - science
+  - 科学
 tags: ["科技"]
 ---
 

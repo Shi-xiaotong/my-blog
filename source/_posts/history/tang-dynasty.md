@@ -2,7 +2,7 @@
 title: 唐朝：从盛世到衰落的百年风云
 date: 2026-02-22 18:00:00
 categories:
-  - history
+  - 历史
 tags: ["历史"]
 ---
 

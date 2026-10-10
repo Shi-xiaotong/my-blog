@@ -2,7 +2,7 @@
 title: "当季新番：无职转生三期登顶热度榜，BLEACH 王权篇，几部值得关注"
 date: 2026-09-13 12:00:00
 categories:
-  - anime
+  - 动漫
 tags:
   - 动漫推荐
   - 新番

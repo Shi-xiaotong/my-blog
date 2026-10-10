@@ -2,7 +2,7 @@
 title: "今天的科技圈，有点热闹"
 date: 2026-08-11 12:00:00
 categories:
-  - tech
+  - 技术
 tags:
   - AI
   - 每日热点

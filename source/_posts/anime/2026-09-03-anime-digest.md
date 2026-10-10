@@ -2,7 +2,7 @@
 title: "当季新番：无职转生三期热度领先，BLEACH 千年血战篇收官"
 date: 2026-09-03 12:00:00
 categories:
-  - anime
+  - 动漫
 tags:
   - 动漫推荐
   - 新番

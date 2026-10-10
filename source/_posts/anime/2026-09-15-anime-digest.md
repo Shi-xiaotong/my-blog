@@ -2,7 +2,7 @@
 title: "当季新番：BLEACH 回归、日常系萌番推荐"
 date: 2026-09-15 12:00:00
 categories:
-  - anime
+  - 动漫
 tags:
   - 动漫推荐
   - 新番

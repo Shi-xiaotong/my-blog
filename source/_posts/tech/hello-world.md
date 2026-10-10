@@ -2,7 +2,7 @@
 title: 你好，世界 —— 写在博客开篇
 date: 2025-12-01 08:30:00
 categories:
-  - notes
+  - 笔记
 tags: ["生活"]
 ---
 

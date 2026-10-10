@@ -2,7 +2,7 @@
 title: "5天，我用若依搞了个SaaS平台，全程没写一行代码🍜"
 date: 2026-07-18 12:00:00
 categories:
-  - tech
+  - 技术
 tags:
   - SaaS
   - 若依

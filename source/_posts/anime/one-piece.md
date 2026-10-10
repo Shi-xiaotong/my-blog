@@ -3,7 +3,7 @@ title: 海贼王：梦想与羁绊的史诗
 date: 2026-04-05 09:00:00
 
 categories:
-  - anime
+  - 动漫
 tags: ["动漫"]
 ---
 
