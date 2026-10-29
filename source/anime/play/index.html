@@ -311,10 +311,12 @@ function getToken(){
 // 按可用性排序：Huya / BDZY / FF22 是第三方采集站，响应不带任何 CORS 头，
 // 浏览器直连会被拦截；FFZY 走自建 Worker 代理（/api/ffzy），带 CORS *，放第一位。
 var API_SOURCES=[
-  {name:'FFZY',base:'https://auth.233002.xyz',search:'/api/ffzy?ac=list&wd=',detail:'/api/ffzy?ac=detail&ids='},
-  {name:'Huya',base:'https://auth.233002.xyz',search:'/api/vod?site=huya&ac=list&wd=',detail:'/api/vod?site=huya&ac=detail&ids='},
-  {name:'BDZY',base:'https://auth.233002.xyz',search:'/api/vod?site=bdzy&ac=list&wd=',detail:'/api/vod?site=bdzy&ac=detail&ids='},
-  {name:'FF22',base:'https://auth.233002.xyz',search:'/api/vod?site=ff22&ac=list&wd=',detail:'/api/vod?site=ff22&ac=detail&ids='}
+  // 搜索用 ac=videolist 而非 ac=list：采集站的 ac=list 只返回基本字段，
+  // vod_pic 恒为空字符串，"猜你喜欢"卡片因此没有海报。
+  {name:'FFZY',base:'https://auth.233002.xyz',search:'/api/ffzy?ac=videolist&wd=',detail:'/api/ffzy?ac=detail&ids='},
+  {name:'Huya',base:'https://auth.233002.xyz',search:'/api/vod?site=huya&ac=videolist&wd=',detail:'/api/vod?site=huya&ac=detail&ids='},
+  {name:'BDZY',base:'https://auth.233002.xyz',search:'/api/vod?site=bdzy&ac=videolist&wd=',detail:'/api/vod?site=bdzy&ac=detail&ids='},
+  {name:'FF22',base:'https://auth.233002.xyz',search:'/api/vod?site=ff22&ac=videolist&wd=',detail:'/api/vod?site=ff22&ac=detail&ids='}
 ];
 var API=API_SOURCES[0].base;
 var currentSourceIdx=0;
