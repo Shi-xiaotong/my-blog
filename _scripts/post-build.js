@@ -8,16 +8,21 @@ const ROOT = path.resolve(__dirname, '..')
 const PUBLIC = path.join(ROOT, 'public')
 const SOURCE = path.join(ROOT, 'source')
 
+// 注意：music-player.css / music-player.js 刻意不并入 bundle。
+// 静态页面（如 /anime/）会在运行时动态加载 JS bundle 以获得登录能力，
+// 但这些页面并不引用 CSS bundle。播放器脚本一旦混在 bundle 里，就会出现
+// “DOM 被创建、样式却没加载”的情况——SVG 因没有尺寸约束撑满整屏
+// （表现为页面上出现巨大的三角形/竖条）。让主题页保持独立引用即可。
 const cssFiles = [
   'tools/common.css', 'tools/site-override.css',
-  'css/custom.css', 'css/music-player.css',
+  'css/custom.css',
   'css/site-auth.css', 'css/user-center.css',
 ]
 
 const jsFiles = [
   'js/typed-polyfill.js', 'js/widget-loader.js', 'js/live2d-toggle.js',
   'js/site-auth.js', 'js/cwd-auth-hook.js',
-  'js/music-player.js', 'js/user-center.js',
+  'js/user-center.js',
 ]
 
 function concat(files, baseDir) {
@@ -52,15 +57,17 @@ fs.writeFileSync(path.join(PUBLIC, 'assets', jsBundleName), jsContent)
 fs.copyFileSync(path.join(PUBLIC, 'assets', jsBundleName), path.join(PUBLIC, 'assets', 'bundle.js'))
 console.log(`[post-build] bundle.js → ${jsBundleName} + bundle.js (${(jsContent.length / 1024).toFixed(1)} KB)`)
 
+// 这两个引用不再被替换成 bundle，主题页会直接加载独立文件；
+// 未引用它们的静态页（/anime/ 等）自然也不会再出现播放器。
 const cssRefs = [
   '/tools/common.css', '/tools/site-override.css',
-  '/css/custom.css', '/css/music-player.css',
+  '/css/custom.css',
   '/css/site-auth.css', '/css/user-center.css',
 ]
 const jsRefs = [
   '/js/typed-polyfill.js', '/js/widget-loader.js', '/js/live2d-toggle.js',
   '/js/site-auth.js', '/js/cwd-auth-hook.js',
-  '/js/music-player.js', '/js/user-center.js',
+  '/js/user-center.js',
 ]
 
 let count = 0
