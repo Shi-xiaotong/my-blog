@@ -109,7 +109,7 @@ def llm_summarize(date_display, articles):
     for art in articles:
         news_block += f"- 标题: {art['title']}\n  链接: {art['url']}\n"
         if art.get('content'):
-            news_block += f"  摘要: {art['content'][:400]}\n"
+            news_block += f"  摘要: {art['content'][:1200]}\n"
     prompt = f"""你是科技博客中文编辑。根据以下今天从 TechCrunch 爬取的真实新闻，写一篇中文每日热点文章。
 
 日期: {date_display}
@@ -119,9 +119,17 @@ def llm_summarize(date_display, articles):
 
 要求：
 - 选 2-4 条重要新闻
-- 每条写一段中文概述（50-100字），用自己的话总结
+- 每条写一段中文概述（150-250字），只复述上面「摘要」里已有的内容
 - 每条标注「[来源](url)」
-- 全文 Markdown，总字数 800-1200 字
+- 全文 Markdown
+- 不要为了凑字数补充信息，宁可短也不许编
+
+【事实铁律】（违反即视为失败输出）
+- 只能复述上面「摘要」中出现过的事实。摘要里没有的信息，一律不许写。
+- 严禁补充：具体数字（金额/百分比/排名/日期）、人物姓名与职务、公司名、地点、事件起因与结果、直接引语。
+- 严禁“合理推断”：不能根据标题猜测细节，不能把常识当作该新闻的事实。
+- 某条新闻的摘要不足以支撑一段时，只写一句概述。
+- 禁用“据报道”“据知情人士”“业内认为”等无出处表述。
 
 【标题规则】（最重要）
 标题用 #，必须是第一条新闻的中文直译，禁止任何创作发挥：
@@ -152,7 +160,7 @@ def llm_summarize(date_display, articles):
     payload = json.dumps({
         "model": model,
         "messages": [
-            {"role": "system", "content": "你是一个专业的科技新闻中文编辑，严格基于提供的新闻内容，不编造事实。回复使用纯 Markdown。不要输出任何思考过程、自我检查、约束条件、格式说明——只输出文章本身。"},
+            {"role": "system", "content": "你是一个专业的科技新闻中文编辑。你的唯一素材是用户提供的「摘要」，严禁编造、严禁推断、严禁补充摘要中不存在的任何细节（数字、人名、职务、公司、地点、引语、因果）。摘要不足时宁可写短，也不许凑字数。回复使用纯 Markdown，不要输出任何思考过程、自我检查、约束条件、格式说明——只输出文章本身。"},
             {"role": "user", "content": prompt}
         ],
         "max_tokens": 12000,
@@ -175,13 +183,61 @@ def llm_summarize(date_display, articles):
             _, cleaned = extract_article_from_leaky_output(content)
             if cleaned:
                 content = cleaned
-            # Strip any remaining self-review at end
-            review_m = re.search(r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction|I need to ensure|Wait,|Constraint \d)', content)
-            if review_m:
-                content = content[:review_m.start()].strip()
             return content.strip()
 
     return retry(_call, label="Agnes API")
+
+
+# ─── 事实自检 ────────────────────────────────────────────────────────────────
+# 正文里的数字与英文实体必须能在抓取原文中找到；找不到说明是 AI 编的，该话题降级。
+
+_ENTITY_STOPWORDS = {
+    "The", "This", "That", "These", "Those", "There", "Their", "Then", "They",
+    "And", "But", "For", "With", "From", "When", "While", "What", "Which",
+    "However", "Meanwhile", "Also", "Although", "Because", "After", "Before",
+    "According", "Source", "Sources", "More", "Read", "Update", "Note",
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December",
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
+}
+
+
+def _extract_fact_entities(text):
+    """提取可核实的事实性实体：带单位的数字 + 英文专有名词。"""
+    nums = re.findall(
+        r'\d[\d,\.]*\s*(?:%|亿|万|千|美元|欧元|英镑|日元|元|个|家|位|名|倍|台|款|条|年|月|日|GB|TB|MB|kg)',
+        text,
+    )
+    terms = re.findall(r'\b[A-Z][A-Za-z0-9\.\-]{2,}\b', text)
+    return {n.replace(' ', '') for n in nums} | {t for t in terms if t not in _ENTITY_STOPWORDS}
+
+
+def verify_facts(body, articles):
+    """把未通过事实核验的话题降级为短概述，返回 (body, 未核实实体列表)。"""
+    source_text = " ".join(
+        (a.get('content') or '') + " " + (a.get('title') or '') for a in articles
+    ).replace(' ', '')
+
+    parts = re.split(r'^(## .+)$', body, flags=re.MULTILINE)
+    if len(parts) < 3:
+        return body, []
+
+    unverified = []
+    out = []
+    for i in range(1, len(parts), 2):
+        heading = parts[i]
+        content = parts[i + 1] if i + 1 < len(parts) else ''
+        bad = [e for e in _extract_fact_entities(content)
+               if e.replace(' ', '') not in source_text]
+        if bad:
+            unverified.extend(bad)
+            url_m = re.search(r'\[来源\]\((https?://[^\)]+)\)', content)
+            note = "（此条未通过事实核验，细节已省略）"
+            if url_m:
+                note += f"\n\n[来源]({url_m.group(1)})"
+            content = "\n\n" + note + "\n"
+        out.append(heading + content)
+    return parts[0] + "".join(out), unverified
 
 
 def generate(date_str):
@@ -237,6 +293,10 @@ description: "{date_display} 科技资讯。"
     body = _re.sub(r'\n---\n\s*(?=\n?## )', '\n', body)
     body = _re.sub(r'\n---\n\s*(?=\n?---)', '\n', body)
     body = _re.sub(r'\n{3,}', '\n\n', body)
+    # 事实自检：正文中的数字/英文实体必须能在抓取原文中找到
+    body, unverified = verify_facts(body, articles)
+    if unverified:
+        print(f"  [FACT-CHECK] 降级 {len(unverified)} 处不可核实内容: {unverified[:8]}", flush=True)
     if '<!-- more -->' not in body:
         paras = body.split('\n\n')
         if len(paras) > 2:
