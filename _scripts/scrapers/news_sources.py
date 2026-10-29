@@ -43,6 +43,8 @@ def fetch_baidu_hot(limit=10) -> List[NewsItem]:
                     url=item.get("url", ""),
                     source="百度",
                     hot_value=str(item.get("hotScore", "")),
+                    # 百度热搜自带官方新闻摘要 — 最关键的事实来源
+                    summary=(item.get("desc") or "").strip(),
                 ))
                 if len(items) >= limit:
                     return items
@@ -134,37 +136,30 @@ ALL_NEWS_SOURCES = {
 }
 
 
-def fetch_all_news(limit_per_source=5, sources=None) -> dict:
-    """Fetch from all (or selected) sources, deduplicate, group by source."""
-    if sources is None:
-        sources = list(ALL_NEWS_SOURCES.keys())
-
-    all_items = []
-    for name in sources:
-        func = ALL_NEWS_SOURCES.get(name)
-        if not func:
-            continue
-        items = safe_fetch(name, func, limit_per_source)
-        all_items.extend(items)
-
-    # Deduplicate
-    from . import deduplicate
-    merged = deduplicate(all_items)
-    merged.sort(key=lambda x: (-len(x.sources), x.title))
-
-    # Group
+def group_items(merged: list) -> dict:
+    """Group deduplicated flat NewsItems by source (multi-source → 多平台热议)."""
     result = {}
     for item in merged:
         key = "多平台热议" if len(item.sources) > 1 else item.source
         if key not in result:
             result[key] = []
         result[key].append(item)
-
     return result
+
+
+def fetch_all_news(limit_per_source=5, sources=None) -> dict:
+    """Fetch from all (or selected) sources, deduplicate, group by source."""
+    merged = _fetch_flat(limit_per_source, sources)
+    return group_items(merged)
 
 
 def fetch_all_news_flat(limit_per_source=5, sources=None) -> list:
     """Fetch from all sources, return flat deduplicated list."""
+    return _fetch_flat(limit_per_source, sources)
+
+
+def _fetch_flat(limit_per_source=5, sources=None) -> list:
+    """Shared fetch + dedup path. Returns the merged (original) object list."""
     if sources is None:
         sources = list(ALL_NEWS_SOURCES.keys())
 

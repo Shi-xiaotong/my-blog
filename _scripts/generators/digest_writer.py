@@ -11,6 +11,8 @@ DIGEST_PROMPT_TEMPLATE = """今天 {date} 各平台热搜数据如下：
 
 {news_data}
 
+{facts_data}
+
 部分话题的热门网友评论：
 {comments_data}
 
@@ -18,6 +20,15 @@ DIGEST_PROMPT_TEMPLATE = """今天 {date} 各平台热搜数据如下：
 
 【近期已写过的文章——绝对不要重复这些话题】
 {recent_topics}
+
+【事实纪律——违反任何一条视为生成失败，必须重写】
+A. 每条话题只能写上面数据里出现的事实。热搜词条只告诉你"某事上了热搜"，不告诉你经过。
+B. 涉及真实人物/机构的事件经过（谁做了什么、具体场景、具体数字、具体引语）：
+   - 有「事实依据」摘录的 → 只能基于摘录写，摘录里没有的细节一律不写
+   - 没有「事实依据」的 → 只写词条本身陈述的事实 + 热度，不推测原因、不还原现场、不编造细节
+   - 不确定的表述一律删掉，宁可少写，不可编造
+C. 引用的网友评论（> 引用块）只能来自上面的「热门网友评论」数据，没有评论就不引用，禁止编造"一位网友说/一位球迷说"
+D. 禁止出现数据里没有的具体数字、日期、人名、机构名、引语
 
 格式要求（严格遵循）：
 1. 文章开头用 # 一级标题（会被提取为文章标题，不要用"X月X日信息差"这种通用标题）
@@ -44,7 +55,7 @@ def generate_digest(news_data: dict, comments_text: str, date_str: str, recent_t
     if recent_topics:
         recent_text = "\n".join(f"  - {t['title']}" for t in recent_topics)
 
-    # Format news data for prompt
+    # Format news data for prompt — attach official summary (百度 desc) inline
     news_lines = []
     for source, items in news_data.items():
         news_lines.append(f"\n[{source}]")
@@ -52,12 +63,21 @@ def generate_digest(news_data: dict, comments_text: str, date_str: str, recent_t
             hot = f" (热度:{item.hot_value})" if item.hot_value else ""
             url_part = f" 链接:{item.url}" if item.url else ""
             news_lines.append(f"  - {item.title}{hot}{url_part}")
+            # 官方摘要直接跟在词条后，作为该话题的事实依据
+            if item.summary:
+                news_lines.append(f"    事实依据: {item.summary[:400]}")
 
     news_block = "\n".join(news_lines)
+
+    # Separate facts block (explicit 事实依据 collection for the discipline rules)
+    from scrapers.fact_fetcher import format_facts_for_prompt
+    all_items = [i for v in news_data.values() for i in v]
+    facts_block = format_facts_for_prompt(all_items)
 
     prompt = DIGEST_PROMPT_TEMPLATE.format(
         date=date_display,
         news_data=news_block,
+        facts_data=facts_block or "（本次数据未提供额外事实依据，请严格按「事实纪律」B 条处理：没有依据的话题只写词条本身的事实）",
         comments_data=comments_text or "暂无",
         recent_topics=recent_text,
     )

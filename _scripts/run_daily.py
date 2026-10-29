@@ -39,15 +39,15 @@ def main():
     # ── Step 1: Scrape all data sources ──
     logger.info("[Step 1] 开始采集数据...")
 
-    from scrapers.news_sources import fetch_all_news, fetch_all_news_flat
+    from scrapers.news_sources import fetch_all_news_flat, group_items
     from scrapers.tech_sources import fetch_techcrunch_with_content
     from scrapers.anime_sources import fetch_current_season
     from scrapers.trending_sources import fetch_github_trending
     from scrapers.hot_comments import fetch_hot_comments, format_comments_for_prompt
 
-    # 1a. Chinese hot search
-    news_data = fetch_all_news(limit_per_source=5)
+    # 1a. Chinese hot search — 单次抓取，flat 和 grouped 共享同一批对象
     news_flat = fetch_all_news_flat(limit_per_source=5)
+    news_data = group_items(news_flat)
     total_news = sum(len(v) for v in news_data.values())
     logger.info("  热搜数据: %d 条, 来自 %d 个板块", total_news, len(news_data))
 
@@ -70,6 +70,12 @@ def main():
     comments = fetch_hot_comments(news_flat[:5], max_topics=5, comments_per_topic=2)
     comments_text = format_comments_for_prompt(comments)
     logger.info("  热评数据: %d 个话题", len(comments))
+
+    # 1f. Fact enrichment — fill item.summary with real article text where possible
+    # 优先用百度热搜自带的 desc（已在 news_sources 抓取），对头条 article URL 补抓正文
+    from scrapers.fact_fetcher import enrich_facts
+    enriched_count = enrich_facts(news_flat, max_fetches=5)
+    logger.info("  事实补充: %d 条", enriched_count)
 
     # ── Step 2: AI editor decides ──
     logger.info("[Step 2] AI 编辑决策...")

@@ -146,6 +146,9 @@ def deduplicate(items, threshold=0.6):
                         existing.sources.append(s)
                 if not existing.url and item.url:
                     existing.url = item.url
+                # 合并事实摘要（保留较长的一个）
+                if item.summary and len(item.summary) > len(existing.summary):
+                    existing.summary = item.summary
                 matched = True
                 break
         if not matched:
