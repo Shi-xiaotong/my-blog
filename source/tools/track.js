@@ -7,6 +7,14 @@
   var title = document.title || '';
   var url = location.href;
   var payload = JSON.stringify({ postSlug: slug, postTitle: title, postUrl: url, siteId: SITE_ID });
-  // sendBeacon with text/plain to avoid CORS preflight
-  navigator.sendBeacon(API + '/api/analytics/visit', new Blob([payload], { type: 'text/plain' }));
+  // 不能用 sendBeacon: 它强制带 credentials，而 cwd-api 的响应是
+  // Access-Control-Allow-Origin: * —— 凭证模式下浏览器拒绝通配符，上报会全部失败。
+  // 统计上报不需要 cookie，显式 omit 即可通过。
+  fetch(API + '/api/analytics/visit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: payload,
+    credentials: 'omit',
+    keepalive: true
+  }).catch(function(){});
 })();
