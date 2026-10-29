@@ -293,6 +293,21 @@
 <script src="/js/site-auth.js"></script>
 <script>
 (function(){
+// ---- site-auth 兼容层 ----
+// site-auth.js 整体包在它自己的 IIFE 内，isLoggedIn / getToken 是局部函数，
+// 只通过 window._siteAuth 暴露，从未成为全局变量。本文件多处直接调用
+// isLoggedIn() / getToken()，在 window 上取不到就抛 ReferenceError，
+// 且常被各自的 catch 吞掉（表现为功能莫名失效、控制台才有线索）。
+// 这里统一提供本地入口，全部转发到 window._siteAuth。
+function isLoggedIn(){
+  return !!(window._siteAuth&&typeof window._siteAuth.isLoggedIn==='function'&&window._siteAuth.isLoggedIn());
+}
+function getToken(){
+  return (window._siteAuth&&typeof window._siteAuth.getToken==='function')
+    ? window._siteAuth.getToken()
+    : (localStorage.getItem('anime_token')||'');
+}
+
 // 按可用性排序：Huya / BDZY / FF22 是第三方采集站，响应不带任何 CORS 头，
 // 浏览器直连会被拦截；FFZY 走自建 Worker 代理（/api/ffzy），带 CORS *，放第一位。
 var API_SOURCES=[
