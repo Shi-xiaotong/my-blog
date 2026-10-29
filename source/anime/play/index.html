@@ -287,11 +287,13 @@
 
 <script>
 (function(){
+// 按可用性排序：Huya / BDZY / FF22 是第三方采集站，响应不带任何 CORS 头，
+// 浏览器直连会被拦截；FFZY 走自建 Worker 代理（/api/ffzy），带 CORS *，放第一位。
 var API_SOURCES=[
-  {name:'Huya',base:'https://www.huyaapi.com',search:'/api.php/provide/vod/?ac=list&wd=',detail:'/api.php/provide/vod/?ac=detail&ids='},
   {name:'FFZY',base:'https://auth.233002.xyz',search:'/api/ffzy?ac=list&wd=',detail:'/api/ffzy?ac=detail&ids='},
-  {name:'BDZY',base:'https://api.apibdzy.com',search:'/api.php/provide/vod/?ac=list&wd=',detail:'/api.php/provide/vod/?ac=detail&ids='},
-  {name:'FF22',base:'https://cj.ffzyapi.com',search:'/api.php/provide/vod/?ac=list&wd=',detail:'/api.php/provide/vod/?ac=detail&ids='}
+  {name:'Huya',base:'https://auth.233002.xyz',search:'/api/vod?site=huya&ac=list&wd=',detail:'/api/vod?site=huya&ac=detail&ids='},
+  {name:'BDZY',base:'https://auth.233002.xyz',search:'/api/vod?site=bdzy&ac=list&wd=',detail:'/api/vod?site=bdzy&ac=detail&ids='},
+  {name:'FF22',base:'https://auth.233002.xyz',search:'/api/vod?site=ff22&ac=list&wd=',detail:'/api/vod?site=ff22&ac=detail&ids='}
 ];
 var API=API_SOURCES[0].base;
 var currentSourceIdx=0;
@@ -551,8 +553,31 @@ function renderEpisodes(){
   });
 }
 
+// 从 /share/ 页面解析出真实 m3u8 地址
+// 源站返回 Access-Control-Allow-Origin: *，可直接跨域读取（不帶 credentials）
+async function resolveShareUrl(shareUrl){
+  try{
+    var ctrl=new AbortController();
+    var tmr=setTimeout(function(){ctrl.abort();},8000);
+    var r=await fetch(shareUrl,{signal:ctrl.signal});
+    clearTimeout(tmr);
+    var html=await r.text();
+    var m=html.match(/url\s*=\s*["']([^"']*\.m3u8[^"']*)["']/);
+    if(!m)return null;
+    var p=m[1];
+    if(p.indexOf('http')!==0){
+      var b=new URL(shareUrl);
+      p=b.origin+(p.charAt(0)==='/'?p:'/'+p);
+    }
+    return p;
+  }catch(e){
+    console.error('[resolveShareUrl]',e);
+    return null;
+  }
+}
+
 // Play episode
-window.playEpisode=function(index){
+window.playEpisode=async function(index){
   if(!episodes||index<0||index>=episodes.length)return;
   currentEpIndex=index;
   var ep=episodes[index];
@@ -576,6 +601,15 @@ window.playEpisode=function(index){
 
   var url=ep.url;
   var isM3U8=url.includes('.m3u8')||url.includes('/m3u8');
+
+  // 数据源改版：部分线路的播放地址是 /share/ 页面而不是 m3u8 直链。
+  // 不解析的话播放器会把 HTML 页面当视频源，导致无法播放。
+  if(!isM3U8&&url.includes('/share/')){
+    showToast('解析播放地址...',3000);
+    var real=await resolveShareUrl(url);
+    if(real){url=real;isM3U8=true;}
+    else{showToast('播放地址解析失败，请切换线路',3000);}
+  }
 
   stopPlayer(false);
 
