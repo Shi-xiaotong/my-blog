@@ -285,6 +285,12 @@
   <div class="error-msg" id="errorMsg" style="display:none"></div>
 </div>
 
+<!-- site-auth 必须在主脚本之前加载：loadDetail() 在页面初始化阶段就会调用
+     isLoggedIn()，若该文件后置加载会抛 ReferenceError，异常被 loadDetail 的
+     catch 吞掉，页面只显示"加载失败"且控制台无报错。该文件末尾有
+     DOMContentLoaded 保护，提前加载不会在 DOM 未就绪时操作元素。 -->
+<link rel="stylesheet" href="/css/site-auth.css">
+<script src="/js/site-auth.js"></script>
 <script>
 (function(){
 // 按可用性排序：Huya / BDZY / FF22 是第三方采集站，响应不带任何 CORS 头，
@@ -495,7 +501,9 @@ async function loadDetail(){
 
     // Check history for resume
     var histEp=startEp;
-    if(isLoggedIn()){
+    // 防御：site-auth.js 可能尚未执行（脚本顺序/加载失败），此处调用会抛
+    // ReferenceError 并让整个 loadDetail 落入 catch 显示"加载失败"。
+    if(typeof isLoggedIn==='function'&&isLoggedIn()){
       try{
         var hRes=await fetch(API+'/api/history/'+vodId,{headers:{'Authorization':'Bearer '+getToken()}});
         var hData=await hRes.json();
@@ -1292,8 +1300,6 @@ loadDetail();
 
 })();
 </script>
-<link rel="stylesheet" href="/css/site-auth.css">
-<script src="/js/site-auth.js"></script>
 <script src="track.js"></script>
 </body>
 </html>
