@@ -7,7 +7,15 @@ var CORS = {
 };
 
 var CSP = {
-  "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https://img.233002.xyz https://*.cfassets.io https://*.googleusercontent.com https://*.githubusercontent.com; font-src 'self' data:; connect-src 'self' https://ai.233002.xyz https://api.github.com https://accounts.google.com https://oauth.githubusercontent.com https://cj.ffzyapi.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://img.233002.xyz https://*.cfassets.io https://*.googleusercontent.com https://*.githubusercontent.com; font-src 'self' data:; connect-src 'self' https://ai.233002.xyz https://api.github.com https://accounts.google.com https://oauth.githubusercontent.com https://cj.ffzyapi.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+};
+
+// 允许经 /api/vod 转发的上游采集站（固定白名单，不接受任意 URL）
+var VOD_UPSTREAMS = {
+  huya: "https://www.huyaapi.com/api.php/provide/vod",
+  bdzy: "https://api.apibdzy.com/api.php/provide/vod",
+  ffzy: "https://cj.ffzyapi.com/api.php/provide/vod",
+  ff22: "https://cj.ffzyapi.com/api.php/provide/vod",
 };
 
 function mergeHeaders(...objs) {
@@ -84,6 +92,55 @@ async function verifyPassword(password, stored) {
   );
   const hashHex = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
   return hashHex === storedHash;
+}
+
+// ─── Brute-force protection ──────────────────────────────────────────────────
+
+var ATTEMPT_LIMITS = {
+  login: { max: 5, lockMinutes: 15 },
+  verifycode: { max: 5, lockMinutes: 15 },
+  registerverify: { max: 5, lockMinutes: 15 },
+  resetverify: { max: 5, lockMinutes: 15 },
+};
+
+// Returns a human-readable lockout message, or null when the key is free to try.
+async function checkLockout(env, kind, key) {
+  const row = await env.DB.prepare(
+    "SELECT locked_until FROM api_attempts WHERE kind = ?1 AND key = ?2"
+  ).bind(kind, key).first();
+  if (!row || !row.locked_until) return null;
+  const until = new Date(row.locked_until).getTime();
+  if (until <= Date.now()) return null;
+  const mins = Math.ceil((until - Date.now()) / 60000);
+  return `尝试次数过多，请在 ${mins} 分钟后重试`;
+}
+
+// Increments the failure counter; locks the key once the limit is reached.
+async function recordFailure(env, kind, key) {
+  const cfg = ATTEMPT_LIMITS[kind] || { max: 5, lockMinutes: 15 };
+  const row = await env.DB.prepare(
+    "SELECT failures FROM api_attempts WHERE kind = ?1 AND key = ?2"
+  ).bind(kind, key).first();
+  const failures = (row ? row.failures : 0) + 1;
+  const lockedUntil = failures >= cfg.max
+    ? new Date(Date.now() + cfg.lockMinutes * 60000).toISOString()
+    : null;
+  await env.DB.prepare(
+    `INSERT INTO api_attempts (kind, key, failures, locked_until, last_attempt)
+     VALUES (?1, ?2, ?3, ?4, datetime('now'))
+     ON CONFLICT(kind, key) DO UPDATE SET
+       failures = excluded.failures,
+       locked_until = COALESCE(excluded.locked_until, api_attempts.locked_until),
+       last_attempt = excluded.last_attempt`
+  ).bind(kind, key, failures, lockedUntil).run();
+  if (lockedUntil) return { locked: true, remaining: 0 };
+  return { locked: false, remaining: cfg.max - failures };
+}
+
+async function clearAttempts(env, kind, key) {
+  await env.DB.prepare(
+    "DELETE FROM api_attempts WHERE kind = ?1 AND key = ?2"
+  ).bind(kind, key).run();
 }
 
 async function sendEmail(env, to, subject, html) {
@@ -203,6 +260,16 @@ async function ensureTables(env) {
   )`).run();
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_ad_anime ON anime_danmaku(anime_id)`).run();
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_ad_email ON anime_danmaku(email)`).run();
+
+  // Brute-force protection: failure counters per (kind, key)
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS api_attempts (
+    kind TEXT NOT NULL,
+    key TEXT NOT NULL,
+    failures INTEGER DEFAULT 0,
+    locked_until TEXT,
+    last_attempt TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (kind, key)
+  )`).run();
 }
 
 // ─── Existing auth helpers ────────────────────────────────────────────────────
@@ -297,6 +364,12 @@ async function handleRegisterVerify(env, request) {
   if (password.length < 6) return badRequest('密码至少6位');
   const normalized = email.toLowerCase().trim();
 
+  const locked = await checkLockout(env, 'registerverify', normalized);
+  if (locked) {
+    await env.DB.prepare(`UPDATE anime_password_codes SET used = 1 WHERE email = ? AND type = 'register'`).bind(normalized).run();
+    return jsonResponse({ error: locked, locked: true }, 429);
+  }
+
   const existing = await env.DB.prepare("SELECT email FROM anime_users WHERE email = ?").bind(normalized).first();
   if (existing) return badRequest('该邮箱已注册');
 
@@ -304,7 +377,15 @@ async function handleRegisterVerify(env, request) {
     `SELECT id, code FROM anime_password_codes WHERE email = ? AND type = 'register' AND used = 0 AND expires_at > datetime('now') ORDER BY created_at DESC LIMIT 1`
   ).bind(normalized).first();
   if (!vc) return badRequest('验证码已过期，请重新获取');
-  if (vc.code !== code) return badRequest('验证码错误');
+  if (vc.code !== code) {
+    const r = await recordFailure(env, 'registerverify', normalized);
+    if (r.locked) {
+      await env.DB.prepare(`UPDATE anime_password_codes SET used = 1 WHERE id = ?`).bind(vc.id).run();
+      return jsonResponse({ error: '验证码错误次数过多，请重新获取', locked: true }, 429);
+    }
+    return jsonResponse({ error: `验证码错误，还可尝试 ${r.remaining} 次`, remaining: r.remaining }, 400);
+  }
+  await clearAttempts(env, 'registerverify', normalized);
 
   await env.DB.prepare(`UPDATE anime_password_codes SET used = 1 WHERE id = ?`).bind(vc.id).run();
 
@@ -324,6 +405,9 @@ async function handleLogin(env, request) {
   if (!email || !password) return badRequest('请输入邮箱和密码');
   const normalized = email.toLowerCase().trim();
 
+  const locked = await checkLockout(env, 'login', normalized);
+  if (locked) return jsonResponse({ error: locked, locked: true }, 429);
+
   const user = await env.DB.prepare("SELECT * FROM anime_users WHERE email = ?").bind(normalized).first();
   if (!user) return badRequest('邮箱未注册');
 
@@ -332,7 +416,12 @@ async function handleLogin(env, request) {
   }
 
   const valid = await verifyPassword(password, user.password_hash);
-  if (!valid) return badRequest('密码错误');
+  if (!valid) {
+    const r = await recordFailure(env, 'login', normalized);
+    if (r.locked) return jsonResponse({ error: '密码错误次数过多，账号已锁定 15 分钟', locked: true }, 429);
+    return jsonResponse({ error: `密码错误，还可尝试 ${r.remaining} 次`, remaining: r.remaining }, 400);
+  }
+  await clearAttempts(env, 'login', normalized);
 
   await env.DB.prepare("UPDATE anime_users SET last_login = datetime('now') WHERE email = ?").bind(normalized).run();
   const sessionToken = await createSession(env, normalized);
@@ -413,7 +502,15 @@ async function handlePasswordResetVerify(env, request) {
     `SELECT id, code FROM anime_password_codes WHERE email = ? AND type = 'reset' AND used = 0 AND expires_at > datetime('now') ORDER BY created_at DESC LIMIT 1`
   ).bind(normalized).first();
   if (!vc) return badRequest('验证码已过期，请重新获取');
-  if (vc.code !== code) return badRequest('验证码错误');
+  if (vc.code !== code) {
+    const r = await recordFailure(env, 'resetverify', normalized);
+    if (r.locked) {
+      await env.DB.prepare(`UPDATE anime_password_codes SET used = 1 WHERE id = ?`).bind(vc.id).run();
+      return jsonResponse({ error: '验证码错误次数过多，请重新获取', locked: true }, 429);
+    }
+    return jsonResponse({ error: `验证码错误，还可尝试 ${r.remaining} 次`, remaining: r.remaining }, 400);
+  }
+  await clearAttempts(env, 'resetverify', normalized);
 
   await env.DB.prepare(`UPDATE anime_password_codes SET used = 1 WHERE id = ?`).bind(vc.id).run();
 
@@ -478,11 +575,25 @@ async function handleVerifyCode(env, request) {
   const { email, code } = body;
   if (!email || !code) return badRequest("Email and code required");
   const normalizedEmail = email.toLowerCase().trim();
+  const locked = await checkLockout(env, 'verifycode', normalizedEmail);
+  if (locked) {
+    await env.DB.prepare("DELETE FROM anime_verify_codes WHERE email = ?").bind(normalizedEmail).run();
+    return jsonResponse({ error: locked, locked: true }, 429);
+  }
+
   const record = await env.DB.prepare(
     "SELECT code, created_at FROM anime_verify_codes WHERE email = ?"
   ).bind(normalizedEmail).first();
   if (!record) return badRequest("请先获取验证码");
-  if (record.code !== code) return badRequest("验证码错误");
+  if (record.code !== code) {
+    const r = await recordFailure(env, 'verifycode', normalizedEmail);
+    if (r.locked) {
+      await env.DB.prepare("DELETE FROM anime_verify_codes WHERE email = ?").bind(normalizedEmail).run();
+      return jsonResponse({ error: "验证码错误次数过多，请重新获取", locked: true }, 429);
+    }
+    return jsonResponse({ error: `验证码错误，还可尝试 ${r.remaining} 次`, remaining: r.remaining }, 400);
+  }
+  await clearAttempts(env, 'verifycode', normalizedEmail);
   const codeTime = (new Date(record.created_at + "Z")).getTime();
   if (Date.now() - codeTime > 5 * 60 * 1000) return badRequest("验证码已过期，请重新获取");
   await env.DB.prepare("DELETE FROM anime_verify_codes WHERE email = ?").bind(normalizedEmail).run();
@@ -869,8 +980,41 @@ async function handleAdminUsers(env, request) {
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
-export default {
-  async fetch(request, env) {
+// Endpoints that expose credentials or user data must not answer to arbitrary
+// sites. The public video proxy (/api/ffzy, /m3u8, /ts) keeps CORS "*" because
+// the player pages rely on it.
+var PRIVATE_PREFIXES = ["/api/auth", "/api/user", "/api/admin"];
+
+var ALLOWED_AUTH_ORIGINS = [
+  "https://www.233002.xyz",
+  "https://233002.xyz",
+  "https://admin.233002.xyz",
+  "http://localhost:4000",
+  "http://127.0.0.1:4000",
+];
+
+function privateCors(request) {
+  const origin = request.headers.get("Origin");
+  const allowOrigin = origin && ALLOWED_AUTH_ORIGINS.indexOf(origin) !== -1
+    ? origin
+    : "https://www.233002.xyz";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Methods": CORS["Access-Control-Allow-Methods"],
+    "Access-Control-Allow-Headers": CORS["Access-Control-Allow-Headers"],
+    "Access-Control-Allow-Credentials": "true",
+    "Vary": "Origin",
+  };
+}
+
+function withPrivateCors(res, request) {
+  const headers = new Headers(res.headers);
+  const cors = privateCors(request);
+  for (const k of Object.keys(cors)) headers.set(k, cors[k]);
+  return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
+}
+
+async function handleRequest(request, env) {
     if (request.method === "OPTIONS") return new Response(null, { headers: mergeHeaders(CORS, CSP) });
 
     // Run migration on each deploy (first request)
@@ -916,6 +1060,24 @@ export default {
       }
     }
 
+    // ── 采集站通用代理 ──
+    // Huya / BDZY / FF22 的响应不带任何 CORS 头，浏览器直连会被拦截。
+    // 走自建代理转发即可补上 CORS。上游是固定白名单，不接受任意 URL，无 SSRF 风险。
+    if (path === "/api/vod") {
+      const site = url.searchParams.get("site");
+      const base = VOD_UPSTREAMS[site];
+      if (!base) return badRequest("unknown site");
+      url.searchParams.delete("site");
+      const params = url.searchParams.toString();
+      const target = params ? `${base}?${params}` : base;
+      try {
+        const resp = await fetch(target, { headers: { "User-Agent": "Mozilla/5.0" }, cf: { cacheTtl: 300, cacheEverything: true } });
+        return new Response(await resp.text(), { headers: mergeHeaders(CORS, CSP, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=300" }) });
+      } catch (e) {
+        return jsonResponse({ error: e.message }, 502);
+      }
+    }
+
     if (path === "/api/history") return handleHistory(env, request, null);
     const hm = path.match(/^\/api\/history\/(\d+)$/);
     if (hm) return handleHistory(env, request, parseInt(hm[1], 10));
@@ -940,25 +1102,6 @@ export default {
         return badRequest("internal hosts not allowed");
       }
       // Block IP literals
-      if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)) return badRequest("IP addresses not allowed");
-      try {
-        const origin = targetUrl.origin;
-        const browserHeaders = {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-          "Accept": "*/*",
-          "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-          "Accept-Encoding": "gzip, deflate, br",
-          "Referer": origin + "/",
-          "Origin": origin,
-          "Connection": "keep-alive",
-          "Sec-Ch-Ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-          "Sec-Ch-Ua-Mobile": "?0",
-          "Sec-Ch-Ua-Platform": '"Windows"',
-          "Sec-Fetch-Dest": "empty",
-          "Sec-Fetch-Mode": "cors",
-          "Sec-Fetch-Site": "same-origin"
-        };
-        // Block IP literals
       if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)) return badRequest("IP addresses not allowed");
       // Resolve hostname to IP and check again (DNS rebinding mitigation)
       try {
@@ -1056,5 +1199,13 @@ export default {
     }
 
     return notFound();
+}
+
+export default {
+  async fetch(request, env) {
+    const path = new URL(request.url).pathname;
+    const isPrivate = PRIVATE_PREFIXES.some((p) => path.startsWith(p));
+    const res = await handleRequest(request, env);
+    return isPrivate ? withPrivateCors(res, request) : res;
   }
 };
