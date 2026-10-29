@@ -54,6 +54,17 @@ layout: links-page
         <span class="friend-link-desc">记录技术与生活</span>
       </div>
     </div>
+    <div class="friend-link-item">
+      <div class="friend-link-avatar" data-name="成长每一天">
+        <img src="https://blog.spongebaby.cn/favicon.png" alt="成长每一天" onerror="this.parentElement.classList.add('no-icon');this.remove();">
+      </div>
+      <div class="friend-link-info">
+        <a href="https://blog.spongebaby.cn" target="_blank" rel="noopener noreferrer">
+          <span class="friend-link-name">成长每一天</span>
+        </a>
+        <span class="friend-link-desc">走过的路上，留下一串脚印~</span>
+      </div>
+    </div>
   </div>
   <div class="links-notice">
     <p><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> 如需交换友链，请联系 <a href="mailto:505350617@qq.com">505350617@qq.com</a></p>
