@@ -187,13 +187,6 @@ HyperFrames 的 lint 能查出很多常见问题（重叠 clip、同轨道冲突
 | 文件大小 | 4.9 MB |
 | 编码 | H.264 |
 
-## 最终效果
-
-<video controls width="100%" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
-  <source src="https://img.233002.xyz/blog/videos/blog-intro-v3.mp4" type="video/mp4">
-  您的浏览器不支持视频播放
-</video>
-
 ## 总结
 
 这次做视频最大的收获不是技术本身，而是**「好视频是改出来的」**这个道理。
