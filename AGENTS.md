@@ -25,10 +25,16 @@ Content: tech articles, daily news digests, anime, tools, games.
 - Never push without user approval unless it's an urgent fix
 
 ### Node.js
-- Node v24 is at `C:\Users\Administrator\AppData\Local\nvm\v24.16.0` (nvm-windows)
-- Switch: `nvm use 24.16.0`
-- PATH must be prepended: `PATH="/c/nvm4w/nodejs:$PATH"` (symlink auto-updates on nvm use)
-- Build: `npm run build` (= `hexo generate && node _scripts/post-build.js && node _scripts/r2-upload.js`)
+
+`node` 路径随机器变化，**不要照抄路径**，先确认再执行：
+
+```
+for c in node nodejs; do command -v $c && $c -v; done
+```
+
+- **Windows**: `C:\Users\Administrator\AppData\Local\nvm\v24.16.0` (nvm-windows)，切换 `nvm use 24.16.0`，PATH 前置 `PATH="/c/nvm4w/nodejs:$PATH"`
+- **macOS (当前机器)**: 默认 shell 中 `node` 常不在 PATH。可用 `/Users/shixiaotong/.hermes/node/bin/node` (v22)，或 `~/.nvm/versions/node/v24.15.0/bin/node` (nvm，需先 `source ~/.zshrc`)
+- Build: `npm run build` (= `hexo generate && node _scripts/post-build.js`)
 
 ---
 
@@ -37,7 +43,7 @@ Content: tech articles, daily news digests, anime, tools, games.
 ### `npm run build` pipeline
 1. `hexo generate` — generates static HTML from markdown
 2. `node _scripts/post-build.js` — CSS/JS bundling, HTML post-processing
-3. `node _scripts/r2-upload.js` — uploads assets to R2 (skipped if no credentials)
+3. 媒体上传走 `hexo deploy`（hexo-cloudflare-r2-media，配置见 `_config.yml` 的 `r2_media` + `deploy: - type: r2-media`）。**只在本地手动执行，CI / Cloudflare Pages 不跑 deploy**
 
 ### Known Build Failures
 
@@ -49,8 +55,8 @@ Content: tech articles, daily news digests, anime, tools, games.
 
 #### `cwebp` Not Installed
 - **Symptom:** `[post-build] ⚠️ cwebp 未安装，跳过图片优化`
-- **Impact:** None — image optimization is skipped, everything else works fine
-- **Fix:** `brew install libwebp` (macOS only, not needed on Windows)
+- **Impact:** 静默降级且**两地产物不一致** — 本地会转 WebP，CI / Cloudflare Pages 环境没有 cwebp 则整段跳过，线上用的是原图
+- **Fix:** `brew install libwebp` (macOS)；CI 需在构建前装 `webp`。注意 Cloudflare Pages 的构建命令在 CF 控制台配置，不在本仓库内，改不到就接受"线上无 WebP"这一事实
 
 ---
 
@@ -189,8 +195,10 @@ Must not appear in generated content:
 ### R2 Media Storage
 - Bucket: `myblog` (key_prefix: `blog`)
 - Domain: `img.233002.xyz`
-- Images must be < 300 KB (10 GB free tier limit)
-- Upload: `node _scripts/r2-upload.js` (needs credentials, skipped in CI)
+- Cover images should be < 300 KB — 这不是 R2 硬限制（免费额度卡的是存储总量与 egress），而是首屏性能要求
+- Upload: `hexo deploy`（hexo-cloudflare-r2-media，需本地 R2 凭证，CI 不执行）
+- R2 入口已统一到该 npm 包，自建脚本 `r2.js` 与 `_scripts/r2-upload.js` 已删除
+- 已删除的孤儿文件: `blog/myblog-cover.webp`（原 1.99MB png 早已转 WebP，文章里的 `.png` 引用一直是 404）、`blog/videos/blog-intro-v3.mp4`
 
 ---
 
@@ -230,7 +238,6 @@ my-blog/
 │   ├── daily-news.py          # Daily news generator (scrape + AI)
 │   ├── run_daily.py           # Entry point for GitHub Actions
 │   ├── post-build.js          # Build post-processor (CSS/JS bundling)
-│   ├── r2-upload.js           # R2 asset upload
 │   ├── generators/
 │   │   └── __init__.py        # AI content generation core (cleanup, API, build_post)
 │   └── scrapers/

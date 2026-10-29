@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "hexo generate && node _scripts/post-build.js && node _scripts/r2-upload.js",
+    "build": "hexo generate && node _scripts/post-build.js",
     "clean": "hexo clean",
     "deploy": "npm run build && wrangler deploy",
     "server": "hexo server",

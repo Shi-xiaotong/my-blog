@@ -168,7 +168,7 @@ function convertImageToWebP(src) {
   }
 
   // 无 R2 凭证时，将 WebP 复制到 public 目录对应位置
-  // 有 R2 凭证时由 r2-upload.js 后续上传（本脚本只负责转换和本地缓存）
+  // 媒体上传由 hexo-cloudflare-r2-media 在 `hexo deploy` 时处理（本脚本只负责转换和本地缓存）
   let webpUrl
   if (isRemote) {
     // CDN 图片：生成同路径的 .webp URL
