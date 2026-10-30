@@ -51,4 +51,4 @@ def generate_tech(tech_articles: list, date_str: str) -> str:
     if not title:
         title = "AI圈今天有点热闹"
 
-    return build_post(title, body, "tech", date_str, ["AI", "每日热点", "前沿技术"])
+    return build_post(title, body, "技术", date_str, ["AI", "每日热点", "前沿技术"])

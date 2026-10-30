@@ -97,4 +97,4 @@ def generate_digest(news_data: dict, comments_text: str, date_str: str, recent_t
     # Pick tags based on content
     tags = ["每日热点", "信息差"]
 
-    return build_post(title, body, "daily-news", date_str, tags)
+    return build_post(title, body, "每日热点", date_str, tags)

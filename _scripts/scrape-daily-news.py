@@ -193,7 +193,7 @@ def generate_article(date_str, force=False):
 title: "{date_display} 科技资讯"
 date: {date_str} 12:00:00
 categories:
-  - daily-news
+  - 每日热点
 tags:
   - 每日热点
 description: "{date_display} 科技资讯。"
@@ -246,7 +246,7 @@ description: "{date_display} 科技资讯。"
         f"title: \"{main_title}\"",
         f"date: {date_str} 12:00:00",
         "categories:",
-        "  - daily-news",
+        "  - 每日热点",
         "tags:",
         "  - 每日热点",
         f"description: \"{desc}\"",

@@ -547,7 +547,7 @@ def generate_article(date_str):
         f"title: {yaml_quote(title)}",
         f"date: {date_str} 12:00:00",
         "categories:",
-        "  - daily-news",
+        "  - 每日热点",
         "tags:",
         "  - 每日热点",
         f"description: {yaml_quote(desc)}" if desc else "",

@@ -85,4 +85,4 @@ def generate_anime(anime_data: list, comments_text: str, date_str: str) -> str:
     if not title:
         title = "本周动漫推荐"
 
-    return build_post(title, body, "anime", date_str, ["动漫推荐", "新番"])
+    return build_post(title, body, "动漫", date_str, ["动漫推荐", "新番"])

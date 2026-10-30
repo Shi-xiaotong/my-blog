@@ -2,7 +2,7 @@
 title: "当季动漫趋势观察"
 date: 2026-10-25 12:00:00
 categories:
-  - anime
+  - 动漫
 tags:
   - 动漫推荐
   - 新番

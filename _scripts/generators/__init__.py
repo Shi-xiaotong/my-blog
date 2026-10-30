@@ -218,9 +218,26 @@ def call_agnes(prompt, system=SYSTEM_PROMPT, max_tokens=3000, temperature=0.7, m
 
 # ── Post Builder ──
 
+# 分类 slug → 中文显示名（与 _config.yml 的 category_map 互为反向：
+# 那里定义「中文名 → 英文 URL slug」，这里保证写进 front-matter 的一定是中文名）
+CATEGORY_ZH = {
+    "anime": "动漫",
+    "daily-news": "每日热点",
+    "tech": "技术",
+    "history": "历史",
+    "life": "生活",
+    "notes": "笔记",
+    "science": "科学",
+    "java": "Java技术",
+}
+
+
 def build_post(title, content, category, date_str, tags, description=""):
     """Build a complete Hexo markdown post with frontmatter."""
     from datetime import datetime
+
+    # 分类统一为中文（writer 里传英文 slug 也不会再写进 front-matter）
+    category = CATEGORY_ZH.get(category, category)
 
     # Safety net: strip any remaining self-review/checklist content
     review_m = re.search(r'\n[-*]\s+(Starts directly|Role:|Core principles|Banned words|Format:|Content:|Each topic|Bold keywords|Lists|Quotes|Separators|Markdown|Pick \d|Rank by|Each paragraph|At least one|I will adjust|Let.s refine|Self-Correction|Wait,|Constraint \d)', content)
