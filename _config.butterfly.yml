@@ -28,3 +28,12 @@ inject:
     - <script src="/js/user-center.js"></script>
     # 移动端侧栏 — 点击菜单链接自动收起
     - <script>document.addEventListener('click',function(e){var s=document.getElementById('sidebar-menus');if(!s||!s.classList.contains('open'))return;var l=e.target.closest('a');if(!l||!l.closest('#sidebar-menus'))return;if(l.closest('.site-page.group'))return;s.classList.remove('open');var m=document.getElementById('menu-mask');if(m)m.style.display='none'})</script>
+    # 站点统计 — 读自建 cwd-api（替代不蒜子，避免第三方 502 让侧栏永久转圈）
+    - <script src="/js/site-stats.js"></script>
+
+# 停用不蒜子：数据接口长期 502（脚本能加载但取不到数），侧栏统计项会
+# 永久停留在 spinner。站点统计改由 /js/site-stats.js 读取自建接口展示。
+busuanzi:
+  site_uv: false
+  site_pv: false
+  page_pv: false
