@@ -1,8 +1,9 @@
-name: Daily Content Generator
+name: Weekly Content Generator
 
+# 只生成「动漫」与「技术」两类；综合热搜（新闻/时政）已停用。
 on:
   schedule:
-    - cron: '0 1 * * *'   # 09:00 CST (01:00 UTC)
+    - cron: '0 1 * * 1'   # 每周一 09:00 CST (01:00 UTC)
   workflow_dispatch:
     inputs:
       topics:
@@ -27,6 +28,14 @@ jobs:
           AGNES_API_KEY: ${{ secrets.AGNES_API_KEY }}
           BLOG_DIR: ${{ github.workspace }}
         run: python _scripts/run_daily.py
+
+      - name: 内容安全扫描（命中敏感题材则不入库）
+        run: |
+          cd ${{ github.workspace }}
+          files=$(git status --porcelain source/_posts | awk '{print $2}')
+          if [ -n "$files" ]; then
+            python _scripts/content_guard.py --delete $files || echo "已拦截命中题材的文件"
+          fi
 
       - name: Commit and push
         run: |

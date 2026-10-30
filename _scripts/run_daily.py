@@ -39,17 +39,13 @@ def main():
     # ── Step 1: Scrape all data sources ──
     logger.info("[Step 1] 开始采集数据...")
 
-    from scrapers.news_sources import fetch_all_news_flat, group_items
     from scrapers.tech_sources import fetch_techcrunch_with_content
     from scrapers.anime_sources import fetch_current_season
     from scrapers.trending_sources import fetch_github_trending
-    from scrapers.hot_comments import fetch_hot_comments, format_comments_for_prompt
+    from content_guard import scan as guard_scan
 
-    # 1a. Chinese hot search — 单次抓取，flat 和 grouped 共享同一批对象
-    news_flat = fetch_all_news_flat(limit_per_source=5)
-    news_data = group_items(news_flat)
-    total_news = sum(len(v) for v in news_data.values())
-    logger.info("  热搜数据: %d 条, 来自 %d 个板块", total_news, len(news_data))
+    # 注：综合热搜源（微博/百度/头条/抖音/知乎）已停用 ——
+    #     时政与社会新闻风险高，且与博客「技术 + 动漫」的定位无关
 
     # 1b. Tech news
     tech_articles = fetch_techcrunch_with_content(today, limit=5)
@@ -66,24 +62,18 @@ def main():
     trending_data = fetch_github_trending(limit=10)
     logger.info("  GitHub趋势: %d 个项目", len(trending_data))
 
-    # 1e. Hot comments
-    comments = fetch_hot_comments(news_flat[:5], max_topics=5, comments_per_topic=2)
-    comments_text = format_comments_for_prompt(comments)
-    logger.info("  热评数据: %d 个话题", len(comments))
-
-    # 1f. Fact enrichment — fill item.summary with real article text where possible
-    # 优先用百度热搜自带的 desc（已在 news_sources 抓取），对头条 article URL 补抓正文
-    from scrapers.fact_fetcher import enrich_facts
-    enriched_count = enrich_facts(news_flat, max_fetches=5)
-    logger.info("  事实补充: %d 条", enriched_count)
+    # 1d. 近 60 天写过的动漫作品 —— 用于本期去重
+    from scrapers import get_recent_anime_titles
+    recent_anime = get_recent_anime_titles(days=60)
+    logger.info("  近 60 天已写作品: %d 个", len(recent_anime))
 
     # ── Step 2: AI editor decides ──
     logger.info("[Step 2] AI 编辑决策...")
-    from scrapers import get_recent_digest_topics
-    recent_topics = get_recent_digest_topics(days=3)
-    logger.info("  近期已写文章: %d 篇", len(recent_topics))
+    recent_topics = [{"title": t} for t in recent_anime]
     from generators.editor import editor_decide
-    decisions = editor_decide(news_data, tech_articles, anime_data, trending_data, recent_topics)
+    decisions = editor_decide({}, tech_articles, anime_data, trending_data, recent_topics)
+    # 新闻类（digest）已停用，只保留动漫与技术
+    decisions = [d for d in decisions if d["type"] in ("anime", "tech")]
     logger.info("  决策结果: %d 篇", len(decisions))
 
     if not decisions:
@@ -93,9 +83,16 @@ def main():
     # ── Step 3: Generate articles ──
     logger.info("[Step 3] 开始生成文章...")
     from scrapers import save_post
-    from generators.digest_writer import generate_digest
     from generators.anime_writer import generate_anime
     from generators.tech_writer import generate_tech
+
+    def _safe(md, kind):
+        """发布前题材扫描：命中敏感题材就不写盘。"""
+        hits = guard_scan(md)
+        if hits:
+            logger.warning("[内容安全] %s 文章命中敏感题材，已丢弃：%s", kind, ", ".join(hits))
+            return False
+        return True
 
     generated = []
 
@@ -105,21 +102,15 @@ def main():
         est_len = decision.get("estimated_length", "medium")
         logger.info("  生成 [%s]: %s", dtype, reason)
 
-        if dtype == "digest":
-            md = generate_digest(news_data, comments_text, today, recent_topics)
-            if md:
-                save_post("daily-news", f"{today}-digest.md", md)
-                generated.append(f"daily-news/{today}-digest.md")
-
-        elif dtype == "anime":
-            md = generate_anime(anime_data, comments_text, today)
-            if md:
+        if dtype == "anime":
+            md = generate_anime(anime_data, None, today, excluded=recent_anime)
+            if md and _safe(md, "anime"):
                 save_post("anime", f"{today}-anime-digest.md", md)
                 generated.append(f"anime/{today}-anime-digest.md")
 
         elif dtype == "tech":
             md = generate_tech(tech_articles, today)
-            if md:
+            if md and _safe(md, "tech"):
                 save_post("tech", f"{today}-ai-frontier.md", md)
                 generated.append(f"tech/{today}-ai-frontier.md")
 

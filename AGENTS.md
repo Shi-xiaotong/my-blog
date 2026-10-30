@@ -63,9 +63,21 @@ for c in node nodejs; do command -v $c && $c -v; done
 ## Daily Content Pipeline (GitHub Actions)
 
 ### How it works
-- `_scripts/run_daily.py` is triggered by GitHub Actions (`daily-news.yml`) at 09:00 CST daily
-- It scrapes TechCrunch and other sources, generates articles via Agnes AI, commits to repo
+- `_scripts/run_daily.py` is triggered by GitHub Actions (`daily-news.yml`) at 09:00 CST **every Monday**
+- It scrapes AniList (anime), TechCrunch and GitHub Trending, generates articles via Agnes AI, commits to repo
 - Cloudflare Pages auto-detects the push and rebuilds the site
+
+### ⚠️ 题材范围（2026-10-30 起）
+- **综合热搜（微博/百度/头条/抖音/知乎）已停用**，不再生成 daily-news 文章 —— 时政与社会新闻风险高、与博客定位无关
+- 只生成两类：`anime`（动漫）与 `tech`（技术/开源），`editor_decide()` 只允许返回这两种 type
+- `_scripts/scrapers/news_sources.py`、`hot_comments.py`、`fact_fetcher.py` 已无调用方，属死代码
+
+### ⚠️ 内容安全闸门
+- `_scripts/content_guard.py`：`scan(text)` 命中敏感题材则返回规则名列表
+  - `run_daily.py` 写盘前调用，命中即丢弃不生成
+  - CI 在 commit 前再跑一次 `python _scripts/content_guard.py --delete <files>`，命中即删
+- 规则表在 `SENSITIVE_RULES`，可按题材类别追加；项目根 `blocklist.txt`（一行一个关键词/正则）可加自定义词，无需改代码
+- 注意：这是**关键词拦截，不是审核**，只能挡明显的时政/案件/灾难类，不能替代人工过目
 
 ### The AI Content Generation Flow
 1. `daily-news.py` → `scrape_articles()` → `scrape_content()` → `llm_summarize()`

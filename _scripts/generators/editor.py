@@ -10,9 +10,6 @@ from . import call_agnes, logger
 
 EDITOR_PROMPT_TEMPLATE = """你是一个博客编辑。以下是今天所有数据源的情况：
 
-【热搜数据】
-{news_summary}
-
 【AI/科技新闻】
 {tech_summary}
 
@@ -28,32 +25,32 @@ EDITOR_PROMPT_TEMPLATE = """你是一个博客编辑。以下是今天所有数�
 请判断今天应该发几篇文章，每篇什么主题。
 
 判断依据：
-- 如果某个话题在多平台同时出现 → 优先写
 - **绝对不要写和「近期已写过的文章」重复的话题**
-- 如果动漫数据有爆发趋势 → 写动漫
-- 如果 AI 有重磅发布（Fable 5/GPT/Claude 级别）→ 写 AI
-- 如果都不突出 → 只写一篇综合信息差
-- 最多写 3 篇，最少 1 篇
+- 如果动漫数据有看点 → 写动漫
+- 如果 AI 有重磅发布（GPT/Claude 级别）→ 写技术
+- 如果都不突出 → 写技术（GitHub 趋势/开源项目盘点）
+- 最多写 2 篇，最少 1 篇
+- 题材范围仅限：动漫、技术、开源项目，不要涉及社会新闻与时政
 
 请按以下 JSON 格式输出（不要其他内容）：
 [
   {{
-    "type": "digest",
+    "type": "anime",
     "reason": "为什么选这个主题的一句话理由",
     "estimated_length": "medium"
   }}
 ]
 
-type 只能是: digest, anime, tech
+type 只能是: anime, tech（不要输出 digest）
 estimated_length 只能是: short, medium, long"""
 
 
 def editor_decide(news_data: dict, tech_data: list, anime_data: list, trending_data: list, recent_topics: list = None) -> list:
+    """news_data 保留仅为兼容旧调用；综合热搜已停用，请传 {}。"""
     """Ask AI editor what to write today. Returns list of {type, reason, estimated_length}."""
     today = datetime.now().strftime("%Y-%m-%d")
 
     # Build summaries
-    news_summary = _summarize_news(news_data)
     tech_summary = _summarize_tech(tech_data)
     anime_summary = _summarize_anime(anime_data)
     trending_summary = _summarize_trending(trending_data)
@@ -64,7 +61,6 @@ def editor_decide(news_data: dict, tech_data: list, anime_data: list, trending_d
         recent_text = "\n".join(f"  - {t['title']}" for t in recent_topics)
 
     prompt = EDITOR_PROMPT_TEMPLATE.format(
-        news_summary=news_summary or "无数据",
         tech_summary=tech_summary or "无数据",
         anime_summary=anime_summary or "无数据",
         trending_summary=trending_summary or "无数据",
@@ -73,14 +69,14 @@ def editor_decide(news_data: dict, tech_data: list, anime_data: list, trending_d
 
     result = call_agnes(prompt, max_tokens=1000, temperature=0.3)
     if not result:
-        logger.warning("编辑决策失败，默认发一篇综合信息差")
-        return [{"type": "digest", "reason": "默认决策", "estimated_length": "medium"}]
+        logger.warning("编辑决策失败，默认发一篇技术盘点")
+        return [{"type": "tech", "reason": "默认决策", "estimated_length": "medium"}]
 
     # Parse JSON from response
     decisions = _parse_decision(result)
     if not decisions:
-        logger.warning("决策解析失败，默认发一篇综合信息差")
-        return [{"type": "digest", "reason": "默认决策", "estimated_length": "medium"}]
+        logger.warning("决策解析失败，默认发一篇技术盘点")
+        return [{"type": "tech", "reason": "默认决策", "estimated_length": "medium"}]
 
     logger.info("编辑决策: %s", decisions)
     return decisions
@@ -142,7 +138,7 @@ def _parse_decision(text: str) -> list:
         if isinstance(decisions, list):
             validated = []
             for d in decisions:
-                if d.get("type") in ("digest", "anime", "tech"):
+                if d.get("type") in ("anime", "tech"):
                     validated.append({
                         "type": d["type"],
                         "reason": d.get("reason", ""),

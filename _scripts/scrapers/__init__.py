@@ -210,3 +210,44 @@ def get_recent_digest_topics(days=3):
         except Exception:
             continue
     return topics
+
+
+def get_recent_anime_titles(days=60):
+    """Read recent anime posts and return work titles already covered.
+
+    用于动漫文章的去重：把近 N 天写过的作品名塞进 prompt 强制排除。
+    作品名取自文章里的 ## / ### 小标题（每部作品通常是独立小标题）。
+    """
+    posts_dir = os.path.join(BLOG_DIR, "source", "_posts", "anime")
+    if not os.path.isdir(posts_dir):
+        return []
+    from datetime import datetime, timedelta
+    cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+    titles = []
+    for fname in sorted(os.listdir(posts_dir), reverse=True):
+        if not fname.endswith(".md"):
+            continue
+        if fname[:10] < cutoff:
+            break
+        try:
+            with open(os.path.join(posts_dir, fname), "r", encoding="utf-8") as f:
+                content = f.read()
+        except Exception:
+            continue
+        # 正文（跳过 front-matter）
+        body = content.split("---", 2)[2] if content.startswith("---") else content
+        for m in re.finditer(r"^#{2,3}\s+(.+)$", body, re.MULTILINE):
+            t = re.sub(r"[（(].*?[)）]", "", m.group(1)).strip()
+            t = re.sub(r"^\d+[.、\s]*", "", t).strip()
+            if 1 < len(t) <= 40:
+                titles.append(t)
+        m = re.search(r'^title:\s*["\']?(.+?)["\']?\s*$', content, re.MULTILINE)
+        if m:
+            titles.append(m.group(1).strip())
+
+    seen, out = set(), []
+    for t in titles:
+        if t not in seen:
+            seen.add(t)
+            out.append(t)
+    return out[:120]
