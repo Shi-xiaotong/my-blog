@@ -62,14 +62,15 @@ def main():
     trending_data = fetch_github_trending(limit=10)
     logger.info("  GitHub趋势: %d 个项目", len(trending_data))
 
-    # 1d. 近 60 天写过的动漫作品 —— 用于本期去重
-    from scrapers import get_recent_anime_titles
+    # 1d. 近 60 天写过的内容 —— 用于本期去重
+    from scrapers import get_recent_anime_titles, get_recent_tech_titles
     recent_anime = get_recent_anime_titles(days=60)
-    logger.info("  近 60 天已写作品: %d 个", len(recent_anime))
+    recent_tech = get_recent_tech_titles(days=60)
+    logger.info("  近 60 天已写: 动漫作品 %d 个 / 技术主题 %d 个", len(recent_anime), len(recent_tech))
 
     # ── Step 2: AI editor decides ──
     logger.info("[Step 2] AI 编辑决策...")
-    recent_topics = [{"title": t} for t in recent_anime]
+    recent_topics = [{"title": t} for t in (recent_anime + recent_tech)]
     from generators.editor import editor_decide
     decisions = editor_decide({}, tech_articles, anime_data, trending_data, recent_topics)
     # 新闻类（digest）已停用，只保留动漫与技术
@@ -109,7 +110,7 @@ def main():
                 generated.append(f"anime/{today}-anime-digest.md")
 
         elif dtype == "tech":
-            md = generate_tech(tech_articles, today)
+            md = generate_tech(tech_articles, today, excluded=recent_tech)
             if md and _safe(md, "tech"):
                 save_post("tech", f"{today}-ai-frontier.md", md)
                 generated.append(f"tech/{today}-ai-frontier.md")

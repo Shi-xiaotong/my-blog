@@ -72,6 +72,12 @@ for c in node nodejs; do command -v $c && $c -v; done
 - 只生成两类：`anime`（动漫）与 `tech`（技术/开源），`editor_decide()` 只允许返回这两种 type
 - `_scripts/scrapers/news_sources.py`、`hot_comments.py`、`fact_fetcher.py` 已无调用方，属死代码
 
+### ⚠️ 标题规则（2026-10-30 起）
+- 自动生成的文章标题要像**一个人在更新博客**，不要像榜单/简报/运营号
+- `anime_writer.py` 与 `tech_writer.py` 的 prompt 里各有一份规则：禁止词表（当季新番、热度榜、速览、今天科技圈有点热闹…）+ 语气示例 + 12~26 字
+- 去重：动漫用 `get_recent_anime_titles(60)`，技术用 `get_recent_tech_titles(60)`，写进 prompt 强制排除
+- 改标题规则时同步改这两处 prompt，别只改一处
+
 ### ⚠️ 内容安全闸门
 - `_scripts/content_guard.py`：`scan(text)` 命中敏感题材则返回规则名列表
   - `run_daily.py` 写盘前调用，命中即丢弃不生成

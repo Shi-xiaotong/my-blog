@@ -251,3 +251,33 @@ def get_recent_anime_titles(days=60):
             seen.add(t)
             out.append(t)
     return out[:120]
+
+
+def get_recent_tech_titles(days=60):
+    """近 N 天技术类文章的标题，用于避免同一场发布会/同一个产品被反复写。"""
+    posts_dir = os.path.join(BLOG_DIR, "source", "_posts", "tech")
+    if not os.path.isdir(posts_dir):
+        return []
+    from datetime import datetime, timedelta
+    cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+    titles = []
+    for fname in sorted(os.listdir(posts_dir), reverse=True):
+        if not fname.endswith(".md"):
+            continue
+        # 文件名带日期的按日期过滤；不带日期的固定文章（如 linux-commands）一律算作"已写过"
+        if fname[:4].isdigit() and fname[:10] < cutoff:
+            continue
+        try:
+            with open(os.path.join(posts_dir, fname), "r", encoding="utf-8") as f:
+                content = f.read()
+        except Exception:
+            continue
+        m = re.search(r'^title:\s*["\']?(.+?)["\']?\s*$', content, re.MULTILINE)
+        if m:
+            titles.append(m.group(1).strip())
+    seen, out = set(), []
+    for t in titles:
+        if t not in seen:
+            seen.add(t)
+            out.append(t)
+    return out[:120]
