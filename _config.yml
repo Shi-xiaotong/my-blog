@@ -30,6 +30,9 @@ code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
   - 'js/**'
+  # 独立 HTML 页面，必须跳过渲染，否则会被主题布局包裹：
+  # 内联的 body/背景/链接样式会污染全站（曾导致 404 页整个变深色、导航变紫块）
+  - '404.html'
   - 'anime/index.html'
   - 'anime/track.js'
   - 'anime/play/**'

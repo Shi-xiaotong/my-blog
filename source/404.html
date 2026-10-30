@@ -3,22 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 - 页面未找到</title>
+<meta name="theme-color" content="#FDFCF8">
+<title>404 · 页面走丢了</title>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px}
-.container{max-width:480px}
-h1{font-size:6em;font-weight:700;color:#9d7cd8;margin-bottom:16px}
-p{font-size:1.1em;color:#94a3b8;margin-bottom:24px;line-height:1.6}
-a{display:inline-block;padding:12px 32px;background:#9d7cd8;color:#fff;text-decoration:none;border-radius:8px;font-size:15px;transition:all .2s}
-a:hover{background:#7c4dff;transform:translateY(-1px)}
+  /* 独立页面，不继承主题样式。配色与 /tools/common.css 的 token 保持一致：
+     奶油白底 #FDFCF8 / 天青 #4DA3D9 / 樱粉 #FF8FAB / 深色 #1C1E2A
+     注意：这里的选择器都是全局的，本文件已被 skip_render 排除，不会再污染主题页 */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #FDFCF8;
+    --card: #FFFFFF;
+    --text: #2B3040;
+    --text-2: #5C6478;
+    --text-3: #98A0B3;
+    --primary: #4DA3D9;
+    --primary-dark: #3B8CC4;
+    --accent: #FF8FAB;
+    --border: #EDEFF5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1C1E2A;
+      --card: #242736;
+      --text: #E8EAF2;
+      --text-2: #A8AEC2;
+      --text-3: #6E7488;
+      --primary: #7FC4E8;
+      --primary-dark: #A5D8F0;
+      --border: #333749;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    background-image:
+      radial-gradient(900px 480px at 12% -10%, rgba(77, 163, 217, .10), transparent 62%),
+      radial-gradient(760px 420px at 92% 4%, rgba(255, 143, 171, .09), transparent 58%);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 32px;
+    box-shadow: 0 2px 8px rgba(43, 48, 64, .05);
+  }
+
+  .code {
+    font-size: 4.5em;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: .04em;
+    color: var(--primary);
+  }
+
+  .divider {
+    width: 48px;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    margin: 22px auto;
+  }
+
+  h1 {
+    font-size: 1.15em;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: .95em;
+    color: var(--text-2);
+    line-height: 1.75;
+    margin-bottom: 28px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .2s ease;
+  }
+
+  a.btn-primary {
+    background: var(--primary);
+    color: #FFF;
+  }
+  a.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+  }
+
+  a.btn-ghost {
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border);
+  }
+  a.btn-ghost:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .hint {
+    margin-top: 26px;
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: .02em;
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 36px 20px; border-radius: 16px; }
+    .code { font-size: 3.4em; }
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>404</h1>
-  <p>页面走丢了，可能是链接有误或已被移除。</p>
-  <a href="/">返回首页</a>
-</div>
+  <div class="container">
+    <div class="code">404</div>
+    <div class="divider"></div>
+    <h1>页面走丢了</h1>
+    <p>可能是链接有误，或者这篇内容已经被移走了。</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/">返回首页</a>
+      <a class="btn btn-ghost" href="/archives/">翻翻存档</a>
+    </div>
+    <div class="hint">水星引力m · 233002.xyz</div>
+  </div>
 </body>
 </html>

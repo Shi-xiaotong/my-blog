@@ -1,0 +1,342 @@
+/* ================================================================
+   水星引力m · Butterfly 结构适配层（site-override.css）
+   ----------------------------------------------------------------
+   这里只放「结构 / 功能必须」的覆盖，不放视觉风格。
+   视觉风格全部在 /css/theme-skin.css。
+   配色 token 全部来自 common.css（var(--xxx)）。
+   ----------------------------------------------------------------
+   注意：写选择器前先确认 Butterfly 5.5.4 的真实 DOM，
+        以下无效选择器曾在此文件中长期存在（已移除）：
+        .post-block / .layout > .recent-posts / #post .prev-next
+   ================================================================ */
+
+/* ─────────────── 1. 导航：三段式布局（logo | 菜单 | 登录栏） ─────────────── */
+#nav {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+#nav #blog-info {
+  flex: 0 0 auto !important;
+}
+#nav #menus {
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 !important;
+}
+#nav .menus_items {
+  display: flex !important;
+  align-items: center !important;
+}
+#nav .menus_items .menus_item {
+  flex: 0 0 auto !important;
+  list-style: none !important;
+}
+#nav #site-auth-bar {
+  margin-left: auto !important;
+}
+
+/* 登录按钮 */
+#nav #site-auth-bar a,
+#nav #site-auth-bar .auth-login-btn,
+#nav .site-page.auth-login-btn {
+  background: rgba(var(--primary-rgb), 0.10) !important;
+  border-radius: 8px !important;
+  padding: 4px 12px !important;
+  color: var(--primary-dark) !important;
+  white-space: nowrap !important;
+}
+#nav #site-auth-bar a:hover,
+#nav #site-auth-bar .auth-login-btn:hover {
+  background: rgba(var(--primary-rgb), 0.18) !important;
+}
+[data-theme="dark"] #nav #site-auth-bar a,
+[data-theme="dark"] #nav #site-auth-bar .auth-login-btn {
+  background: rgba(var(--primary-rgb), 0.14) !important;
+  color: var(--primary-dark) !important;
+}
+
+/* ─────────────── 2. 导航下拉菜单 ─────────────── */
+#nav .menus_items .sub-menus {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 10px !important;
+  min-width: 260px;
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(43, 48, 64, 0.10) !important;
+}
+#nav .menus_items .sub-menus .menus_item_child li a {
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+}
+#nav .menus_items .sub-menus .menus_item_child li a:hover {
+  background: rgba(var(--primary-rgb), 0.10) !important;
+  color: var(--primary-dark) !important;
+}
+#nav .menus_items .sub-menus .menu-item {
+  display: flex !important;
+  align-items: center;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  white-space: nowrap;
+}
+#nav .menus_items .sub-menus .menu-item:hover {
+  background: rgba(var(--primary-rgb), 0.10) !important;
+}
+#nav .menus_items .sub-menus .menu-item a {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+[data-theme="dark"] #nav .menus_items .sub-menus {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* ─────────────── 3. 布局：侧栏固定宽度 ─────────────── */
+.layout {
+  display: flex;
+  justify-content: center;
+}
+#aside-content {
+  width: 320px !important;
+  min-width: 320px !important;
+}
+@media screen and (max-width: 900px) {
+  #aside-content {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* ─────────────── 4. 侧栏社交图标：一排不换行 ─────────────── */
+.card-info-social-icons {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 8px 4px !important;
+}
+.card-info-social-icons .social-icon {
+  flex: 0 0 auto !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px !important;
+}
+
+/* ─────────────── 5. 登录弹窗 ─────────────── */
+#site-login-modal .slm-box {
+  border-radius: 16px !important;
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 16px 48px rgba(43, 48, 64, 0.16) !important;
+}
+#site-login-modal .slm-box h3 {
+  color: var(--text-highlight-color, var(--text-strong));
+  font-size: 22px;
+  font-weight: 700;
+}
+#site-login-modal .slm-tab.active {
+  color: var(--primary) !important;
+  border-bottom-color: var(--primary) !important;
+}
+#site-login-modal .slm-submit {
+  background: var(--primary) !important;
+  border-radius: 8px !important;
+  color: #FFFFFF !important;
+}
+#site-login-modal .slm-submit:hover {
+  background: var(--primary-dark) !important;
+}
+#site-login-modal .slm-send-btn {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+  border-radius: 8px !important;
+}
+[data-theme="dark"] #site-login-modal .slm-box {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* ─────────────── 6. 评论区（CWD） ─────────────── */
+#cwd-comments > *,
+#cwd-comments form,
+#cwd-comments .comment-form {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+#cwd-comments input,
+#cwd-comments textarea,
+#cwd-comments select {
+  background: var(--bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 10px !important;
+  padding: 10px 12px !important;
+  color: var(--text) !important;
+  font-size: 14px !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease !important;
+}
+#cwd-comments input:focus,
+#cwd-comments textarea:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.14) !important;
+  outline: none !important;
+}
+#cwd-comments button[type="submit"] {
+  background: var(--primary) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 10px 24px !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: background 0.18s ease !important;
+}
+#cwd-comments button[type="submit"]:hover {
+  background: var(--primary-dark) !important;
+}
+[data-theme="dark"] #cwd-comments input,
+[data-theme="dark"] #cwd-comments textarea,
+[data-theme="dark"] #cwd-comments select {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* ─────────────── 7. 工具箱 / 导航页卡片 ─────────────── */
+/* 已迁移至 ui.css 第 33 节：工具页是静态页，不走 Butterfly 布局，
+   卡片外观由页面内联样式提供，本文件不再覆盖 .category / .tool-card。 */
+
+/* ─────────────── 8. 友情链接失效头像兜底 ─────────────── */
+/* 友链页是自建页面（source/links/index.md 内联样式），这里只兜底加载失败的图 */
+.friend-link-avatar:has(img[src*="friend_404"]) {
+  background: linear-gradient(135deg, #BFE3F5 0%, #FFD9E2 100%) !important;
+  border-radius: 50%;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 600;
+}
+.friend-link-avatar img[src*="friend_404"] {
+  display: none !important;
+}
+
+/* ─────────────── 9. 移动端侧栏 ─────────────── */
+#sidebar-menus {
+  background: var(--card-bg) !important;
+  border-left: 1px solid var(--border-color) !important;
+  box-shadow: -8px 0 32px rgba(43, 48, 64, 0.08) !important;
+}
+#sidebar-menus .menus_items {
+  background: var(--bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+}
+#sidebar-menus .menus_item_child {
+  background: transparent !important;
+}
+#sidebar-menus .menus_item_child li a {
+  color: var(--text) !important;
+  border-radius: 6px !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+}
+#sidebar-menus .menus_item_child li a:hover {
+  background: rgba(var(--primary-rgb), 0.12) !important;
+  color: var(--primary-dark) !important;
+}
+#sidebar-menus .site-page {
+  color: var(--text) !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+}
+#sidebar-menus .site-page:hover {
+  background: rgba(var(--primary-rgb), 0.10) !important;
+  color: var(--primary-dark) !important;
+  box-shadow: none !important;
+}
+#menu-mask {
+  background: rgba(43, 48, 64, 0.38) !important;
+}
+[data-theme="dark"] #sidebar-menus {
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4) !important;
+}
+[data-theme="dark"] #sidebar-menus .menus_items {
+  background: var(--card-bg-hover) !important;
+}
+[data-theme="dark"] #sidebar-menus .site-page,
+[data-theme="dark"] #sidebar-menus .menus_item_child li a {
+  color: var(--text) !important;
+}
+[data-theme="dark"] #sidebar-menus .site-page:hover,
+[data-theme="dark"] #sidebar-menus .menus_item_child li a:hover {
+  background: rgba(var(--primary-rgb), 0.12) !important;
+  color: var(--primary-dark) !important;
+}
+[data-theme="dark"] #menu-mask {
+  background: rgba(0, 0, 0, 0.55) !important;
+}
+
+/* ─────────────── 11. 移动端：强制汉堡菜单 ─────────────── */
+@media screen and (max-width: 768px) {
+  #nav .menus_items {
+    display: none !important;
+  }
+  #nav #toggle-menu {
+    display: inline-block !important;
+  }
+  #recent-posts .recent-post-item {
+    flex-direction: row !important;
+    height: auto !important;
+    min-height: 84px;
+  }
+  #recent-posts .recent-post-item .post_cover {
+    width: 84px !important;
+    height: auto !important;
+    min-height: 84px;
+    flex-shrink: 0;
+  }
+  #recent-posts .recent-post-item .post_cover .post-bg {
+    height: 100% !important;
+    min-height: 84px;
+  }
+  #recent-posts .recent-post-item .post_cover.right {
+    order: 1 !important;
+  }
+  #recent-posts .recent-post-item > .recent-post-info {
+    padding: 12px 16px !important;
+    width: auto !important;
+    flex: 1;
+  }
+  #recent-posts .recent-post-item > .recent-post-info .article-title {
+    font-size: 1.05em !important;
+  }
+  #recent-posts .recent-post-item > .recent-post-info .content {
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  #site-auth-bar {
+    margin-left: 4px !important;
+    padding: 0 2px !important;
+  }
+  #site-auth-bar .auth-login-btn {
+    padding: 2px 8px !important;
+    font-size: 11px !important;
+  }
+  #site-auth-bar .auth-user-info {
+    padding: 1px 5px 1px 3px !important;
+    font-size: 11px !important;
+  }
+  #site-auth-bar .auth-user-info .auth-name {
+    max-width: 50px !important;
+    font-size: 11px !important;
+  }
+}

@@ -9,21 +9,21 @@
 # 主题颜色
 theme_color:
   enable: true
-  main: "#3b82f6"
-  paginator: "#3b82f6"
-  button_hover: "#2563eb"
-  text_selection: "#3b82f6"
-  link_color: "#3b82f6"
-  meta_color: "#64748b"
-  hr_color: "#3b82f6"
-  code_foreground: "#ef4444"
-  code_background: "rgba(27, 31, 35, .05)"
-  toc_color: "#3b82f6"
-  blockquote_padding_color: "#3b82f6"
-  blockquote_background_color: "rgba(59, 130, 246, 0.15)"
-  scrollbar_color: "#3b82f6"
+  main: "#4DA3D9"
+  paginator: "#4DA3D9"
+  button_hover: "#3B8CC4"
+  text_selection: "#4DA3D9"
+  link_color: "#4DA3D9"
+  meta_color: "#5C6478"
+  hr_color: "#4DA3D9"
+  code_foreground: "#D9587A"
+  code_background: "rgba(77, 163, 217, .08)"
+  toc_color: "#4DA3D9"
+  blockquote_padding_color: "#4DA3D9"
+  blockquote_background_color: "rgba(77, 163, 217, 0.08)"
+  scrollbar_color: "#4DA3D9"
   meta_theme_color_light: "ffffff"
-  meta_theme_color_dark: "#0d0d0d"
+  meta_theme_color_dark: "#1C1E2A"
 
 # --------------------------------------
 # 导航设置
@@ -119,25 +119,23 @@ footer_img: false
 # 可以设置为颜色、图片 URL 或包含颜色和/或图片 URL 的数组
 # 如果提供了数组，每次加载时会从数组中随机选择背景
 # background: null
-background: "#0f172a"
+background: "#FDFCF8"
 
 cover:
   # 是否禁用封面
   index_enable: true
   aside_enable: false
   archives_enable: false
-  # 当没有设置封面时，显示 CSS 渐变
+  # 当没有设置封面时，显示 CSS 渐变（晴空白 · 低饱和柔和色）
   default_cover:
-    - 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-    - 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
-    - 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
-    - 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
-    - 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
-    - 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'
-    - 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'
-    - 'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)'
-    - 'linear-gradient(135deg, #0c3483 0%, #a2b6df 100%)'
-    - 'linear-gradient(135deg, #f12711 0%, #f5af19 100%)'
+    - 'linear-gradient(135deg, #BFE3F5 0%, #E8F4FB 100%)'
+    - 'linear-gradient(135deg, #FFD9E2 0%, #FFF0F4 100%)'
+    - 'linear-gradient(135deg, #D6F0E6 0%, #EFFAF6 100%)'
+    - 'linear-gradient(135deg, #FFE9C7 0%, #FFF7EA 100%)'
+    - 'linear-gradient(135deg, #E4DDF7 0%, #F5F1FC 100%)'
+    - 'linear-gradient(135deg, #CFEBFB 0%, #FFE4EC 100%)'
+    - 'linear-gradient(135deg, #FFE0DC 0%, #FFF3F0 100%)'
+    - 'linear-gradient(135deg, #D9E9F7 0%, #EAF3FB 100%)'
 
 # 替换失效图片
 error_img:
@@ -180,7 +178,7 @@ post_meta:
 # 站点信息的位置，例如：300px/300em/300rem/10%
 index_site_info_top:
 # top_img 的高度，例如：300px/300em/300rem
-index_top_img_height:
+index_top_img_height: 66vh
 
 # 主页副标题
 subtitle:
@@ -1146,11 +1144,13 @@ inject:
     # 预连接天气 API
     - <link rel="preconnect" href="https://api.open-meteo.com">
     - <link rel="dns-prefetch" href="https://api.open-meteo.com">
-    # 注入 common.css 全站统一设计Token
-    - <link rel="stylesheet" href="/tools/common.css">
-    # 注入 site-override.css 桥接Butterfly→common.css
-    - <link rel="stylesheet" href="/tools/site-override.css?v=7">
-    # 注入 custom.css 全站自定义样式
+    # 样式统一入口（顺序即层叠顺序，勿随意调整）：
+    #   tokens  → ui → theme-skin → butterfly-adapter → custom
+    # 改配色只需动 /css/tokens.css
+    - <link rel="stylesheet" href="/css/tokens.css">
+    - <link rel="stylesheet" href="/css/ui.css">
+    - <link rel="stylesheet" href="/css/theme-skin.css">
+    - <link rel="stylesheet" href="/css/butterfly-adapter.css">
     - <link rel="stylesheet" href="/css/custom.css">
     # Font Awesome 字体预加载 — 自托管字体文件，避免 jsDelivr 慢速
     - <link rel="preload" href="/assets/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>

@@ -1,129 +1,23 @@
-/* ===== 🌌 水星引力m Glassmorphism Design System ===== */
-/* UI/UX Pro Max — Glassmorphism + Cosmic Theme       */
-/* Zero image dependencies — all CSS/JS gradients      */
+/* ================================================================
+   水星引力m · UI 基础与组件库（ui.css）
+   ----------------------------------------------------------------
+   全站共用：Butterfly 主题页 / 工具箱 / 小游戏 / 影视屋 / 各组件
+   ⚠️ 本文件不定义颜色，颜色一律来自 tokens.css 的 var(--xxx)。
+   ⚠️ 新增页面样式前，先确认这里是不是已经有可复用的组件。
 
-/* ─── 1. Design Tokens ─── */
-:root {
-  /* Font */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
-  --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
-
-  /* Typography */
-  --text-xs: 0.75rem;   /* 12px */
-  --text-sm: 0.875rem;  /* 14px */
-  --text-base: 1rem;    /* 16px */
-  --text-lg: 1.125rem;  /* 18px */
-  --text-xl: 1.25rem;   /* 20px */
-  --text-2xl: 1.5rem;   /* 24px */
-  --text-3xl: 2rem;     /* 32px */
-  --text-4xl: 2.5rem;   /* 40px */
-  --text-5xl: 3rem;     /* 48px */
-  --text-6xl: 4rem;     /* 64px */
-
-  --leading-tight: 1.25;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.75;
-
-  /* Glassmorphism colors (light) */
-  --primary: #2563EB;
-  --primary-light: #DBEAFE;
-  --primary-dark: #1D4ED8;
-  --secondary: #3B82F6;
-  --accent: #F97316;
-  --accent-light: #FED7AA;
-
-  --bg: rgba(248,250,252,0.65);
-  --card-bg: rgba(255,255,255,0.72);
-  --card-bg-hover: rgba(255,255,255,0.85);
-  --text: #1E293B;
-  --text-secondary: #475569;
-  --text-tertiary: #94A3B8;
-  --border: rgba(226,232,240,0.5);
-  --border-hover: rgba(148,163,184,0.5);
-
-  --success: #22C55E;
-  --error: #EF4444;
-  --warning: #F59E0B;
-  --info: #3B82F6;
-
-  /* Glassmorphism effects */
-  --glass-blur: 12px;
-  --glass-border: 1px solid var(--border);
-  --glass-shadow: 0 8px 32px rgba(0,0,0,0.08);
-  --glass-shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
-  --shadow-xl: 0 16px 48px rgba(0,0,0,0.12);
-
-  /* Border radius */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 20px;
-  --radius-full: 50%;
-
-  /* Spacing (4pt/8dp) */
-  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;
-  --space-4: 16px;  --space-5: 20px;  --space-6: 24px;
-  --space-8: 32px;  --space-10: 40px; --space-12: 48px;
-  --space-16: 64px; --space-20: 80px;
-
-  /* Easing */
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --duration-slow: 400ms;
-
-  /* Z-index */
-  --z-base: 1;
-  --z-dropdown: 10;
-  --z-sticky: 20;
-  --z-overlay: 40;
-  --z-modal: 100;
-  --z-toast: 999;
-  --z-max: 9999;
-
-  /* CSS-only image placeholders */
-  --img-placeholder-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A78BFA 100%);
-  --img-placeholder-error: linear-gradient(135deg, #F43F5E 0%, #FB7185 100%);
-  --img-placeholder-article: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
-}
-
-/* Dark mode */
-[data-theme="dark"] {
-  --primary: #818CF8;
-  --primary-light: rgba(129,140,248,0.15);
-  --primary-dark: #6366F1;
-  --secondary: #93C5FD;
-  --accent: #FB923C;
-  --accent-light: rgba(251,146,60,0.15);
-
-  --bg: rgba(15,23,42,0.65);
-  --card-bg: rgba(30,41,59,0.72);
-  --card-bg-hover: rgba(30,41,59,0.88);
-  --text: #E2E8F0;
-  --text-secondary: #94A3B8;
-  --text-tertiary: #64748B;
-  --border: rgba(51,65,85,0.5);
-  --border-hover: rgba(71,85,105,0.5);
-
-  --glass-shadow: 0 8px 32px rgba(0,0,0,0.2);
-  --glass-shadow-hover: 0 12px 40px rgba(0,0,0,0.3);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
-  --shadow-xl: 0 16px 48px rgba(0,0,0,0.25);
-
-  --img-placeholder-gradient: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #A78BFA 100%);
-  --img-placeholder-error: linear-gradient(135deg, #BE123C 0%, #E11D48 100%);
-  --img-placeholder-article: linear-gradient(135deg, #3730A3 0%, #6D28D9 100%);
-}
+   分节：
+     1. Reset          2. Base           3. Card
+     4. Container      5. Focus          6. Reduced Motion
+     7. Keyframes      8. Typography     9. Header
+    10. Link/Back     11. Tool Area     12. Buttons
+    13. Form          14. Layout        15. Output
+    16. Toast         17. Theme Toggle  18. Status/Icon
+    19. Footer        20. Check/Radio   21. Input Group
+    22. Preview       23. Range Slider  24. Code Block
+    25. Skeleton      26. Empty         27. Tab
+    28. Progress      29. Hint          30. Image Placeholder
+    31. 游戏页专属     32. 响应式      33. 工具箱列表页
+   ================================================================ */
 
 /* ─── 2. Reset ─── */
 *, *::before, *::after {
@@ -139,7 +33,7 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: transparent;
+  background: var(--bg);
   color: var(--text);
   min-height: 100vh;
   line-height: var(--leading-relaxed);
@@ -147,18 +41,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── 4. Glassmorphism Card ─── */
+/* ─── 4. Card（实色，不用 backdrop-filter） ─── */
 .glass {
   background: var(--card-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  transition: all var(--duration-normal) var(--ease-out);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--duration-normal) var(--ease-out),
+              border-color var(--duration-normal) var(--ease-out),
+              transform var(--duration-normal) var(--ease-out);
 }
 .glass:hover {
-  background: var(--card-bg-hover);
-  box-shadow: var(--glass-shadow-hover);
+  box-shadow: var(--shadow-lg);
   border-color: var(--border-hover);
 }
 
@@ -207,8 +101,6 @@ body {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-@keyframes twinkle {
-  0%, 100% { opacity: 0.3; }
   50% { opacity: 1; }
 }
 
@@ -252,12 +144,10 @@ a:hover { color: var(--primary-dark); }
 /* ─── 12. Tool Area ─── */
 .tool-area {
   background: var(--card-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: var(--glass-border);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 28px;
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--shadow-md);
 }
 
 /* ─── 13. Buttons ─── */
@@ -271,11 +161,11 @@ a:hover { color: var(--primary-dark); }
   font-family: inherit;
 }
 .btn-primary {
-  background: var(--primary); color: #fff;
+  background: var(--primary); color: var(--btn-color);
 }
 .btn-primary:hover {
   filter: brightness(1.1); transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+  box-shadow: var(--shadow-md);
 }
 .btn-primary:active { transform: translateY(0); }
 .btn-outline {
@@ -308,8 +198,6 @@ input[type="datetime-local"], input[type="password"], select {
   font-size: var(--text-sm); background: var(--bg); color: var(--text);
   outline: none; font-family: inherit;
   transition: border-color var(--duration-fast) var(--ease-out);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
 }
 textarea:focus, input:focus, select:focus {
   border-color: var(--primary);
@@ -378,8 +266,6 @@ label {
   border-radius: var(--radius-full);
   border: var(--glass-border);
   background: var(--card-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   color: var(--text);
   cursor: pointer; display: flex; align-items: center;
   justify-content: center; z-index: var(--z-sticky);
@@ -422,7 +308,6 @@ label {
   cursor: pointer; font-size: var(--text-xs);
   transition: all var(--duration-fast) var(--ease-out);
   background: var(--card-bg);
-  backdrop-filter: blur(4px);
 }
 .check-item:hover { border-color: var(--primary); }
 .check-item.active {
@@ -593,91 +478,6 @@ img:not([src])::after, img[src=""]::after {
   padding: var(--space-2);
 }
 
-/* ─── 33. ⭐ CSS-Only 404 Page ─── */
-/* Replaces: 404.png, error-page.png */
-.error-page {
-  min-height: 70vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  padding: var(--space-8);
-  position: relative;
-  overflow: hidden;
-}
-.error-page::before {
-  content: '';
-  position: absolute;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-  opacity: 0.08;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-.error-page h1 {
-  font-size: var(--text-6xl);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: var(--space-2);
-  position: relative;
-  z-index: 1;
-}
-.error-page .error-subtitle {
-  font-size: var(--text-lg);
-  color: var(--text-secondary);
-  margin-bottom: var(--space-8);
-  position: relative;
-  z-index: 1;
-}
-.error-page .error-astronaut {
-  position: relative;
-  width: 120px; height: 120px;
-  margin-bottom: var(--space-6);
-  z-index: 1;
-  animation: float 3s ease-in-out infinite;
-}
-.error-page .error-astronaut svg {
-  width: 100%; height: 100%;
-}
-.error-page .error-btn {
-  display: inline-flex;
-  align-items: center; gap: var(--space-2);
-  padding: 14px 32px; min-height: 48px;
-  background: var(--primary); color: #fff;
-  border: none; border-radius: var(--radius-md);
-  font-size: var(--text-base); font-weight: 500;
-  cursor: pointer; text-decoration: none;
-  transition: all var(--duration-normal) var(--ease-out);
-  position: relative;
-  z-index: 1;
-}
-.error-page .error-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(37,99,235,0.3);
-}
-
-/* ─── 34. ⭐ CSS Stars Decoration ─── */
-/* CSS-only starfield for non-canvas pages */
-.css-stars {
-  position: fixed; inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  overflow: hidden;
-}
-.css-star {
-  position: absolute;
-  width: 2px; height: 2px;
-  background: var(--primary);
-  border-radius: var(--radius-full);
-  animation: twinkle 3s ease-in-out infinite;
-}
-.css-star:nth-child(odd) { animation-delay: 0.5s; }
-.css-star:nth-child(3n) { animation-delay: 1s; width: 1px; }
-.css-star:nth-child(5n) { animation-delay: 2s; width: 3px; height: 3px; }
-
 /* ─── 35. Responsive ─── */
 @media (max-width: 640px) {
   .container, .container-wide, .container-narrow { padding: var(--space-3); }
@@ -692,3 +492,150 @@ img:not([src])::after, img[src=""]::after {
   .error-page h1 { font-size: var(--text-5xl); }
   .error-page .error-astronaut { width: 80px; height: 80px; }
 }
+
+
+/* ================================================================
+   31. 游戏页专属组件（原 /games/common.css 合并而来）
+   ================================================================ */
+
+/* 分数条 */
+.score-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: var(--space-4); padding: var(--space-3) var(--space-4);
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.score-item { text-align: center; }
+.score-label {
+  font-size: var(--text-xs); color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.score-value {
+  font-size: var(--text-2xl); font-weight: 700;
+  font-family: var(--font-mono); color: var(--primary);
+}
+
+/* 游戏画布 */
+.game-area { display: flex; justify-content: center; margin: var(--space-4) 0; }
+.game-area canvas {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  touch-action: none;
+}
+
+/* 游戏结束遮罩 */
+.overlay {
+  position: absolute; inset: 0;
+  background: rgba(28, 30, 42, 0.72);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  border-radius: var(--radius-md); z-index: 10;
+}
+.overlay h2 { font-size: var(--text-2xl); margin-bottom: var(--space-2); }
+.overlay p { color: var(--text-secondary); margin-bottom: var(--space-4); }
+
+/* 游戏独立页框架 */
+.game-page-header { text-align: center; padding: var(--space-6) 0 0; }
+.game-page-header .back-link { justify-content: center; }
+.game-page-header h1 { font-size: 1.8em; margin: var(--space-2) 0 0; }
+.game-page-footer {
+  text-align: center; padding: var(--space-10) 0 var(--space-5);
+  color: var(--text-secondary); font-size: var(--text-sm);
+}
+.game-page-footer a { color: var(--primary); text-decoration: none; }
+.game-page-footer a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .score-value { font-size: var(--text-xl); }
+}
+
+/* ─── 33. 工具箱列表页（source/tools/index.html） ─────────────────
+   卡片外观（背景/边框/圆角/阴影/hover）由页面内联样式负责，
+   这里只补分类色彩标识，不要覆盖 .category / .tool-card 的盒子样式。 */
+.category .category-title {
+  border-left: 3px solid var(--primary);
+  padding-left: var(--space-3);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.category[data-category="converter"] .category-title { border-left-color: var(--primary); }
+.category[data-category="dev"]       .category-title { border-left-color: var(--cat-dev); }
+.category[data-category="crypto"]    .category-title { border-left-color: var(--cat-crypto); }
+.category[data-category="text"]      .category-title { border-left-color: var(--cat-text); }
+.category[data-category="time"]      .category-title { border-left-color: var(--cat-time); }
+.category[data-category="image"]     .category-title { border-left-color: var(--cat-image); }
+.category[data-category="ai"]        .category-title { border-left-color: var(--cat-ai); }
+
+.category[data-category="converter"] .cat-icon { color: var(--primary); }
+.category[data-category="dev"]       .cat-icon { color: var(--cat-dev); }
+.category[data-category="crypto"]    .cat-icon { color: var(--cat-crypto); }
+.category[data-category="text"]      .cat-icon { color: var(--cat-text); }
+.category[data-category="time"]      .cat-icon { color: var(--cat-time); }
+.category[data-category="image"]     .cat-icon { color: var(--cat-image); }
+.category[data-category="ai"]        .cat-icon { color: var(--cat-ai); }
+
+.category[data-category="converter"] .tool-icon { background: color-mix(in srgb, var(--primary) 10%, transparent);      color: var(--primary); }
+.category[data-category="dev"]       .tool-icon { background: color-mix(in srgb, var(--cat-dev) 10%, transparent);       color: var(--cat-dev); }
+.category[data-category="crypto"]    .tool-icon { background: color-mix(in srgb, var(--cat-crypto) 10%, transparent);    color: var(--cat-crypto); }
+.category[data-category="text"]      .tool-icon { background: color-mix(in srgb, var(--cat-text) 10%, transparent);      color: var(--cat-text); }
+.category[data-category="time"]      .tool-icon { background: color-mix(in srgb, var(--cat-time) 10%, transparent);      color: var(--cat-time); }
+.category[data-category="image"]     .tool-icon { background: color-mix(in srgb, var(--cat-image) 10%, transparent);     color: var(--cat-image); }
+.category[data-category="ai"]        .tool-icon { background: color-mix(in srgb, var(--cat-ai) 10%, transparent);        color: var(--cat-ai); }
+
+/* ================================================================
+   34. 工具详情页统一外壳（source/tools/*.html，144 个页面共用）
+   ----------------------------------------------------------------
+   ⚠️ 页面自带的 <style> 在 ui.css 之后加载，同权重会覆盖这里；
+      所以统一规则一律加 body 前缀提升权重 —— 148 个页面不用改源码，
+      要调整工具页外观，只改这一段。
+   ================================================================ */
+
+/* 主容器：居中 + token 间距（页面里写死 max-width:100% 的也拉回来） */
+body .container {
+  max-width: 900px; margin: 0 auto; padding: var(--space-5);
+}
+
+/* 页头：返回链接在上、标题在下，与 /tools/ 列表页同一套 */
+body .container .header {
+  display: block; margin-bottom: var(--space-5);
+}
+body .container .header .back-link {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+body .container .header h1 {
+  margin: 0; font-size: var(--text-2xl); font-weight: 700;
+  line-height: var(--leading-tight); color: var(--text-strong);
+}
+
+/* 工具主体卡片 */
+body .tool-area { padding: var(--space-6); box-shadow: var(--shadow-sm); }
+
+/* 结果/输出面板：统一浅底 + token 圆角，别再各页 6/8/10px 混用 */
+body .result-box,
+body .output-wrap,
+body .output-area,
+body .output {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+/* 工具条：控件保持内联宽度，别被全局 width:100% 撑满整行 */
+body .toolbar {
+  display: flex; align-items: center;
+  gap: var(--space-2); flex-wrap: wrap;
+}
+body .toolbar select { width: auto; min-width: 110px; }
+
+/* 表单控件与按钮圆角收敛 */
+body .tool-area textarea,
+body .tool-area select,
+body .tool-area input[type="text"],
+body .tool-area input[type="number"],
+body .tool-area input[type="url"],
+body .container > .toolbar select {
+  border-radius: var(--radius-md);
+}
+body .container .btn { border-radius: var(--radius-md); font-family: inherit; }

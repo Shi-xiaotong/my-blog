@@ -13,10 +13,21 @@ const SOURCE = path.join(ROOT, 'source')
 // 但这些页面并不引用 CSS bundle。播放器脚本一旦混在 bundle 里，就会出现
 // “DOM 被创建、样式却没加载”的情况——SVG 因没有尺寸约束撑满整屏
 // （表现为页面上出现巨大的三角形/竖条）。让主题页保持独立引用即可。
+// CSS 打包顺序 = 层叠顺序，改动前先想清楚谁覆盖谁：
+//   tokens  变量定义（必须第一个）
+//   ui      基础 + 组件（主题页和静态页共用）
+//   skin    Butterfly 视觉外观
+//   adapter Butterfly 结构适配
+//   custom  全站响应式 / 字体
+//   *       具体功能组件（登录、个人中心）
 const cssFiles = [
-  'tools/common.css', 'tools/site-override.css',
+  'css/tokens.css',
+  'css/ui.css',
+  'css/theme-skin.css',
+  'css/butterfly-adapter.css',
   'css/custom.css',
-  'css/site-auth.css', 'css/user-center.css',
+  'css/site-auth.css',
+  'css/user-center.css',
 ]
 
 const jsFiles = [
@@ -60,7 +71,8 @@ console.log(`[post-build] bundle.js → ${jsBundleName} + bundle.js (${(jsConten
 // 这两个引用不再被替换成 bundle，主题页会直接加载独立文件；
 // 未引用它们的静态页（/anime/ 等）自然也不会再出现播放器。
 const cssRefs = [
-  '/tools/common.css', '/tools/site-override.css',
+  '/css/tokens.css', '/css/ui.css',
+  '/css/theme-skin.css', '/css/butterfly-adapter.css',
   '/css/custom.css',
   '/css/site-auth.css', '/css/user-center.css',
 ]

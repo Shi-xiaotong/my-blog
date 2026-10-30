@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="JSON 格式化工具，支持格式化、压缩、转义、校验，纯浏览器端运行。">
 <title>JSON 格式化 - 在线工具</title>
-<link rel="stylesheet" href="common.css">
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/ui.css">
 <style>
-:root { --bg: #f8f9fa; --border: #e2e8f0; --primary: #3b82f6; }
-[data-theme="dark"] { --bg: #1a1a2e; --border: #2d3748; --primary: #60a5fa; }
-
 body { margin: 0; padding: 0; }
 .container { max-width: 100%; padding: 16px; }
 .header { margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
@@ -57,12 +55,12 @@ body { margin: 0; padding: 0; }
 }
 
 .json-key { color: var(--primary); }
-.json-string { color: #16a34a; }
-.json-number { color: #ea580c; }
-.json-boolean { color: #9333ea; }
-.json-null { color: #ef4444; }
+.json-string { color: var(--success); }
+.json-number { color: var(--warning); }
+.json-boolean { color: var(--cat-crypto); }
+.json-null { color: var(--error); }
 
-.error { color: #ef4444; padding: 10px; font-size: 14px; }
+.error { color: var(--error); padding: 10px; font-size: 14px; }
 
 /* 折叠功能样式 */
 .collapsible-toggle {
@@ -73,7 +71,7 @@ body { margin: 0; padding: 0; }
   border-radius: 4px;
 }
 .collapsible-toggle:hover {
-  background: rgba(59, 130, 246, 0.1);
+  background: var(--primary-light);
 }
 .collapse-arrow {
   display: inline-block;
@@ -81,10 +79,10 @@ body { margin: 0; padding: 0; }
   font-size: 10px;
   transition: transform 0.2s;
   margin-right: 2px;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 .collapse-hint {
-  color: #94a3b8;
+  color: var(--text-tertiary);
   font-size: 12px;
   font-style: italic;
 }
@@ -100,8 +98,8 @@ body { margin: 0; padding: 0; }
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: #1e293b;
-  color: white;
+  background: var(--text-strong);
+  color: var(--bg);
   padding: 10px 20px;
   border-radius: 8px;
   font-size: 14px;
@@ -128,6 +126,7 @@ body { margin: 0; padding: 0; }
     <h1>JSON 格式化</h1>
   </div>
 
+  <div class="tool-area">
   <div class="toolbar">
     <label>缩进:</label>
     <select id="indent" onchange="doFormat()">
@@ -146,17 +145,18 @@ body { margin: 0; padding: 0; }
     <div class="panel">
       <div class="panel-header">
         <span class="panel-title">输入 JSON</span>
-        <span id="input-info" style="font-size:12px;color:#94a3b8"></span>
+        <span id="input-info" style="font-size:12px;color:var(--text-tertiary)"></span>
       </div>
       <textarea id="input" class="editor" placeholder='在此粘贴 JSON...' spellcheck="false"></textarea>
     </div>
     <div class="panel">
       <div class="panel-header">
         <span class="panel-title">输出</span>
-        <span id="output-info" style="font-size:12px;color:#94a3b8"></span>
+        <span id="output-info" style="font-size:12px;color:var(--text-tertiary)"></span>
       </div>
       <div id="output" class="output-panel"></div>
     </div>
+  </div>
   </div>
 </div>
 
@@ -312,7 +312,7 @@ function doFormat() {
   const outEl = document.getElementById('output');
   const infoEl = document.getElementById('output-info');
   
-  if (!input) { outEl.innerHTML = '<span style="color:#94a3b8">等待输入...</span>'; return; }
+  if (!input) { outEl.innerHTML = '<span style="color:var(--text-tertiary)">等待输入...</span>'; return; }
   
   try {
     const obj = JSON.parse(input);
@@ -376,7 +376,7 @@ function copyResult() {
 
 function clearAll() {
   document.getElementById('input').value = '';
-  document.getElementById('output').innerHTML = '<span style="color:#94a3b8">等待输入...</span>';
+  document.getElementById('output').innerHTML = '<span style="color:var(--text-tertiary)">等待输入...</span>';
   document.getElementById('output-info').textContent = '';
   rawResult = '';
 }

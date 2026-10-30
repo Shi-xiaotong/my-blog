@@ -5,49 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>在线工具箱 - 233002.xyz · Powered by Agnes AI</title>
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/ui.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg,#f4f6f9);color:var(--text,#1e293b);min-height:100vh}
-:root{--bg:#f4f6f9;--card-bg:#fff;--text:#1e293b;--text-secondary:#64748b;--border:#e2e8f0;--radius-lg:14px;--shadow-lg:0 6px 20px rgba(0,0,0,0.1);--primary-light:rgba(59,130,246,0.12);--primary:#3b82f6;--duration-fast:0.2s;--ease-out:ease-out}
-[data-theme="dark"]{--bg:#0f172a;--card-bg:#1e293b;--text:#e2e8f0;--text-secondary:#94a3b8;--border:#334155;--shadow-lg:0 6px 20px rgba(0,0,0,0.4)}
-.container-wide{max-width:1200px;margin:0 auto;padding:20px}
-.header-center{text-align:center;padding:20px 0}
-.header-center h1{font-size:2em;margin-bottom:6px}
-.header-center p{color:var(--text-secondary);font-size:1.1em}
-.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--primary);text-decoration:none;font-size:14px;margin-bottom:8px}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);min-height:100vh}
+.container-wide{max-width:1200px;margin:0 auto;padding:var(--space-5)}
+.header-center{text-align:center;padding:var(--space-5) 0}
+.header-center h1{font-size:var(--text-3xl);margin-bottom:var(--space-2);color:var(--text-strong)}
+.header-center p{color:var(--text-secondary);font-size:var(--text-lg)}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--primary);text-decoration:none;font-size:var(--text-sm);margin-bottom:var(--space-2)}
 .back-link:hover{text-decoration:underline}
-.theme-toggle{position:fixed;top:16px;right:16px;z-index:100;width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card-bg);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.theme-toggle{position:fixed;top:var(--space-4);right:var(--space-4);z-index:var(--z-modal);width:36px;height:36px;border-radius:var(--radius-full);border:1px solid var(--border);background:var(--card-bg);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color var(--duration-fast) var(--ease-out)}
+.theme-toggle:hover{border-color:var(--primary)}
 .theme-toggle svg{width:18px;height:18px}
-.tools-header{text-align:center;padding:30px 0}
-.tools-header h1{font-size:2em;margin-bottom:6px}
-.tools-header p{color:var(--text-secondary);font-size:1.1em}
-.search-box{max-width:500px;margin:20px auto;position:relative}
-.search-box input{width:100%;padding:12px 16px 12px 44px;border:2px solid var(--border);border-radius:10px;font-size:15px;background:var(--card-bg);color:var(--text);outline:none;transition:border-color 0.2s}
-.search-box input:focus{border-color:var(--primary)}
-.search-box .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-secondary)}
-.category{margin-bottom:32px}
-.quick-nav{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--border);padding:8px 0;margin-bottom:16px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
-.quick-nav a{padding:4px 12px;border-radius:20px;font-size:13px;text-decoration:none;color:var(--text-secondary);border:1px solid var(--border);background:var(--card-bg);transition:all 0.15s;white-space:nowrap}
+.search-box{max-width:500px;margin:var(--space-5) auto;position:relative}
+.search-box input{width:100%;padding:12px 16px 12px 44px;border:2px solid var(--border-hover);border-radius:var(--radius-md);font-size:var(--text-sm);background:var(--card-bg);color:var(--text);outline:none;box-shadow:var(--shadow-sm);transition:border-color var(--duration-fast) var(--ease-out),box-shadow var(--duration-fast) var(--ease-out)}
+.search-box input::placeholder{color:var(--text-secondary);opacity:1}
+.search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.search-box .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-secondary);pointer-events:none}
+.category{margin-bottom:var(--space-8)}
+.quick-nav{position:sticky;top:0;z-index:var(--z-sticky);background:var(--bg);border-bottom:1px solid var(--border);padding:var(--space-2) 0;margin-bottom:var(--space-4);display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.quick-nav a{padding:4px 12px;border-radius:var(--radius-full);font-size:var(--text-xs);text-decoration:none;color:var(--text-secondary);border:1px solid var(--border);background:var(--card-bg);transition:all var(--duration-fast) var(--ease-out);white-space:nowrap}
 .quick-nav a:hover{color:var(--primary);border-color:var(--primary)}
-.quick-nav a.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.category-title{font-size:1.2em;font-weight:600;margin-bottom:16px;padding-left:4px;display:flex;align-items:center;gap:8px;color:var(--text)}
-.category-title .cat-icon{color:var(--primary)}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.tool-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;text-decoration:none;color:var(--text);transition:all 0.2s;display:flex;align-items:flex-start;gap:14px}
+.quick-nav a.active{background:var(--primary);color:var(--btn-color);border-color:var(--primary)}
+.category-title{font-size:var(--text-xl);font-weight:600;margin-bottom:var(--space-4);display:flex;align-items:center;gap:var(--space-2);color:var(--text-strong)}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-4)}
+.tool-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-5);text-decoration:none;color:var(--text);transition:all var(--duration-fast) var(--ease-out);display:flex;align-items:flex-start;gap:14px}
 .tool-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);border-color:var(--primary)}
 .tool-card.hidden{display:none}
-.tool-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tool-icon{width:44px;height:44px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--primary-light);color:var(--primary)}
 .tool-icon svg{width:22px;height:22px}
-.tool-info h3{font-size:15px;margin-bottom:4px}
-.tool-info p{font-size:13px;color:var(--text-secondary);line-height:1.4}
-.skip-link{position:fixed;top:-100px;left:16px;padding:12px 20px;background:var(--primary);color:#fff;border-radius:8px;z-index:9999;text-decoration:none;font-size:14px;font-weight:500;transition:top 0.2s}
+.tool-info h3{font-size:var(--text-sm);font-weight:600;margin-bottom:4px}
+.tool-info p{font-size:var(--text-xs);color:var(--text-secondary);line-height:1.4}
+.skip-link{position:fixed;top:-100px;left:16px;padding:12px 20px;background:var(--primary);color:var(--btn-color);border-radius:var(--radius-md);z-index:var(--z-max);text-decoration:none;font-size:var(--text-sm);font-weight:500;transition:top 0.2s}
 .skip-link:focus{top:16px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
-.tool-count{font-size:13px;color:var(--text-secondary);margin-bottom:20px}
-.section-divider{border:none;border-top:2px dashed var(--border);margin:32px 0}
-.ai-badge{font-size:11px;background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff;padding:2px 8px;border-radius:10px;margin-left:6px}
-.local-badge{font-size:11px;background:var(--primary);color:#fff;padding:2px 8px;border-radius:10px;margin-left:6px}
-@media(max-width:640px){.tools-grid{grid-template-columns:1fr 1fr;gap:10px}.tool-card{padding:14px;flex-direction:column;align-items:center;text-align:center;gap:8px}.tool-icon{width:40px;height:40px}}
+.local-badge{font-size:11px;background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:var(--radius-full);margin-left:6px;font-weight:500}
+.net-badge{font-size:11px;background:var(--accent-light);color:var(--cat-ai);padding:2px 8px;border-radius:var(--radius-full);margin-left:6px;font-weight:500}
+@media(max-width:640px){.tools-grid{grid-template-columns:1fr 1fr;gap:var(--space-3)}.tool-card{padding:var(--space-3);flex-direction:column;align-items:center;text-align:center;gap:var(--space-2)}.tool-icon{width:40px;height:40px}}
 </style>
 </head>
 <body>
@@ -79,154 +75,150 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 
 <!-- ========== 格式转换 ========== -->
 <div class="category" data-category="converter" id="cat-converter">
-  <div class="category-title"><span class="cat-icon">转换</span> 格式转换 <span class="local-badge">纯本地</span></div>
+  <div class="category-title">格式转换 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/json-formatter.html" class="tool-card" data-keywords="json 格式化 压缩 校验 美化 转义">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON 格式化</h3><p>JSON 格式化、压缩、转义、校验</p></div>
     </a>
     <a href="/tools/json-yaml.html" class="tool-card" data-keywords="json yaml yml 转换 互转 配置">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON YAML 互转</h3><p>JSON 与 YAML 格式互相转换</p></div>
     </a>
     <a href="/tools/json-ts.html" class="tool-card" data-keywords="json typescript ts 类型 interface 接口">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON 转 TS</h3><p>JSON 自动生成 TypeScript 接口类型</p></div>
     </a>
     <a href="/tools/csv-json.html" class="tool-card" data-keywords="csv json 转换 互转 表格 数据">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>CSV JSON 互转</h3><p>CSV 表格数据与 JSON 互相转换</p></div>
     </a>
     <a href="/tools/json-to-csv.html" class="tool-card" data-keywords="json csv 转换">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON 转 CSV</h3><p>JSON 数据转换为 CSV 表格</p></div>
     </a>
     <a href="/tools/csv-to-json.html" class="tool-card" data-keywords="csv json 转换">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>CSV 转 JSON</h3><p>CSV 表格数据转换为 JSON</p></div>
     </a>
     <a href="/tools/csv-to-yaml.html" class="tool-card" data-keywords="csv yaml yml 转换">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>CSV 转 YAML</h3><p>CSV 表格数据转换为 YAML</p></div>
     </a>
     <a href="/tools/yaml-to-csv.html" class="tool-card" data-keywords="yaml yml csv 转换">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>YAML 转 CSV</h3><p>YAML 数据转换为 CSV 表格</p></div>
     </a>
     <a href="/tools/tsv-to-json.html" class="tool-card" data-keywords="tsv json 转换 制表符">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>TSV 转 JSON</h3><p>制表符分隔数据转换为 JSON</p></div>
     </a>
     <a href="/tools/jsonl.html" class="tool-card" data-keywords="jsonl json lines 转换">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSONL 转换器</h3><p>JSON Lines 与 JSON 数组互转</p></div>
     </a>
     <a href="/tools/base64.html" class="tool-card" data-keywords="base64 编码 解码 编解码">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Base64 编解码</h3><p>Base64 编码与解码，支持中文</p></div>
     </a>
     <a href="/tools/base32.html" class="tool-card" data-keywords="base32 编码 解码">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Base32 编解码</h3><p>Base32 编码与解码</p></div>
     </a>
     <a href="/tools/base58.html" class="tool-card" data-keywords="base58 编码 解码 比特币">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Base58 编解码</h3><p>Base58 编码与解码</p></div>
     </a>
     <a href="/tools/base36.html" class="tool-card" data-keywords="base36 编码 解码">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Base36 编解码</h3><p>Base36 编码与解码</p></div>
     </a>
     <a href="/tools/base64url.html" class="tool-card" data-keywords="base64 url 安全 编码 解码">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Base64 URL 安全编解码</h3><p>URL 安全的 Base64 编码与解码</p></div>
     </a>
     <a href="/tools/hex-encode.html" class="tool-card" data-keywords="hex 十六进制 编码 解码">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>HEX 编解码</h3><p>十六进制编码与解码</p></div>
     </a>
     <a href="/tools/url-codec.html" class="tool-card" data-keywords="url 编码 解码 encodeURIComponent">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>URL 编解码</h3><p>URL 编码与解码转换</p></div>
     </a>
     <a href="/tools/unicode.html" class="tool-card" data-keywords="unicode 中文 编码 解码">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Unicode 编解码</h3><p>Unicode 与中文互转</p></div>
     </a>
     <a href="/tools/html-escape.html" class="tool-card" data-keywords="html 转义 反转义 实体 编码 escape">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>HTML 转义</h3><p>HTML 实体编码与反转义</p></div>
     </a>
     <a href="/tools/base-convert.html" class="tool-card" data-keywords="进制 转换 二进制 八进制 十进制 十六进制">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>进制转换</h3><p>二进制、八进制、十进制、十六进制互转</p></div>
     </a>
     <a href="/tools/json-stringify.html" class="tool-card" data-keywords="json 字符串 转义 逃逸 escape">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON 字符串转义</h3><p>JSON 字符串转义与反转义</p></div>
     </a>
     <a href="/tools/json-to-xml.html" class="tool-card" data-keywords="json xml 转换 互转">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON 转 XML</h3><p>JSON 格式转换为 XML 格式</p></div>
     </a>
     <a href="/tools/xml-to-json.html" class="tool-card" data-keywords="xml json 转换 互转">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>XML 转 JSON</h3><p>XML 格式转换为 JSON 格式</p></div>
     </a>
     <a href="/tools/yaml-to-json.html" class="tool-card" data-keywords="yaml yml json 转换">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>YAML 转 JSON</h3><p>YAML 格式转换为 JSON 格式</p></div>
     </a>
     <a href="/tools/json-to-java.html" class="tool-card" data-keywords="json java 实体类 lombok">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON转Java</h3><p>JSON生成Java @Data实体类</p></div>
     </a>
     <a href="/tools/json-to-csharp.html" class="tool-card" data-keywords="json csharp c# 实体类">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON转C#</h3><p>JSON生成C#实体类</p></div>
     </a>
     <a href="/tools/json-to-go.html" class="tool-card" data-keywords="json golang go struct 结构体">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON转Go</h3><p>JSON生成Go结构体</p></div>
     </a>
     <a href="/tools/json-to-sql.html" class="tool-card" data-keywords="json sql 建表 create table">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON转SQL</h3><p>JSON生成CREATE TABLE语句</p></div>
     </a>
     <a href="/tools/json-url-param.html" class="tool-card" data-keywords="json url 参数 query string 互转">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON ↔ URL参数</h3><p>JSON与URL查询参数互转</p></div>
     </a>
     <a href="/tools/timestamp.html" class="tool-card" data-keywords="时间戳 日期 unix 转换 epoch">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>时间戳转换</h3><p>Unix 时间戳与日期互转</p></div>
     </a>
     <a href="/tools/md-to-wechat.html" class="tool-card" data-keywords="markdown 微信 公众号 排版 转换">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Markdown 转公众号排版</h3><p>Markdown 转换为微信公众号 HTML 排版</p></div>
     </a>
     <a href="/tools/roman-numeral.html" class="tool-card" data-keywords="罗马数字 阿拉伯数字 转换">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>罗马数字转换</h3><p>阿拉伯数字与罗马数字互转</p></div>
     </a>
     <a href="/tools/punycode.html" class="tool-card" data-keywords="punycode 中文域名 编码 解码">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Punycode编解码</h3><p>中文域名与Punycode互转</p></div>
     </a>
-  </div>
-</div>
-
-
     <a href="/tools/byte-converter.html" class="tool-card" data-keywords="字节 byte kb mb gb 存储 单位 换算">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>字节大小转换</h3><p>B/KB/MB/GB/TB/PB 互转</p></div>
     </a>
     <a href="/tools/unit-converter.html" class="tool-card" data-keywords="单位 换算 长度 重量 温度 面积 存储">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>单位换算器</h3><p>长度/重量/温度/速度/面积换算</p></div>
     </a>
     <a href="/tools/json-to-table.html" class="tool-card" data-keywords="json table 表格 转换 markdown">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON 转 Markdown 表格</h3><p>JSON 数组自动生成表格</p></div>
     </a>
   </div>
@@ -234,146 +226,142 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 
 <!-- ========== 开发者工具 ========== -->
 <div class="category" data-category="dev" id="cat-dev">
-  <div class="category-title"><span class="cat-icon">开发</span> 开发者工具 <span class="local-badge">纯本地</span></div>
+  <div class="category-title">开发者工具 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/markdown.html" class="tool-card" data-keywords="markdown md 预览 渲染 实时">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Markdown 预览</h3><p>实时 Markdown 渲染预览</p></div>
     </a>
     <a href="/tools/hash.html" class="tool-card" data-keywords="md5 sha 哈希 hash 加密 摘要">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>哈希生成</h3><p>MD5、SHA-1、SHA-256、SHA-512</p></div>
     </a>
     <a href="/tools/uuid.html" class="tool-card" data-keywords="uuid guid 生成 唯一 随机">
-      <div class="tool-icon" style="background:#fff7ed;color:#f97316;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>UUID 生成器</h3><p>批量生成 UUID v4，一键复制</p></div>
     </a>
     <a href="/tools/regex.html" class="tool-card" data-keywords="正则 表达式 regex 测试 匹配 预设">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>正则测试</h3><p>正则表达式在线测试，高亮匹配</p></div>
     </a>
     <a href="/tools/color.html" class="tool-card" data-keywords="颜色 转换 hex rgb hsl 拾色器">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>颜色转换</h3><p>HEX/RGB/HSL 互转，可视化拾色</p></div>
     </a>
     <a href="/tools/jwt-decode.html" class="tool-card" data-keywords="jwt json web token 解析 解码">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JWT 解析</h3><p>解析 JWT Token 的 Header 和 Payload</p></div>
     </a>
     <a href="/tools/cron.html" class="tool-card" data-keywords="cron 定时 表达式 解析 可视化">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Cron 解析</h3><p>Cron 表达式可视化，显示未来执行时间</p></div>
     </a>
     <a href="/tools/http-status.html" class="tool-card" data-keywords="http 状态码 404 500 200 速查 查询">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>HTTP 状态码</h3><p>HTTP 状态码速查，支持搜索</p></div>
     </a>
     <a href="/tools/mock.html" class="tool-card" data-keywords="mock 数据 生成 用户 地址 假数据 测试 lorem">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Mock 数据</h3><p>生成用户、地址、商品等测试数据</p></div>
     </a>
     <a href="/tools/ua-parser.html" class="tool-card" data-keywords="user agent ua 浏览器 解析 识别">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>UA 解析</h3><p>User-Agent 浏览器/OS/设备识别</p></div>
     </a>
     <a href="/tools/code-highlight.html" class="tool-card" data-keywords="代码 高亮 格式化 美化 复制">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>代码高亮</h3><p>代码语法高亮，选语言，一键复制</p></div>
     </a>
     <a href="/tools/css-unit.html" class="tool-card" data-keywords="css 单位 px rem em vw 转换">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>CSS 单位换算</h3><p>px/rem/em/vw/% 实时换算</p></div>
     </a>
     <a href="/tools/gradient.html" class="tool-card" data-keywords="渐变色 颜色 gradient css 生成器">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>渐变色生成器</h3><p>可视化渐变色生成，支持线性/径向</p></div>
     </a>
     <a href="/tools/json-key-sort.html" class="tool-card" data-keywords="json 键名 排序 升序 降序">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSON 键名排序</h3><p>递归排序 JSON 对象的键名</p></div>
     </a>
     <a href="/tools/nanoid-ulid.html" class="tool-card" data-keywords="nanoid ulid 生成 唯一 id">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>NanoID / ULID 生成器</h3><p>生成 NanoID 和 ULID 标识符</p></div>
     </a>
     <a href="/tools/generator-pack.html" class="tool-card" data-keywords="gitignore robots sitemap meta 生成器">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>通用生成器包</h3><p>gitignore/robots/sitemap/meta 生成</p></div>
     </a>
     <a href="/tools/jsonpath.html" class="tool-card" data-keywords="jsonpath json 路径 查询 解析">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JSONPath解析</h3><p>JSONPath在线查询解析</p></div>
     </a>
     <a href="/tools/html-formatter.html" class="tool-card" data-keywords="html 格式化 美化 压缩">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>HTML格式化</h3><p>HTML代码格式化/压缩</p></div>
     </a>
     <a href="/tools/xml-formatter.html" class="tool-card" data-keywords="xml 格式化 美化 压缩">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>XML格式化</h3><p>XML格式化/压缩</p></div>
     </a>
     <a href="/tools/js-formatter.html" class="tool-card" data-keywords="javascript js 格式化 美化">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JS格式化</h3><p>JavaScript代码格式化</p></div>
     </a>
     <a href="/tools/browser-info.html" class="tool-card" data-keywords="浏览器 useragent 信息 检测">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>浏览器信息</h3><p>获取浏览器/系统详细信息</p></div>
     </a>
     <a href="/tools/random-ip.html" class="tool-card" data-keywords="随机 ip ipv4 ipv6 地址">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>随机IP</h3><p>生成随机IPv4/IPv6地址</p></div>
     </a>
     <a href="/tools/random-mac.html" class="tool-card" data-keywords="随机 mac 地址 mac地址">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>随机MAC</h3><p>生成随机MAC地址</p></div>
     </a>
     <a href="/tools/random-phone.html" class="tool-card" data-keywords="随机 手机号 号码 运营商">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>随机手机号</h3><p>随机生成中国手机号</p></div>
     </a>
     <a href="/tools/file-hash.html" class="tool-card" data-keywords="文件 hash md5 sha 校验">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>文件Hash校验</h3><p>文件拖拽计算MD5/SHA1/SHA256</p></div>
     </a>
     <a href="/tools/dir-tree.html" class="tool-card" data-keywords="目录树 文件夹 路径 tree">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>目录树生成</h3><p>文件路径列表生成树形结构</p></div>
     </a>
-  </div>
-</div>
-
-
     <a href="/tools/css-minify.html" class="tool-card" data-keywords="css 压缩 格式化 美化 代码">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M9 9h6v6H9z"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M9 9h6v6H9z"/></svg></div>
       <div class="tool-info"><h3>CSS 压缩/格式化</h3><p>CSS 代码压缩与格式化</p></div>
     </a>
     <a href="/tools/multi-calculator.html" class="tool-card" data-keywords="bmi 工资 房贷 计算器 计算">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M9 9h6.001v6.001H9z"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M9 9h6.001v6.001H9z"/></svg></div>
       <div class="tool-info"><h3>BMI / 工资 / 房贷计算器</h3><p>BMI 指数、税后工资、房贷月供</p></div>
     </a>
     <a href="/tools/password-gen.html" class="tool-card" data-keywords="密码 生成 安全 随机 强度">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
       <div class="tool-info"><h3>密码生成器</h3><p>安全密码生成，自定义长度和规则</p></div>
     </a>
     <a href="/tools/password-strength.html" class="tool-card" data-keywords="密码 强度 检测 安全 评估">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><path d="M12 14v3"/><circle cx="12" cy="19.5" r=".5"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><path d="M12 14v3"/><circle cx="12" cy="19.5" r=".5"/></svg></div>
       <div class="tool-info"><h3>密码强度检测</h3><p>评估密码安全性并给出建议</p></div>
     </a>
     <a href="/tools/percentage.html" class="tool-card" data-keywords="百分比 计算 比例 增减">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>百分比计算器</h3><p>百分比计算、数值增减百分比</p></div>
     </a>
     <a href="/tools/random.html" class="tool-card" data-keywords="随机 数 生成 骰子 抽取">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg></div>
       <div class="tool-info"><h3>随机数 / 随机抽取 / 掷骰子</h3><p>随机数生成、抽取和掷骰子</p></div>
     </a>
     <a href="/tools/url-param.html" class="tool-card" data-keywords="url 参数 query string 生成 构建">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
       <div class="tool-info"><h3>URL 参数生成器</h3><p>可视化生成 URL 查询参数</p></div>
     </a>
     <a href="/tools/url-slug.html" class="tool-card" data-keywords="url slug 生成 中文 转换 友好">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
       <div class="tool-info"><h3>URL Slug 生成器</h3><p>中文文本转 URL 友好 slug</p></div>
     </a>
   </div>
@@ -381,34 +369,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 
 <!-- ========== 编码加密 ========== -->
 <div class="category" data-category="crypto" id="cat-crypto">
-  <div class="category-title"><span class="cat-icon">加密</span> 编码加密 <span class="local-badge">纯本地</span></div>
+  <div class="category-title">编码加密 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/cipher.html" class="tool-card" data-keywords="加密 解密 aes des rsa sm4 base64 综合">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>综合加密工具箱</h3><p>AES/DES/RSA/SM4/Base64 等</p></div>
     </a>
     <a href="/tools/md5-encrypt.html" class="tool-card" data-keywords="md5 加密 32位 16位 哈希">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>MD5加密</h3><p>MD5 32位/16位加密</p></div>
     </a>
     <a href="/tools/sha-encrypt.html" class="tool-card" data-keywords="sha sha1 sha256 sha384 sha512 加密">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>SHA加密</h3><p>SHA1/224/256/384/512</p></div>
     </a>
     <a href="/tools/morse-code.html" class="tool-card" data-keywords="摩斯 密码 摩尔斯 电码 加密 解密">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>摩斯密码</h3><p>文本与摩斯电码互转</p></div>
     </a>
     <a href="/tools/rc4-encrypt.html" class="tool-card" data-keywords="rc4 加密 解密 流密码">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>RC4加密</h3><p>RC4流密码加密解密</p></div>
     </a>
     <a href="/tools/text-hide.html" class="tool-card" data-keywords="文字 隐藏 加密 零宽度 隐写">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>文字隐藏加密</h3><p>零宽字符隐写加密</p></div>
     </a>
     <a href="/tools/js-obfuscator.html" class="tool-card" data-keywords="js 混淆 加密 保护">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>JS混淆加密</h3><p>JavaScript代码混淆</p></div>
     </a>
   </div>
@@ -417,114 +405,114 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 
 <!-- ========== 文本处理 ========== -->
 <div class="category" data-category="text" id="cat-text">
-  <div class="category-title"><span class="cat-icon">文本</span> 文本处理 <span class="local-badge">纯本地</span></div>
+  <div class="category-title">文本处理 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/text-tools.html" class="tool-card" data-keywords="文本 大小写 反转 去除空格 工具">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>文本工具箱</h3><p>大小写转换/反转/去除空格等</p></div>
     </a>
     <a href="/tools/text-diff.html" class="tool-card" data-keywords="文本 差异 对比 diff 比较">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>文本差异对比</h3><p>文本差异对比，支持全屏显示</p></div>
     </a>
     <a href="/tools/case-convert.html" class="tool-card" data-keywords="大小写 转换 大写 小写 首字母">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>大小写转换</h3><p>英文字母大小写转换</p></div>
     </a>
     <a href="/tools/word-count.html" class="tool-card" data-keywords="字数 统计 字符 计数">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>字数统计</h3><p>在线字数统计，字符统计</p></div>
     </a>
     <a href="/tools/markdown.html" class="tool-card" data-keywords="markdown md 编辑 预览 导出">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Markdown 编辑器</h3><p>在线Markdown编辑预览</p></div>
     </a>
     <a href="/tools/md-table.html" class="tool-card" data-keywords="markdown 表格 生成 编辑 md table">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Markdown 表格</h3><p>Markdown 表格生成与编辑</p></div>
     </a>
     <a href="/tools/text-binary.html" class="tool-card" data-keywords="文本 二进制 转换 binary">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>文本二进制互转</h3><p>文本与二进制数据互转</p></div>
     </a>
     <a href="/tools/line-numbers.html" class="tool-card" data-keywords="行号 行数 添加 文本">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>行号工具</h3><p>为文本添加行号</p></div>
     </a>
     <a href="/tools/lorem-ipsum.html" class="tool-card" data-keywords="lorem ipsum 假文 占位 文本 生成">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Lorem Ipsum</h3><p>Lorem Ipsum 假文生成器</p></div>
     </a>
     <a href="/tools/emoji-cleaner.html" class="tool-card" data-keywords="emoji 清理 移除 表情 符号">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Emoji 清理</h3><p>移除文本中的 Emoji 符号</p></div>
     </a>
     <a href="/tools/punctuation.html" class="tool-card" data-keywords="标点 中英文 转换 符号">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>中英标点转换</h3><p>中文英文标点符号互转</p></div>
     </a>
     <a href="/tools/array-sort.html" class="tool-card" data-keywords="数组 排序 升序 降序 去重 打乱">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>字符串数组排序</h3><p>行文本排序/去重/打乱</p></div>
     </a>
     <a href="/tools/regex-replace.html" class="tool-card" data-keywords="正则 替换 查找 替换字符串">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>正则替换</h3><p>正则表达式查找替换</p></div>
     </a>
     <a href="/tools/trad-simp.html" class="tool-card" data-keywords="简体 繁体 转换 中文">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>简繁体转换</h3><p>简体与繁体中文互转</p></div>
     </a>
     <a href="/tools/full-half-width.html" class="tool-card" data-keywords="全角 半角 字符 转换">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>全角半角转换</h3><p>全角半角字符互转</p></div>
     </a>
     <a href="/tools/sup-sub.html" class="tool-card" data-keywords="上标 下标 文字 生成">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>上标/下标生成</h3><p>生成上标下标文字</p></div>
     </a>
     <a href="/tools/name-generator.html" class="tool-card" data-keywords="姓名 生成 随机 名字">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>姓名生成器</h3><p>随机生成中文姓名</p></div>
     </a>
     <a href="/tools/camel-hump.html" class="tool-card" data-keywords="驼峰 下划线 连字符 命名 转换">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>驼峰下划线互转</h3><p>camelCase/snake_case/kebab互转</p></div>
     </a>
     <a href="/tools/vertical-text.html" class="tool-card" data-keywords="竖排 文字 排版 直排">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>文字竖排</h3><p>文字竖排显示</p></div>
     </a>
     <a href="/tools/extract-email.html" class="tool-card" data-keywords="提取 邮箱 email 地址">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>提取邮箱</h3><p>从文本提取邮箱地址</p></div>
     </a>
     <a href="/tools/extract-phone.html" class="tool-card" data-keywords="提取 手机号 电话 号码">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>提取手机号</h3><p>从文本提取手机号码</p></div>
     </a>
     <a href="/tools/extract-url.html" class="tool-card" data-keywords="提取 链接 url 网址">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>提取链接</h3><p>从文本提取URL链接</p></div>
     </a>
     <a href="/tools/add-line-numbers.html" class="tool-card" data-keywords="行号 序号 编号 添加">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>文本添加序号</h3><p>每行添加序号</p></div>
     </a>
     <a href="/tools/text-generator.html" class="tool-card" data-keywords="文本 生成 重复 规则">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>文本规则生成</h3><p>按规则重复生成文本</p></div>
     </a>
     <a href="/tools/html-to-text.html" class="tool-card" data-keywords="html 提取 文字 纯文本 标签">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>HTML提取文字</h3><p>去除HTML标签提取纯文本</p></div>
     </a>
     <a href="/tools/martian.html" class="tool-card" data-keywords="火星文 转换 非主流">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>火星文转换</h3><p>文字转火星文</p></div>
     </a>
     <a href="/tools/pinyin.html" class="tool-card" data-keywords="拼音 汉字 转换 注音">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>汉字转拼音</h3><p>输入汉字显示拼音</p></div>
     </a>
   </div>
@@ -533,62 +521,62 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 
 <!-- ========== 时间工具 ========== -->
 <div class="category" data-category="time" id="cat-time">
-  <div class="category-title"><span class="cat-icon">时间</span> 时间工具 <span class="local-badge">纯本地</span></div>
+  <div class="category-title">时间工具 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
     <a href="/tools/timer.html" class="tool-card" data-keywords="秒表 计时器 计时 stopwatch">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>秒表计时器</h3><p>在线秒表计时器</p></div>
     </a>
     <a href="/tools/countdown.html" class="tool-card" data-keywords="倒计时 计时 全屏">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>在线倒计时</h3><p>设置倒计时，支持全屏显示</p></div>
     </a>
     <a href="/tools/alarm-clock.html" class="tool-card" data-keywords="闹钟 提醒 桌面通知">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>在线闹钟</h3><p>闹钟+桌面通知+声音提醒</p></div>
     </a>
     <a href="/tools/timestamp.html" class="tool-card" data-keywords="时间戳 日期 unix 转换">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>时间戳转换</h3><p>Unix 时间戳与日期互转</p></div>
     </a>
     <a href="/tools/date-diff.html" class="tool-card" data-keywords="日期 间隔 相差 天数 计算">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>日期间隔查询</h3><p>日期间隔查询计算</p></div>
     </a>
     <a href="/tools/age-calculator.html" class="tool-card" data-keywords="年龄 计算 生日">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>年龄计算器</h3><p>精确计算年龄年月日</p></div>
     </a>
     <a href="/tools/zodiac.html" class="tool-card" data-keywords="生肖 星座 查询 出生日期">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>生肖星座查询</h3><p>输入生日查生肖+星座</p></div>
     </a>
     <a href="/tools/shelf-life.html" class="tool-card" data-keywords="保质期 过期 计算 日期">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>保质期计算</h3><p>计算过期日期和剩余天数</p></div>
     </a>
     <a href="/tools/dynasty-table.html" class="tool-card" data-keywords="历史 朝代 中国 时间线">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>中国历史朝代</h3><p>朝代时间线速查表</p></div>
     </a>
     <a href="/tools/time-converter.html" class="tool-card" data-keywords="时间 单位 转换 秒 分 时 天">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>时间单位转换</h3><p>秒/分/时/天互转</p></div>
     </a>
     <a href="/tools/world-clock.html" class="tool-card" data-keywords="世界 时间 时区 城市 时钟">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>世界各地时间</h3><p>全球主要城市当前时间</p></div>
     </a>
     <a href="/tools/perpetual-calendar.html" class="tool-card" data-keywords="万年历 农历 节气 黄历 日期 传统 生肖">
-      <div class="tool-icon" style="background:#fef3c7;color:#d97706;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg></div>
       <div class="tool-info"><h3>万年历</h3><p>公历农历 · 节气节日 · 生肖</p></div>
     </a>
     <a href="/tools/solar-terms.html" class="tool-card" data-keywords="二十四节气 节气 传统 日期">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>二十四节气</h3><p>二十四节气日期查询</p></div>
     </a>
     <a href="/tools/baby-100-days.html" class="tool-card" data-keywords="百日 宝宝 计算 出生">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>宝宝百日计算</h3><p>计算百日日期和生肖</p></div>
     </a>
   </div>
@@ -597,114 +585,110 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 
 <!-- ========== 图片处理 ========== -->
 <div class="category" data-category="image" id="cat-image">
-  <div class="category-title"><span class="cat-icon">图片</span> 图片处理 <span class="local-badge">纯本地</span></div>
+  <div class="category-title">图片处理 <span class="local-badge">纯本地</span></div>
   <div class="tools-grid">
       <a href="/tools/image-compress.html" class="tool-card" data-keywords="图片 压缩 jpg png gif 大小">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片压缩</h3><p>在线图片压缩，支持jpg/png/gif</p></div>
     </a>
     <a href="/tools/image-convert.html" class="tool-card" data-keywords="图片 格式 转换 jpg png webp">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片格式转换</h3><p>支持jpg/png/webp格式批量转换</p></div>
     </a>
     <a href="/tools/image-crop.html" class="tool-card" data-keywords="图片 裁剪 crop">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片裁剪</h3><p>在线图片裁剪</p></div>
     </a>
     <a href="/tools/watermark.html" class="tool-card" data-keywords="图片 水印 watermark">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片加水印</h3><p>在线图片加水印</p></div>
     </a>
     <a href="/tools/watermark-remove.html" class="tool-card" data-keywords="水印 去除 清除 图片 涂抹 修复 inpainting">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6"/><path d="M16 16 20 20"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6"/><path d="M16 16 20 20"/></svg></div>
       <div class="tool-info"><h3>图片去水印</h3><p>涂抹水印区域智能填充</p></div>
     </a>
     <a href="/tools/qr-code.html" class="tool-card" data-keywords="二维码 qr code 生成">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>二维码生成</h3><p>支持文本/WIFI/网址等二维码</p></div>
     </a>
     <a href="/tools/base64-image.html" class="tool-card" data-keywords="图片 base64 编码 转换">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片转Base64</h3><p>图片与Base64编码互转</p></div>
     </a>
     <a href="/tools/image-grid.html" class="tool-card" data-keywords="九宫格 切图 分割 网格">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>九宫格切图</h3><p>图片多格切割</p></div>
     </a>
     <a href="/tools/image-filter.html" class="tool-card" data-keywords="滤镜 灰度 复古 模糊 反色">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片滤镜</h3><p>灰度/复古/模糊/反色等滤镜</p></div>
     </a>
     <a href="/tools/image-color.html" class="tool-card" data-keywords="图片 颜色 分析 主色 提取">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片颜色分析</h3><p>分析图片主色调</p></div>
     </a>
     <a href="/tools/image-exif.html" class="tool-card" data-keywords="exif 图片 信息 元数据 读取">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片EXIF读取</h3><p>读取图片元数据信息</p></div>
     </a>
     <a href="/tools/image-adjust.html" class="tool-card" data-keywords="图片 调整 亮度 对比度 饱和度">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片调整</h3><p>亮度/对比度/饱和度调节</p></div>
     </a>
     <a href="/tools/image-rotate.html" class="tool-card" data-keywords="图片 旋转 翻转 镜像">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片翻转旋转</h3><p>图片旋转/翻转/下载</p></div>
     </a>
     <a href="/tools/image-resize.html" class="tool-card" data-keywords="图片 缩放 尺寸 调整">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片缩放</h3><p>调整图片尺寸</p></div>
     </a>
     <a href="/tools/image-mosaic.html" class="tool-card" data-keywords="马赛克 打码 模糊 遮盖">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片打码</h3><p>马赛克/模糊打码处理</p></div>
     </a>
     <a href="/tools/image-merge.html" class="tool-card" data-keywords="图片 拼接 合并 合成">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>图片拼接</h3><p>多张图片垂直拼接</p></div>
     </a>
     <a href="/tools/signature.html" class="tool-card" data-keywords="签名 手写 画板 电子签名">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>在线手写签名</h3><p>Canvas签名板，可下载</p></div>
     </a>
     <a href="/tools/online-whiteboard.html" class="tool-card" data-keywords="白板 画板 绘图 涂鸦">
-      <div class="tool-icon" style="background:#ecfdf5;color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>在线白板</h3><p>自由画板，颜色可调</p></div>
     </a>
     <a href="/tools/seal-generator.html" class="tool-card" data-keywords="印章 生成 圆形 公章">
-      <div class="tool-icon" style="background:#fef3c7;color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>印章生成器</h3><p>生成圆形印章图片</p></div>
     </a>
     <a href="/tools/svg-placeholder.html" class="tool-card" data-keywords="svg 占位符 占位图 生成">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>SVG占位符</h3><p>生成SVG占位图片</p></div>
     </a>
     <a href="/tools/barcode.html" class="tool-card" data-keywords="条形码 code128 生成">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>条形码生成</h3><p>生成CODE128条形码</p></div>
     </a>
     <a href="/tools/webp-convert.html" class="tool-card" data-keywords="webp png jpg 转换 格式">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>WEBP转换</h3><p>WEBP/PNG/JPG格式互转</p></div>
     </a>
     <a href="/tools/favicon-generator.html" class="tool-card" data-keywords="favicon 图标 生成 网站图标">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>Favicon生成</h3><p>生成网站图标</p></div>
     </a>
     <a href="/tools/rounded-image.html" class="tool-card" data-keywords="圆角 图片 透明 裁剪">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>透明圆角图片</h3><p>图片圆角处理</p></div>
     </a>
     <a href="/tools/gif-decompose.html" class="tool-card" data-keywords="gif 分解 帧 动图">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>GIF分解</h3><p>GIF动图帧分解</p></div>
     </a>
-  </div>
-</div>
-
-
     <a href="/tools/contrast.html" class="tool-card" data-keywords="对比度 颜色 检测 wcag 无障碍 aa aaa">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div>
       <div class="tool-info"><h3>颜色对比度检测</h3><p>WCAG 无障碍 AA/AAA 级别检测</p></div>
     </a>
   </div>
@@ -712,26 +696,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 
 <!-- ========== AI 工具 ========== -->
 <div class="category" data-category="ai" id="cat-ai">
-  <div class="category-title"><span class="cat-icon">AI</span> AI 工具 <span class="local-badge">纯本地</span></div>
+  <div class="category-title">AI 工具 <span class="net-badge">需联网</span></div>
   <div class="tools-grid">
     <a href="/tools/ai-image.html" class="tool-card" data-keywords="ai 图片 生成 文生图 图生图">
-      <div class="tool-icon" style="background:#f3e8ff;color:#a855f7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>AI 图片生成</h3><p>Agnes Image 2.1 Flash 文生图/图生图</p></div>
     </a>
     <a href="/tools/ai-writer.html" class="tool-card" data-keywords="ai 文案 写作 营销 翻译">
-      <div class="tool-icon" style="background:#f0fdf4;color:#22c55e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>AI 文案助手</h3><p>AI 写文章/营销文案/翻译/改写</p></div>
     </a>
     <a href="/tools/ai-code-explain.html" class="tool-card" data-keywords="ai 代码 解释 分析 bug 优化">
-      <div class="tool-icon" style="background:#eff6ff;color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>AI 代码解释</h3><p>AI 逐行解释/找 Bug/优化代码</p></div>
     </a>
     <a href="/tools/ai-naming.html" class="tool-card" data-keywords="ai 起名 宝宝 公司 品牌">
-      <div class="tool-icon" style="background:#fef2f2;color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>AI 起名助手</h3><p>AI 起名：宝宝/公司/网名/品牌</p></div>
     </a>
     <a href="/tools/ai-resume.html" class="tool-card" data-keywords="ai 简历 优化 诊断 面试">
-      <div class="tool-icon" style="background:#fce7f3;color:#ec4899;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+      <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
       <div class="tool-info"><h3>AI 简历优化</h3><p>AI 诊断/优化/模拟面试</p></div>
     </a>
 

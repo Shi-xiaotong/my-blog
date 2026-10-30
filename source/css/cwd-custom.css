@@ -1,99 +1,166 @@
-/* ===== CWD 评论系统 — 毛玻璃样式 ===== */
-/* Loaded by CWD widget via customCssUrl config */
-/* Overrides widget default white background */
+/* ================================================================
+   CWD 评论系统 · 自定义样式
+   ----------------------------------------------------------------
+   由 CWD 组件通过 customCssUrl 动态加载，加载时机最晚，
+   因此这里的规则会覆盖 /tools/site-override.css 中的评论样式。
+   配色对齐 common.css 的 token：
+     主色 var(--primary) / 深色 var(--bg) / 卡片 var(--card-bg) / 边框 var(--border)
+   注意：本文件不随 bundle.css 打包，不能依赖 var(--primary)，
+        所以色值直接写死，改色时两处都要改。
+   ================================================================ */
 
-/* ─── 1. Comment Form Container ─── */
 #cwd-comments {
-  --cwd-primary: #818CF8;
-  --cwd-bg: rgba(255,255,255,0.72);
-  --cwd-glass-blur: 12px;
+  --cwd-primary: var(--primary);
+  --cwd-bg: #FFFFFF;
 }
 
-/* Comment form wrapper */
+/* ─── 1. 表单容器：实色卡，不用毛玻璃 ─── */
 .cwd-comment-form,
 #cwd-comments form {
-  background: rgba(255,255,255,0.72) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(226,232,240,0.5) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.06) !important;
+  background: #FFFFFF !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 8px rgba(43, 48, 64, 0.05) !important;
 }
 
-/* Input fields */
+/* ─── 2. 输入框 ─── */
 .cwd-comment-form input[type="text"],
 .cwd-comment-form input[type="email"],
 .cwd-comment-form input[type="url"],
 .cwd-comment-form textarea,
 #cwd-comments input,
-#cwd-comments textarea {
-  background: rgba(255,255,255,0.5) !important;
-  backdrop-filter: blur(4px) !important;
-  -webkit-backdrop-filter: blur(4px) !important;
-  border: 1px solid rgba(148,163,184,0.3) !important;
-  border-radius: 8px !important;
-  color: #1E293B !important;
+#cwd-comments textarea,
+#cwd-comments select {
+  background: var(--bg) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px !important;
+  color: var(--text) !important;
   font-size: 14px !important;
-  transition: all 0.2s ease !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease !important;
   font-family: inherit !important;
+}
+
+.cwd-comment-form input::placeholder,
+.cwd-comment-form textarea::placeholder,
+#cwd-comments input::placeholder,
+#cwd-comments textarea::placeholder {
+  color: var(--text-tertiary) !important;
 }
 
 .cwd-comment-form input:focus,
 .cwd-comment-form textarea:focus,
 #cwd-comments input:focus,
-#cwd-comments textarea:focus {
-  border-color: #818CF8 !important;
-  box-shadow: 0 0 0 3px rgba(129,140,248,0.15) !important;
+#cwd-comments textarea:focus,
+#cwd-comments select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.14) !important;
   outline: none !important;
+  background: #FFFFFF !important;
 }
 
-/* Submit button */
+/* ─── 3. 提交按钮 ─── */
 .cwd-comment-form button[type="submit"],
 #cwd-comments button[type="submit"],
 .cwd-btn-primary {
-  background: #818CF8 !important;
+  background: var(--primary) !important;
   border: none !important;
-  border-radius: 8px !important;
-  color: #fff !important;
+  border-radius: 10px !important;
+  color: #FFFFFF !important;
   font-weight: 600 !important;
   cursor: pointer !important;
-  transition: all 0.2s ease !important;
+  transition: background 0.18s ease, transform 0.18s ease !important;
   padding: 10px 24px !important;
   min-height: 44px !important;
 }
 
 .cwd-comment-form button[type="submit"]:hover,
-#cwd-comments button[type="submit"]:hover {
-  filter: brightness(1.1) !important;
+#cwd-comments button[type="submit"]:hover,
+.cwd-btn-primary:hover {
+  background: var(--primary-dark) !important;
   transform: translateY(-1px) !important;
 }
 
-/* Labels */
+/* ─── 4. 标签 / 次要文字 ─── */
 .cwd-comment-form label,
 #cwd-comments label {
-  color: #475569 !important;
+  color: var(--text-secondary) !important;
   font-size: 14px !important;
   font-weight: 500 !important;
 }
 
-/* ─── Dark Mode ─── */
-[data-theme="dark"] #cwd-comments,
+#cwd-comments .cwd-comment-meta,
+#cwd-comments .cwd-comment-time,
+#cwd-comments .cwd-empty {
+  color: var(--text-tertiary) !important;
+}
+
+/* 表情按钮等图标按钮 */
+#cwd-comments .cwd-emoji-btn,
+#cwd-comments .cwd-toolbar button {
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--text-secondary) !important;
+}
+#cwd-comments .cwd-emoji-btn:hover,
+#cwd-comments .cwd-toolbar button:hover {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+/* ─── 5. 深色模式 ─── */
+[data-theme="dark"] #cwd-comments {
+  --cwd-primary: var(--primary);
+  --cwd-bg: var(--card-bg);
+}
+
 [data-theme="dark"] .cwd-comment-form,
 [data-theme="dark"] #cwd-comments form {
-  background: rgba(30,41,59,0.72) !important;
-  border-color: rgba(51,65,85,0.5) !important;
+  background: var(--card-bg) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22) !important;
 }
 
 [data-theme="dark"] .cwd-comment-form input,
 [data-theme="dark"] .cwd-comment-form textarea,
 [data-theme="dark"] #cwd-comments input,
-[data-theme="dark"] #cwd-comments textarea {
-  background: rgba(30,41,59,0.5) !important;
-  border-color: rgba(51,65,85,0.4) !important;
-  color: #E2E8F0 !important;
+[data-theme="dark"] #cwd-comments textarea,
+[data-theme="dark"] #cwd-comments select {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+[data-theme="dark"] .cwd-comment-form input:focus,
+[data-theme="dark"] .cwd-comment-form textarea:focus,
+[data-theme="dark"] #cwd-comments input:focus,
+[data-theme="dark"] #cwd-comments textarea:focus {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.16) !important;
+}
+
+[data-theme="dark"] .cwd-comment-form button[type="submit"],
+[data-theme="dark"] #cwd-comments button[type="submit"] {
+  background: var(--primary) !important;
+  color: var(--text-strong) !important;
+}
+[data-theme="dark"] .cwd-comment-form button[type="submit"]:hover,
+[data-theme="dark"] #cwd-comments button[type="submit"]:hover {
+  background: var(--primary-dark) !important;
 }
 
 [data-theme="dark"] .cwd-comment-form label,
 [data-theme="dark"] #cwd-comments label {
-  color: #94A3B8 !important;
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] #cwd-comments .cwd-comment-meta,
+[data-theme="dark"] #cwd-comments .cwd-comment-time,
+[data-theme="dark"] #cwd-comments .cwd-empty {
+  color: var(--text-tertiary) !important;
 }

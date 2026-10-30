@@ -16,9 +16,9 @@
   --leading-tight: 1.25;
   --leading-normal: 1.5;
   --leading-relaxed: 1.625;
-  --primary: #3b82f6;
+  --primary: var(--primary);
   --primary-light: rgba(59,130,246,0.08);
-  --primary-hover: #2563eb;
+  --primary-hover: var(--primary);
   --bg: rgba(248,250,252,0.75);
   --card-bg: rgba(255,255,255,0.78);
   --text: #1e293b;

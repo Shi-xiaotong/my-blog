@@ -14,31 +14,11 @@
 
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
+<link rel="stylesheet" href="/css/tokens.css">
+
+<link rel="stylesheet" href="/css/ui.css">
+
 <style>
-
-:root {
-
-  --primary: #3b82f6;
-
-  --primary-hover: #1D4ED8;
-
-  --bg: #f4f6f9;
-
-  --card-bg: #ffffff;
-
-  --text: #1e293b;
-
-  --text-secondary: #64748b;
-
-  --border: #e2e8f0;
-
-  --shadow: 0 2px 8px rgba(0,0,0,0.08);
-
-  --shadow-lg: 0 6px 20px rgba(0,0,0,0.1);
-
-  --radius: 12px;
-
-}
 
 [data-theme="dark"] {
 
@@ -194,19 +174,31 @@ body {
 
 #anime-page .search-bar input {
 
-  flex: 1; padding: 10px 16px; border: 1px solid var(--border); border-radius: 20px 0 0 20px;
+  flex: 1; min-width: 0; width: auto; padding: 10px 16px;
+
+  border: 2px solid var(--border-hover); border-right: none; border-radius: 20px 0 0 20px;
 
   background: var(--card-bg); color: var(--text); font-size: 15px; outline: none;
 
-  transition: border-color 0.2s;
+  box-shadow: var(--shadow-sm);
+
+  transition: border-color 0.2s, box-shadow 0.2s;
 
 }
 
-#anime-page .search-bar input:focus { border-color: var(--primary); }
+#anime-page .search-bar input::placeholder { color: var(--text-secondary); opacity: 1; }
+
+#anime-page .search-bar input:focus {
+
+  border-color: var(--primary);
+
+  box-shadow: 0 0 0 3px var(--primary-light);
+
+}
 
 #anime-page .search-bar button {
 
-  padding: 10px 24px; background: var(--primary); color: #fff;
+  flex-shrink: 0; padding: 10px 24px; background: var(--primary); color: var(--btn-color);
 
   border: none; border-radius: 0 20px 20px 0; cursor: pointer; font-size: 15px; font-weight: 600;
 
@@ -214,7 +206,7 @@ body {
 
 }
 
-#anime-page .search-bar button:hover { background: var(--primary-hover); color: #fff; }
+#anime-page .search-bar button:hover { background: var(--primary-hover); color: var(--btn-color); }
 
 
 
@@ -240,7 +232,7 @@ body {
 
 #anime-page .tabs button.active {
 
-  background: var(--primary); color: #fff; border-color: var(--primary);
+  background: var(--primary); color: var(--btn-color); border-color: var(--primary);
 
   font-weight: 600; opacity: 1;
 
@@ -312,7 +304,9 @@ body {
 
   background: var(--card-bg); color: var(--primary);
 
-  border: 1px solid var(--border); border-radius: 8px;
+  border: 1px solid var(--border-hover); border-radius: 8px;
+
+  box-shadow: var(--shadow-sm);
 
   cursor: pointer; font-size: 16px; text-align: center; transition: all 0.2s;
 
@@ -320,7 +314,7 @@ body {
 
 #anime-page .pagination button:hover {
 
-  border-color: var(--primary); background: var(--primary); color: #fff;
+  border-color: var(--primary); background: var(--primary); color: var(--btn-color);
 
 }
 
