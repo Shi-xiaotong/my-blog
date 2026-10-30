@@ -101,8 +101,6 @@ body {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-  50% { opacity: 1; }
-}
 
 /* ─── 9. Typography ─── */
 h1, h2, h3, h4 { line-height: var(--leading-tight); font-weight: 700; color: var(--text); }
@@ -590,9 +588,17 @@ img:not([src])::after, img[src=""]::after {
       要调整工具页外观，只改这一段。
    ================================================================ */
 
-/* 主容器：居中 + token 间距（页面里写死 max-width:100% 的也拉回来） */
+/* 主容器：居中，宽度与 /tools/ 列表页对齐（页面写死 max-width:100% 的也拉回来） */
 body .container {
-  max-width: 900px; margin: 0 auto; padding: var(--space-5);
+  max-width: 1200px; margin: 0 auto; padding: var(--space-5);
+}
+
+/* 编辑器 / 双栏输入输出 / 画布类页面：横向空间优先，铺满视口 */
+body .container:has(.editor-container),
+body .container:has(.editor-wrap),
+body .container:has(.panels),
+body .container:has(canvas) {
+  max-width: 1600px;
 }
 
 /* 页头：返回链接在上、标题在下，与 /tools/ 列表页同一套 */

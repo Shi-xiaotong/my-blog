@@ -10,17 +10,14 @@ permalink: /bookmarks/
 <link rel="stylesheet" href="/css/bookmarks-page.css">
 
 <div class="container">
-  <!-- Header -->
-  <div class="header">
-    <h1>我的导航</h1>
-    <div class="header-right"></div>
-  </div>
   <div class="header-sub">精选好站 · 分类收藏</div>
 
   <!-- Navigation Bar -->
   <div class="bookmarks-nav">
-    <div class="bookmarks-nav-inner">
+    <div class="bookmarks-nav-main">
       <button class="bookmarks-nav-item active" data-cat="all" onclick="switchCategory('all')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> 全部</button>
+    </div>
+    <div class="bookmarks-nav-inner">
             <button class="bookmarks-nav-item" data-cat="search" onclick="switchCategory('search')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="7.5"/><path d="m21 21-5.2-5.2"/></svg> 搜索</button>
             <button class="bookmarks-nav-item" data-cat="ai" onclick="switchCategory('ai')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 2-2 3-2 5h-4c0-2-2-3-2-5a4 4 0 0 1 4-4Z"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> AI</button>
             <button class="bookmarks-nav-item" data-cat="dev" onclick="switchCategory('dev')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> 开发</button>
@@ -37,7 +34,8 @@ permalink: /bookmarks/
             <button class="bookmarks-nav-item" data-cat="misc" onclick="switchCategory('misc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> 工具</button>
     </div>
     <div class="bookmarks-search">
-      <input type="text" id="bookmarkSearch" placeholder="搜索站点..." />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="7.5"/><path d="m21 21-5.2-5.2"/></svg>
+      <input type="text" id="bookmarkSearch" placeholder="搜索站点名称、网址或描述..." />
     </div>
   </div>
 
