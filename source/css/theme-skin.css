@@ -334,15 +334,30 @@
   color: var(--text-strong);
   font-weight: 700;
 }
+/* 左侧色条 + 主题的 FontAwesome 图标（h2 16px / h3 14px）共存。
+   图标是绝对定位、默认 left:0，会压在色条上；padding 也要够宽才装得下图标，
+   否则图标会盖住文字。所以：图标右移到色条之后，padding 留出「色条+图标+间隙」。 */
 #post #article-container h2 {
-  padding-left: 12px;
+  padding-left: 34px;
   border-left: 3px solid var(--theme-color);
   line-height: 1.5;
 }
 #post #article-container h3 {
-  padding-left: 10px;
+  padding-left: 30px;
   border-left: 2px solid rgba(var(--primary-rgb), 0.45);
   line-height: 1.5;
+}
+#post #article-container h2:before {
+  left: 12px;
+}
+#post #article-container h3:before {
+  left: 10px;
+}
+#post #article-container h2:hover {
+  padding-left: 38px;
+}
+#post #article-container h3:hover {
+  padding-left: 34px;
 }
 #post #article-container a {
   color: var(--theme-color);
