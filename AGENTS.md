@@ -74,9 +74,16 @@ for c in node nodejs; do command -v $c && $c -v; done
 
 ### ⚠️ 标题规则（2026-10-30 起）
 - 自动生成的文章标题要像**一个人在更新博客**，不要像榜单/简报/运营号
-- `anime_writer.py` 与 `tech_writer.py` 的 prompt 里各有一份规则：禁止词表（当季新番、热度榜、速览、今天科技圈有点热闹…）+ 语气示例 + 12~26 字
-- 去重：动漫用 `get_recent_anime_titles(60)`，技术用 `get_recent_tech_titles(60)`，写进 prompt 强制排除
-- 改标题规则时同步改这两处 prompt，别只改一处
+- `anime_writer.py` 与 `tech_writer.py` 的 prompt 里各有一份规则：禁止词表（当季新番、热度榜、速览、今天科技圈有点热闹…）+ 语气示例 + 10~30 字
+- **光写进 prompt 不够**：两处都有 `_validate_title()` 在生成后校验，不合格就带提示重试一次，再不合格用数据里的作品名兜底
+- 合格条件：不含禁用词、长度合格、且**有具体锚点**（作品名，或续作/原创/弃番/完结/制作公司这类具体现象）
+
+### ⚠️ 去重在数据层，不只是 prompt
+- 动漫：`_filter_excluded()` 在 `format_anime_for_prompt` 之前就剔除近 60 天写过的作品
+  - 两边都做简繁折叠（`_fold`，無職転生 ↔ 无职转生）和去季数后缀（`_variants`，第3期/Ⅲ/Season 2）
+  - 冷门补番角度用 `fetch_top_rated` 前先过滤，不足 5 部就回退当季数据；最终不足 3 部就换数据源，仍不够就少写
+- 技术：`tech_writer._filter_excluded()` 先剔主题重合的新闻，剔完没东西就不写这一期
+- 抽关键词做相似度比较时**必须从原始文本抽**：`_norm()` 会吃掉空格，`Blackwell Ultra` 会变成一个词导致永远匹配不上
 
 ### ⚠️ 内容安全闸门
 - `_scripts/content_guard.py`：`scan(text)` 命中敏感题材则返回规则名列表
