@@ -601,13 +601,14 @@ body .container:has(canvas) {
   max-width: 1600px;
 }
 
-/* 页头：返回链接在上、标题在下，与 /tools/ 列表页同一套 */
+/* 页头：返回链接与标题同一行，省一行的纵向空间 */
 body .container .header {
-  display: block; margin-bottom: var(--space-5);
+  display: flex; align-items: baseline; flex-wrap: wrap;
+  gap: var(--space-3); margin-bottom: var(--space-4);
 }
 body .container .header .back-link {
   display: inline-flex; align-items: center; gap: var(--space-1);
-  margin-bottom: var(--space-2);
+  flex-shrink: 0;
 }
 body .container .header h1 {
   margin: 0; font-size: var(--text-2xl); font-weight: 700;
@@ -616,6 +617,14 @@ body .container .header h1 {
 
 /* 工具主体卡片 */
 body .tool-area { padding: var(--space-6); box-shadow: var(--shadow-sm); }
+
+/* 编辑器类页面：高度按新外壳重算（容器 padding + 页头 + 卡片内边距 + 工具条 ≈ 280px），
+   页面里写死的 calc(100vh - 180px) / 70vh 是旧外壳时代的值，会多滚一屏 */
+body .editor-container,
+body .editor-wrap {
+  height: calc(100vh - 280px);
+  min-height: 320px;
+}
 
 /* 结果/输出面板：统一浅底 + token 圆角，别再各页 6/8/10px 混用 */
 body .result-box,
