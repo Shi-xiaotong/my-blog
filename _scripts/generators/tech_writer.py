@@ -110,6 +110,7 @@ TECH_PROMPT_TEMPLATE = """今天 AI 圈新闻如下：
    - **禁止**出现：今天/本周/今日 + 科技圈/AI圈 + 有点热闹、值得看看、一览、速览、盘点、观察
    - 参考语气（只学语气）：推理比训练更烧钱，Blackwell Ultra 这次动的就是它
    - 标题只写一行，以 # 开头；正文里不要再重复这个标题
+   - 结构：每条新闻单独一节，用 ## 小标题，不要用加粗段落冒充小标题
 5. 全文 markdown
 6. **优先写「近 60 天没写过的」发布会/产品**；如果今天的数据里只有重复内容，就只挑真正有新进展的 1-2 条写，宁可短也不要换个说法重写一遍
 7. 事实纪律：只写上面提供的标题/摘要/来源里出现的事实。摘要里没有的性能数字、参数、日期、引语一律不写，不凭记忆补充。来源名（The Verge 等）只引用数据里出现的，不虚构出处
@@ -169,5 +170,22 @@ def generate_tech(tech_articles: list, date_str: str, excluded: list = None) -> 
             logger.warning("标题仍不合格，用数据兜底: %s", title)
 
     body = strip_title_from_body(result) if extract_title(result) else result
+
+    # 小标题兜底：把独占一行的加粗段落提升成 ## 小标题
+    if len(re.findall(r'^\s*#{2,3}\s+\S', body, re.MULTILINE)) < 2:
+        lines = []
+        n = 0
+        for line in body.split("\n"):
+            m = re.match(r'^\s*\*\*(.+?)\*\*\s*$', line)
+            if m and 1 < len(m.group(1).strip()) <= 40:
+                lines.append(f"## {m.group(1).strip()}")
+                n += 1
+            else:
+                lines.append(line)
+        if n >= 2:
+            body = "\n".join(lines)
+            logger.warning("小标题缺失，已把 %d 处加粗段落提升为 ## 小标题", n)
+        else:
+            logger.warning("小标题少于 2 个，保留原文")
 
     return build_post(title, body, "技术", date_str, ["AI", "前沿技术"])

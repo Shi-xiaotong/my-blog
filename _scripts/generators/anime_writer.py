@@ -62,7 +62,8 @@ ANIME_PROMPT_TEMPLATE = """当季动漫数据和趋势如下：
 4. **只写上面数据里的作品**；可写的作品如果不足 5 部，就少写几部（3 部也行），
    宁可少写也不要把「已写过的作品」换个说法再写一遍
 5. 网友评论、弹幕热词挑 1-2 条穿插即可，保持圈内氛围但不刷屏
-6. 标题（只写一行，以 # 开头；正文里不要再重复这个标题）：
+6. 结构：每部作品单独成一节，用 ## 小标题（小标题写作品名），不要用加粗段落（**第1名：作品名**）冒充小标题
+7. 标题（只写一行，以 # 开头；正文里不要再重复这个标题）：
    - 像个人博客更新，不像榜单、简报或运营号
    - 必须有一个具体锚点：至少一个具体作品名，或一个具体现象/判断（续作、原创、弃番、完结、制作公司）
    - 12~26 字，陈述句或疑问句，不用感叹号、不用 emoji
@@ -72,12 +73,12 @@ ANIME_PROMPT_TEMPLATE = """当季动漫数据和趋势如下：
      · 边缘行者2 热度第一，评分却输给药屋少女
      · 这季榜单前列几乎全是续作，原创番去哪了
      · 追了两个月，片单定在 4 部：弃掉热度前三
-7. 事实纪律：剧情/制作信息只写上面数据里有的（AniList 的评分、集数、简介、题材）；
+8. 事实纪律：剧情/制作信息只写上面数据里有的（AniList 的评分、集数、简介、题材）；
    简介里没提的剧情发展、结局、名场面一律不写
    - 不写结局、不写关键转折、不写未播出剧情；评论里涉及剧透的内容一律不引用
    - 提到评分和热度时标注"数据截至 {date_display}"
    - 网友评论只能来自提供的评论数据，没有就不引用
-8. 禁用词表：聚焦于、旨在、折射出、随着……的快速迭代、上述动态、与此同时、值得关注的是、
+9. 禁用词表：聚焦于、旨在、折射出、随着……的快速迭代、上述动态、与此同时、值得关注的是、
    引发了广泛讨论、在……的背景下、综上所述、值得一提的是、不可忽视的是、标志着、
    进一步加剧了、后续进展值得持续跟踪、好家伙、这波操作、炸了、太炸了、绝了、
    头皮发麻、我吹爆、排雷、安利指南、看完不亏"""
@@ -299,6 +300,32 @@ def _fallback_title(anime_data: list) -> str:
 
 # ── 生成 ────────────────────────────────────────────────────────────────
 
+_HEADING_RE = re.compile(r'^\s*#{2,3}\s+\S', re.MULTILINE)
+# 独占一行的加粗段落（**第1名：作品名**）——AI 常用它冒充小标题
+_BOLD_ONLY_RE = re.compile(r'^\s*\*\*(.+?)\*\*\s*$', re.MULTILINE)
+
+
+def _count_subheadings(text: str) -> int:
+    return len(_HEADING_RE.findall(text or ""))
+
+
+def _has_subheadings(text: str, min_count: int = 2) -> bool:
+    """正文有没有真正的 ## 小标题。没有的话目录（TOC）是空的，标题装饰也显示不出来。"""
+    return _count_subheadings(text) >= min_count
+
+
+def _promote_bold_headings(body: str) -> str:
+    """把独占一行的 **加粗段落** 提升成 ## 小标题（兜底用，不动文字）。"""
+
+    def sub(m):
+        t = m.group(1).strip().strip("：:")
+        if 1 < len(t) <= 40:
+            return f"## {t}"
+        return m.group(0)
+
+    return _BOLD_ONLY_RE.sub(sub, body)
+
+
 def _looks_like_valid_article(text: str) -> bool:
     """Check if generated text looks like an actual article vs AI self-dialogue loop."""
     has_heading = bool(re.search(r'^\s*#?\s*#+\s+.+', text, re.MULTILINE))
@@ -391,14 +418,22 @@ def generate_anime(anime_data: list, comments_text: str, date_str: str,
         logger.warning("动漫文章疑似 AI 自我对话循环，丢弃")
         return ""
 
-    # 6) 标题校验，不合格重试一次
+    # 6) 标题 + 小标题结构，不合格重试一次
     title = extract_title(result)
-    if not _validate_title(title, data):
-        logger.warning("标题不合格，重试一次: %s", title)
+    bad_title = not _validate_title(title, data)
+    bad_headings = not _has_subheadings(result)
+    if bad_title or bad_headings:
+        logger.warning("重试一次：标题=%r 标题不合格=%s 小标题数=%d",
+                       title, bad_title, _count_subheadings(result))
+        reasons = []
+        if bad_title:
+            reasons.append("标题必须包含一个具体作品名，或一个具体现象"
+                           "（续作/原创/弃番/完结/制作公司），12~26 字，且不得出现禁用词")
+        if bad_headings:
+            reasons.append("每部作品单独成节，都要用 ## 小标题（小标题写作品名），"
+                           "不要用加粗段落冒充小标题")
         retry_prompt = (
-            prompt
-            + "\n\n【上一次的标题不合格】必须包含一个具体作品名，或一个具体现象"
-              "（续作/原创/弃番/完结/制作公司），12~26 字，且不得出现禁用词。请重新输出全文。"
+            prompt + "\n\n【上一次不合格，请重新输出全文】" + "；".join(reasons) + "。"
         )
         result = call_agnes(retry_prompt, max_tokens=4000)
         if result and not _check_prompt_leakage(result):
@@ -408,6 +443,16 @@ def generate_anime(anime_data: list, comments_text: str, date_str: str,
             logger.warning("标题仍不合格，用作品名兜底: %s", title)
 
     body = strip_title_from_body(result) if extract_title(result) else result
+
+    # 6b) 小标题兜底：AI 还是拿加粗冒充小标题的话，把独占一行的加粗段落提升成 ##
+    if not _has_subheadings(body):
+        promoted = _promote_bold_headings(body)
+        if _has_subheadings(promoted):
+            logger.warning("小标题缺失，已把 %d 处加粗段落提升为 ## 小标题",
+                           _count_subheadings(promoted))
+            body = promoted
+        else:
+            logger.warning("小标题仍少于 2 个，保留原文（目录会是空的）")
 
     # 7) 动态标签
     tags = ["动漫"] + ANGLE_TAGS.get(angle_name, ["追番"])
