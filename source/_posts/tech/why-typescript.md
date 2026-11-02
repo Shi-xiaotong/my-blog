@@ -10,6 +10,9 @@ categories:
 
 「JavaScript是动态类型语言，写起来快，但维护起来要命。」——这是我在经历了几次线上事故后得出的结论。今天聊聊为什么TypeScript值得学习。
 
+
+<!-- more -->
+
 ## 我的JavaScript血泪史
 
 ### 场景一：undefined的陷阱
@@ -116,5 +119,3 @@ type Callback = (data: string) => void;
 TypeScript不是银弹，但它确实让我的代码质量提升了一个档次。如果你还在犹豫，我的建议是：**试试看**。
 
 你可能不会喜欢它，但你应该了解它。
-
----

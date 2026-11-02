@@ -8,6 +8,9 @@ categories:
 
 # Docker Compose快速指南
 
+
+<!-- more -->
+
 ## 最小示例
 
 ```yaml

@@ -9,6 +9,9 @@ description: "偶然发现 HyperFrames 这个能把 HTML 渲染成 MP4 的开源
 
 > 本文记录了用 HyperFrames 给自己的博客做一个介绍视频的完整过程，包括踩坑实录和最终效果。
 
+
+<!-- more -->
+
 ## 前言
 
 前几天在逛 GitHub 的时候，偶然发现了一个叫 [HyperFrames](https://hyperframes.heygen.com) 的开源项目——它可以把 **HTML + CSS + JavaScript** 直接渲染成 **MP4 视频**。

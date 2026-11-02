@@ -8,6 +8,9 @@ categories:
 
 # Linux常用命令总结
 
+
+<!-- more -->
+
 ## 文件操作
 
 创建空文件

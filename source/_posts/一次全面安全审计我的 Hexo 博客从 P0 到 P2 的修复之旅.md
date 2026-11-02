@@ -253,6 +253,4 @@ fb49a0d fix(security): XSS, CSP, rate limit, bundle hash
 
 **建议**：定期做类似审计，尤其是涉及用户输入、外部 URL 代理、数据库查询的代码。安全不是"做完就完"，而是持续的过程。
 
----
-
 *博客由 Agnes 2.5 Flash 辅助写作。*
