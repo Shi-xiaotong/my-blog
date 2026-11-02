@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict';
 
 /**
@@ -147,4 +146,8 @@ async function main() {
   console.log(`\n完成 ${uploaded.length} 张。把上面的 URL 粘进文章即可（博客图统一放 blog/ 前缀）。`);
 }
 
-main().catch(e => { console.error('❌', e.message); process.exit(1); });
+// 仅当直接 `node scripts/r2-upload.js` 运行时才执行；
+// 被 Hexo 作为 scripts/ 扩展加载时（require.main !== module）只定义函数，不误跑。
+if (require.main === module) {
+  main().catch(e => { console.error('❌', e.message); process.exit(1); });
+}
