@@ -217,30 +217,50 @@ Must not appear in generated content:
 - `workers/src/auth-worker.js` — OAuth handling
 - Deploy via `wrangler deploy` (separate from Pages)
 
-### 媒体 / 图片：R2 上传流程（图片不进 git）
+### 媒体 / 图片：R2 上传完整流程（图片不进 git）
 
-设计原则：**原图不提交到 git 仓库**（否则仓库会越来越大）。流程是本地压缩 + 转 WebP → 上传 R2，原图留在仓库外的目录（如 `~/Pictures`、U 盘）。仓库里只有 markdown 对 `https://img.233002.xyz/...` 的引用。
+**原则**：原图不提交 git（否则仓库膨胀）。本地 压缩 + 转 WebP → 上传 R2，原图留在仓库外（如 `~/Pictures`、U 盘）。仓库只存 markdown 对 `https://img.233002.xyz/...` 的 URL 引用。
 
-**标准流程（推荐，新文章用此）**
-1. 把手机/相机原图放在仓库外任意目录（不要放进 `source/`）。
-2. 压缩 + 转 WebP + 上传一步到位：
+**R2 存储结构**
+- Bucket：`myblog`；对外域名：`https://img.233002.xyz`
+- 博客图对象键：`blog/<文件名>.webp`（扁平，无分类/日期层级）
+- 其它资源（头像/logo/bgm）：`assets/<文件名>.webp`
+
+**前置条件（一次性）**
+- `.env` 含 `R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ENDPOINT` / `R2_BUCKET` / `R2_PUBLIC_URL`（已 gitignore，凭证当前可用）。
+- 转码工具其三选一：`cwebp`（最佳）、ImageMagick `magick`、node `sharp`（本机均已具备）。
+- 运行环境：`node` 不在默认 PATH，先 `export PATH="$HOME/.hermes/node/bin:$PATH"`（或 `source ~/.zshrc` 启用 nvm）。
+
+**端到端步骤**
+1. 原图放仓库外目录，按「文章前缀 + 序号」改名避免撞名：如 `jinan-daming-lake-1.jpg`、`nvidia-drop-1.png`（**务必加前缀**，key 扁平、同名会覆盖）。
+2. 运行脚本（自动压缩转 webp + 上传 + 打印 URL）：
    ```bash
-   node scripts/r2-upload.js 照片1.jpg 照片2.png
-   node scripts/r2-upload.js --dir ~/Pictures/jinan        # 批量整目录
-   node scripts/r2-upload.js --prefix assets 头像.webp      # 非 blog 资源(头像/logo 等)
-   node scripts/r2-upload.js --q 75 大图.png                # 降质换更小体积
+   node scripts/r2-upload.js ~/Pictures/jinan/jinan-daming-lake-1.jpg
+   node scripts/r2-upload.js --dir ~/Pictures/jinan        # 整目录批量
+   node scripts/r2-upload.js --prefix assets 头像.webp      # 头像/logo 等非 blog 资源
+   node scripts/r2-upload.js --q 75 大图.png                # 降质换更小体积(默认 q=82)
    ```
-   - 转换优先级 `cwebp` → `ImageMagick` → `sharp`；输出临时 webp 只在 `/tmp`，上传后清理，**不落盘到仓库**。
-   - 上传 key 固定 `blog/<去扩展名>.webp`（扁平），并打印可直粘的公网 URL。
-   - ⚠️ 跑前先 `source .env`（无 dotenv 自动加载）；`node` 不在默认 PATH 时用 nvm/hermes 路径。
-3. 把脚本打印的 `https://img.233002.xyz/blog/xxx.webp` 粘进文章（直接写绝对 URL，不用相对路径）。
-4. 验证：`curl -I https://img.233002.xyz/blog/xxx.webp` 应返回 `200`。
+3. 复制终端打印的 `https://img.233002.xyz/blog/jinan-daming-lake-1.webp`。
+4. 粘进文章（**直接写绝对 URL**，不要相对路径）：
+   ```md
+   ![护城河](https://img.233002.xyz/blog/jinan-daming-lake-1.webp)
+   ```
+5. 验证：`curl -I https://img.233002.xyz/blog/jinan-daming-lake-1.webp` 应返回 `200`。
 
-**关键注意**
-- **不会自动转 webp**：转换由 `scripts/r2-upload.js` 用 `cwebp` 显式完成；CI / Cloudflare Pages 不跑任何图片处理，`post-build.js` 那段 cwebp 本地优化只作用于 `public/` 内相对引用图、与 R2 无关，且当前因缺 `cwebp` 被跳过。
-- **扁平命名冲突**：key 是 `blog/<文件名>`，**不同文章同文件名会互相覆盖**。命名加前缀（如 `jinan-`、`nvidia-`）避免撞名。
-- **凭证**在 `.env`（已 gitignore）：`R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ENDPOINT` / `R2_BUCKET` / `R2_PUBLIC_URL`；`AGNES_API_KEY`、`CF_R2_TOKEN` 当前为空。已用只读 `ListObjects` + 实际上传验证可用。失效时去 Cloudflare 面板 → R2 → myblog → 管理 R2 API 令牌 重新生成。
-- **备选（不推荐）**：`hexo-cloudflare-r2-media` 插件（`npx hexo deploy`）也能传图，但要求图放在 `source/_posts/<文章>/` 且**会随 git 提交**，与"图片不进 git"的诉求冲突，故不作为默认流程。存量 webp 多为早年 `r2.js`（已删）手动上传，不属于该插件流程、也无本地备份——哪天误删 R2 对象就找不回，原图请自己在外地留底。
+**脚本行为**
+- 转换优先级 `cwebp` → `ImageMagick` → `sharp`；临时 webp 只落在 `/tmp`，上传后自动清理，**不写入仓库、不碰 git**。
+- 上传 key = `<prefix>/<原文件名去扩展名>.webp`（默认 prefix=`blog`）；已存在则覆盖（可用于重传更新）。
+- 终端显示压缩比（如 `原 3KB → webp 1KB (省 66%)`）。
+
+**排错**
+- `❌ 缺少 R2 凭证`：没 `source .env` 或 `.env` 缺字段 → 先 `source .env`，或去 CF 面板 → R2 → myblog → 管理 R2 API 令牌 重发。
+- `node: 未找到命令`：没把 node 加进 PATH（见前置条件）。
+- 转换失败（无可用工具）：`brew install libwebp`（cwebp）或 `brew install imagemagick`，或 `npm i sharp`。
+- 上传成功但页面 404：文章 URL 文件名是否与上传 key 完全一致（含前缀 `blog/`）；用 `curl -I` 核对。
+
+**不推荐 / 历史路径**
+- `hexo-cloudflare-r2-media` 插件（`npx hexo deploy`）也能传图，但要求图放 `source/_posts/<文章>/` 且会随 git 提交，与"图片不进 git"冲突，不作默认。
+- 存量 webp 多为早年 `r2.js`（已删）手动上传，不属于任何当前自动化、也无本地备份——R2 对象误删即永久丢失，原图请自己留底。
 
 ---
 
