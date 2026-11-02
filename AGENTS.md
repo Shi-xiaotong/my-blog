@@ -55,8 +55,8 @@ for c in node nodejs; do command -v $c && $c -v; done
 
 #### `cwebp` Not Installed
 - **Symptom:** `[post-build] ⚠️ cwebp 未安装，跳过图片优化`
-- **Impact:** 静默降级且**两地产物不一致** — 本地会转 WebP，CI / Cloudflare Pages 环境没有 cwebp 则整段跳过，线上用的是原图
-- **Fix:** `brew install libwebp` (macOS)；CI 需在构建前装 `webp`。注意 Cloudflare Pages 的构建命令在 CF 控制台配置，不在本仓库内，改不到就接受"线上无 WebP"这一事实
+- **Impact:** 静默降级：本机有 cwebp 时 `public/` 内相对引用的图会被转 WebP，CI / Cloudflare Pages 无 cwebp 则跳过，线上用原图。**此本地优化与 R2 托管的图无关**（见 Deployment → 媒体 R2 上传流程）。
+- **Fix:** `brew install libwebp` (macOS)；CI 需在构建前装 `webp`。注意 Cloudflare Pages 的构建命令在 CF 控制台配置，不在本仓库内，改不到就接受"线上无 WebP"这一事实。想让 R2 图也是 webp，得在放进 `source/_posts/<文章>/` 前自己转好。
 
 ---
 
@@ -202,8 +202,6 @@ Must not appear in generated content:
 
 8. **每篇文章必须有至少一句主观表达**："说实话"/"我觉得"/"好家伙"/"个人看法"。
 
-9. **禁用词检查**：`聚焦于, 旨在, 折射出, 上述动态, 与此同时, 值得关注的是, 引发了广泛讨论, 综上所述, 值得一提的是, 不可忽视的是, 标志着, 进一步加剧了, 后续进展值得持续跟踪`
-
 ---
 
 ## Deployment
@@ -219,41 +217,41 @@ Must not appear in generated content:
 - `workers/src/auth-worker.js` — OAuth handling
 - Deploy via `wrangler deploy` (separate from Pages)
 
-### R2 Media Storage
-- Bucket: `myblog` (key_prefix: `blog`)
-- Domain: `img.233002.xyz`
-- Cover images should be < 300 KB — 这不是 R2 硬限制（免费额度卡的是存储总量与 egress），而是首屏性能要求
-- Upload: `hexo deploy`（hexo-cloudflare-r2-media，需本地 R2 凭证，CI 不执行）
-- R2 入口已统一到该 npm 包，自建脚本 `r2.js` 与 `_scripts/r2-upload.js` 已删除
-- 已删除的孤儿文件: `blog/myblog-cover.webp`（原 1.99MB png 早已转 WebP，文章里的 `.png` 引用一直是 404）、`blog/videos/blog-intro-v3.mp4`
+### 媒体 / 图片：R2 上传流程
+
+图片**不在 git 仓库**（仓库只提交 markdown 里的引用 URL），实际文件在 Cloudflare R2：
+`bucket=myblog`、`key_prefix=blog`（对象键 = `blog/<文件名>`），对外域名 `https://img.233002.xyz`。
+本地 `source/_posts/<分类>/<文章>/` 下的原图会随 `hexo deploy` 上传（这些原图本身也进 git）。
+
+**自动上传（新文章推荐）**
+1. 把图片（**建议直接存成 `.webp`**）放进 `source/_posts/<分类>/<文章slug>/` 目录（与 `<文章slug>.md` 同级文件夹）。
+2. 文章内用相对路径引用：`![说明](./photo.webp)` 或 `![说明](photo.webp)`。
+3. 加载凭证（⚠️ 无 dotenv，不会自动加载）：`set -a; source .env; set +a`
+4. 上传：`npx hexo deploy`（deployer 类型 `r2-media`）。它会：
+   - 把该文件夹里的媒体**原样上传**到 R2 的 `blog/<文件名>`（**不转码**）；
+   - 自动把生成 HTML 里的本地相对图片 URL 改写成 `https://img.233002.xyz/blog/<文件名>`（即使文章硬编码了 R2 绝对 URL，只要原图在文件夹里仍会上传）；
+   - 用 `.r2-media-manifest.json` 记哈希，未变动的跳过；
+   - 默认 `delete_stale: true`：删掉 source 已不存在的图片对应的 R2 对象，并清掉 `public/` 下本地媒体。
+5. 验证：`curl -I https://img.233002.xyz/blog/photo.webp` 应返回 `200`。
+
+**关键注意**
+- **不会自动转 webp**：deployer 只按原扩展名上传，不转码。要 webp 必须自己先存成 `.webp`。`_scripts/post-build.js` 的 cwebp 本地优化（转 `public/` 图 + 包 `<picture>`）与 R2 无关，且当前因缺 `cwebp` 二进制被跳过，不影响线上 R2。
+- **扁平命名冲突**：对象键是 `blog/<文件名>`，**不同文章同文件名会互相覆盖**。命名加前缀（如 `jinan-`、`nvidia-`）避免撞名。
+- **CI / Cloudflare Pages 不跑 `hexo deploy`**：只 push 代码不会上传新图，图片只在你本地跑 deploy 时才上 R2（这也是改引用后缀前图片 404 的原因）。
+- **凭证**在 `.env`（已 gitignore）：`R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ENDPOINT` / `R2_BUCKET` / `R2_PUBLIC_URL`；`AGNES_API_KEY`、`CF_R2_TOKEN` 当前为空。已用只读 `ListObjects` 验证可用。失效时去 Cloudflare 面板 → R2 → myblog → 管理 R2 API 令牌 重新生成。
+- 历史孤儿：`blog/myblog-cover.webp`、`blog/videos/blog-intro-v3.mp4` 已删除。
 
 ---
 
 ## Common Pitfalls
 
-### 1. post-build.js TDZ (Node 24)
-`const` variables are not hoisted. `jsHash` must be declared before `jsBundleName`.
-
-### 2. AI Thinking Leakage
-Agnes 2.5 Flash leaks thinking. Always clean output. See the "AI Content Generation Flow" section above.
-
-### 3. Two Separate AI Call Paths
-`daily-news.py` has its own API call that doesn't use `generators/call_agnes()`. Both paths need cleaning.
-
-### 4. Cloudflare Build Fails Silently
-If `post-build.js` or `hexo generate` fails, Cloudflare Pages shows a build error but the old site stays up. Check Cloudflare Pages dashboard for build logs.
-
-### 5. GitHub Push via HTTPS Blocked
-Chinese GFW sometimes blocks HTTPS to GitHub. Fallback: SSH (`git@github.com:Shi-xiaotong/my-blog.git`). Always restore HTTPS after push.
-
-### 6. LF/CRLF Warnings
-Git on Windows shows "LF will be replaced by CRLF" warnings. Harmless — just informational.
-
-### 7. Emotion/OwO System
-New emoticons go in `source/emotion/` with `OwO.json` config. Run `node source/emotion/generate-owo.cjs` to regenerate.
-
-### 8. Font Awesome v7
-Local subset at `source/assets/fontawesome/css/fa-subset.min.css`. Preload fonts via inject.head in `themes/butterfly/_config.yml`.
+- **CF 构建静默失败**：`post-build.js` / `hexo generate` 出错时，Cloudflare Pages 只报构建错误、旧站仍在。查 CF Pages 控制台构建日志。
+- **GFW 挡 GitHub HTTPS**：改 SSH（`git@github.com:Shi-xiaotong/my-blog.git`），推完务必还原 HTTPS。
+- **Windows CRLF 警告**：无害，仅提示。
+- **Emotion/OwO**：新表情放 `source/emotion/`，跑 `node source/emotion/generate-owo.cjs` 重生成。
+- **Font Awesome v7**：本地子集 `source/assets/fontawesome/css/fa-subset.min.css`，用 `inject.head` 预加载。
+- **图片 / 后缀坑**：见 Deployment → 媒体 R2 上传流程；改 `.png/.jpg`→`.webp` 前先 `curl -I` 确认目标 webp 存在（同目录 `blog-feature-*` 仅 png 可达，别误改）。
+- **TDZ / AI 思考泄漏**：分别见 Build System → Known Build Failures、Daily Content Pipeline → AI Thinking Leakage。
 
 ---
 
