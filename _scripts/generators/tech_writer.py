@@ -111,6 +111,9 @@ TECH_PROMPT_TEMPLATE = """今天 AI 圈新闻如下：
    - 参考语气（只学语气）：推理比训练更烧钱，Blackwell Ultra 这次动的就是它
    - 标题只写一行，以 # 开头；正文里不要再重复这个标题
    - 结构：每条新闻单独一节，用 ## 小标题，不要用加粗段落冒充小标题
+   - 每条新闻：## 小标题 + 1-2 句要点 + 一句 `> 一句话：` 收尾（提炼这条对读者意味着什么）
+   - 开头可选一个导读卡：{{% note blue %}}一句话总览本期{{% endnote %}}
+   - <!-- more --> 放在导读/首条新闻之后
 5. 全文 markdown
 6. **优先写「近 60 天没写过的」发布会/产品**；如果今天的数据里只有重复内容，就只挑真正有新进展的 1-2 条写，宁可短也不要换个说法重写一遍
 7. 事实纪律：只写上面提供的标题/摘要/来源里出现的事实。摘要里没有的性能数字、参数、日期、引语一律不写，不凭记忆补充。来源名（The Verge 等）只引用数据里出现的，不虚构出处
@@ -187,5 +190,11 @@ def generate_tech(tech_articles: list, date_str: str, excluded: list = None) -> 
             logger.warning("小标题缺失，已把 %d 处加粗段落提升为 ## 小标题", n)
         else:
             logger.warning("小标题少于 2 个，保留原文")
+
+    # 保证 <!-- more --> 在首个小标题之前（让卡片预览有内容）
+    if "<!-- more -->" not in body:
+        m = re.search(r"(?m)^##\s", body)
+        if m:
+            body = body[:m.start()] + "\n<!-- more -->\n\n" + body[m.start():]
 
     return build_post(title, body, "技术", date_str, ["AI", "前沿技术"])
