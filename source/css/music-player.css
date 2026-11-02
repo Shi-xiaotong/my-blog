@@ -17,8 +17,8 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2E3446 0%, #3F4658 50%, #2E3446 100%);
-  box-shadow: 0 4px 14px rgba(43, 48, 64, 0.18);
+  background: linear-gradient(135deg, #3A2E22 0%, #4A382C 50%, #3A2E22 100%);
+  box-shadow: 0 4px 14px rgba(120, 90, 60, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,8 +49,8 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), #F26D8E);
-  box-shadow: 0 0 8px rgba(255, 143, 171, 0.45);
+  background: linear-gradient(135deg, var(--accent), #E0987C);
+  box-shadow: 0 0 8px rgba(224, 169, 143, 0.45);
 }
 
 /* 唱针 */
@@ -102,7 +102,7 @@
 
 .music-player.playing .disc-container {
   animation: discRotate 4s linear infinite;
-  box-shadow: 0 4px 18px rgba(255, 143, 171, 0.28);
+  box-shadow: 0 4px 18px rgba(224, 169, 143, 0.28);
 }
 
 /* 音符容器 */
@@ -127,7 +127,7 @@
   transform: translateX(-50%);
   animation: noteFloat 2s ease-out infinite;
   color: var(--accent);
-  text-shadow: 0 0 5px rgba(255, 143, 171, 0.45);
+  text-shadow: 0 0 5px rgba(224, 169, 143, 0.45);
 }
 
 .music-note:nth-child(1) {

@@ -22,7 +22,7 @@
   -webkit-backdrop-filter: none !important;
   border: 1px solid var(--border) !important;
   border-radius: 14px !important;
-  box-shadow: 0 2px 8px rgba(43, 48, 64, 0.05) !important;
+  box-shadow: 0 2px 8px rgba(120, 90, 60, 0.05) !important;
 }
 
 /* ─── 2. 输入框 ─── */

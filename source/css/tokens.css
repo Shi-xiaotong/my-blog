@@ -11,7 +11,7 @@
      - 影视屋 /anime/
      - 各种组件（播放器、登录、个人中心、评论）
 
-   风格：晴空白 —— 奶油白底 + 天青主色 + 樱粉点缀
+   风格：焦糖奶油 —— 奶油米白底 + 焦糖棕主色 + 蜜桃点缀
    ================================================================ */
 
 :root {
@@ -35,46 +35,46 @@
   --leading-normal: 1.5;
   --leading-relaxed: 1.75;
 
-  /* ── 主色 ── */
-  --primary: #4DA3D9;
+  /* ── 主色（焦糖棕） ── */
+  --primary: #B5793F;
   /* 主色 RGB 分量：让 rgba(var(--primary-rgb), .1) 自动跟随主色，
      改色时不必逐个手改 rgba 数值 */
-  --primary-rgb: 77, 163, 217;
-  --primary-light: #EAF6FD;
-  --primary-dark: #3B8CC4;
-  --secondary: #7FC4E8;
-  --accent: #FF8FAB;
-  --accent-light: #FFEEF4;
+  --primary-rgb: 181, 121, 63;
+  --primary-light: #F2E4D6;
+  --primary-dark: #9A6534;
+  --secondary: #D9B38C;
+  --accent: #E0A98F;
+  --accent-light: #FBEFE8;
 
-  /* ── 底色与文字 ── */
-  --bg: #FDFCF8;
-  --card-bg: #FFFFFF;
-  --card-bg-hover: #FFFFFF;
-  --text: #2B3040;
-  --text-strong: #1F2430;      /* 标题，比正文更深一档 */
-  --text-secondary: #5C6478;
-  --text-tertiary: #98A0B3;
-  --border: #EDEFF5;
-  --border-hover: #D8DDE9;
+  /* ── 底色与文字（奶油米白） ── */
+  --bg: #FBF4EA;
+  --card-bg: #FFFDF8;
+  --card-bg-hover: #FFFDF8;
+  --text: #4A3F35;
+  --text-strong: #3A2F26;      /* 标题，比正文更深一档 */
+  --text-secondary: #7A6F63;
+  --text-tertiary: #A89C8E;
+  --border: #EADFCE;
+  --border-hover: #DCC9AE;
 
-  /* ── 状态色 ── */
-  --success: #3DBBA0;
-  --error: #F26D6D;
-  --warning: #F0B429;
-  --info: #4DA3D9;
+  /* ── 状态色（暖化） ── */
+  --success: #6FA287;
+  --error: #D98B7A;
+  --warning: #E0B252;
+  --info: #B5793F;
 
-  /* ── 阴影（轻） ── */
-  --shadow-sm: 0 1px 3px rgba(43, 48, 64, 0.04);
-  --shadow-md: 0 2px 8px rgba(43, 48, 64, 0.05);
-  --shadow-lg: 0 6px 20px rgba(43, 48, 64, 0.07);
-  --shadow-xl: 0 12px 32px rgba(43, 48, 64, 0.09);
+  /* ── 阴影（暖棕柔影） ── */
+  --shadow-sm: 0 2px 6px rgba(120, 90, 60, 0.05);
+  --shadow-md: 0 4px 14px rgba(120, 90, 60, 0.07);
+  --shadow-lg: 0 10px 30px rgba(120, 90, 60, 0.09);
+  --shadow-xl: 0 18px 44px rgba(120, 90, 60, 0.11);
 
-  /* ── 圆角 ── */
-  --radius-sm: 8px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
+  /* ── 圆角（更糯） ── */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-2xl: 32px;
   --radius-full: 999px;
 
   /* ── 间距（4pt 栅格） ── */
@@ -100,10 +100,10 @@
   --z-toast: 999;
   --z-max: 9999;
 
-  /* ── 图片占位（纯 CSS，不依赖图片文件） ── */
-  --img-placeholder-gradient: linear-gradient(135deg, #BEE3F8 0%, #FFD9E2 100%);
-  --img-placeholder-error: linear-gradient(135deg, #FFD1D1 0%, #FFE3E3 100%);
-  --img-placeholder-article: linear-gradient(135deg, #D6EEFB 0%, #FFE7EE 100%);
+  /* ── 图片占位（暖奶油） ── */
+  --img-placeholder-gradient: linear-gradient(135deg, #F0D9BE 0%, #E8C4A8 100%);
+  --img-placeholder-error: linear-gradient(135deg, #F2CDBF 0%, #EBC4B6 100%);
+  --img-placeholder-article: linear-gradient(135deg, #F3E0CC 0%, #EAD2BC 100%);
 
   /* ── 兼容旧变量名（历史页面仍在引用，勿删） ── */
   --glass-blur: 0px;
@@ -112,36 +112,36 @@
   --glass-shadow-hover: var(--shadow-lg);
 }
 
-/* ─────────────── 深色模式：深靛，不用纯黑 ─────────────── */
+/* ─────────────── 深色模式：深可可，不用纯黑 ─────────────── */
 html[data-theme="dark"] {
-  --primary: #7FC4E8;
-  --primary-rgb: 127, 196, 232;
+  --primary: #D9A878;
+  --primary-rgb: 217, 168, 120;
   --primary-light: rgba(var(--primary-rgb), 0.14);
-  --primary-dark: #A5D8F0;
-  --secondary: #8FD3F4;
-  --accent: #FFA8BE;
-  --accent-light: rgba(255, 168, 190, 0.15);
+  --primary-dark: #E8C49C;
+  --secondary: #C9A07A;
+  --accent: #E8B89C;
+  --accent-light: rgba(232, 184, 156, 0.15);
 
-  --bg: #1C1E2A;
-  --card-bg: #242736;
-  --card-bg-hover: #2A2E3F;
-  --text: #E8EAF2;
-  --text-strong: #F2F4FA;
-  --text-secondary: #A8AEC2;
-  --text-tertiary: #6E7488;
-  --border: #333749;
-  --border-hover: #414759;
+  --bg: #211B16;
+  --card-bg: #2C241D;
+  --card-bg-hover: #33291F;
+  --text: #EDE3D6;
+  --text-strong: #F5EDE2;
+  --text-secondary: #B8A892;
+  --text-tertiary: #8A7C6B;
+  --border: #3A3026;
+  --border-hover: #4A3D2F;
 
-  --glass-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
-  --glass-shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.32);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.18);
-  --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.22);
-  --shadow-lg: 0 6px 20px rgba(0, 0, 0, 0.28);
-  --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.34);
+  --glass-shadow: 0 2px 10px rgba(0, 0, 0, 0.30);
+  --glass-shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.38);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.34);
+  --shadow-xl: 0 18px 44px rgba(0, 0, 0, 0.40);
 
-  --img-placeholder-gradient: linear-gradient(135deg, #2A3A4D 0%, #4A3340 100%);
-  --img-placeholder-error: linear-gradient(135deg, #4A2A2E 0%, #5C3238 100%);
-  --img-placeholder-article: linear-gradient(135deg, #24384A 0%, #3E2E3A 100%);
+  --img-placeholder-gradient: linear-gradient(135deg, #3A2E22 0%, #4A382C 100%);
+  --img-placeholder-error: linear-gradient(135deg, #4A2E2A 0%, #5C3A32 100%);
+  --img-placeholder-article: linear-gradient(135deg, #33271E 0%, #453327 100%);
 }
 
 /* ================================================================
@@ -184,7 +184,7 @@ html[data-theme="dark"] {
   --preloader-color: var(--primary);
   --hr-border: var(--border);
   --hr-before-color: var(--primary);
-  --mark-bg: rgba(77, 163, 217, 0.20);
+  --mark-bg: rgba(181, 121, 63, 0.18);
   --zoom-bg: var(--bg);
 
   /* ── 静态页历史变量名（tools / games 里在用，勿删） ── */
@@ -194,11 +194,10 @@ html[data-theme="dark"] {
   --ai-bg: var(--card-bg);
   --user-bg: var(--primary-light);
 }
-
 html[data-theme="dark"] {
   --btn-color: #16202B;
   --white: #F2F4FA;
-  --mark-bg: rgba(127, 196, 232, 0.22);
+  --mark-bg: rgba(217, 168, 120, 0.20);
 }
 
 /* ================================================================
