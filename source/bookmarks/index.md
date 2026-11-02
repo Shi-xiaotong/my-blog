@@ -52,6 +52,9 @@ permalink: /bookmarks/
       <a href="/games/" class="link-card" target="_blank" rel="noopener noreferrer" title="网页小游戏">
         <span class="name">小游戏</span>
       </a>
+      <a href="/anime/" id="animeEntrance" class="link-card" target="_blank" rel="noopener noreferrer" title="影视屋" style="display:none">
+        <span class="name">影视屋</span>
+      </a>
     </div>
   </div>
 
@@ -61,5 +64,22 @@ permalink: /bookmarks/
 </div>
 
 <script src="/js/bookmarks-page.js"></script>
+
+<script>
+(function(){
+  function update(){
+    var el = document.getElementById('animeEntrance');
+    if (!el) return;
+    var ok = (typeof window.cwdIsAdmin === 'function') && window.cwdIsAdmin();
+    el.style.display = ok ? '' : 'none';
+  }
+  document.addEventListener('DOMContentLoaded', update);
+  window.addEventListener('load', update);
+  try { window.addEventListener('anime_login_change', update); } catch (e) {}
+  document.addEventListener('pjax:complete', update);
+  setTimeout(update, 800);
+  setTimeout(update, 2000);
+})();
+</script>
 
 {% endraw %}

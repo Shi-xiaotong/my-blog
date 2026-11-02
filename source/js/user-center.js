@@ -290,7 +290,7 @@ function loadHistory(){
     var list=d.list||[];
     var el=$('ucHistoryList');
     if(!el)return;
-    if(!d.logged_in||list.length===0){
+    if(!d.logged_in||list.length===0||!(typeof window.cwdIsAdmin==='function'&&window.cwdIsAdmin())){
       el.innerHTML='<div class="uc-hint">暂无观看记录</div>';
       return;
     }

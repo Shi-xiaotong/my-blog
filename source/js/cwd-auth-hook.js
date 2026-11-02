@@ -204,6 +204,19 @@
     }, 1000);
   }
 
+  // 暴露给外部组件（导航卡片 / 个人中心）判断「当前是否为已验证的管理员」
+  window.cwdIsAdmin = function() {
+    try {
+      var auth = window._siteAuth;
+      if (!auth || !auth.isLoggedIn()) return false;
+      var u = auth.getUser();
+      if (!u || u.email !== ADMIN_EMAIL) return false;
+      return hasAdminToken();
+    } catch (e) {
+      return false;
+    }
+  };
+
   function init() {
     fillCWDUserInfo();
     addVerifyButton();
