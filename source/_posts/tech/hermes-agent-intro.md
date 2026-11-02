@@ -14,7 +14,7 @@ Hermes Agent 是 Nous Research 开源的一个 AI 代理框架。不同于普通
 
 <!-- more -->
 
-![Hermes Agent 多平台接入示意](https://img.233002.xyz/blog/hermes-cover.jpg)
+![Hermes Agent 多平台接入示意](https://img.233002.xyz/blog/hermes-cover.webp)
 
 ## 核心能力
 
@@ -46,7 +46,7 @@ Hermes 内置了丰富的工具集：
  **技能系统** | 可复用的工作流模板，社区共享 |
  **子代理委派** | 并行处理多个子任务 |
 
-![Hermes Agent 技术架构](https://img.233002.xyz/blog/hermes-architecture.jpg)
+![Hermes Agent 技术架构](https://img.233002.xyz/blog/hermes-architecture.webp)
 
 ### 技能系统
 
@@ -56,7 +56,7 @@ Hermes 内置了丰富的工具集：
 
 技能可以分享到社区，也可以从社区安装别人的技能。
 
-![Hermes Agent 技能生态](https://img.233002.xyz/blog/hermes-skills.jpg)
+![Hermes Agent 技能生态](https://img.233002.xyz/blog/hermes-skills.webp)
 
 ## 实际应用场景
 
@@ -107,7 +107,7 @@ Hermes 的架构设计围绕"Agent 即服务"的理念：
 
 ## 与传统 Chatbot 的区别
 
-![Hermes Agent vs 传统 Chatbot](https://img.233002.xyz/blog/hermes-comparison.jpg)
+![Hermes Agent vs 传统 Chatbot](https://img.233002.xyz/blog/hermes-comparison.webp)
 
  对比项 | 传统 Chatbot | Hermes Agent |
 --------|-------------|--------------|

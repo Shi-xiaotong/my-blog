@@ -12,7 +12,7 @@ tags: ["AI"]
 
 <!-- more -->
 
-![英伟达股价走势示意](https://img.233002.xyz/blog/nvidia-drop-chart.png)
+![英伟达股价走势示意](https://img.233002.xyz/blog/nvidia-drop-chart.webp)
 
 ## 发生了什么
 
@@ -43,7 +43,7 @@ tags: ["AI"]
 
 英伟达在中国市场的收入占比正在下降，这是不争的事实。
 
-![中国AI芯片竞争格局](https://img.233002.xyz/blog/nvidia-china-2.png)
+![中国AI芯片竞争格局](https://img.233002.xyz/blog/nvidia-china-2.webp)
 
 ### 3. AI 投资回报质疑
 
@@ -51,7 +51,7 @@ tags: ["AI"]
 
 微软、谷歌、Meta 的 AI 业务目前都在"烧钱"阶段。如果下游应用迟迟不能变现，上游卖铲子的英伟达自然会承压。
 
-![AI 投资回报示意](https://img.233002.xyz/blog/nvidia-drop-ai.png)
+![AI 投资回报示意](https://img.233002.xyz/blog/nvidia-drop-ai.webp)
 
 ## AI 泡沫要破了吗
 
@@ -59,7 +59,7 @@ tags: ["AI"]
 
 英伟达的市盈率从最高的 60 多倍降到了 40 多倍，仍然不便宜，但已经不那么离谱了。AI 的需求是真实存在的——数据中心、自动驾驶、机器人、医疗 AI，每个领域都需要算力。
 
-![AI投资与数据中心](https://img.233002.xyz/blog/nvidia-invest-2.png)
+![AI投资与数据中心](https://img.233002.xyz/blog/nvidia-invest-2.webp)
 
 > 长期看，AI 行业的真正风险不是"需求消失"，而是"供给过剩"。当每家公司都在建数据中心、训练大模型时，算力可能从稀缺变成过剩。到那时候，英伟达的故事才会真正改写。
 
@@ -71,4 +71,4 @@ tags: ["AI"]
 
 > 2.2 万亿的蒸发提醒我们：再强的公司也不是只涨不跌的。但 AI 的趋势不会因为一次回调就结束。真正值得关注的不是英伟达的股价，而是 AI 技术能不能在各行各业真正落地。
 
-![AI技术未来展望](https://img.233002.xyz/blog/nvidia-ending.png)
+![AI技术未来展望](https://img.233002.xyz/blog/nvidia-ending.webp)

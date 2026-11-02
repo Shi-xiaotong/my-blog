@@ -20,7 +20,7 @@ Gemini Flash、Cerebras、NVIDIA NIM、Groq、智谱 GLM、Cloudflare Workers AI
 
 调用的时候随便写个 model 名，它自动路由到有额度的平台。某家 429 限流了？自动切下一家。你完全不用管后面有几个平台在转。
 
-![FreeLLMAPI 架构示意图](https://img.233002.xyz/blog/freellmapi-arch.png)
+![FreeLLMAPI 架构示意图](https://img.233002.xyz/blog/freellmapi-arch.webp)
 
 ## 我实际配了哪些平台？
 
@@ -37,7 +37,7 @@ Gemini Flash、Cerebras、NVIDIA NIM、Groq、智谱 GLM、Cloudflare Workers AI
 > NVIDIA NIM：100+ 模型可选，含 Llama、DeepSeek 等
 > OpenRouter：100+ 免费模型，GPT-4o 也能白嫖
 
-![管理后台面板](https://img.233002.xyz/blog/freellmapi-dashboard.png)
+![管理后台面板](https://img.233002.xyz/blog/freellmapi-dashboard.webp)
 
 ## 5 分钟部署教程
 
@@ -79,7 +79,7 @@ npm run dev
 
 打开 `http://localhost:5173`，这是管理后台。在 Keys 页面把各家 Key 添加进去（Key 存在加密 SQLite 里，比 .env 安全）。
 
-![管理后台添加 Key](https://img.233002.xyz/blog/freellmapi-keys.png)
+![管理后台添加 Key](https://img.233002.xyz/blog/freellmapi-keys.webp)
 
 ## 怎么用？
 
@@ -105,7 +105,7 @@ curl http://localhost:3001/v1/chat/completions \
 
 > Cursor / VS Code Copilot：设置里改 API endpoint
 
-![API 调用示例](https://img.233002.xyz/blog/freellmapi-usage.png)
+![API 调用示例](https://img.233002.xyz/blog/freellmapi-usage.webp)
 
 ## 踩过的坑
 
@@ -138,7 +138,7 @@ FreeLLMAPI 有个 30 分钟粘性会话机制，同一会话内模型不会乱�
 
 FreeLLMAPI 的核心优势是 **纯用免费额度**，不需要你有任何付费 Key。One-API 更像是 Key 管理+分发工具，本身不提供额度。
 
-![对比总结](https://img.233002.xyz/blog/freellmapi-compare.png)
+![对比总结](https://img.233002.xyz/blog/freellmapi-compare.webp)
 
 ## 最后
 

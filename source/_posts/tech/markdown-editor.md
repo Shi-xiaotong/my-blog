@@ -16,7 +16,7 @@ categories:
 
 <!-- more -->
 
-![Markdown 编辑器与博客发布示意](https://img.233002.xyz/blog/blog-header-1.png)
+![Markdown 编辑器与博客发布示意](https://img.233002.xyz/blog/blog-header-1.webp)
 
 ## 起因：一个偷懒的想法
 
@@ -41,7 +41,7 @@ categories:
 
 编辑器部署在 `admin.233002.xyz/editor`，长这样：
 
-![Markdown 编辑器界面](https://img.233002.xyz/blog/blog-header-2.png)
+![Markdown 编辑器界面](https://img.233002.xyz/blog/blog-header-2.webp)
 
 左边是 Markdown 源码，右边是实时预览。顶部有工具栏，底部有发布按钮。整体风格跟博客保持一致，暗色主题。
 
@@ -63,7 +63,7 @@ categories:
 
 这是最实用的功能。直接把图片拖进编辑器，自动上传到 R2 存储桶，返回图片链接自动插入到 Markdown 里。
 
-![编辑器工具栏与图片管理](https://img.233002.xyz/blog/image3-dark-theme-editor.png)
+![编辑器工具栏与图片管理](https://img.233002.xyz/blog/image3-dark-theme-editor.webp)
 
 不用再去 R2 后台手动上传、复制链接、拼 Markdown 语法了。
 
@@ -101,7 +101,7 @@ categories:
 
 这是整个项目最核心的功能——写一次内容，同时发布到两个平台：
 
-![一键双发布流程](https://img.233002.xyz/blog/image4-flow-diagram.png)
+![一键双发布流程](https://img.233002.xyz/blog/image4-flow-diagram.webp)
 
 **博客端：**
 - Markdown 内容推送到 GitHub 仓库
@@ -117,7 +117,7 @@ categories:
 
 写完文章点发布之前，编辑器会自动检查文章质量：
 
-![质量检查面板](https://img.233002.xyz/blog/05-quality-dashboard.png)
+![质量检查面板](https://img.233002.xyz/blog/05-quality-dashboard.webp)
 
 检查项包括：
 - ✅ 标题字数（中文不超过 21 字，英文不超过 64 字节）
@@ -161,7 +161,7 @@ categories:
 
 省下来的时间，可以多写一篇文章。
 
-![Markdown 编辑器开发工作台](https://img.233002.xyz/blog/06-closing-workspace.png)
+![Markdown 编辑器开发工作台](https://img.233002.xyz/blog/06-closing-workspace.webp)
 
 ---
 

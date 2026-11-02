@@ -23,7 +23,7 @@ tags: ["AI"]
 
 于是，一个价值一周时间的坑，就这么挖好了。
 
-![配图](https://img.233002.xyz/blog/ai-novel-douyin-cover.png)
+![配图](https://img.233002.xyz/blog/ai-novel-douyin-cover.webp)
 
 ## 工具准备：堆了一桌厨具，最后煮了泡面
 
@@ -41,7 +41,7 @@ tags: ["AI"]
 
 **程序员搞副业的第一定律：你以为的"半小时搞定"，实际是三天。**
 
-![配图](https://img.233002.xyz/blog/ai-novel-douyin-terminal-errors.png)
+![配图](https://img.233002.xyz/blog/ai-novel-douyin-terminal-errors.webp)
 
 ## 小说：AI写的和你写的，差距在哪
 
@@ -59,7 +59,7 @@ AI写小说的问题：
 
 这回好了一些。至少读起来像是人写的了，虽然还是有AI味。
 
-![配图](https://img.233002.xyz/blog/ai-novel-douyin-pipeline.png)
+![配图](https://img.233002.xyz/blog/ai-novel-douyin-pipeline.webp)
 
 ## 配音：6个音色，选哪个都是错
 
@@ -76,7 +76,7 @@ MiMo TTS 有6个音色：苏打、冰糖、茉莉、Milo、白桦、Dean。
 
 听起来还行？等你实际跑一遍就发现——**AI配音的最大问题不是音色，是停顿**。它不知道哪里该喘气、哪里该压低声音、哪里该提高语速。一整段读下来像机器人念课文。
 
-![配图](https://img.233002.xyz/blog/ai-novel-douyin-tts-config.png)
+![配图](https://img.233002.xyz/blog/ai-novel-douyin-tts-config.webp)
 
 ## 素材：解压视频的水很深
 
@@ -111,7 +111,7 @@ MiMo TTS 有6个音色：苏打、冰糖、茉莉、Milo、白桦、Dean。
 
 修好之后又产了一章，这回能看了。发出去，播放量……还是个位数。
 
-![配图](https://img.233002.xyz/blog/ai-novel-douyin-chapters-tree.png)
+![配图](https://img.233002.xyz/blog/ai-novel-douyin-chapters-tree.webp)
 
 ## 反思：AI能帮你什么，不能帮你什么
 
@@ -143,6 +143,6 @@ MiMo TTS 有6个音色：苏打、冰糖、茉莉、Milo、白桦、Dean。
 
 如果你也在搞类似的副业，评论区聊聊？或者你有更好的方案，求教。
 
-![配图](https://img.233002.xyz/blog/ai-novel-douyin-douyin-works.png)
+![配图](https://img.233002.xyz/blog/ai-novel-douyin-douyin-works.webp)
 
 *本文所有工具和项目均为作者实际使用，没有一个是编的。踩过的坑都是真坑，播放量也是真个位数。*

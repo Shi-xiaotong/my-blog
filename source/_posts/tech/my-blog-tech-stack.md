@@ -18,7 +18,7 @@ categories:
 
 先上一张整体架构图：
 
-![技术栈总览](https://img.233002.xyz/blog/myblog1.png)
+![技术栈总览](https://img.233002.xyz/blog/myblog1.webp)
 
  层级 | 技术选型 | 说明 |
 ------|---------|------|
@@ -44,7 +44,7 @@ categories:
 - 中文文档完善，社区活跃
 - Live2D 看板娘、天气、万年历等趣味功能
 
-![Butterfly 主题效果](https://img.233002.xyz/blog/myblog2.png)
+![Butterfly 主题效果](https://img.233002.xyz/blog/myblog2.webp)
 
 ## GitHub 代码管理
 
@@ -70,7 +70,7 @@ my-blog/
     └── butterfly/       # 主题及自定义配置
 ```
 
-![GitHub 仓库](https://img.233002.xyz/blog/myblog3.png)
+![GitHub 仓库](https://img.233002.xyz/blog/myblog3.webp)
 
 ## Cloudflare Pages 部署
 
@@ -89,7 +89,7 @@ my-blog/
 4. 绑定自定义域名 233002.xyz
 5. 推送代码即自动部署
 
-![Cloudflare Pages 部署配置](https://img.233002.xyz/blog/myblog4.png)
+![Cloudflare Pages 部署配置](https://img.233002.xyz/blog/myblog4.webp)
 
 ## Cloudflare R2 图片存储
 
@@ -106,7 +106,7 @@ my-blog/
 - 文章中使用完整 R2 URL
 - 仓库只保留 Markdown 文件，干净轻量
 
-![Cloudflare R2 存储](https://img.233002.xyz/blog/myblog5.png)
+![Cloudflare R2 存储](https://img.233002.xyz/blog/myblog5.webp)
 
 ## Hermes Agent + Mimo：AI 自动化
 
@@ -122,7 +122,7 @@ my-blog/
 
 整个交互体验就像是有一个懂技术的助手随时待命，只需要用自然语言描述需求，AI 就能帮你完成操作。
 
-![Hermes Agent 交互](https://img.233002.xyz/blog/myblog6.png)
+![Hermes Agent 交互](https://img.233002.xyz/blog/myblog6.webp)
 
 ## 总结
 
