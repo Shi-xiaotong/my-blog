@@ -8,7 +8,7 @@ tags: ["生活"]
 
 > 沿着济南护城河走了半圈，水清得能看见鱼群游过。
 
-![护城河](https://img.233002.xyz/blog/jinan-daming-lake-1.jpg)
+![护城河](https://img.233002.xyz/blog/jinan-daming-lake-1.webp)
 
 ## 出发
 
@@ -22,33 +22,33 @@ tags: ["生活"]
 
 没想到第一眼就被惊艳到了。
 
-![河水](https://img.233002.xyz/blog/jinan-daming-lake-2.jpg)
+![河水](https://img.233002.xyz/blog/jinan-daming-lake-2.webp)
 
 护城河的水清澈见底，真的是那种一眼就能看到底的清。成群的鱼儿在水里游来游去，完全不怕人。
 
-![鱼群](https://img.233002.xyz/blog/jinan-quancheng-1.jpg)
+![鱼群](https://img.233002.xyz/blog/jinan-quancheng-1.webp)
 
-![水景](https://img.233002.xyz/blog/jinan-quancheng-2.jpg)
+![水景](https://img.233002.xyz/blog/jinan-quancheng-2.webp)
 
 围着护城河走了半圈，两岸的树木郁郁葱葱，花草错落有致，随手一拍都是风景。
 
-![绿树](https://img.233002.xyz/blog/jinan-quancheng-3.jpg)
+![绿树](https://img.233002.xyz/blog/jinan-quancheng-3.webp)
 
-![花草](https://img.233002.xyz/blog/jinan-quancheng-4.jpg)
+![花草](https://img.233002.xyz/blog/jinan-quancheng-4.webp)
 
 ## 沿途
 
 走累了就找个地方坐坐，看看水，看看鱼，听听泉水的声音。
 
-![河边](https://img.233002.xyz/blog/jinan-furong-1.jpg)
+![河边](https://img.233002.xyz/blog/jinan-furong-1.webp)
 
-![风景](https://img.233002.xyz/blog/jinan-furong-2.jpg)
+![风景](https://img.233002.xyz/blog/jinan-furong-2.webp)
 
 不赶时间，不看手机，就这么慢慢地走，慢慢地看。
 
-![留影](https://img.233002.xyz/blog/jinan-south-1.jpg)
+![留影](https://img.233002.xyz/blog/jinan-south-1.webp)
 
-![记录](https://img.233002.xyz/blog/jinan-south-2.jpg)
+![记录](https://img.233002.xyz/blog/jinan-south-2.webp)
 
 ## 写在最后
 
