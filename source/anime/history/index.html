@@ -89,14 +89,33 @@ function getToken(){return (window._siteAuth&&window._siteAuth.getToken)?window.
 
 var container=document.getElementById('historyContainer');
 
-if(!getToken()){
-  container.innerHTML='<div class="login-prompt"><i class="fas fa-user-lock"></i><h3>请先登录</h3><p>登录后可查看观看记录</p><button onclick="showSiteLoginModal()">去登录</button></div>';
-  // Re-check on login
-  window.addEventListener('storage',function(e){if(e.key==='anime_token'&&getToken())loadHistory();});
-  return;
-}
+// 管理员门控：仅管理员账号可访问本页
+(function gateInit(){
+  if(typeof window.cwdIsAdmin==='function'&&window.cwdIsAdmin()){
+    startHistory(); return;
+  }
+  if(typeof window.cwdIsAdmin!=='function'||!window._siteAuth){
+    gateInit._t=(gateInit._t||0)+1;
+    if(gateInit._t>25){
+      container.innerHTML='<div style="max-width:480px;margin:120px auto;text-align:center;color:#94a3b8;font-family:sans-serif"><h2 style="color:#e94560">无访问权限</h2><p>该页面仅对管理员开放。</p><p><a href="/" style="color:#ffd93d">返回首页</a></p></div>';
+      setTimeout(function(){location.replace('/');},1200);
+      return;
+    }
+    setTimeout(gateInit,150); return;
+  }
+  container.innerHTML='<div style="max-width:480px;margin:120px auto;text-align:center;color:#94a3b8;font-family:sans-serif"><h2 style="color:#e94560">无访问权限</h2><p>该页面仅对管理员开放。</p><p><a href="/" style="color:#ffd93d">返回首页</a></p></div>';
+  setTimeout(function(){location.replace('/');},1200);
+})();
 
-loadHistory();
+function startHistory(){
+  if(!getToken()){
+    container.innerHTML='<div class="login-prompt"><i class="fas fa-user-lock"></i><h3>请先登录</h3><p>登录后可查看观看记录</p><button onclick="showSiteLoginModal()">去登录</button></div>';
+    // Re-check on login
+    window.addEventListener('storage',function(e){if(e.key==='anime_token'&&getToken())loadHistory();});
+    return;
+  }
+  loadHistory();
+}
 
 async function loadHistory(){
   try{
@@ -185,6 +204,7 @@ function formatDate(s){
 })();
 </script>
 <script src="/js/site-auth.js"></script>
+<script src="/js/cwd-auth-hook.js"></script>
 <script src="track.js"></script>
 </body>
 </html>

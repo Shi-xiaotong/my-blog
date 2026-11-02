@@ -680,6 +680,9 @@ function toggleTheme() {
   var s = document.createElement('script');
   s.src = '/js/site-auth.js';
   document.head.appendChild(s);
+  var s2 = document.createElement('script');
+  s2.src = '/js/cwd-auth-hook.js';
+  document.head.appendChild(s2);
 })();
 
 (function(){
@@ -983,11 +986,23 @@ window.addEventListener('focus',function(){
 
 
 
-// Init
-
-loadList();
-
-loadContinueCard();
+// Init —— 管理员门控：仅管理员账号可访问本页
+(function gateInit(){
+  if(typeof window.cwdIsAdmin==='function'&&window.cwdIsAdmin()){
+    loadList(); loadContinueCard(); return;
+  }
+  if(typeof window.cwdIsAdmin!=='function'||!window._siteAuth){
+    gateInit._t=(gateInit._t||0)+1;
+    if(gateInit._t>25){ // ~4s 仍无登录态 -> 视为访客, 拦截
+      document.body.innerHTML='<div style="max-width:480px;margin:120px auto;text-align:center;color:#94a3b8;font-family:sans-serif"><h2 style="color:#e94560">无访问权限</h2><p>该页面仅对管理员开放。</p><p><a href="/" style="color:#ffd93d">返回首页</a></p></div>';
+      setTimeout(function(){location.replace('/');},1200);
+      return;
+    }
+    setTimeout(gateInit,150); return;
+  }
+  document.body.innerHTML='<div style="max-width:480px;margin:120px auto;text-align:center;color:#94a3b8;font-family:sans-serif"><h2 style="color:#e94560">无访问权限</h2><p>该页面仅对管理员开放。</p><p><a href="/" style="color:#ffd93d">返回首页</a></p></div>';
+  setTimeout(function(){location.replace('/');},1200);
+})();
 
 
 

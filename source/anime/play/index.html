@@ -291,6 +291,7 @@
      DOMContentLoaded 保护，提前加载不会在 DOM 未就绪时操作元素。 -->
 <link rel="stylesheet" href="/css/site-auth.css">
 <script src="/js/site-auth.js"></script>
+<script src="/js/cwd-auth-hook.js"></script>
 <script>
 (function(){
 // ---- site-auth 兼容层 ----
@@ -1312,7 +1313,12 @@ async function loadRecommendations(){
   }catch(e){}
 }
 
-// Init
+// Init —— 管理员门控：仅管理员账号可访问本页
+if(typeof window.cwdIsAdmin!=='function'||!window.cwdIsAdmin()){
+  document.body.innerHTML='<div style="max-width:480px;margin:120px auto;text-align:center;color:#94a3b8;font-family:sans-serif"><h2 style="color:#e94560">无访问权限</h2><p>该页面仅对管理员开放。</p><p><a href="/" style="color:#ffd93d">返回首页</a></p></div>';
+  setTimeout(function(){location.replace('/');},1200);
+  throw new Error('anime-gate');
+}
 loadDetail();
 
 })();
