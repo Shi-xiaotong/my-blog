@@ -217,29 +217,30 @@ Must not appear in generated content:
 - `workers/src/auth-worker.js` — OAuth handling
 - Deploy via `wrangler deploy` (separate from Pages)
 
-### 媒体 / 图片：R2 上传流程
+### 媒体 / 图片：R2 上传流程（图片不进 git）
 
-图片**不在 git 仓库**（仓库只提交 markdown 里的引用 URL），实际文件在 Cloudflare R2：
-`bucket=myblog`、`key_prefix=blog`（对象键 = `blog/<文件名>`），对外域名 `https://img.233002.xyz`。
-本地 `source/_posts/<分类>/<文章>/` 下的原图会随 `hexo deploy` 上传（这些原图本身也进 git）。
+设计原则：**原图不提交到 git 仓库**（否则仓库会越来越大）。流程是本地压缩 + 转 WebP → 上传 R2，原图留在仓库外的目录（如 `~/Pictures`、U 盘）。仓库里只有 markdown 对 `https://img.233002.xyz/...` 的引用。
 
-**自动上传（新文章推荐）**
-1. 把图片（**建议直接存成 `.webp`**）放进 `source/_posts/<分类>/<文章slug>/` 目录（与 `<文章slug>.md` 同级文件夹）。
-2. 文章内用相对路径引用：`![说明](./photo.webp)` 或 `![说明](photo.webp)`。
-3. 加载凭证（⚠️ 无 dotenv，不会自动加载）：`set -a; source .env; set +a`
-4. 上传：`npx hexo deploy`（deployer 类型 `r2-media`）。它会：
-   - 把该文件夹里的媒体**原样上传**到 R2 的 `blog/<文件名>`（**不转码**）；
-   - 自动把生成 HTML 里的本地相对图片 URL 改写成 `https://img.233002.xyz/blog/<文件名>`（即使文章硬编码了 R2 绝对 URL，只要原图在文件夹里仍会上传）；
-   - 用 `.r2-media-manifest.json` 记哈希，未变动的跳过；
-   - 默认 `delete_stale: true`：删掉 source 已不存在的图片对应的 R2 对象，并清掉 `public/` 下本地媒体。
-5. 验证：`curl -I https://img.233002.xyz/blog/photo.webp` 应返回 `200`。
+**标准流程（推荐，新文章用此）**
+1. 把手机/相机原图放在仓库外任意目录（不要放进 `source/`）。
+2. 压缩 + 转 WebP + 上传一步到位：
+   ```bash
+   node scripts/r2-upload.js 照片1.jpg 照片2.png
+   node scripts/r2-upload.js --dir ~/Pictures/jinan        # 批量整目录
+   node scripts/r2-upload.js --prefix assets 头像.webp      # 非 blog 资源(头像/logo 等)
+   node scripts/r2-upload.js --q 75 大图.png                # 降质换更小体积
+   ```
+   - 转换优先级 `cwebp` → `ImageMagick` → `sharp`；输出临时 webp 只在 `/tmp`，上传后清理，**不落盘到仓库**。
+   - 上传 key 固定 `blog/<去扩展名>.webp`（扁平），并打印可直粘的公网 URL。
+   - ⚠️ 跑前先 `source .env`（无 dotenv 自动加载）；`node` 不在默认 PATH 时用 nvm/hermes 路径。
+3. 把脚本打印的 `https://img.233002.xyz/blog/xxx.webp` 粘进文章（直接写绝对 URL，不用相对路径）。
+4. 验证：`curl -I https://img.233002.xyz/blog/xxx.webp` 应返回 `200`。
 
 **关键注意**
-- **不会自动转 webp**：deployer 只按原扩展名上传，不转码。要 webp 必须自己先存成 `.webp`。`_scripts/post-build.js` 的 cwebp 本地优化（转 `public/` 图 + 包 `<picture>`）与 R2 无关，且当前因缺 `cwebp` 二进制被跳过，不影响线上 R2。
-- **扁平命名冲突**：对象键是 `blog/<文件名>`，**不同文章同文件名会互相覆盖**。命名加前缀（如 `jinan-`、`nvidia-`）避免撞名。
-- **CI / Cloudflare Pages 不跑 `hexo deploy`**：只 push 代码不会上传新图，图片只在你本地跑 deploy 时才上 R2（这也是改引用后缀前图片 404 的原因）。
-- **凭证**在 `.env`（已 gitignore）：`R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ENDPOINT` / `R2_BUCKET` / `R2_PUBLIC_URL`；`AGNES_API_KEY`、`CF_R2_TOKEN` 当前为空。已用只读 `ListObjects` 验证可用。失效时去 Cloudflare 面板 → R2 → myblog → 管理 R2 API 令牌 重新生成。
-- 历史孤儿：`blog/myblog-cover.webp`、`blog/videos/blog-intro-v3.mp4` 已删除。
+- **不会自动转 webp**：转换由 `scripts/r2-upload.js` 用 `cwebp` 显式完成；CI / Cloudflare Pages 不跑任何图片处理，`post-build.js` 那段 cwebp 本地优化只作用于 `public/` 内相对引用图、与 R2 无关，且当前因缺 `cwebp` 被跳过。
+- **扁平命名冲突**：key 是 `blog/<文件名>`，**不同文章同文件名会互相覆盖**。命名加前缀（如 `jinan-`、`nvidia-`）避免撞名。
+- **凭证**在 `.env`（已 gitignore）：`R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ENDPOINT` / `R2_BUCKET` / `R2_PUBLIC_URL`；`AGNES_API_KEY`、`CF_R2_TOKEN` 当前为空。已用只读 `ListObjects` + 实际上传验证可用。失效时去 Cloudflare 面板 → R2 → myblog → 管理 R2 API 令牌 重新生成。
+- **备选（不推荐）**：`hexo-cloudflare-r2-media` 插件（`npx hexo deploy`）也能传图，但要求图放在 `source/_posts/<文章>/` 且**会随 git 提交**，与"图片不进 git"的诉求冲突，故不作为默认流程。存量 webp 多为早年 `r2.js`（已删）手动上传，不属于该插件流程、也无本地备份——哪天误删 R2 对象就找不回，原图请自己在外地留底。
 
 ---
 

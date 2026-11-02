@@ -38,6 +38,8 @@ source/_posts/**/*.jpeg
 source/_posts/**/*.gif
 source/_posts/**/*.webp
 .r2-media-manifest.json
+# 本地原图暂存（不进 git；用 scripts/r2-upload.js 压缩转 webp 后上传 R2）
+local-assets/
 
 # wrangler files
 .wrangler
