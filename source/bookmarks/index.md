@@ -52,9 +52,6 @@ permalink: /bookmarks/
       <a href="/games/" class="link-card" target="_blank" rel="noopener noreferrer" title="网页小游戏">
         <span class="name">小游戏</span>
       </a>
-      <a href="/anime/" class="link-card" target="_blank" rel="noopener noreferrer" title="影视屋">
-        <span class="name">影视屋</span>
-      </a>
     </div>
   </div>
 
