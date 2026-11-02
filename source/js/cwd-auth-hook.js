@@ -210,8 +210,7 @@
       var auth = window._siteAuth;
       if (!auth || !auth.isLoggedIn()) return false;
       var u = auth.getUser();
-      if (!u || u.email !== ADMIN_EMAIL) return false;
-      return hasAdminToken();
+      return !!(u && u.email === ADMIN_EMAIL);
     } catch (e) {
       return false;
     }

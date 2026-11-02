@@ -92,7 +92,7 @@ function login(){
     token=data.token;user=data.user;
     localStorage.setItem('anime_token',token);
     localStorage.setItem('anime_user',JSON.stringify(user));
-    render();hideLoginModal();
+    render();hideLoginModal();try{window.dispatchEvent(new Event('anime_login_change'));}catch(e){}
   })
   .catch(function(){if(btn)btn.disabled=false;err.textContent='网络错误';err.style.color='#e94560';});
 }
@@ -144,7 +144,7 @@ function regVerify(){
     token=data.token;user=data.user;
     localStorage.setItem('anime_token',token);
     localStorage.setItem('anime_user',JSON.stringify(user));
-    render();hideLoginModal();
+    render();hideLoginModal();try{window.dispatchEvent(new Event('anime_login_change'));}catch(e){}
   })
   .catch(function(){if(btn)btn.disabled=false;err.textContent='网络错误';err.style.color='#e94560';});
 }
@@ -196,7 +196,7 @@ function resetVerify(){
     token=data.token;user=data.user;
     localStorage.setItem('anime_token',token);
     localStorage.setItem('anime_user',JSON.stringify(user));
-    render();hideLoginModal();
+    render();hideLoginModal();try{window.dispatchEvent(new Event('anime_login_change'));}catch(e){}
   })
   .catch(function(){if(btn)btn.disabled=false;err.textContent='网络错误';err.style.color='#e94560';});
 }
@@ -225,16 +225,33 @@ function handleOAuthCallback(){
 function validate(){
   if(!token){render();return;}
   fetch(API+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
-  .then(function(r){if(!r.ok)throw new Error();return r.json();})
+  .then(function(r){
+    // 只有令牌确实失效(401/403)才登出；网络错误/5xx 一律保留本地登录态
+    if(r.status===401||r.status===403){
+      token='';user=null;
+      localStorage.removeItem('anime_token');
+      localStorage.removeItem('anime_user');
+      render();
+      return null;
+    }
+    if(!r.ok){throw new Error('http '+r.status);}
+    return r.json();
+  })
   .then(function(data){
+    if(!data)return;
     if(data.user){user=data.user;localStorage.setItem('anime_user',JSON.stringify(user));}
     if(data.has_password===false){
       var u=JSON.parse(localStorage.getItem('anime_user')||'{}');
       u._no_password=true;localStorage.setItem('anime_user',JSON.stringify(u));
     }
+    render();
+    // 校验完成后再广播一次，确保依赖登录态的门控(影视屋入口/个人中心)及时刷新
+    try{window.dispatchEvent(new Event('anime_login_change'));}catch(e){}
   })
-  .catch(function(){token='';user=null;localStorage.removeItem('anime_token');localStorage.removeItem('anime_user');})
-  .then(function(){render();});
+  .catch(function(){
+    // 网络抖动/接口异常：不清登录态
+    render();
+  });
 }
 
 function init(){
