@@ -289,3 +289,17 @@ my-blog/
 │   └── layout/                # Pug templates
 └── AGENTS.md                  # ← This file
 ```
+
+---
+
+## Manual Post Templates (scaffolds/)
+
+手写稿（生活 / 游戏 / 历史 / 科学 / 推荐 / 部分技术）用 Hexo 原生 `scaffolds/` 起步，**只填内容、不操心排版**：
+
+- `hexo new post "标题"` —— 通用默认（`scaffolds/post.md`）
+- `hexo new review "书名/片名/游戏名"` —— 书 / 影 / 游评（`scaffolds/review.md`）
+- `hexo new essay "主题"` —— 历史 / 科普 / 随笔（`scaffolds/essay.md`）
+
+富标签（note / label / hide / timeline / tabs / blockquote）、禁用手写 `---` 结尾（变剪刀）、必带 `<!-- more -->`、用 `##` 分节出目录等规则，见 **`docs/WRITING.md`**（写稿前先读）。
+
+> 自动稿（anime / tech）排版写死在 `_scripts/generators/*.py` 的 prompt 里，不在此体系。

@@ -4,7 +4,6 @@ date: {{ date }}
 categories:
   - 历史   # 或 科学
 tags:
-  - 
 ---
 
 {% note blue %}一句话总览：这篇想说清楚什么。{% endnote %}

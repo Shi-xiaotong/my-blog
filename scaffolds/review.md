@@ -4,7 +4,6 @@ date: {{ date }}
 categories:
   - 生活   # 书/影评多归「生活」，游戏归「游戏」
 tags:
-  - 
 ---
 
 {% note green %}一句话结论：值不值得看 / 读，先把结论甩出来。{% endnote %}
