@@ -135,7 +135,7 @@ layout: links-page
   display: block;
 }
 .friend-link-avatar.no-icon {
-  background: linear-gradient(135deg, #49b1f5, #6dc3fa);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   display: flex;
   align-items: center;
   justify-content: center;

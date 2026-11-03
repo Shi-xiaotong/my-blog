@@ -33,6 +33,22 @@ inject:
     # 站点统计 — 读自建 cwd-api（替代不蒜子，避免第三方 502 让侧栏永久转圈）
     - <script src="/js/site-stats.js"></script>
 
+# ── 主题强调色 ──
+# Butterfly 会在构建时把 $theme-color 编译成字面量（导航/登录下划线 lighten($theme-color,30%)、
+# 引用块左边框 $blockquote-padding-color、分页器/选中文字/TOC 等），这些无法被 tokens.css 的
+# --theme-color 覆盖，因此必须在此显式声明，并与 tokens.css 的 --primary 保持一致。
+theme_color:
+  enable: true
+  main: '#B5793F'                     # = --primary
+  paginator: '#B5793F'
+  text_selection: '#B5793F'
+  link_color: '#B5793F'
+  hr_color: '#B5793F'
+  meta_color: '#7A6F63'               # = --text-secondary
+  toc_color: '#B5793F'
+  blockquote_padding_color: '#B5793F'
+  blockquote_background_color: '#B5793F'
+
 # 停用不蒜子：数据接口长期 502（脚本能加载但取不到数），侧栏统计项会
 # 永久停留在 spinner。站点统计改由 /js/site-stats.js 读取自建接口展示。
 busuanzi:
