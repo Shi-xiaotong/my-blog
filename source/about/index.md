@@ -19,11 +19,6 @@ type: about
 .char-card::before {
   display: none;
 }
-.char-card h3 {
-  padding-left: 12px;
-  border-left: 3px solid var(--primary);
-  line-height: 1.4;
-}
 .char-card-inner {
   position: relative;
   z-index: 1;
@@ -309,7 +304,7 @@ type: about
 <!-- 属性面板 -->
 <div class="char-card">
   <div class="char-card-inner">
-    <h3 style="color: var(--text-strong); margin-top: 0;"><i class="fas fa-chart-bar"></i> 属性面板</h3>
+    <h3 style="margin-top: 0;"><i class="fas fa-chart-bar"></i> 属性面板</h3>
     <div class="stat-bar">
       <span class="stat-label"><i class="fas fa-code"></i>编程力</span>
       <div class="stat-track"><div class="stat-fill coding"></div></div>
@@ -349,7 +344,7 @@ type: about
 <!-- 技能树 -->
 <div class="char-card">
   <div class="char-card-inner">
-    <h3 style="color: var(--text-strong); margin-top: 0;"><i class="fas fa-wand-magic-sparkles"></i> 技能树</h3>
+    <h3 style="margin-top: 0;"><i class="fas fa-wand-magic-sparkles"></i> 技能树</h3>
     <div class="skill-grid">
       <div class="skill-item"><i class="fab fa-python skill-icon"></i><span class="skill-name">Python</span><span class="skill-lv">Lv.85</span></div>
       <div class="skill-item"><i class="fab fa-rust skill-icon"></i><span class="skill-name">Rust</span><span class="skill-lv">Lv.42</span></div>
@@ -369,7 +364,7 @@ type: about
 <!-- 成就 -->
 <div class="char-card">
   <div class="char-card-inner">
-    <h3 style="color: var(--text-strong); margin-top: 0;"><i class="fas fa-trophy"></i> 已解锁成就</h3>
+    <h3 style="margin-top: 0;"><i class="fas fa-trophy"></i> 已解锁成就</h3>
     <div class="achievement-list">
       <span class="achievement"><i class="fas fa-medal"></i> 连续写代码超过12小时</span>
       <span class="achievement"><i class="fas fa-skull-crossbones"></i> Debug到凌晨四点</span>
