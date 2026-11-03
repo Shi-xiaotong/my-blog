@@ -5,16 +5,16 @@ type: about
 ---
 
 <style>
-/* ========== 角色卡 ========== */
+/* ========== 角色卡（统一样式：焦糖奶油主题 token） ========== */
 .char-card {
   position: relative;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  border: 2px solid #e94560;
-  border-radius: 16px;
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--primary-light) 100%);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-md);
   padding: 30px;
   margin: 20px 0;
   overflow: hidden;
-  box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+  box-shadow: var(--shadow-md);
 }
 .char-card::before {
   content: '';
@@ -23,7 +23,7 @@ type: about
   left: -50%;
   width: 200%;
   height: 200%;
-  background: conic-gradient(from 0deg, transparent, rgba(233, 69, 96, 0.1), transparent 30%);
+  background: conic-gradient(from 0deg, transparent, rgba(var(--primary-rgb), 0.12), transparent 30%);
   animation: cardShine 6s linear infinite;
 }
 @keyframes cardShine {
@@ -35,7 +35,7 @@ type: about
 }
 .rarity {
   display: inline-block;
-  background: linear-gradient(90deg, #ff6b6b, #ffd93d, #ff6b6b);
+  background: linear-gradient(90deg, var(--accent), var(--warning), var(--accent));
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -51,12 +51,10 @@ type: about
   font-size: 2em;
   font-weight: 900;
   margin: 10px 0 5px;
-  background: linear-gradient(135deg, #fff, #e94560);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-strong);
 }
 .char-subtitle {
-  color: #8892b0;
+  color: var(--text-secondary);
   font-size: 0.95em;
   margin-bottom: 20px;
 }
@@ -65,9 +63,9 @@ type: about
   margin: 0 0 15px 20px;
   width: 120px;
   height: 120px;
-  border-radius: 12px;
-  border: 2px solid #e94560;
-  box-shadow: 0 0 20px rgba(233, 69, 96, 0.4);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--primary);
+  box-shadow: var(--shadow-md);
   object-fit: cover;
 }
 
@@ -80,19 +78,19 @@ type: about
 }
 .stat-label {
   min-width: 80px;
-  color: #ccd6f6;
+  color: var(--text);
   font-size: 0.9em;
 }
 .stat-label i {
   margin-right: 6px;
   width: 16px;
   text-align: center;
-  color: #e94560;
+  color: var(--primary);
 }
 .stat-track {
   flex: 1;
   height: 8px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(var(--primary-rgb), 0.12);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -102,12 +100,12 @@ type: about
   animation: fillBar 1.5s ease-out forwards;
   transform-origin: left;
 }
-.stat-fill.coding { width: 95%; background: linear-gradient(90deg, #e94560, #ff6b6b); }
-.stat-fill.sleep { width: 30%; background: linear-gradient(90deg, #6c5ce7, #a29bfe); }
-.stat-fill.caffeine { width: 99%; background: linear-gradient(90deg, #fdcb6e, #e17055); }
-.stat-fill.luck { width: 60%; background: linear-gradient(90deg, #00b894, #55efc4); }
-.stat-fill.social { width: 25%; background: linear-gradient(90deg, #636e72, #b2bec3); }
-.stat-fill.debugging { width: 88%; background: linear-gradient(90deg, #0984e3, #74b9ff); }
+.stat-fill.coding { width: 95%; background: linear-gradient(90deg, var(--primary), var(--accent)); }
+.stat-fill.sleep { width: 30%; background: linear-gradient(90deg, var(--secondary), var(--accent)); }
+.stat-fill.caffeine { width: 99%; background: linear-gradient(90deg, var(--warning), var(--error)); }
+.stat-fill.luck { width: 60%; background: linear-gradient(90deg, var(--success), var(--accent)); }
+.stat-fill.social { width: 25%; background: linear-gradient(90deg, var(--text-tertiary), var(--border-hover)); }
+.stat-fill.debugging { width: 88%; background: linear-gradient(90deg, var(--primary-dark), var(--secondary)); }
 @keyframes fillBar {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
@@ -121,9 +119,9 @@ type: about
   margin: 15px 0;
 }
 .skill-item {
-  background: rgba(233, 69, 96, 0.08);
-  border: 1px solid rgba(233, 69, 96, 0.25);
-  border-radius: 10px;
+  background: rgba(var(--primary-rgb), 0.08);
+  border: 1px solid rgba(var(--primary-rgb), 0.25);
+  border-radius: var(--radius-sm);
   padding: 12px 8px;
   text-align: center;
   transition: all 0.3s;
@@ -131,17 +129,17 @@ type: about
 }
 .skill-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(233, 69, 96, 0.3);
-  border-color: #e94560;
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
 }
 .skill-icon {
   font-size: 1.8em;
   display: block;
   margin-bottom: 4px;
-  color: #e94560;
+  color: var(--primary);
 }
-.skill-name { font-size: 0.85em; color: #ccd6f6; }
-.skill-lv { font-size: 0.7em; color: #e94560; margin-top: 2px; }
+.skill-name { font-size: 0.85em; color: var(--text); }
+.skill-lv { font-size: 0.7em; color: var(--primary); margin-top: 2px; }
 
 /* ========== 成就系统 ========== */
 .achievement-list {
@@ -151,16 +149,16 @@ type: about
   margin: 15px 0;
 }
 .achievement {
-  background: rgba(255, 217, 61, 0.08);
-  border: 1px solid rgba(255, 217, 61, 0.25);
-  border-radius: 20px;
+  background: rgba(var(--primary-rgb), 0.10);
+  border: 1px solid rgba(var(--primary-rgb), 0.25);
+  border-radius: var(--radius-full);
   padding: 6px 14px;
   font-size: 0.85em;
-  color: #ffd93d;
+  color: var(--warning);
   transition: all 0.3s;
 }
 .achievement:hover {
-  background: rgba(255, 217, 61, 0.15);
+  background: rgba(var(--primary-rgb), 0.18);
   transform: scale(1.05);
 }
 .achievement i {
@@ -179,7 +177,7 @@ type: about
 .particle {
   position: absolute;
   width: 4px; height: 4px;
-  background: #e94560;
+  background: var(--primary);
   border-radius: 50%;
   opacity: 0;
   animation: float linear infinite;
@@ -202,27 +200,27 @@ type: about
 /* ========== 语录 ========== */
 .quote-box {
   position: relative;
-  background: rgba(233, 69, 96, 0.05);
-  border-left: 4px solid #e94560;
-  border-radius: 0 12px 12px 0;
+  background: rgba(var(--primary-rgb), 0.06);
+  border-left: 4px solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 16px 20px;
   margin: 15px 0;
   font-style: italic;
-  color: #8892b0;
+  color: var(--text-secondary);
 }
 .quote-box::before {
   content: '「';
   position: absolute;
   top: -5px; left: 10px;
   font-size: 2.5em;
-  color: rgba(233, 69, 96, 0.2);
+  color: rgba(var(--primary-rgb), 0.2);
 }
 .quote-box::after {
   content: '」';
   position: absolute;
   bottom: -20px; right: 10px;
   font-size: 2.5em;
-  color: rgba(233, 69, 96, 0.2);
+  color: rgba(var(--primary-rgb), 0.2);
 }
 
 /* ========== 联系方式 ========== */
@@ -236,33 +234,33 @@ type: about
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   padding: 14px 16px;
   transition: all 0.3s;
   text-decoration: none !important;
-  color: #ccd6f6;
+  color: var(--text);
 }
 .contact-card:hover {
-  border-color: #e94560;
+  border-color: var(--primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(233, 69, 96, 0.2);
+  box-shadow: var(--shadow-md);
 }
 .contact-icon {
   font-size: 1.5em;
-  color: #e94560;
+  color: var(--primary);
   width: 36px;
   text-align: center;
 }
 .contact-info { font-size: 0.9em; }
-.contact-info small { display: block; color: #8892b0; font-size: 0.85em; }
+.contact-info small { display: block; color: var(--text-secondary); font-size: 0.85em; }
 
 /* ========== 分割线 ========== */
 .divider {
   text-align: center;
   margin: 30px 0;
-  color: #e94560;
+  color: var(--primary);
   font-size: 1.2em;
   letter-spacing: 8px;
   opacity: 0.5;
@@ -275,12 +273,12 @@ type: about
 }
 .icon-list li {
   padding: 8px 0;
-  color: var(--font-color, #333);
+  color: var(--text);
   font-size: 1.05em;
 }
 .icon-list li i {
   margin-right: 8px;
-  color: #e94560;
+  color: var(--primary);
   width: 20px;
   text-align: center;
 }
@@ -314,62 +312,62 @@ type: about
     <div class="rarity">✦ S S R ✦</div>
     <div class="char-name">水星引力m</div>
     <div class="char-subtitle">「 在 bug 的海洋中寻找 bug 之外的东西 」</div>
-    <p style="color: #a8b2d1; line-height: 1.8;">
+    <p style="color: var(--text-secondary); line-height: 1.8;">
       一个被代码选中的普通少年（自封的）。白天假装在写代码，实际上在写 bug；
       晚上假装在 debug，实际上在和 <code>console.log</code> 谈心。
       <br><br>
       技能树严重偏科：前端勉强能看，后端勉强能跑，运维勉强没崩。
       唯一点满的技能是「在凌晨三点找到最后一个分号」。
       <br><br>
-      人生信条：<span style="color: #e94560;">「只要我 commit 够快，bug 就追不上我。」</span>
+      人生信条：<span style="color: var(--primary);">「只要我 commit 够快，bug 就追不上我。」</span>
     </p>
   </div>
 </div>
 
 <!-- 属性面板 -->
-<div class="char-card" style="border-color: #6c5ce7;">
+<div class="char-card" style="border-color: var(--secondary);">
   <div class="char-card-inner">
-    <h3 style="color: #fff; margin-top: 0;"><i class="fas fa-chart-bar"></i> 属性面板</h3>
+    <h3 style="color: var(--text-strong); margin-top: 0;"><i class="fas fa-chart-bar"></i> 属性面板</h3>
     <div class="stat-bar">
       <span class="stat-label"><i class="fas fa-code"></i>编程力</span>
       <div class="stat-track"><div class="stat-fill coding"></div></div>
-      <span style="color: #e94560; font-size: 0.85em;">95</span>
+      <span style="color: var(--primary); font-size: 0.85em;">95</span>
     </div>
     <div class="stat-bar">
       <span class="stat-label"><i class="fas fa-bed"></i>睡眠力</span>
       <div class="stat-track"><div class="stat-fill sleep"></div></div>
-      <span style="color: #a29bfe; font-size: 0.85em;">30</span>
+      <span style="color: var(--text-secondary); font-size: 0.85em;">30</span>
     </div>
     <div class="stat-bar">
       <span class="stat-label"><i class="fas fa-mug-hot"></i>咖啡因</span>
       <div class="stat-track"><div class="stat-fill caffeine"></div></div>
-      <span style="color: #fdcb6e; font-size: 0.85em;">99</span>
+      <span style="color: var(--warning); font-size: 0.85em;">99</span>
     </div>
     <div class="stat-bar">
       <span class="stat-label"><i class="fas fa-dice"></i>运气</span>
       <div class="stat-track"><div class="stat-fill luck"></div></div>
-      <span style="color: #00b894; font-size: 0.85em;">60</span>
+      <span style="color: var(--success); font-size: 0.85em;">60</span>
     </div>
     <div class="stat-bar">
       <span class="stat-label"><i class="fas fa-users"></i>社交力</span>
       <div class="stat-track"><div class="stat-fill social"></div></div>
-      <span style="color: #b2bec3; font-size: 0.85em;">25</span>
+      <span style="color: var(--text-tertiary); font-size: 0.85em;">25</span>
     </div>
     <div class="stat-bar">
       <span class="stat-label"><i class="fas fa-bug"></i>Debug力</span>
       <div class="stat-track"><div class="stat-fill debugging"></div></div>
-      <span style="color: #74b9ff; font-size: 0.85em;">88</span>
+      <span style="color: var(--primary); font-size: 0.85em;">88</span>
     </div>
-    <p style="color: #636e72; font-size: 0.8em; margin-bottom: 0;">
+    <p style="color: var(--text-tertiary); font-size: 0.8em; margin-bottom: 0;">
       * 社交力低是 bug，不是 feature。已反馈给策划，预计下版本修复（大概）。
     </p>
   </div>
 </div>
 
 <!-- 技能树 -->
-<div class="char-card" style="border-color: #00b894;">
+<div class="char-card" style="border-color: var(--success);">
   <div class="char-card-inner">
-    <h3 style="color: #fff; margin-top: 0;"><i class="fas fa-wand-magic-sparkles"></i> 技能树</h3>
+    <h3 style="color: var(--text-strong); margin-top: 0;"><i class="fas fa-wand-magic-sparkles"></i> 技能树</h3>
     <div class="skill-grid">
       <div class="skill-item"><i class="fab fa-python skill-icon"></i><span class="skill-name">Python</span><span class="skill-lv">Lv.85</span></div>
       <div class="skill-item"><i class="fab fa-rust skill-icon"></i><span class="skill-name">Rust</span><span class="skill-lv">Lv.42</span></div>
@@ -387,9 +385,9 @@ type: about
 </div>
 
 <!-- 成就 -->
-<div class="char-card" style="border-color: #fdcb6e;">
+<div class="char-card" style="border-color: var(--warning);">
   <div class="char-card-inner">
-    <h3 style="color: #fff; margin-top: 0;"><i class="fas fa-trophy"></i> 已解锁成就</h3>
+    <h3 style="color: var(--text-strong); margin-top: 0;"><i class="fas fa-trophy"></i> 已解锁成就</h3>
     <div class="achievement-list">
       <span class="achievement"><i class="fas fa-medal"></i> 连续写代码超过12小时</span>
       <span class="achievement"><i class="fas fa-skull-crossbones"></i> Debug到凌晨四点</span>
@@ -400,7 +398,7 @@ type: about
       <span class="achievement"><i class="fas fa-circle-exclamation"></i> Stack Overflow提问被标记重复</span>
       <span class="achievement"><i class="fas fa-bomb"></i> 在生产环境执行 rm -rf /</span>
     </div>
-    <p style="color: #636e72; font-size: 0.8em; margin-bottom: 0;">
+    <p style="color: var(--text-tertiary); font-size: 0.8em; margin-bottom: 0;">
       * 成就「在生产环境执行 rm -rf /」已被管理员撤回，改名为「差点在生产环境执行 rm -rf /」。
     </p>
   </div>
@@ -439,7 +437,7 @@ type: about
 
 ## 联系方式
 
-<p style="color: #8892b0; margin-bottom: 12px;">如果你想找我聊天（或者想帮我 debug），可以在这里找到我：</p>
+<p style="color: var(--text-secondary); margin-bottom: 12px;">如果你想找我聊天（或者想帮我 debug），可以在这里找到我：</p>
 
 <div class="contact-grid">
   <a href="https://github.com/Shi-xiaotong" class="contact-card" target="_blank">
@@ -496,7 +494,7 @@ type: about
 
 ---
 
-<p style="text-align: center; color: #636e72; font-size: 0.85em; margin-top: 30px;">
+<p style="text-align: center; color: var(--text-tertiary); font-size: 0.85em; margin-top: 30px;">
   <i class="fas fa-shield-halved" style="margin-right: 4px;"></i>
   本站 Live2D 看板娘组件来自 [stevenjoezhang/live2d-widget](https://github.com/stevenjoezhang/live2d-widget)，<br>
   模型为 bilibili 出品的 22娘/33娘，版权归 bilibili 所有。<br>
