@@ -106,11 +106,13 @@ function regSendCode(){
   err.textContent='发送中...';err.style.color='#aaa';
   btn.disabled=true;
   fetch(API+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,type:'register'})})
-  .then(function(r){return r.json()})
-  .then(function(data){
-    if(data.error){err.textContent=data.error;err.style.color='#e94560';btn.disabled=false;return;}
-    if(data.dev_code){
-      err.textContent='验证码已发送 (开发模式: '+data.dev_code+')';err.style.color='#4ecdc4';
+  .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};}).catch(function(){return {ok:r.ok,d:{}};});})
+  .then(function(x){
+    if(!x.ok||(x.d&&x.d.error)){
+      err.textContent=(x.d&&x.d.error)||'邮件发送失败，请稍后重试';err.style.color='#e94560';btn.disabled=false;return;
+    }
+    if(x.d.dev_code){
+      err.textContent='验证码已发送 (开发模式: '+x.d.dev_code+')';err.style.color='#4ecdc4';
     }else{
       err.textContent='验证码已发送到邮箱';err.style.color='#4ecdc4';
     }
@@ -158,11 +160,13 @@ function resetSendCode(){
   err.textContent='发送中...';err.style.color='#aaa';
   btn.disabled=true;
   fetch(API+'/api/auth/password/reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,type:'reset'})})
-  .then(function(r){return r.json()})
-  .then(function(data){
-    if(data.error){err.textContent=data.error;err.style.color='#e94560';btn.disabled=false;return;}
-    if(data.dev_code){
-      err.textContent='验证码已发送 (开发模式: '+data.dev_code+')';err.style.color='#4ecdc4';
+  .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};}).catch(function(){return {ok:r.ok,d:{}};});})
+  .then(function(x){
+    if(!x.ok||(x.d&&x.d.error)){
+      err.textContent=(x.d&&x.d.error)||'邮件发送失败，请稍后重试';err.style.color='#e94560';btn.disabled=false;return;
+    }
+    if(x.d.dev_code){
+      err.textContent='验证码已发送 (开发模式: '+x.d.dev_code+')';err.style.color='#4ecdc4';
     }else{
       err.textContent='验证码已发送到邮箱';err.style.color='#4ecdc4';
     }
