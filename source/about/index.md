@@ -53,16 +53,6 @@ type: about
   font-size: 0.95em;
   margin-bottom: 20px;
 }
-.char-card-inner .card-avatar {
-  float: right;
-  margin: 0 0 15px 20px;
-  width: 120px;
-  height: 120px;
-  border-radius: var(--radius-sm);
-  border: 2px solid var(--primary);
-  box-shadow: var(--shadow-md);
-  object-fit: cover;
-}
 
 /* ========== 属性面板 ========== */
 .stat-bar {
@@ -280,9 +270,7 @@ type: about
 
 /* ========== 响应式 ========== */
 @media (max-width: 600px) {
-  .char-card { padding: 20px; }
   .char-name { font-size: 1.5em; }
-  .char-card-inner .card-avatar { width: 80px; height: 80px; }
   .skill-grid { grid-template-columns: repeat(3, 1fr); }
   .contact-grid { grid-template-columns: 1fr; }
 }
@@ -303,7 +291,6 @@ type: about
 <!-- 角色卡 -->
 <div class="char-card">
   <div class="char-card-inner">
-    <img class="card-avatar" src="https://img.233002.xyz/assets/zipai.webp" alt="avatar">
     <div class="rarity">✦ S S R ✦</div>
     <div class="char-name">水星引力m</div>
     <div class="char-subtitle">「 在 bug 的海洋中寻找 bug 之外的东西 」</div>
