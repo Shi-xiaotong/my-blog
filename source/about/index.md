@@ -440,39 +440,7 @@ type: about
 
 ## 致谢开源项目
 
-本博客的搭建离不开以下优秀的开源项目和技术服务，衷心感谢每一位作者的贡献！
-
-### 博客框架与主题
-
-| 项目 | 说明 | 作者 |
-|------|------|------|
-| [Hexo](https://hexo.io) | 快速、简洁且高效的博客框架 | hexojs |
-| [Butterfly](https://github.com/jerryc127/hexo-theme-butterfly) | Hexo 的美观多功能主题 | jerryc127 |
-| [hexo-butterfly-extjs](https://github.com/HiWangyeah/hexo-butterfly-extjs) | Butterfly 主题扩展插件 | HiWangyeah |
-
-### 评论系统
-
-| 项目 | 说明 | 作者 |
-|------|------|------|
-| [CWD](https://github.com/anghunk/cwd) | 基于 Cloudflare Workers + D1 的轻量级评论系统 | anghunk |
-
-### 小组件与工具
-
-| 项目 | 说明 | 作者 |
-|------|------|------|
-| [Live2D Widget](https://github.com/stevenjoezhang/live2d-widget) | 网页 Live2D 看板娘组件（模型为 B站 22，版权归 bilibili 所有） | stevenjoezhang |
-| [lunar-javascript](https://github.com/6tail/lunar-javascript) | 农历/阴阳历转换工具库（万年历） | 6tail |
-
-### 基础设施与服务
-
-| 项目 | 说明 |
-|------|------|
-| [GitHub](https://github.com) | 代码托管与版本控制 |
-| [Cloudflare](https://cloudflare.com) | Pages 托管、Workers、D1、R2 存储、CDN |
-| [Open-Meteo](https://open-meteo.com) | 开源免费天气 API |
-| [Cravatar](https://cravatar.cn) | 国内通用头像服务 |
-| [ipwho](https://ipwho.org) | IP 信息查询 API |
-| [Hermes Agent](https://hermes-agent.nousresearch.com) | AI 自动化运维助手 |
+本博客基于 Hexo + Butterfly 主题搭建，评论系统使用 CWD，看板娘来自 Live2D Widget。感谢这些优秀的开源项目与作者。
 
 ---
 
