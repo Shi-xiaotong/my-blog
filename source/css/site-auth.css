@@ -102,16 +102,56 @@
 #site-login-modal.show {
   display: flex;
 }
+#site-login-modal.show .slm-box {
+  animation: slmPop 0.25s var(--ease-out);
+}
+@keyframes slmPop {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 #site-login-modal .slm-box {
+  position: relative;
+  overflow: hidden;
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  width: 380px;
+  border-radius: var(--radius-xl);
+  padding: 34px 30px 30px;
+  width: 400px;
   max-width: 90vw;
   text-align: center;
   box-shadow: var(--shadow-xl);
+}
+#site-login-modal .slm-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+#site-login-modal .slm-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--text-tertiary);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+#site-login-modal .slm-close:hover {
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
 }
 #site-login-modal .slm-box h3 {
   color: var(--primary);
@@ -136,7 +176,7 @@
 #site-login-modal .slm-tabs {
   display: flex;
   gap: 0;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   border-bottom: 1px solid var(--border);
 }
 #site-login-modal .slm-tab {
@@ -146,7 +186,8 @@
   border-bottom: 2px solid transparent;
   color: var(--text-tertiary);
   font-size: 14px;
-  padding: 8px 0;
+  font-weight: 500;
+  padding: 10px 0;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
@@ -157,6 +198,7 @@
 #site-login-modal .slm-tab.active {
   color: var(--primary);
   border-bottom-color: var(--primary);
+  font-weight: 600;
 }
 
 /* 表单底部链接 */
@@ -193,10 +235,10 @@
   background: var(--border);
 }
 
-/* OAuth 按钮 */
+/* OAuth 按钮：两列柔和描边，去纯黑块，与主题一致 */
 #site-login-modal .slm-oauth {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-bottom: 16px;
 }
@@ -206,18 +248,21 @@
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 10px;
+  padding: 11px 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--card-bg);
   color: var(--text);
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s var(--ease-out);
 }
 #site-login-modal .slm-oauth-btn:hover {
   background: var(--bg);
   border-color: var(--border-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 #site-login-modal .slm-oauth-btn .slm-icon {
   width: 20px;
@@ -225,24 +270,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-/* GitHub / Google 保持品牌色，只调边框 */
-#site-login-modal .slm-oauth-btn.github {
-  background: #24292e;
-  border-color: #24292e;
-  color: #FFFFFF;
-}
-#site-login-modal .slm-oauth-btn.github:hover {
-  background: #1b1f23;
-  border-color: #1b1f23;
-}
-#site-login-modal .slm-oauth-btn.google {
-  background: #FFFFFF;
-  border-color: var(--border);
-  color: #3C4043;
-}
-#site-login-modal .slm-oauth-btn.google:hover {
-  background: var(--bg);
+  color: var(--text-strong);
 }
 
 /* 邮箱 / 密码表单 */
@@ -253,15 +281,17 @@
 }
 #site-login-modal .slm-email-form input {
   width: 100%;
-  padding: 10px 14px;
+  padding: 11px 14px;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text);
   font-size: 14px;
+  text-align: left;
   outline: none;
   box-sizing: border-box;
   font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 #site-login-modal .slm-email-form input:focus {
   border-color: var(--primary);
@@ -298,18 +328,21 @@
 
 #site-login-modal .slm-submit {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: var(--primary);
   color: #FFFFFF;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s var(--ease-out);
+  box-shadow: var(--shadow-sm);
 }
 #site-login-modal .slm-submit:hover {
   background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 #site-login-modal .slm-submit:disabled {
   opacity: 0.5;

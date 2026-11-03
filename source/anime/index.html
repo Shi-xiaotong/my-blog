@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="/css/tokens.css">
 
 <link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/site-auth.css">
 
 <style>
 
@@ -360,121 +361,7 @@ body {
 
 
 
-/* Login modal */
-
-#site-login-modal {
-
-  display: none; position: fixed; inset: 0; z-index: 9999;
-
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-
-  align-items: center; justify-content: center;
-
-}
-
-#site-login-modal.show { display: flex; }
-
-.slm-box {
-
-  background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
-
-  padding: 32px; max-width: 400px; width: 90%; text-align: center;
-
-  box-shadow: var(--shadow-lg);
-
-}
-
-.slm-box h3 { margin-bottom: 6px; color: var(--text); font-size: 18px; }
-
-.slm-sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 16px; }
-
-.slm-error { font-size: 13px; min-height: 20px; margin-bottom: 10px; }
-
-.slm-oauth { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-
-.slm-oauth-btn {
-
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-
-  padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border);
-
-  background: transparent; color: var(--text); cursor: pointer; font-size: 14px;
-
-  transition: all 0.2s;
-
-}
-
-.slm-oauth-btn:hover { border-color: var(--primary); }
-
-.slm-oauth-btn.github:hover { background: #24292e; color: #fff; border-color: #24292e; }
-
-.slm-oauth-btn.google:hover { background: #f0f0f0; }
-
-.slm-icon { display: flex; align-items: center; }
-
-.slm-divider {
-
-  color: var(--text-secondary); font-size: 12px; margin: 12px 0;
-
-  display: flex; align-items: center; gap: 10px;
-
-}
-
-.slm-divider::before, .slm-divider::after {
-
-  content: ''; flex: 1; height: 1px; background: var(--border);
-
-}
-
-.slm-email-form { display: flex; flex-direction: column; gap: 10px; }
-
-.slm-email-form input {
-
-  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
-
-  background: var(--bg); color: var(--text); font-size: 14px; outline: none; box-sizing: border-box;
-
-}
-
-.slm-email-form input:focus { border-color: var(--primary); }
-
-.slm-email-row { display: flex; gap: 8px; }
-
-.slm-email-row input {
-
-  flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
-
-  background: var(--bg); color: var(--text); font-size: 14px; outline: none;
-
-}
-
-.slm-email-row input:focus { border-color: var(--primary); }
-
-.slm-email-form input::placeholder,
-
-.slm-email-row input::placeholder { color: #94a3b8; }
-
-.slm-send-btn, .slm-submit {
-
-  padding: 10px 16px; border: none; border-radius: 10px;
-
-  background: var(--primary); color: #fff; font-size: 14px; font-weight: 600;
-
-  cursor: pointer; white-space: nowrap;
-
-}
-
-.slm-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.slm-cancel {
-
-  margin-top: 14px; background: none; border: none;
-
-  color: var(--text-secondary); cursor: pointer; font-size: 13px;
-
-}
-
-.slm-cancel:hover { color: var(--text); }
+/* Login 弹窗样式统一由 /css/site-auth.css 提供（此处不再内联，避免与共享样式不一致） */
 
 
 
