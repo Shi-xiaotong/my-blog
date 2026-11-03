@@ -144,18 +144,19 @@ async function clearAttempts(env, kind, key) {
 }
 
 async function sendEmail(env, to, subject, html) {
-  if (!env.RESEND_API_KEY) {
-    console.log('[dev] email not sent:', { to, subject });
-    return;
+  const key = env.RESEND_API_KEY;
+  if (!key) {
+    console.error('[email] RESEND_API_KEY 未配置，邮件未发送');
+    throw new Error('邮件服务未配置（RESEND_API_KEY 缺失）');
   }
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: env.EMAIL_FROM || 'noreply@233002.xyz', to, subject, html }),
+    headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: env.EMAIL_FROM || '水星引力m 博客 <noreply@233002.xyz>', to, subject, html }),
   });
   if (!res.ok) {
     const err = await res.text();
-    console.error('[email] send failed:', err);
+    console.error('[email] send failed:', err.slice(0, 500));
     throw new Error('邮件发送失败');
   }
 }
@@ -543,21 +544,9 @@ async function handleSendCode(env, request) {
     "INSERT OR REPLACE INTO anime_verify_codes (email, code, created_at) VALUES (?1, ?2, datetime('now'))"
   ).bind(normalizedEmail, code).run();
   if (env.DEV_MODE !== "true") {
+    const html = `<div style="font-family:sans-serif;max-width:400px;margin:0 auto;padding:20px"><h2 style="color:#ffd93d">水星引力m 博客</h2><p>你的登录验证码是：</p><div style="font-size:32px;font-weight:bold;letter-spacing:8px;padding:16px;background:#1a1a2e;border-radius:8px;text-align:center;color:#ffd93d">${code}</div><p style="color:#888;font-size:13px">验证码 5 分钟内有效，请勿泄露给他人。</p></div>`;
     try {
-      const sendRes = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { "Authorization": `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from: env.EMAIL_FROM || "noreply@233002.xyz",
-          to: normalizedEmail,
-          subject: "登录验证码 - 水星引力m 博客",
-          html: `<div style="font-family:sans-serif;max-width:400px;margin:0 auto;padding:20px"><h2 style="color:#ffd93d">水星引力m 博客</h2><p>你的登录验证码是：</p><div style="font-size:32px;font-weight:bold;letter-spacing:8px;padding:16px;background:#1a1a2e;border-radius:8px;text-align:center;color:#ffd93d">${code}</div><p style="color:#888;font-size:13px">验证码 5 分钟内有效，请勿泄露给他人。</p></div>`
-        })
-      });
-      if (!sendRes.ok) {
-        const errText = await sendRes.text();
-        return jsonResponse({ error: "邮件发送失败，请稍后重试" }, 500);
-      }
+      await sendEmail(env, normalizedEmail, "登录验证码 - 水星引力m 博客", html);
     } catch {
       return jsonResponse({ error: "邮件发送失败，请稍后重试" }, 500);
     }
