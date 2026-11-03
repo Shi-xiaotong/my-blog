@@ -172,41 +172,22 @@
   min-height: 16px;
 }
 
-/* Tabs */
-#site-login-modal .slm-tabs {
+/* 登录视图：邮箱表单在上，快捷登录在下（不再有顶部 tab） */
+#site-login-modal #slmLoginView {
   display: flex;
-  gap: 0;
-  margin-bottom: 18px;
-  border-bottom: 1px solid var(--border);
+  flex-direction: column;
 }
-#site-login-modal .slm-tab {
-  flex: 1;
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  color: var(--text-tertiary);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 10px 0;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-#site-login-modal .slm-tab:hover {
-  color: var(--text);
-}
-#site-login-modal .slm-tab.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-  font-weight: 600;
-}
+#site-login-modal #slmLoginView .slm-email-form { order: 1; }
+#site-login-modal #slmLoginView .slm-divider { order: 2; margin: 20px 0 16px; }
+#site-login-modal #slmLoginView .slm-oauth { order: 3; margin-bottom: 0; }
 
 /* 表单底部链接 */
 #site-login-modal .slm-form-footer {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
-  padding: 0 2px;
+  align-items: center;
+  margin-top: 0;
+  padding: 0 4px;
 }
 #site-login-modal .slm-link {
   background: none;
@@ -279,9 +260,14 @@
   flex-direction: column;
   gap: 10px;
 }
+#site-login-modal .slm-email-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 #site-login-modal .slm-email-form input {
   width: 100%;
-  padding: 11px 14px;
+  padding: 12px 14px;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
