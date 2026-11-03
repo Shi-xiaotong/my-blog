@@ -60,7 +60,8 @@
 | `send` | CNAME | `send.forge.rmta.net` | **Resend 发信 SPF/return-path**（已 verified） |
 | `_dmarc` | TXT | `v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s; rua=mailto:sxtcyq@gmail.com,mailto:sxtcyq@qq.com` | 反 spoofing |
 
-> **SPF/DKIM/DMARC 说明（重要）**：Resend 的 SPF 机制是专属子域 CNAME（`rsend`/`send`），**不**要求把 Resend 合并进根域 SPF。根域 SPF 只给 Cloudflare Email Routing 收件用。Resend 发信靠 `resend._domainkey` 的 DKIM 让 `d=233002.xyz` 与 From 严格对齐 → **DMARC 靠 DKIM 通过**，根域 `aspf=s` 不影响送达。
+> **来源说明（重要）**：邮件相关记录并非全是"原生必备"——`MX ×3`、`@` SPF(`include:_spf.mx.cloudflare.net`)、`cf2024-1._domainkey` DKIM、DMARC `p=reject` 均为**早期邮件对接遗留**（Cloudflare Email Routing 收件套件 + 反伪造加固）；Resend 的 `resend._domainkey` / `rsend` / `send` 才是**今天为发信新配**。发信（Resend）不依赖 Email Routing 那套；留着收件套件仅为了 `@233002.xyz` 能收信（退信/回复/管理员邮箱），不需要可整组删。
+> **SPF/DKIM/DMARC 机制**：Resend 的 SPF 机制是专属子域 CNAME（`rsend`/`send`），**不**要求把 Resend 合并进根域 SPF。根域 SPF 只给 Cloudflare Email Routing 收件用。Resend 发信靠 `resend._domainkey` 的 DKIM 让 `d=233002.xyz` 与 From 严格对齐 → **DMARC 靠 DKIM 通过**，根域 `aspf=s` 不影响送达。
 > - 可选增强：若想连 SPF 也对齐（更稳），可把 DMARC 改 `aspf=r`（relaxed）。不改也能收。
 > - 早期提到的空 `*._domainkey` 记录现已不在列表中，无需处理。
 
