@@ -15,7 +15,10 @@ permissions:
   contents: write
 
 jobs:
+  # ── 已主动禁用：不再自动生成文章（2026-11-03）──
+  # 如需恢复，删除下方 `if: false` 即可（schedule 与 workflow_dispatch 保持原样）。
   generate:
+    if: false   # 禁用：停止每周自动产出动漫/技术文摘
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
