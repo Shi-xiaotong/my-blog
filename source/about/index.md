@@ -8,26 +8,21 @@ type: about
 /* ========== 角色卡（统一样式：焦糖奶油主题 token） ========== */
 .char-card {
   position: relative;
-  background: linear-gradient(135deg, var(--card-bg) 0%, var(--primary-light) 100%);
-  border: 2px solid var(--primary);
-  border-radius: var(--radius-md);
-  padding: 30px;
-  margin: 20px 0;
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0 0 34px;
+  overflow: visible;
+  box-shadow: none;
 }
 .char-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(from 0deg, transparent, rgba(var(--primary-rgb), 0.12), transparent 30%);
-  animation: cardShine 6s linear infinite;
+  display: none;
 }
-@keyframes cardShine {
-  to { transform: rotate(360deg); }
+.char-card h3 {
+  padding-left: 12px;
+  border-left: 3px solid var(--primary);
+  line-height: 1.4;
 }
 .char-card-inner {
   position: relative;
@@ -325,7 +320,7 @@ type: about
 </div>
 
 <!-- 属性面板 -->
-<div class="char-card" style="border-color: var(--secondary);">
+<div class="char-card">
   <div class="char-card-inner">
     <h3 style="color: var(--text-strong); margin-top: 0;"><i class="fas fa-chart-bar"></i> 属性面板</h3>
     <div class="stat-bar">
@@ -365,7 +360,7 @@ type: about
 </div>
 
 <!-- 技能树 -->
-<div class="char-card" style="border-color: var(--success);">
+<div class="char-card">
   <div class="char-card-inner">
     <h3 style="color: var(--text-strong); margin-top: 0;"><i class="fas fa-wand-magic-sparkles"></i> 技能树</h3>
     <div class="skill-grid">
@@ -385,7 +380,7 @@ type: about
 </div>
 
 <!-- 成就 -->
-<div class="char-card" style="border-color: var(--warning);">
+<div class="char-card">
   <div class="char-card-inner">
     <h3 style="color: var(--text-strong); margin-top: 0;"><i class="fas fa-trophy"></i> 已解锁成就</h3>
     <div class="achievement-list">
