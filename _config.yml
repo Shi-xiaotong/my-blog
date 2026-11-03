@@ -44,7 +44,8 @@ skip_render:
   - 'games/common.css'
   - 'games/track.js'
   - 'games/js/*.js'
-  - '**/*.json'
+  - 'emotion/**/*.json'
+  - 'live2d/**/*.json'
 
 # 写作
 new_post_name: :title.md # 新文章的文件名
@@ -66,10 +67,6 @@ highlight:
   tab_replace: ''
   wrap: true
   hljs: false
-prismjs:
-  preprocess: true
-  line_number: true
-  tab_replace: ''
 
 # 主页设置
 ## path: 博客首页的根路径（默认为空）
@@ -84,8 +81,6 @@ index_generator:
 default_category: uncategorized
 category_map:
   动漫: anime
-  每日热点: daily-news
-  历史: history
   生活: life
   笔记: notes
   科学: science
