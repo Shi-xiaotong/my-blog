@@ -140,7 +140,7 @@ description: "一句话吸引人的摘要。"
 
 ---
 
-## 模板三：每日热点/新闻评论 (daily-news)
+## 模板三：每日热点/新闻评论 (daily-news) — ⚠️ 已停用 2026-11-03
 
 ```
 ---
@@ -183,7 +183,7 @@ description: "一句话摘要。"
 
 ---
 
-## 模板四：生活/游记/书单 (life / history / games / recommendations)
+## 模板四：生活/游记/书单 (life / games / recommendations)
 
 ```
 ---

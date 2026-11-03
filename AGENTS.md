@@ -3,7 +3,7 @@
 ## Project Overview
 
 Hexo 7 + Butterfly 5.5.4 blog, deployed via Cloudflare Pages (auto-deploy on push to GitHub).
-Content: tech articles, daily news digests, anime, tools, games.
+Content: tech articles, anime, tools, games, plus hand-written life/science/recommendations posts.
 
 **Tech stack:** Node.js 24, Python 3.11, Hexo, Stylus, Pug, Cloudflare Workers/Pages, R2.
 
@@ -60,10 +60,12 @@ for c in node nodejs; do command -v $c && $c -v; done
 
 ---
 
-## Daily Content Pipeline (GitHub Actions)
+## Daily Content Pipeline (GitHub Actions) — ⚠️ DISABLED 2026-11-03
+
+> **状态：已禁用。** `.github/workflows/daily-news.yml` 的 `generate` job 已加 `if: false`（commit `64bd63c`），不再自动生成文章。相关脚本（`run_daily.py`、`generators/`、`scrapers/`）仍保留在仓库，但无自动化入口，仅作历史参考，可手动运行。
 
 ### How it works
-- `_scripts/run_daily.py` is triggered by GitHub Actions (`daily-news.yml`) at 09:00 CST **every Monday**
+- `_scripts/run_daily.py` 曾被 GitHub Actions (`daily-news.yml`) 在每周一 09:00 CST 触发
 - It scrapes AniList (anime), TechCrunch and GitHub Trending, generates articles via Agnes AI, commits to repo
 - Cloudflare Pages auto-detects the push and rebuilds the site
 
@@ -282,7 +284,7 @@ Must not appear in generated content:
 my-blog/
 ├── _scripts/
 │   ├── daily-news.py          # Daily news generator (scrape + AI)
-│   ├── run_daily.py           # Entry point for GitHub Actions
+│   ├── run_daily.py           # Entry point for GitHub Actions (DISABLED)
 │   ├── post-build.js          # Build post-processor (CSS/JS bundling)
 │   ├── generators/
 │   │   └── __init__.py        # AI content generation core (cleanup, API, build_post)
@@ -290,7 +292,7 @@ my-blog/
 │       └── __init__.py        # Web scraping helpers
 ├── source/
 │   ├── _posts/
-│   │   ├── daily-news/        # Daily digest articles (auto-generated)
+│   │   ├── daily-news/        # Daily digest articles (auto-generated, DISABLED)
 │   │   └── tech/              # Tech articles
 │   ├── tools/                 # Tool pages (standalone HTML)
 │   ├── games/                 # Game pages
@@ -301,7 +303,7 @@ my-blog/
 │       ├── index.js           # CF Worker main
 │       └── auth-worker.js     # OAuth worker
 ├── .github/workflows/
-│   └── daily-news.yml         # GitHub Actions daily content
+│   └── daily-news.yml         # GitHub Actions daily content (DISABLED 2026-11-03, if:false)
 ├── _config.yml                # Hexo config
 ├── themes/butterfly/
 │   ├── _config.yml            # Butterfly theme config (inject, menu, colors)
