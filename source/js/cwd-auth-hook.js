@@ -1,6 +1,6 @@
 (function(){
-  var CWD_API = 'https://cwd-api.233002.xyz';
-  var ADMIN_EMAIL = '505350617@qq.com';
+  var CWD_API = (window.SITE_CFG && window.SITE_CFG.CWD_API) || 'https://cwd-api.233002.xyz';
+  var ADMIN_EMAIL = (window.SITE_CFG && window.SITE_CFG.ADMIN_EMAIL) || '505350617@qq.com';
   var STORAGE_KEY = 'cwd_admin_auth';
   var SALT = 'cwd-salt';
 

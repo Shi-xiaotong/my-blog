@@ -1,6 +1,6 @@
 (function(){
 try{
-var API='https://auth.233002.xyz';
+var API=(window.SITE_CFG&&window.SITE_CFG.AUTH_API)||'https://auth.233002.xyz';
 var token=localStorage.getItem('anime_token')||'';
 var user=JSON.parse(localStorage.getItem('anime_user')||'null');
 var countdown=0;

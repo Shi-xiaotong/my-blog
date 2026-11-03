@@ -4,7 +4,7 @@
 // 数据接口取不到，侧栏统计项会永久停留在 spinner 状态。这里改读自建的
 // cwd-api 统计接口，并且「拿不到数据就移除占位」，避免重蹈转圈覆辙。
 (function () {
-  var API = 'https://cwd-api.233002.xyz';
+  var API = (window.SITE_CFG && window.SITE_CFG.CWD_API) || 'https://cwd-api.233002.xyz';
   var SITE_ID = 'blog';
   var UV_LABEL = '总访客数';
   var PV_LABEL = '总访问量';

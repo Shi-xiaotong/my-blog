@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<script src="/js/site-config.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>观看记录</title>
@@ -84,7 +85,7 @@
 
 <script>
 (function(){
-var API='https://auth.233002.xyz';
+var API=(window.SITE_CFG&&window.SITE_CFG.AUTH_API)||'https://auth.233002.xyz';
 function getToken(){return (window._siteAuth&&window._siteAuth.getToken)?window._siteAuth.getToken():localStorage.getItem('anime_token')||'';}
 
 var container=document.getElementById('historyContainer');

@@ -1,6 +1,6 @@
 (function(){
-var AUTH_API='https://auth.233002.xyz';
-var DATA_API='https://auth.233002.xyz';
+var AUTH_API=(window.SITE_CFG&&window.SITE_CFG.AUTH_API)||'https://auth.233002.xyz';
+var DATA_API=(window.SITE_CFG&&window.SITE_CFG.AUTH_API)||'https://auth.233002.xyz';
 var $=function(id){return document.getElementById(id);};
 
 function init(){
@@ -370,7 +370,7 @@ window.ucChangePassword=function(){
   var isSet=(document.getElementById('ucPwdOldWrap')||{}).style.display==='none';
   var tkn=localStorage.getItem('anime_token')||'';
   var body=isSet?{new_password:newPwd}:{old_password:oldPwd,new_password:newPwd};
-  fetch('https://auth.233002.xyz/api/auth/password',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tkn},body:JSON.stringify(body)})
+  fetch((window.SITE_CFG&&window.SITE_CFG.AUTH_API||'https://auth.233002.xyz')+'/api/auth/password',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tkn},body:JSON.stringify(body)})
   .then(function(r){return r.json()})
   .then(function(d){
     if(d.error){if(err)err.textContent=d.error;return;}

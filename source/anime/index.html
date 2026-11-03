@@ -4,6 +4,8 @@
 
 <head>
 
+<script src="/js/site-config.js"></script>
+
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -692,15 +694,15 @@ function toggleTheme() {
 // 代理的 FFZY 能正常跨域，因此放在第一位作为默认源。
 var API_SOURCES=[
 
-  {name:'FFZY',base:'https://auth.233002.xyz',list:'/api/ffzy?ac=videolist'},
+  {name:'FFZY',base:(window.SITE_CFG&&window.SITE_CFG.AUTH_API||'https://auth.233002.xyz'),list:'/api/ffzy?ac=videolist'},
 
   // ac=list 只返回基本字段，vod_pic 恒为空（列表卡片没有海报）；
   // 与 FFZY 保持一致改用 ac=videolist。
-  {name:'Huya',base:'https://auth.233002.xyz',list:'/api/vod?site=huya&ac=videolist'},
+  {name:'Huya',base:(window.SITE_CFG&&window.SITE_CFG.AUTH_API||'https://auth.233002.xyz'),list:'/api/vod?site=huya&ac=videolist'},
 
-  {name:'BDZY',base:'https://auth.233002.xyz',list:'/api/vod?site=bdzy&ac=videolist'},
+  {name:'BDZY',base:(window.SITE_CFG&&window.SITE_CFG.AUTH_API||'https://auth.233002.xyz'),list:'/api/vod?site=bdzy&ac=videolist'},
 
-  {name:'FF22',base:'https://auth.233002.xyz',list:'/api/vod?site=ff22&ac=videolist'}
+  {name:'FF22',base:(window.SITE_CFG&&window.SITE_CFG.AUTH_API||'https://auth.233002.xyz'),list:'/api/vod?site=ff22&ac=videolist'}
 
 ];
 

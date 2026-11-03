@@ -16,12 +16,14 @@ inject:
     # 百度站长验证
     - <meta name="baidu-site-verification" content="codeva-ZY06XcFKmM" />
   bottom:
+    # 自定义页共享配置（域名/管理员标识集中管理）
+    - <script src="/js/site-config.js"></script>
     # 全局用户认证
     - <script src="/js/site-auth.js"></script>
     # CWD评论认证钩子
     - <script src="/js/cwd-auth-hook.js"></script>
     # CWD评论系统 — 懒加载：仅在有评论区的页面才动态加载 cwd.js
-    - <script>function initCWD(){var w=document.querySelector('.comment-wrap');if(!w)return;w.innerHTML='<div id="cwd-comments"></div>';function loadCWD(){var s=document.createElement("script");s.src="/assets/libs/cwd.js";s.onload=function(){try{new CWDComments({el:"#cwd-comments",apiBaseUrl:"https://cwd-api.233002.xyz",siteId:"blog",lang:"zh-CN",customCssUrl:"/css/cwd-custom.css",adminEmail:"no-admin"}).mount()}catch(e){console.error("CWD",e)}};document.body.appendChild(s)}function init(){if(typeof CWDComments==='undefined'){loadCWD()}else{try{new CWDComments({el:"#cwd-comments",apiBaseUrl:"https://cwd-api.233002.xyz",siteId:"blog",lang:"zh-CN",customCssUrl:"/css/cwd-custom.css",adminEmail:"no-admin"}).mount()}catch(e){console.error("CWD",e)}}}setTimeout(init,100)}document.addEventListener("DOMContentLoaded",initCWD);document.addEventListener("pjax:complete",initCWD);</script>
+    - <script>function initCWD(){var w=document.querySelector('.comment-wrap');if(!w)return;w.innerHTML='<div id="cwd-comments"></div>';function loadCWD(){var s=document.createElement("script");s.src="/assets/libs/cwd.js";s.onload=function(){try{new CWDComments({el:"#cwd-comments",apiBaseUrl:"https://cwd-api.233002.xyz",siteId:"blog",lang:"zh-CN",customCssUrl:"/css/cwd-custom.css",adminEmail:"505350617@qq.com"}).mount()}catch(e){console.error("CWD",e)}};document.body.appendChild(s)}function init(){if(typeof CWDComments==='undefined'){loadCWD()}else{try{new CWDComments({el:"#cwd-comments",apiBaseUrl:"https://cwd-api.233002.xyz",siteId:"blog",lang:"zh-CN",customCssUrl:"/css/cwd-custom.css",adminEmail:"505350617@qq.com"}).mount()}catch(e){console.error("CWD",e)}}}setTimeout(init,100)}document.addEventListener("DOMContentLoaded",initCWD);document.addEventListener("pjax:complete",initCWD);</script>
     # 音乐播放器
     - <script src="/js/music-player.js"></script>
     # 个人中心
